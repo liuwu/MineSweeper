@@ -7,8 +7,12 @@ def shared_pods
     pod 'BlocksKit', '~> 2.0'
     pod 'DateTools', '~> 1.6'
     pod 'SDWebImage', '~> 3.7'
+    # WLNetworking依赖AFNetworking和AliyunOSSiOS
     pod 'AFNetworking', '3.2.1'
+    pod 'AliyunOSSiOS', :git => 'https://github.com/aliyun/AliyunOSSiOS.git'
     pod 'Masonry'
+    # 二维码扫描
+    pod 'ZBarSDK', '~> 1.3.1'
     pod 'UITableView+FDTemplateLayoutCell'
     pod 'YYKit'
     pod 'FMDB/SQLCipher', '~> 2.5' # FMDB：Sqlite封装库
@@ -16,6 +20,9 @@ def shared_pods
     pod 'KMNavigationBarTransition'
     pod 'MJRefresh','3.1.15.3'
     pod 'CHIPageControl/Jaloro', '= 0.1.5'
+    
+    # 使用： https://github.com/ChenYilong/CYLTabBarController
+    pod 'CYLTabBarController', '~> 1.17.4'
 end
 
 target 'MineSweeper' do

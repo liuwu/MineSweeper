@@ -10,7 +10,6 @@
 #import "WLRequestManager.h"
 
 #import "AFgzipRequestSerializer.h"
-#import "AFgzipRequestSerializer.h"
 
 @interface WLRequest ()
 

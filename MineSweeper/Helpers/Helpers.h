@@ -10,7 +10,6 @@
 #define Helpers_h
 
 //设备fps信息库
-#import "WLDeviceInfoTool.h"
 
 //网络库
 #import "WLNetwokingConfig.h"

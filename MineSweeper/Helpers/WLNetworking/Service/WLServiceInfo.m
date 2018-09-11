@@ -109,8 +109,8 @@
         
         if (isTest) {
             sharedInstance.serviceBaseUrl = httpServer ? httpServer : @"https://sevnew.welian.com";
-            sharedInstance.ossBucket = kWL_ossBucketTest;
-            sharedInstance.ossFileBucket = kWL_ossFileBucketTest;
+//            sharedInstance.ossBucket = kWL_ossBucketTest;
+//            sharedInstance.ossFileBucket = kWL_ossFileBucketTest;
             
             sharedInstance.rongCloudAppKey = @"lmxuhwagx82sd";
             sharedInstance.uMengAppKey = @"56ca9c0ee0f55a52970028bf";
@@ -128,11 +128,11 @@
             sharedInstance.QYWalletGroupId = 309612;
             sharedInstance.QYInvestGroupId = 309612;
             sharedInstance.QYLoginGroupId = 309612;
-            sharedInstance.h5ServiceBaseUrl = kWL_H5ServiceUrlTest;
+//            sharedInstance.h5ServiceBaseUrl = kWL_H5ServiceUrlTest;
         }else{
             sharedInstance.serviceBaseUrl = httpServer ? httpServer : @"https://sevnew.welian.com";
-            sharedInstance.ossBucket = kWL_ossBucket;
-            sharedInstance.ossFileBucket = kWL_ossFileBucket;
+//            sharedInstance.ossBucket = kWL_ossBucket;
+//            sharedInstance.ossFileBucket = kWL_ossFileBucket;
             
             sharedInstance.rongCloudAppKey = @"z3v5yqkbvojw0";
             sharedInstance.uMengAppKey = @"545c8c97fd98c59807006c67";
@@ -148,25 +148,25 @@
             sharedInstance.QYWalletGroupId = 339432;
             sharedInstance.QYInvestGroupId = 398452;
             sharedInstance.QYLoginGroupId = 1240676;
-            sharedInstance.h5ServiceBaseUrl = kWL_H5ServiceUrl;
+//            sharedInstance.h5ServiceBaseUrl = kWL_H5ServiceUrl;
         }
         
         sharedInstance.favorableGuidanceBoole = NO;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            if (![NSUserDefaults boolForKey:kWLAlreadyFavorableGuidanceBoole]) {
-                NSDate *lastTime = [NSUserDefaults objectForKey:kWLLastTimeStartApplicationDate];
-                [NSUserDefaults setObject:[NSDate date] forKey:kWLLastTimeStartApplicationDate];
-                if ([lastTime isYesterday]) {
-                    NSInteger count = [NSUserDefaults intForKey:kWLStartApplicationCount] + 1;
-                    [NSUserDefaults setInteger:count forKey:kWLStartApplicationCount];
-                    if (count >= 2) {
-                        sharedInstance.favorableGuidanceBoole = YES;
-                    }
-                }else {
-                    [NSUserDefaults setInteger:0 forKey:kWLStartApplicationCount];
-                }
-            }
-        });
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//            if (![NSUserDefaults boolForKey:kWLAlreadyFavorableGuidanceBoole]) {
+//                NSDate *lastTime = [NSUserDefaults objectForKey:kWLLastTimeStartApplicationDate];
+//                [NSUserDefaults setObject:[NSDate date] forKey:kWLLastTimeStartApplicationDate];
+//                if ([lastTime isYesterday]) {
+//                    NSInteger count = [NSUserDefaults intForKey:kWLStartApplicationCount] + 1;
+//                    [NSUserDefaults setInteger:count forKey:kWLStartApplicationCount];
+//                    if (count >= 2) {
+//                        sharedInstance.favorableGuidanceBoole = YES;
+//                    }
+//                }else {
+//                    [NSUserDefaults setInteger:0 forKey:kWLStartApplicationCount];
+//                }
+//            }
+//        });
         
     });
     return sharedInstance;
@@ -177,7 +177,7 @@
         if (kSystemVersion >= 10.3) {
             [SKStoreReviewController requestReview];
             [WLServiceInfo sharedServiceInfo].favorableGuidanceBoole = NO;
-            [NSUserDefaults setBool:YES forKey:kWLAlreadyFavorableGuidanceBoole];
+//            [NSUserDefaults setBool:YES forKey:kWLAlreadyFavorableGuidanceBoole];
         }
     }
 }

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ShareFriendsController.h"
+//#import "ShareFriendsController.h"
 
 @class CardStatuModel;
 @interface WLShareFriendsTool : NSObject

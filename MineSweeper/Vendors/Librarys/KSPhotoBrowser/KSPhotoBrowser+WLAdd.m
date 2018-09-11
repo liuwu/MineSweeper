@@ -7,18 +7,18 @@
 //
 
 #import "KSPhotoBrowser+WLAdd.h"
-#import "WLShareFriendsTool.h"
+//#import "WLShareFriendsTool.h"
 #import "WLAssetsManager.h"
 #import "WLSystemAuth.h"
 
 @implementation KSPhotoBrowser (WLAdd)
 
 - (void)sendFriendImage:(UIImage *)image {
-    [[WLShareFriendsTool sharedWLShareFriendsTool] shareFriendsWithImage:image];
+//    [[WLShareFriendsTool sharedWLShareFriendsTool] shareFriendsWithImage:image];
 }
 
 - (void)extractQRcodeResultJump:(NSString *)resultString {
-    [[AppDelegate sharedAppDelegate] wlopenURLString:resultString sourceViewControl:self];
+//    [[AppDelegate sharedAppDelegate] wlopenURLString:resultString sourceViewControl:self];
 }
 
 - (void)saveToPhotosAlbumImage:(UIImage *)image {

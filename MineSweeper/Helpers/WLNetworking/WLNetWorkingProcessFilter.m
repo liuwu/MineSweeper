@@ -8,6 +8,7 @@
 
 #import "WLNetWorkingProcessFilter.h"
 #import "WLPackAlertController.h"
+#import "AppDelegate.h"
 
 
 /// --------- NSNotification -----------
@@ -97,11 +98,11 @@ NSString *const kWLNeedCompleteInfoNotification = @"kWLNeedCompleteInfoNoti";
  */
 - (NSDictionary *)urlArgumentsInfos {
 
-    WLUserJWTModel *jwtModel = [[WLUserDataCenter sharedInstance] getLoginUserJWT];
+//    WLUserJWTModel *jwtModel = [[WLUserDataCenter sharedInstance] getLoginUserJWT];
     /// 每次启动App时都会新生成
-    NSString *sessionId = jwtModel.sessionId?:[NSUserDefaults objectForKey:kWL_UserSessionIdKey];
+//    NSString *sessionId = jwtModel.sessionId?:[NSUserDefaults objectForKey:kWL_UserSessionIdKey];
     NSMutableDictionary *requestHeaderDic = [NSMutableDictionary dictionary];
-    [requestHeaderDic setValue:sessionId forKey:@"sessionid"];
+//    [requestHeaderDic setValue:sessionId forKey:@"sessionid"];
     [requestHeaderDic setValue:kAppVersion forKey:@"version"];
     [requestHeaderDic setValue:kPlatformType forKey:@"platform"];
     [requestHeaderDic setValue:kDeviceUdid forKey:@"platform"];
@@ -109,13 +110,13 @@ NSString *const kWLNeedCompleteInfoNotification = @"kWLNeedCompleteInfoNoti";
 }
 
 - (NSDictionary *)httpHeaderInfos {
-    WLUserJWTModel *jwtModel = [[WLUserDataCenter sharedInstance] getLoginUserJWT];
+//    WLUserJWTModel *jwtModel = [[WLUserDataCenter sharedInstance] getLoginUserJWT];
     /// 每次启动App时都会新生成
-    NSString *sessionId = jwtModel.sessionId?:[NSUserDefaults objectForKey:kWL_UserSessionIdKey];
-    NSString *userJWT = jwtModel.jwt;
+//    NSString *sessionId = jwtModel.sessionId?:[NSUserDefaults objectForKey:kWL_UserSessionIdKey];
+//    NSString *userJWT = jwtModel.jwt;
     NSMutableDictionary *requestHeaderDic = [NSMutableDictionary dictionary];
-    [requestHeaderDic setValue:sessionId forKey:@"sessionid"];
-    [requestHeaderDic setValue:userJWT forKey:@"jwt"];
+//    [requestHeaderDic setValue:sessionId forKey:@"sessionid"];
+//    [requestHeaderDic setValue:userJWT forKey:@"jwt"];
     [requestHeaderDic setValue:kAppVersion forKey:@"version"];
     [requestHeaderDic setValue:kPlatformType forKey:@"platform"];
     [requestHeaderDic setValue:kDeviceUdid forKey:@"platform"];
@@ -160,7 +161,7 @@ NSString *const kWLNeedCompleteInfoNotification = @"kWLNeedCompleteInfoNoti";
                 /// 接口返回成功，且数据正确
                 if (sessionid.length > 0) {
                     ///保存sessionid
-                    [NSUserDefaults setObject:sessionid forKey:kWL_UserSessionIdKey];
+//                    [NSUserDefaults setObject:sessionid forKey:kWL_UserSessionIdKey];
                 }
                 return data;
             }else{
@@ -334,7 +335,7 @@ NSString *const kWLNeedCompleteInfoNotification = @"kWLNeedCompleteInfoNoti";
                                           destructiveHandler:^(LGAlertView *alertView) {
                                               if (url.length > 0) {
                                                   //已经登录，跳转页面
-                                                  [[AppDelegate sharedAppDelegate] wlopenURLString:url sourceViewControl:nil];
+//                                                  [[AppDelegate sharedAppDelegate] wlopenURLString:url sourceViewControl:nil];
                                               }
                                               
                                           }] showAnimated:YES completionHandler:nil];

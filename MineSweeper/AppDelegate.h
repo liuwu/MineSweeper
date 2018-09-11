@@ -10,7 +10,14 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
+single_interface(AppDelegate)
 @property (strong, nonatomic) UIWindow *window;
+
+// 退出登录
+- (void)logoutWithErrormsg:(NSString *)errormsg;
+
+///登录成功
+- (void)loginSucceed;
 
 
 @end

@@ -1,0 +1,495 @@
+//
+//  AXBadgeView.m
+//  AXBadgeView
+//
+//  Created by ai on 15/12/7.
+//  Copyright © 2015年 AiXing. All rights reserved.
+//
+
+#import "AXBadgeView.h"
+
+#define kAXBadgeViewBreatheAnimationKey     @"breathe"
+#define kAXBadgeViewRotateAnimationKey      @"rotate"
+#define kAXBadgeViewShakeAnimationKey       @"shake"
+#define kAXBadgeViewScaleAnimationKey       @"scale"
+#define kAXBadgeViewBounceAnimationKey      @"bounce"
+
+typedef NS_ENUM(NSUInteger, AXAxis)
+{
+    AXAxisX = 0,
+    AXAxisY,
+    AXAxisZ
+};
+
+// Degrees to radians
+#define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
+#define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
+
+@interface AXBadgeView ()
+{
+    NSString *_textStorage;
+}
+@property(strong, nonatomic) NSLayoutConstraint *horizontalLayout;
+@property(strong, nonatomic) NSLayoutConstraint *verticalLayout;
+@property(strong, nonatomic) NSLayoutConstraint *widthLayout;
+@property(strong, nonatomic) NSLayoutConstraint *heightLayout;
+@end
+
+@implementation AXBadgeView
+#pragma mark - Initializer
+- (instancetype)init {
+    if (self = [super init]) {
+        [self initializer];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self initializer];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        [self initializer];
+    }
+    return self;
+}
+
+- (void)initializer {
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    self.font = [UIFont systemFontOfSize:12];
+    self.backgroundColor = [UIColor wl_HexFF3B30];
+    self.textColor = [UIColor whiteColor];
+    self.textAlignment = NSTextAlignmentCenter;
+    _offsets = CGPointMake(-4, 4);
+    _position = CGPointMake(1, 0);
+    _textStorage = @"";
+    self.style = AXBadgeViewNormal;
+    self.animation = AXBadgeViewAnimationNone;
+    _hideOnZero = YES;
+    _scaleContent = NO;
+    _minSize = CGSizeMake(8.0, 8.0);
+    /*
+    [self addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew context:nil];
+     */
+}
+
+- (void)dealloc {
+    /*
+    [self removeObserver:self forKeyPath:@"text"];
+     */
+}
+
+#pragma mark - Override
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"text"]) {
+        NSString *text = [change objectForKey:NSKeyValueChangeNewKey];
+        [self updateTextIfNeededWithText:text];
+    }
+}
+
+- (CGSize)sizeThatFits:(CGSize)size {
+    CGSize susize = [super sizeThatFits:size];
+    susize.height = MAX(susize.height, _minSize.height);
+    susize.width = MAX(susize.width + susize.height/2, _minSize.width);
+    if (susize.width < susize.height) {
+        susize.width = susize.height;
+    }
+    if (self.style != AXBadgeViewNormal) {
+        susize.width += 3.f;
+        susize.height += 3.f;
+    }
+    return susize;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+    [super willMoveToSuperview:newSuperview];
+    if (newSuperview) {
+        [self setOffsets:_offsets];
+    }
+    self.alpha = 1.0;
+}
+
+- (void)didMoveToSuperview {
+    [super didMoveToSuperview];
+    UIView *suview = self.superview;
+    if(!suview) return;
+    [self setOffsets:_offsets];
+    if (![suview.constraints containsObject:self.verticalLayout]) {
+        [suview addConstraint:_verticalLayout];
+    }
+    if (![suview.constraints containsObject:self.horizontalLayout]) {
+        [suview addConstraint:_horizontalLayout];
+    }
+    [suview setNeedsLayout];
+    [suview bringSubviewToFront:self];
+}
+
+- (void)setText:(NSString *)text {
+    _textStorage = [text copy];
+    switch (_style) {
+        case AXBadgeViewNew:
+            [super setText:@"new"];
+            break;
+        case AXBadgeViewText:
+            [super setText:_textStorage];
+            break;
+        case AXBadgeViewNumber:
+            [super setText:[NSString stringWithFormat:@"%@", @([_textStorage integerValue])]];
+            break;
+        default:
+            [super setText:@""];
+            break;
+    }
+    [self updateTextIfNeededWithText:[super text]];
+    [self sizeToFit];
+    self.layer.cornerRadius = CGRectGetHeight(self.bounds)/2;
+    self.layer.masksToBounds = YES;
+    if (![self.constraints containsObject:self.widthLayout]) {
+        [self addConstraint:_widthLayout];
+    }
+    if (![self.constraints containsObject:self.heightLayout]) {
+        [self addConstraint:_heightLayout];
+    }
+    _widthLayout.constant = CGRectGetWidth(self.bounds);
+    _heightLayout.constant = CGRectGetHeight(self.bounds);
+    [self setNeedsLayout];
+    if (self.isVisible) {
+        if (_scaleContent) [self showAnimated:YES];
+    }
+}
+
+#pragma mark - Getters
+- (NSLayoutConstraint *)widthLayout {
+    if (_widthLayout) return _widthLayout;
+    _widthLayout = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:0];
+    return _widthLayout;
+}
+
+- (NSLayoutConstraint *)heightLayout {
+    if (_heightLayout) return _heightLayout;
+    _heightLayout = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:0];
+    return _heightLayout;
+}
+
+- (BOOL)isVisible {
+    return self.superview && !self.hidden && self.alpha != 0 ? YES : NO;
+}
+
+- (NSString *)text {
+    [self updateTextIfNeededWithText:[super text]];
+    return [super text];
+}
+
+#pragma mark - Setters
+- (void)setStyle:(AXBadgeViewStyle)style {
+    _style = style;
+    [self setText:_textStorage];
+}
+
+- (void)setAnimation:(AXBadgeViewAnimation)animation {
+    _animation = animation;
+    switch (_animation) {
+        case AXBadgeViewAnimationBreathe:
+            [self.layer addAnimation:[self breathingAnimationWithDuration:1.2] forKey:kAXBadgeViewBreatheAnimationKey];
+            break;
+        case AXBadgeViewAnimationBounce:
+            [self.layer addAnimation:[self bounceAnimationWithRepeat:CGFLOAT_MAX duration:0.8 forLayer:self.layer] forKey:kAXBadgeViewBounceAnimationKey];
+            break;
+        case AXBadgeViewAnimationScale:
+            [self.layer addAnimation:[self scaleAnimationFrom:1.2 toScale:0.8 duration:0.8 repeat:MAXFLOAT] forKey:kAXBadgeViewScaleAnimationKey];
+            break;
+        case AXBadgeViewAnimationShake:
+            [self.layer addAnimation:[self shakeAnimationWithRepeat:CGFLOAT_MAX duration:0.8 forLayer:self.layer] forKey:kAXBadgeViewShakeAnimationKey];
+            break;
+        default:
+            [self.layer removeAllAnimations];
+            break;
+    }
+}
+
+- (void)setOffsets:(CGPoint)offsets {
+    _offsets = offsets;
+    
+    [self updateConstraintsOfSelfIfNeeded];
+}
+
+- (void)setPosition:(CGPoint)position {
+    _position = position;
+    
+    [self updateConstraintsOfSelfIfNeeded];
+}
+
+- (void)setMinSize:(CGSize)minSize {
+    _minSize = minSize;
+    [self setText:_textStorage];
+    [self sizeToFit];
+}
+
+#pragma mark - Public
+- (void)showAnimated:(BOOL)animated {
+    [_attachedView addSubview:self];
+    [self updateTextIfNeededWithText:[super text]];
+    if (self.alpha != 1.0) {
+        self.alpha = 1.0;
+    }
+    self.transform = CGAffineTransformMakeScale(.0, .0);
+    if (animated) {
+        [UIView animateWithDuration:0.5 delay:.0 usingSpringWithDamping:0.6 initialSpringVelocity:0.6 options:7 animations:^{
+            self.transform = CGAffineTransformIdentity;
+        } completion:nil];
+    } else {
+        self.transform = CGAffineTransformIdentity;
+    }
+}
+
+- (void)showInView:(UIView *)view animated:(BOOL)animated {
+    _attachedView = view;
+    [self showAnimated:animated];
+}
+
+- (void)hideAnimated:(BOOL)animated completion:(dispatch_block_t)completion {
+    if (animated) {
+        [UIView animateWithDuration:0.25 animations:^{
+            self.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            if (finished) {
+                [self removeFromSuperview];
+                self.alpha = 1.0;
+                if (completion) {
+                    completion();
+                }
+            }
+        }];
+    } else {
+        [self removeFromSuperview];
+        if (completion) {
+            completion();
+        }
+    }
+}
+
+#pragma mark - Private
+- (void)updateTextIfNeededWithText:(NSString *)text {
+    if (_hideOnZero) {
+        switch (_style) {
+            case AXBadgeViewNumber:
+                if ([text integerValue] == 0) {
+                    self.hidden = YES;
+                } else {
+                    self.hidden = NO;
+                }
+                break;
+            case AXBadgeViewText:
+                if ([text isEqualToString:@""]) {
+                    self.hidden = YES;
+                } else {
+                    self.hidden = NO;
+                }
+                break;
+            case AXBadgeViewNew:
+                break;
+            default:
+                break;
+        }
+    } else {
+        self.hidden = NO;
+    }
+}
+
+- (void)updateConstraintsOfSelfIfNeeded {
+    if (self.superview) {
+        CGFloat positionX = _position.x;
+        CGFloat positionY = _position.y;
+        
+        if ([self.superview.constraints containsObject:_horizontalLayout]) {
+            [self.superview removeConstraint:_horizontalLayout];
+        }
+        if ([self.superview.constraints containsObject:_verticalLayout]) {
+            [self.superview removeConstraint:_verticalLayout];
+        }
+        if (positionX == 0.0) {
+            _horizontalLayout = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.superview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:_offsets.x];
+        } else if (positionX == 1.0) {
+            _horizontalLayout = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.superview attribute:NSLayoutAttributeRight multiplier:1.0 constant:_offsets.x];
+        } else {
+            _horizontalLayout = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.superview attribute:NSLayoutAttributeRight multiplier:positionX constant:_offsets.x];
+        }
+        if (positionY == 0.0) {
+            _verticalLayout = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.superview attribute:NSLayoutAttributeTop multiplier:1.0 constant:_offsets.y];
+        } else if (positionY == 1.0) {
+            _verticalLayout = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.superview attribute:NSLayoutAttributeBottom multiplier:1.0 constant:_offsets.y];
+        } else {
+            _verticalLayout = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.superview attribute:NSLayoutAttributeBottom multiplier:positionY constant:_offsets.y];
+        }
+        [self.superview addConstraint:_horizontalLayout];
+        [self.superview addConstraint:_verticalLayout];
+        [self.superview setNeedsLayout];
+    }
+}
+/**
+ *  breathing forever
+ *
+ *  @param time duritaion, from clear to fully seen
+ *
+ *  @return animation obj
+ */
+- (CABasicAnimation *)breathingAnimationWithDuration:(CGFloat)duration
+{
+    CABasicAnimation *animation=[CABasicAnimation animationWithKeyPath:@"opacity"];
+    animation.fromValue=[NSNumber numberWithFloat:1.0];
+    animation.toValue=[NSNumber numberWithFloat:0.1];
+    animation.autoreverses=YES;
+    animation.duration=duration;
+    animation.repeatCount=FLT_MAX;
+    animation.removedOnCompletion=NO;
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    animation.fillMode=kCAFillModeForwards;
+    return animation;
+}
+
+/**
+ *  breathing with fixed repeated times
+ *
+ *  @param repeatTimes times
+ *  @param time        duritaion, from clear to fully seen
+ *
+ *  @return animation obj
+ */
+- (CABasicAnimation *)breathingAnimationWithRepeat:(CGFloat)repeating duration:(CGFloat)duration
+{
+    CABasicAnimation *animation=[CABasicAnimation animationWithKeyPath:@"opacity"];
+    animation.fromValue=[NSNumber numberWithFloat:1.0];
+    animation.toValue=[NSNumber numberWithFloat:0.4];
+    animation.repeatCount=repeating;
+    animation.duration=duration;
+    animation.removedOnCompletion=NO;
+    animation.fillMode=kCAFillModeForwards;
+    animation.timingFunction=[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    animation.autoreverses=YES;
+    return  animation;
+}
+
+/**
+ *  //rotate
+ *
+ *  @param dur         duration
+ *  @param degree      rotate degree in radian(弧度)
+ *  @param axis        axis
+ *  @param repeatCount repeat count
+ *
+ *  @return animation obj
+ */
+- (CABasicAnimation *)rotationAnimationWithDuration:(CGFloat)duration degree:(CGFloat)degree direction:(AXAxis)axis repeatCount:(NSUInteger)repeatCount
+{
+    CABasicAnimation* animation;
+    NSArray *axisArr = @[@"transform.rotation.x", @"transform.rotation.y", @"transform.rotation.z"];
+    animation = [CABasicAnimation animationWithKeyPath:axisArr[axis]];
+    animation.fromValue = [NSNumber numberWithFloat:0];
+    animation.toValue= [NSNumber numberWithFloat:degree];
+    animation.duration= duration;
+    animation.autoreverses= NO;
+    animation.cumulative= YES;
+    animation.removedOnCompletion=NO;
+    animation.fillMode=kCAFillModeForwards;
+    animation.repeatCount= repeatCount;
+    animation.delegate= self;
+    
+    return animation;
+}
+
+/**
+ *  scale animation
+ *
+ *  @param fromScale   the original scale value, 1.0 by default
+ *  @param toScale     target scale
+ *  @param time        duration
+ *  @param repeatTimes repeat counts
+ *
+ *  @return animaiton obj
+ */
+- (CABasicAnimation *)scaleAnimationFrom:(CGFloat)fromScale toScale:(CGFloat)toScale duration:(float)duration repeat:(float)repeating
+{
+    CABasicAnimation *animation=[CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    animation.fromValue = @(fromScale);
+    animation.toValue = @(toScale);
+    animation.duration = duration;
+    animation.autoreverses = YES;
+    animation.repeatCount = repeating;
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeForwards;
+    return animation;
+}
+
+/**
+ *  shake
+ *
+ *  @param repeatTimes time
+ *  @param time        duration
+ *  @param obj         always be CALayer
+ *  @return aniamtion obj
+ */
+- (CAKeyframeAnimation *)shakeAnimationWithRepeat:(CGFloat)repeating duration:(CGFloat)duration forLayer:(CALayer *)layer
+{
+    CGPoint originPos = CGPointZero;
+    CGSize originSize = CGSizeZero;
+    if ([layer isKindOfClass:[CALayer class]]) {
+        originPos = [layer position];
+        originSize = [layer bounds].size;
+    }
+    CGFloat hOffset = originSize.width / 4;
+    CAKeyframeAnimation* anim=[CAKeyframeAnimation animation];
+    anim.keyPath=@"transform";
+    anim.values=@[
+                  [NSValue valueWithCATransform3D:CATransform3DMakeTranslation(0, 0, 0)],
+                  [NSValue valueWithCATransform3D:CATransform3DMakeTranslation(-hOffset, 0, 0)],
+                  [NSValue valueWithCATransform3D:CATransform3DMakeTranslation(0, 0, 0)],
+                  [NSValue valueWithCATransform3D:CATransform3DMakeTranslation(hOffset, 0, 0)],
+                  [NSValue valueWithCATransform3D:CATransform3DMakeTranslation(0, 0, 0)]
+                  ];
+    anim.repeatCount=repeating;
+    anim.duration=duration;
+    anim.fillMode = kCAFillModeForwards;
+    return anim;
+}
+
+/**
+ *  bounce
+ *
+ *  @param repeatTimes time
+ *  @param time        duration
+ *  @param obj         always be CALayer
+ *  @return aniamtion obj
+ */
+- (CAKeyframeAnimation *)bounceAnimationWithRepeat:(CGFloat)repeating duration:(CGFloat)duration forLayer:(CALayer *)layer
+{
+    CGPoint originPos = CGPointZero;
+    CGSize originSize = CGSizeZero;
+    if ([layer isKindOfClass:[CALayer class]]) {
+        originPos = [layer position];
+        originSize = [layer bounds].size;
+    }
+    CGFloat hOffset = originSize.height / 4;
+    CAKeyframeAnimation* anim=[CAKeyframeAnimation animation];
+    anim.keyPath=@"transform";
+    anim.values=@[
+                  [NSValue valueWithCATransform3D:CATransform3DMakeTranslation(0, 0, 0)],
+                  [NSValue valueWithCATransform3D:CATransform3DMakeTranslation(0, -hOffset, 0)],
+                  [NSValue valueWithCATransform3D:CATransform3DMakeTranslation(0, 0, 0)],
+                  [NSValue valueWithCATransform3D:CATransform3DMakeTranslation(0, hOffset, 0)],
+                  [NSValue valueWithCATransform3D:CATransform3DMakeTranslation(0, 0, 0)]
+                  ];
+    anim.repeatCount=repeating;
+    anim.duration=duration;
+    anim.fillMode = kCAFillModeForwards;
+    return anim;
+}
+@end

@@ -54,7 +54,7 @@
     #pragma mark - Custom views
     #import "WLHUDView.h"
     #import "LGAlertView.h"
-    #import "WLDicHQFontImage.h"
+//    #import "WLDicHQFontImage.h"
 
 
 #endif /* MineSweeper_pch */

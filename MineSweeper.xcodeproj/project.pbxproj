@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		101134302148A7FB0082F74B /* MOBFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1011342F2148A7FA0082F74B /* MOBFoundation.framework */; };
+		101134332148B5CC0082F74B /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 101134322148B5CC0082F74B /* BaseViewController.m */; };
+		1011343D2148CDC40082F74B /* WLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 101134352148CDC40082F74B /* WLTextField.m */; };
+		1011343E2148CDC40082F74B /* UITextField+LeftRightView.m in Sources */ = {isa = PBXBuildFile; fileRef = 101134382148CDC40082F74B /* UITextField+LeftRightView.m */; };
+		1011343F2148CDC40082F74B /* UITextField+Limit.m in Sources */ = {isa = PBXBuildFile; fileRef = 1011343A2148CDC40082F74B /* UITextField+Limit.m */; };
+		101134402148CDC40082F74B /* WLLoginTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 1011343B2148CDC40082F74B /* WLLoginTextField.m */; };
+		101134432148CEAF0082F74B /* LWLoginTextFieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 101134422148CEAF0082F74B /* LWLoginTextFieldView.m */; };
 		103518C72147A34000EDC7AD /* RETableViewTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 103517242147A33F00EDC7AD /* RETableViewTextCell.m */; };
 		103518C82147A34000EDC7AD /* RETableViewBoolCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 103517252147A33F00EDC7AD /* RETableViewBoolCell.m */; };
 		103518C92147A34000EDC7AD /* RETableViewLongTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 103517262147A33F00EDC7AD /* RETableViewLongTextCell.m */; };
@@ -199,11 +206,6 @@
 		10351A122147B73200EDC7AD /* CALayer+WLBorderConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 103519DF2147B73200EDC7AD /* CALayer+WLBorderConfig.m */; };
 		10351A132147B73200EDC7AD /* CALayer+WLAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 103519E12147B73200EDC7AD /* CALayer+WLAdd.m */; };
 		10351A142147B73200EDC7AD /* WLSystemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 103519E42147B73200EDC7AD /* WLSystemManager.m */; };
-		10351A202147B79500EDC7AD /* TBCityIconFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A162147B79500EDC7AD /* TBCityIconFont.m */; };
-		10351A212147B79500EDC7AD /* WLDicHQFontImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A172147B79500EDC7AD /* WLDicHQFontImage.m */; };
-		10351A222147B79500EDC7AD /* TBCityIconInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A182147B79500EDC7AD /* TBCityIconInfo.m */; };
-		10351A232147B79500EDC7AD /* HQFontImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A192147B79500EDC7AD /* HQFontImage.m */; };
-		10351A242147B79500EDC7AD /* UIImage+TBCityIconFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A1A2147B79500EDC7AD /* UIImage+TBCityIconFont.m */; };
 		10351A272147B7FD00EDC7AD /* WLRuntimeClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A252147B7FC00EDC7AD /* WLRuntimeClass.m */; };
 		10351A2D2147B84500EDC7AD /* WLHubProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A2A2147B84500EDC7AD /* WLHubProgressView.m */; };
 		10351A2E2147B84500EDC7AD /* WLHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A2B2147B84500EDC7AD /* WLHUDView.m */; };
@@ -221,7 +223,6 @@
 		10351A592147BD2600EDC7AD /* SMSConnector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10351A4B2147BD2600EDC7AD /* SMSConnector.framework */; };
 		10351A5A2147BD2600EDC7AD /* WechatConnector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10351A4C2147BD2600EDC7AD /* WechatConnector.framework */; };
 		10351A5B2147BD2600EDC7AD /* ShareSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10351A4D2147BD2600EDC7AD /* ShareSDK.framework */; };
-		10351A5C2147BD2600EDC7AD /* MOBFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10351A4F2147BD2600EDC7AD /* MOBFoundation.framework */; };
 		10351A5F2147C6AA00EDC7AD /* NavViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A5E2147C6AA00EDC7AD /* NavViewController.m */; };
 		10351A662147C74B00EDC7AD /* NSData+Godzippa.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A632147C74B00EDC7AD /* NSData+Godzippa.m */; };
 		10351A672147C74B00EDC7AD /* NSFileManager+Godzippa.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A642147C74B00EDC7AD /* NSFileManager+Godzippa.m */; };
@@ -271,6 +272,8 @@
 		10351ADD2147D39D00EDC7AD /* FriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351ADC2147D39D00EDC7AD /* FriendListViewController.m */; };
 		10351AE02147D3B100EDC7AD /* MeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351ADF2147D3B100EDC7AD /* MeViewController.m */; };
 		10351AE82147D3F400EDC7AD /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351AE72147D3F400EDC7AD /* HomeViewController.m */; };
+		10351AEB2147EB2E00EDC7AD /* LWLoginTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351AEA2147EB2E00EDC7AD /* LWLoginTextField.m */; };
+		10351AEE21481BB900EDC7AD /* SmsLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351AED21481BB900EDC7AD /* SmsLoginViewController.m */; };
 		1089C5492146AD9700363537 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1089C5482146AD9700363537 /* AppDelegate.m */; };
 		1089C54F2146AD9700363537 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1089C54D2146AD9700363537 /* Main.storyboard */; };
 		1089C5512146AD9900363537 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1089C5502146AD9900363537 /* Assets.xcassets */; };
@@ -281,6 +284,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1011342F2148A7FA0082F74B /* MOBFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MOBFoundation.framework; sourceTree = "<group>"; };
+		101134312148B5CC0082F74B /* BaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
+		101134322148B5CC0082F74B /* BaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
+		101134352148CDC40082F74B /* WLTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLTextField.m; sourceTree = "<group>"; };
+		101134362148CDC40082F74B /* UITextField+Limit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+Limit.h"; sourceTree = "<group>"; };
+		101134372148CDC40082F74B /* WLLoginTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLoginTextField.h; sourceTree = "<group>"; };
+		101134382148CDC40082F74B /* UITextField+LeftRightView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+LeftRightView.m"; sourceTree = "<group>"; };
+		101134392148CDC40082F74B /* WLTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLTextField.h; sourceTree = "<group>"; };
+		1011343A2148CDC40082F74B /* UITextField+Limit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+Limit.m"; sourceTree = "<group>"; };
+		1011343B2148CDC40082F74B /* WLLoginTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLoginTextField.m; sourceTree = "<group>"; };
+		1011343C2148CDC40082F74B /* UITextField+LeftRightView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+LeftRightView.h"; sourceTree = "<group>"; };
+		101134412148CEAF0082F74B /* LWLoginTextFieldView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LWLoginTextFieldView.h; sourceTree = "<group>"; };
+		101134422148CEAF0082F74B /* LWLoginTextFieldView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LWLoginTextFieldView.m; sourceTree = "<group>"; };
 		103517232147A33F00EDC7AD /* RETableViewNumberCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RETableViewNumberCell.h; sourceTree = "<group>"; };
 		103517242147A33F00EDC7AD /* RETableViewTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RETableViewTextCell.m; sourceTree = "<group>"; };
 		103517252147A33F00EDC7AD /* RETableViewBoolCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RETableViewBoolCell.m; sourceTree = "<group>"; };
@@ -731,16 +747,6 @@
 		103519E22147B73200EDC7AD /* CALayer+WLBorderConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+WLBorderConfig.h"; sourceTree = "<group>"; };
 		103519E42147B73200EDC7AD /* WLSystemManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLSystemManager.m; sourceTree = "<group>"; };
 		103519E52147B73200EDC7AD /* WLSystemManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLSystemManager.h; sourceTree = "<group>"; };
-		10351A162147B79500EDC7AD /* TBCityIconFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBCityIconFont.m; sourceTree = "<group>"; };
-		10351A172147B79500EDC7AD /* WLDicHQFontImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLDicHQFontImage.m; sourceTree = "<group>"; };
-		10351A182147B79500EDC7AD /* TBCityIconInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBCityIconInfo.m; sourceTree = "<group>"; };
-		10351A192147B79500EDC7AD /* HQFontImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HQFontImage.m; sourceTree = "<group>"; };
-		10351A1A2147B79500EDC7AD /* UIImage+TBCityIconFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TBCityIconFont.m"; sourceTree = "<group>"; };
-		10351A1B2147B79500EDC7AD /* TBCityIconInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBCityIconInfo.h; sourceTree = "<group>"; };
-		10351A1C2147B79500EDC7AD /* WLDicHQFontImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLDicHQFontImage.h; sourceTree = "<group>"; };
-		10351A1D2147B79500EDC7AD /* TBCityIconFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBCityIconFont.h; sourceTree = "<group>"; };
-		10351A1E2147B79500EDC7AD /* UIImage+TBCityIconFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+TBCityIconFont.h"; sourceTree = "<group>"; };
-		10351A1F2147B79500EDC7AD /* HQFontImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HQFontImage.h; sourceTree = "<group>"; };
 		10351A252147B7FC00EDC7AD /* WLRuntimeClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLRuntimeClass.m; sourceTree = "<group>"; };
 		10351A262147B7FD00EDC7AD /* WLRuntimeClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLRuntimeClass.h; sourceTree = "<group>"; };
 		10351A292147B84500EDC7AD /* WLHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLHUDView.h; sourceTree = "<group>"; };
@@ -766,7 +772,6 @@
 		10351A4B2147BD2600EDC7AD /* SMSConnector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SMSConnector.framework; sourceTree = "<group>"; };
 		10351A4C2147BD2600EDC7AD /* WechatConnector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WechatConnector.framework; sourceTree = "<group>"; };
 		10351A4D2147BD2600EDC7AD /* ShareSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ShareSDK.framework; sourceTree = "<group>"; };
-		10351A4F2147BD2600EDC7AD /* MOBFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MOBFoundation.framework; sourceTree = "<group>"; };
 		10351A5D2147C6AA00EDC7AD /* NavViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavViewController.h; sourceTree = "<group>"; };
 		10351A5E2147C6AA00EDC7AD /* NavViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavViewController.m; sourceTree = "<group>"; };
 		10351A612147C74B00EDC7AD /* NSFileManager+Godzippa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+Godzippa.h"; sourceTree = "<group>"; };
@@ -841,6 +846,10 @@
 		10351ADF2147D3B100EDC7AD /* MeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MeViewController.m; sourceTree = "<group>"; };
 		10351AE62147D3F400EDC7AD /* HomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
 		10351AE72147D3F400EDC7AD /* HomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
+		10351AE92147EB2E00EDC7AD /* LWLoginTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LWLoginTextField.h; sourceTree = "<group>"; };
+		10351AEA2147EB2E00EDC7AD /* LWLoginTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LWLoginTextField.m; sourceTree = "<group>"; };
+		10351AEC21481BB900EDC7AD /* SmsLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SmsLoginViewController.h; sourceTree = "<group>"; };
+		10351AED21481BB900EDC7AD /* SmsLoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SmsLoginViewController.m; sourceTree = "<group>"; };
 		1089C5442146AD9700363537 /* MineSweeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MineSweeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1089C5472146AD9700363537 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1089C5482146AD9700363537 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -867,6 +876,7 @@
 				10351AC62147CE7900EDC7AD /* Photos.framework in Frameworks */,
 				10351AC42147CE7200EDC7AD /* UIKit.framework in Frameworks */,
 				10351AC22147CE6A00EDC7AD /* SystemConfiguration.framework in Frameworks */,
+				101134302148A7FB0082F74B /* MOBFoundation.framework in Frameworks */,
 				10351AC02147CE6400EDC7AD /* QuartzCore.framework in Frameworks */,
 				10351ABE2147CE5D00EDC7AD /* OpenGLES.framework in Frameworks */,
 				10351ABC2147CE5600EDC7AD /* MapKit.framework in Frameworks */,
@@ -895,7 +905,6 @@
 				103519002147A34000EDC7AD /* libcrypto.a in Frameworks */,
 				10351A552147BD2600EDC7AD /* ShareSDKConfigFile.framework in Frameworks */,
 				103518FC2147A34000EDC7AD /* RongIMKit.framework in Frameworks */,
-				10351A5C2147BD2600EDC7AD /* MOBFoundation.framework in Frameworks */,
 				10351A5A2147BD2600EDC7AD /* WechatConnector.framework in Frameworks */,
 				10351A5B2147BD2600EDC7AD /* ShareSDK.framework in Frameworks */,
 				10351A572147BD2600EDC7AD /* ShareSDKUI.framework in Frameworks */,
@@ -909,12 +918,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1011342E2148A7FA0082F74B /* Required */ = {
+			isa = PBXGroup;
+			children = (
+				1011342F2148A7FA0082F74B /* MOBFoundation.framework */,
+			);
+			path = Required;
+			sourceTree = "<group>";
+		};
+		101134342148CDC40082F74B /* UITextField */ = {
+			isa = PBXGroup;
+			children = (
+				101134392148CDC40082F74B /* WLTextField.h */,
+				101134352148CDC40082F74B /* WLTextField.m */,
+				101134362148CDC40082F74B /* UITextField+Limit.h */,
+				1011343A2148CDC40082F74B /* UITextField+Limit.m */,
+				101134372148CDC40082F74B /* WLLoginTextField.h */,
+				1011343B2148CDC40082F74B /* WLLoginTextField.m */,
+				1011343C2148CDC40082F74B /* UITextField+LeftRightView.h */,
+				101134382148CDC40082F74B /* UITextField+LeftRightView.m */,
+			);
+			path = UITextField;
+			sourceTree = "<group>";
+		};
 		103517202147A33F00EDC7AD /* Utilites */ = {
 			isa = PBXGroup;
 			children = (
 				10351A602147C74B00EDC7AD /* Godzippa */,
 				10351A332147BA4300EDC7AD /* UIView */,
-				10351A152147B79500EDC7AD /* IconFont */,
 				1035197F2147B73100EDC7AD /* WLKit */,
 				103517212147A33F00EDC7AD /* RETableViewManager */,
 				103517822147A33F00EDC7AD /* WLEmptyDataSet */,
@@ -1835,6 +1866,8 @@
 			children = (
 				1089C55D2146AF4700363537 /* LoginViewController.h */,
 				1089C55E2146AF4700363537 /* LoginViewController.m */,
+				10351AEC21481BB900EDC7AD /* SmsLoginViewController.h */,
+				10351AED21481BB900EDC7AD /* SmsLoginViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1842,6 +1875,10 @@
 		103519662147A41300EDC7AD /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				10351AE92147EB2E00EDC7AD /* LWLoginTextField.h */,
+				10351AEA2147EB2E00EDC7AD /* LWLoginTextField.m */,
+				101134412148CEAF0082F74B /* LWLoginTextFieldView.h */,
+				101134422148CEAF0082F74B /* LWLoginTextFieldView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1921,6 +1958,8 @@
 				10351A7D2147CAC900EDC7AD /* WLPackAlertController.m */,
 				10351A5D2147C6AA00EDC7AD /* NavViewController.h */,
 				10351A5E2147C6AA00EDC7AD /* NavViewController.m */,
+				101134312148B5CC0082F74B /* BaseViewController.h */,
+				101134322148B5CC0082F74B /* BaseViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1928,6 +1967,7 @@
 		103519702147A41300EDC7AD /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				101134342148CDC40082F74B /* UITextField */,
 				10351A962147CB5000EDC7AD /* WLActionSheet.h */,
 				10351A972147CB5000EDC7AD /* WLActionSheet.m */,
 				10351A7F2147CB0300EDC7AD /* LGAlertView */,
@@ -2065,6 +2105,7 @@
 				103519962147B73100EDC7AD /* UIView+WLRoundedCorner.h */,
 				103519972147B73100EDC7AD /* UIDevice+WLAddForInfo.m */,
 				103519982147B73100EDC7AD /* UINavigationBar+WLAwesome.h */,
+				103519B12147B73200EDC7AD /* UINavigationBar+WLAwesome.m */,
 				103519992147B73100EDC7AD /* UITextField+WLAdd.h */,
 				1035199A2147B73100EDC7AD /* UIButton+WLAdd.m */,
 				1035199B2147B73100EDC7AD /* UIWindow+WLAdd.h */,
@@ -2089,7 +2130,6 @@
 				103519AE2147B73200EDC7AD /* UIWindow+WLAdd.m */,
 				103519AF2147B73200EDC7AD /* UIButton+WLAdd.h */,
 				103519B02147B73200EDC7AD /* UITextField+WLAdd.m */,
-				103519B12147B73200EDC7AD /* UINavigationBar+WLAwesome.m */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -2163,23 +2203,6 @@
 			path = Utility;
 			sourceTree = "<group>";
 		};
-		10351A152147B79500EDC7AD /* IconFont */ = {
-			isa = PBXGroup;
-			children = (
-				10351A162147B79500EDC7AD /* TBCityIconFont.m */,
-				10351A172147B79500EDC7AD /* WLDicHQFontImage.m */,
-				10351A182147B79500EDC7AD /* TBCityIconInfo.m */,
-				10351A192147B79500EDC7AD /* HQFontImage.m */,
-				10351A1A2147B79500EDC7AD /* UIImage+TBCityIconFont.m */,
-				10351A1B2147B79500EDC7AD /* TBCityIconInfo.h */,
-				10351A1C2147B79500EDC7AD /* WLDicHQFontImage.h */,
-				10351A1D2147B79500EDC7AD /* TBCityIconFont.h */,
-				10351A1E2147B79500EDC7AD /* UIImage+TBCityIconFont.h */,
-				10351A1F2147B79500EDC7AD /* HQFontImage.h */,
-			);
-			path = IconFont;
-			sourceTree = "<group>";
-		};
 		10351A282147B84500EDC7AD /* HUDView */ = {
 			isa = PBXGroup;
 			children = (
@@ -2212,8 +2235,8 @@
 		10351A372147BD2600EDC7AD /* ShareSDK-iOS-4.0.1 */ = {
 			isa = PBXGroup;
 			children = (
+				1011342E2148A7FA0082F74B /* Required */,
 				10351A382147BD2600EDC7AD /* ShareSDK */,
-				10351A4E2147BD2600EDC7AD /* Required */,
 			);
 			path = "ShareSDK-iOS-4.0.1";
 			sourceTree = "<group>";
@@ -2286,14 +2309,6 @@
 				10351A4C2147BD2600EDC7AD /* WechatConnector.framework */,
 			);
 			path = PlatformConnector;
-			sourceTree = "<group>";
-		};
-		10351A4E2147BD2600EDC7AD /* Required */ = {
-			isa = PBXGroup;
-			children = (
-				10351A4F2147BD2600EDC7AD /* MOBFoundation.framework */,
-			);
-			path = Required;
 			sourceTree = "<group>";
 		};
 		10351A602147C74B00EDC7AD /* Godzippa */ = {
@@ -2674,10 +2689,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10351AEB2147EB2E00EDC7AD /* LWLoginTextField.m in Sources */,
 				103519F92147B73200EDC7AD /* UIColor+WLAdd.m in Sources */,
 				10351A032147B73200EDC7AD /* NSString+WLAddForPinyin.m in Sources */,
 				103519232147A34000EDC7AD /* WLPhotoPreviewController.m in Sources */,
 				1089C55F2146AF4700363537 /* LoginViewController.m in Sources */,
+				101134332148B5CC0082F74B /* BaseViewController.m in Sources */,
 				103519322147A34000EDC7AD /* DaiDodgeKeyboard+AccessObject.m in Sources */,
 				103519FB2147B73200EDC7AD /* UITextField+WLAdd.m in Sources */,
 				103519242147A34000EDC7AD /* WLPhotoPreviewItemController.m in Sources */,
@@ -2728,13 +2745,13 @@
 				103519352147A34000EDC7AD /* KSYYImageManager.m in Sources */,
 				10351A912147CB0300EDC7AD /* LGAlertViewCell.m in Sources */,
 				103519FE2147B73200EDC7AD /* NSDictionary+WLAdd.m in Sources */,
+				1011343D2148CDC40082F74B /* WLTextField.m in Sources */,
 				103519F12147B73200EDC7AD /* UINavigationController+WLAdd.m in Sources */,
 				10351A2E2147B84500EDC7AD /* WLHUDView.m in Sources */,
 				103519372147A34000EDC7AD /* KSProgressLayer.m in Sources */,
 				103519FD2147B73200EDC7AD /* NSString+WLAddForSize.m in Sources */,
 				103519382147A34000EDC7AD /* KSPhotoItem.m in Sources */,
 				103519442147A34000EDC7AD /* WLPersistanceCriteria.m in Sources */,
-				10351A242147B79500EDC7AD /* UIImage+TBCityIconFont.m in Sources */,
 				103519272147A34000EDC7AD /* CMPopTipView.m in Sources */,
 				103519592147A34000EDC7AD /* WLServiceInfo.m in Sources */,
 				103518EE2147A34000EDC7AD /* REPresenceValidator.m in Sources */,
@@ -2779,7 +2796,6 @@
 				10351A952147CB0300EDC7AD /* UIWindow+LGAlertView.m in Sources */,
 				103519472147A34000EDC7AD /* WLPersistanceQueryCommand+WLSchemaManipulations.m in Sources */,
 				103519EF2147B73200EDC7AD /* UIImage+WLRoundedCorner.m in Sources */,
-				10351A212147B79500EDC7AD /* WLDicHQFontImage.m in Sources */,
 				103519EC2147B73200EDC7AD /* UIDevice+WLAddForInfo.m in Sources */,
 				103519F22147B73200EDC7AD /* UIApplication+WLAdd.m in Sources */,
 				103518E22147A34000EDC7AD /* REMultipleChoiceItem.m in Sources */,
@@ -2797,12 +2813,12 @@
 				103519422147A34000EDC7AD /* WLPersistanceTable.m in Sources */,
 				103519312147A34000EDC7AD /* UIView+FirstResponderNotify.m in Sources */,
 				10351A2D2147B84500EDC7AD /* WLHubProgressView.m in Sources */,
-				10351A232147B79500EDC7AD /* HQFontImage.m in Sources */,
 				103519332147A34000EDC7AD /* WLSystemAuth.m in Sources */,
 				1035192F2147A34000EDC7AD /* DaiDodgeKeyboard+Animation.m in Sources */,
 				10351ACF2147D16400EDC7AD /* MainViewController.m in Sources */,
 				10351A6E2147C82A00EDC7AD /* CardAlertView.m in Sources */,
 				10351A142147B73200EDC7AD /* WLSystemManager.m in Sources */,
+				101134432148CEAF0082F74B /* LWLoginTextFieldView.m in Sources */,
 				1035192E2147A34000EDC7AD /* DaiDodgeKeyboardObjects.m in Sources */,
 				1035197E2147B3BA00EDC7AD /* Constants.m in Sources */,
 				103519E92147B73200EDC7AD /* UITableViewCell+WLAdd.m in Sources */,
@@ -2828,6 +2844,7 @@
 				103519EB2147B73200EDC7AD /* UIViewController+WLAdd.m in Sources */,
 				10351A322147B9AE00EDC7AD /* AFgzipRequestSerializer.m in Sources */,
 				1035193D2147A34000EDC7AD /* WLPersistanceHelper.m in Sources */,
+				10351AEE21481BB900EDC7AD /* SmsLoginViewController.m in Sources */,
 				103519512147A34000EDC7AD /* WLChainRequestManager.m in Sources */,
 				1035190E2147A34000EDC7AD /* AXBadgeView.m in Sources */,
 				10351A0D2147B73200EDC7AD /* NSNumber+WLAdd.m in Sources */,
@@ -2840,20 +2857,22 @@
 				103518CE2147A34000EDC7AD /* RETableViewOptionCell.m in Sources */,
 				1089C5492146AD9700363537 /* AppDelegate.m in Sources */,
 				103519F72147B73200EDC7AD /* UIView+WLRoundedCorner.m in Sources */,
+				1011343F2148CDC40082F74B /* UITextField+Limit.m in Sources */,
 				10351A5F2147C6AA00EDC7AD /* NavViewController.m in Sources */,
 				103519462147A34000EDC7AD /* NSArray+WLPersistanceRecordTransform.m in Sources */,
 				10351A662147C74B00EDC7AD /* NSData+Godzippa.m in Sources */,
 				10351A922147CB0300EDC7AD /* LGAlertViewButtonProperties.m in Sources */,
+				1011343E2148CDC40082F74B /* UITextField+LeftRightView.m in Sources */,
 				103518E02147A34000EDC7AD /* RETextItem.m in Sources */,
 				10351A0C2147B73200EDC7AD /* NSObject+WLAddForKVO.m in Sources */,
 				10351A112147B73200EDC7AD /* WLCGUtilities.m in Sources */,
 				103519292147A34000EDC7AD /* MBProgressHUD.m in Sources */,
 				103519FF2147B73200EDC7AD /* NSDecimalNumber+WLAdd.m in Sources */,
 				10351A102147B73200EDC7AD /* NSData+WLAddForHash.m in Sources */,
-				10351A222147B79500EDC7AD /* TBCityIconInfo.m in Sources */,
 				103519E72147B73200EDC7AD /* UIFont+WLAdd.m in Sources */,
 				10351AD72147D37C00EDC7AD /* ChatListViewController.m in Sources */,
 				103519122147A34000EDC7AD /* Describe.m in Sources */,
+				101134402148CDC40082F74B /* WLLoginTextField.m in Sources */,
 				103518D92147A34000EDC7AD /* NSString+RETableViewManagerAdditions.m in Sources */,
 				103518DB2147A34000EDC7AD /* REFormattedNumberField.m in Sources */,
 				103518E92147A34000EDC7AD /* RERadioItem.m in Sources */,
@@ -2872,7 +2891,6 @@
 				10351A712147C88A00EDC7AD /* CustomCardMessage.m in Sources */,
 				1035195B2147A34000EDC7AD /* WLNetWorkingProcessFilter.m in Sources */,
 				1035193B2147A34000EDC7AD /* WLPersistanceRecord.m in Sources */,
-				10351A202147B79500EDC7AD /* TBCityIconFont.m in Sources */,
 				103518DF2147A34000EDC7AD /* RECreditCardItem.m in Sources */,
 				10351A362147BA4300EDC7AD /* UIView+Gradient.m in Sources */,
 				103519FA2147B73200EDC7AD /* UIWindow+WLAdd.m in Sources */,

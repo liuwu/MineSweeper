@@ -17,8 +17,9 @@ static NSString *const kisUnallowedPop     = @"keyForUnallowedPop";
 - (void)setFirstNavigationLeftItemShow:(BOOL)firstNavigationLeftItemShow{
     objc_setAssociatedObject(self, &kFirstNavigationLeftItemShow, @(firstNavigationLeftItemShow), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (self.firstNavigationLeftItemShow) {
-        UIImage *backImage = [[WLDicHQFontImage iconWithName:@"back" fontSize:WLNavImagePtSize color:UIColor.wl_Hex333333] wl_alwaysOriginal];
-        UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithImage:backImage style:UIBarButtonItemStylePlain target:self action:@selector(dismissViewControl:)];
+//        UIImage *backImage = [[WLDicHQFontImage iconWithName:@"back" fontSize:WLNavImagePtSize color:UIColor.wl_Hex333333] wl_alwaysOriginal];
+//        UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithImage:backImage style:UIBarButtonItemStylePlain target:self action:@selector(dismissViewControl:)];
+        UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"backImage"] style:UIBarButtonItemStylePlain target:self action:@selector(dismissViewControl:)];
         self.navigationItem.leftBarButtonItem = backItem;
     }
 }

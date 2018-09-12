@@ -35,9 +35,13 @@ CGFloat const kWL_TableNormalCellHeight     = 52.f;
 ///常用的间距25.f
 CGFloat const kWL_NormalMarginWidth_25      = 25.f;
 ///常用的间距15.f
+CGFloat const kWL_NormalMarginWidth_10      = 10.f;
 CGFloat const kWL_NormalMarginWidth_15      = 15.f;
+CGFloat const kWL_NormalMarginWidth_14      = 14.f;
 CGFloat const kWL_NormalMarginWidth_16      = 16.f;
+CGFloat const kWL_NormalMarginWidth_20      = 20.f;
 ///常用的间距10.f
+CGFloat const kWL_NormalMarginWidth_11      = 11.f;
 CGFloat const kWL_NormalMarginWidth_12      = 12.f;
 
 

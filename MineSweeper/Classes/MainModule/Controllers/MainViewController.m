@@ -81,6 +81,12 @@
 
 @implementation MainViewController
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:WLColoerRGB(255.f)] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setShadowImage:[UIImage imageWithColor:WLColoerRGB(255.f)]];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -96,8 +102,8 @@
 
 // 设置ui相关信息
 - (void)setupUIInfo {
-    [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+//    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     [[UITabBar appearance] setShadowImage:[UIImage new]];
     [[UITabBar appearance] setBackgroundImage:[UIImage new]];
     self.tabBar.backgroundColor = [UIColor whiteColor];
@@ -113,10 +119,10 @@
 #pragma mark – Private methods
 /// 设置页面UI
 - (void)setupMainUI{
-    NavViewController *homeNav = [self tabBarChildController:[HomeViewController class] title:@"首页" imageName:@"tabbar_home"];
-    NavViewController *chatNav = [self tabBarChildController:[ChatListViewController class] title:@"消息" imageName:@"tabbar_chat"];
-    NavViewController *friendItem = [self tabBarChildController:[FriendListViewController class] title:@"通讯录" imageName:@"tabbar_friend"];
-    NavViewController *meNav = [self tabBarChildController:[MeViewController class] title:@"我的" imageName:@"tabbar_me"];
+    NavViewController *homeNav = [self tabBarChildController:[HomeViewController class] title:@"首页" imageName:@"common_addressBook_icon"];
+    NavViewController *chatNav = [self tabBarChildController:[ChatListViewController class] title:@"消息" imageName:@"common_chat_icon_normal"];
+    NavViewController *friendItem = [self tabBarChildController:[FriendListViewController class] title:@"通讯录" imageName:@"common_group_icon_normal"];
+    NavViewController *meNav = [self tabBarChildController:[MeViewController class] title:@"我的" imageName:@"common_mine_icon_normal"];
     
     self.viewControllers = @[homeNav,chatNav,friendItem,meNav];
     self.chatItem = chatNav.tabBarItem;
@@ -125,6 +131,7 @@
     self.FriendItem = friendItem.tabBarItem;
     
     self.normalItem = self.homeItem;
+    self.selectedIndex = 0;
     /// 耗时：10.859000
     [self updataItembadge];
 //    if (![NSUserDefaults boolForKey:MeTtemRedDotKey] && configTool.loginUser.isLogin) {
@@ -157,13 +164,27 @@
     UIViewController *controller = [[controllerClass alloc] init];
     NavViewController *navController = [[NavViewController alloc] initWithRootViewController:controller];
     
-    UITabBarItem *tabBarItem = [[UITabBarItem alloc] initWithTitle:title image:[UIImage wl_imageNameAlwaysOriginal:imageName] selectedImage:[UIImage wl_imageNameAlwaysOriginal:[imageName stringByAppendingString:@"_selected"]]];
+    UITabBarItem *tabBarItem = [[UITabBarItem alloc] initWithTitle:title image:[UIImage wl_imageNameAlwaysOriginal:imageName] selectedImage:[UIImage wl_imageNameAlwaysOriginal:[imageName stringByAppendingString:@"_active"]]];
     
-    [tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName :[UIColor wl_hex0F6EF4],NSFontAttributeName:WLFONT(10)} forState:UIControlStateSelected];
+    [tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName :WLRGB(254.f, 72.f, 30.f),NSFontAttributeName:WLFONT(10)} forState:UIControlStateSelected];
     [tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor wl_HexBDBDBD],NSFontAttributeName:WLFONT(10)} forState:UIControlStateNormal];
     
     navController.tabBarItem = tabBarItem;
     return navController;
+}
+
+#pragma mark – UITabBarDelegate
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
+//    if (_normalItem == _findItem && item == _findItem) {
+//        NavViewController *homeNav = self.viewControllers[1];
+//        WLHomePageController *homeVC = homeNav.viewControllers[0];
+//        [homeVC tableviewbeginRefreshing];
+//    }
+//    if (item == _meItem && ![NSUserDefaults boolForKey:MeTtemRedDotKey] && configTool.loginUser.isLogin) {
+//        [NSUserDefaults setBool:YES forKey:MeTtemRedDotKey];
+//        [self.tabBar hideBadgeOnItemIndex:3];
+//    }
+    _normalItem = item;
 }
 
 #pragma mark – UITabBarControllerDelegate

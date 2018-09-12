@@ -29,7 +29,8 @@
         _title.textColor = [UIColor whiteColor];
         [self addSubview:_title];
         _backButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [_backButton setImage:[[WLDicHQFontImage iconWithName:@"back" fontSize:WLNavImagePtSize color:[UIColor whiteColor]] wl_alwaysOriginal] forState:UIControlStateNormal];
+//        [_backButton setImage:[[WLDicHQFontImage iconWithName:@"back" fontSize:WLNavImagePtSize color:[UIColor whiteColor]] wl_alwaysOriginal] forState:UIControlStateNormal];
+        [_backButton setTitle:@"返回" forState:UIControlStateNormal];
         [self addSubview:_backButton];
         _selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_selectButton setImage:[UIImage wl_imageNameAlwaysOriginal:@"photo_check_default"] forState:UIControlStateNormal];

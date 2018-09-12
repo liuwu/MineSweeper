@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "LoginViewController.h"
 #import "NavViewController.h"
+#import "MainViewController.h"
 
 @interface AppDelegate ()
 
@@ -65,6 +66,10 @@ single_implementation(AppDelegate);
 
 #pragma mark - 登录成功
 - (void)loginSucceed {
+    MainViewController *mainVc = [[MainViewController alloc] init];
+    NavViewController *rootNav = [[NavViewController alloc] initWithRootViewController:mainVc];
+    self.window.rootViewController = rootNav;
+    
 //    [WLSystemManager init3DTouchActionShow:YES];
 //    // 初始化登录用户信息
 //    [self initLoginUserInfo];

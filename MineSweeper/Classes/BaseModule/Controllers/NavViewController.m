@@ -35,8 +35,9 @@
     }
     if (self.viewControllers.count) {
         [viewController setHidesBottomBarWhenPushed:YES];
-        UIImage *backImage = [WLDicHQFontImage iconWithName:@"back" fontSize:WLNavImagePtSize color:UIColor.wl_Hex333333];
-        [viewController wl_setLeftItemWithTitle:nil image:backImage target:self action:@selector(animatePopViewController)];
+//        UIImage *backImage = [WLDicHQFontImage iconWithName:@"back" fontSize:WLNavImagePtSize color:UIColor.wl_Hex333333];
+//        [viewController wl_setLeftItemWithTitle:nil image:backImage target:self action:@selector(animatePopViewController)];
+        [viewController wl_setLeftItemWithTitle:nil image:[UIImage imageNamed:@"back"] target:self action:@selector(animatePopViewController)];
     }
     [super pushViewController:viewController animated:animated];
 }

@@ -87,12 +87,17 @@
     [self.navigationController.navigationBar setShadowImage:[UIImage imageWithColor:WLColoerRGB(255.f)]];
 }
 
+- (NSString *)title {
+    return @"主页";
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.delegate = self;
     // 设置ui相关信息
     [self setupUIInfo];
+    [self setupMainUI];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -104,8 +109,8 @@
 - (void)setupUIInfo {
 //    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    [[UITabBar appearance] setShadowImage:[UIImage new]];
-    [[UITabBar appearance] setBackgroundImage:[UIImage new]];
+//    [[UITabBar appearance] setShadowImage:[UIImage new]];
+//    [[UITabBar appearance] setBackgroundImage:[UIImage new]];
     self.tabBar.backgroundColor = [UIColor whiteColor];
     [self.tabBar.layer setLayerShadow:WLRGBA(60, 60, 60, 0.1) offset:CGSizeMake(0, -1.f) radius:3];
     if (iPhoneX) {
@@ -189,15 +194,16 @@
 
 #pragma mark – UITabBarControllerDelegate
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
-    if (_normalItem == _homeItem) {
-        return YES;
-    }else {
+//    if (_normalItem == _homeItem) {
+//        return YES;
+//    }else {
 //        return [WLAccessControlPresenter perfectLoginAndInformation:^BOOL(BOOL haveLoginUser) {
 //            return YES;
 //        } haveJWT:^BOOL(BOOL needBandPhone, BOOL needComplete) {
 //            return YES;
 //        }];
-    }
+//        return NO;
+//    }
     return YES;
 }
 

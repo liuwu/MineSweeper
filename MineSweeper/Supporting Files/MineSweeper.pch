@@ -37,8 +37,6 @@
     #import <Masonry/Masonry.h>
     #import <MJRefresh/MJRefresh.h>
 
-    #import <IQKeyboardManager/IQKeyboardManager.h>
-
     #pragma mark - Custom
     #import "WLKit.h"
     #import "SendIFMacros.h"

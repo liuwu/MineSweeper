@@ -14,8 +14,6 @@
 
 #import "AppDelegate.h"
 
-#import <IQKeyboardManager/IQKeyboardManager.h>
-
 @interface LoginViewController ()
 
 
@@ -104,7 +102,7 @@
     [self.view addSubview:forgetBtn];
     self.forgetBtn = forgetBtn;
     
-    [[IQKeyboardManager sharedManager] setEnable:YES];
+//    [[IQKeyboardManager sharedManager] setEnable:YES];
     
     
     //添加单击手势

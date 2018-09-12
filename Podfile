@@ -20,9 +20,6 @@ def shared_pods
     pod 'KMNavigationBarTransition'
     pod 'MJRefresh','3.1.15.3'
     pod 'CHIPageControl/Jaloro', '= 0.1.5'
-    # 键盘处理
-    pod 'IQKeyboardManager'
-    pod 'IHKeyboardAvoiding'
     # 验证码
     pod 'MMCaptchaView'
     

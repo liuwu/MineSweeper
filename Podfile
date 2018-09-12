@@ -25,6 +25,8 @@ def shared_pods
     
     # 使用： https://github.com/ChenYilong/CYLTabBarController
     pod 'CYLTabBarController', '~> 1.17.4'
+
+    pod 'QMUIKit'
 end
 
 target 'MineSweeper' do
@@ -36,6 +38,13 @@ post_install do |installer|
         target.build_configurations.each  do |config|
             config.build_settings['SWIFT_VERSION'] = '4.0'
             config.build_settings['CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF'] = 'NO'   # 忽略block里使用self的警告
+        end
+
+        if target.name == "FMDB"
+            target.build_configurations.each do |config|
+                header_search = {"HEADER_SEARCH_PATHS" => "SQLCipher"}
+                config.build_settings.merge!(header_search)
+            end
         end
     end
 end

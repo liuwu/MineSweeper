@@ -10,7 +10,6 @@
 		101134302148A7FB0082F74B /* MOBFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1011342F2148A7FA0082F74B /* MOBFoundation.framework */; };
 		101134332148B5CC0082F74B /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 101134322148B5CC0082F74B /* BaseViewController.m */; };
 		1011343D2148CDC40082F74B /* WLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 101134352148CDC40082F74B /* WLTextField.m */; };
-		1011343E2148CDC40082F74B /* UITextField+LeftRightView.m in Sources */ = {isa = PBXBuildFile; fileRef = 101134382148CDC40082F74B /* UITextField+LeftRightView.m */; };
 		1011343F2148CDC40082F74B /* UITextField+Limit.m in Sources */ = {isa = PBXBuildFile; fileRef = 1011343A2148CDC40082F74B /* UITextField+Limit.m */; };
 		101134402148CDC40082F74B /* WLLoginTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 1011343B2148CDC40082F74B /* WLLoginTextField.m */; };
 		101134432148CEAF0082F74B /* LWLoginTextFieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 101134422148CEAF0082F74B /* LWLoginTextFieldView.m */; };
@@ -291,11 +290,9 @@
 		101134352148CDC40082F74B /* WLTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLTextField.m; sourceTree = "<group>"; };
 		101134362148CDC40082F74B /* UITextField+Limit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+Limit.h"; sourceTree = "<group>"; };
 		101134372148CDC40082F74B /* WLLoginTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLLoginTextField.h; sourceTree = "<group>"; };
-		101134382148CDC40082F74B /* UITextField+LeftRightView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+LeftRightView.m"; sourceTree = "<group>"; };
 		101134392148CDC40082F74B /* WLTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLTextField.h; sourceTree = "<group>"; };
 		1011343A2148CDC40082F74B /* UITextField+Limit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+Limit.m"; sourceTree = "<group>"; };
 		1011343B2148CDC40082F74B /* WLLoginTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLLoginTextField.m; sourceTree = "<group>"; };
-		1011343C2148CDC40082F74B /* UITextField+LeftRightView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+LeftRightView.h"; sourceTree = "<group>"; };
 		101134412148CEAF0082F74B /* LWLoginTextFieldView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LWLoginTextFieldView.h; sourceTree = "<group>"; };
 		101134422148CEAF0082F74B /* LWLoginTextFieldView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LWLoginTextFieldView.m; sourceTree = "<group>"; };
 		10113445214915E10082F74B /* NNValidationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNValidationView.h; sourceTree = "<group>"; };
@@ -938,8 +935,6 @@
 				1011343A2148CDC40082F74B /* UITextField+Limit.m */,
 				101134372148CDC40082F74B /* WLLoginTextField.h */,
 				1011343B2148CDC40082F74B /* WLLoginTextField.m */,
-				1011343C2148CDC40082F74B /* UITextField+LeftRightView.h */,
-				101134382148CDC40082F74B /* UITextField+LeftRightView.m */,
 			);
 			path = UITextField;
 			sourceTree = "<group>";
@@ -2643,11 +2638,11 @@
 				"${BUILT_PRODUCTS_DIR}/CYLTabBarController/CYLTabBarController.framework",
 				"${BUILT_PRODUCTS_DIR}/DateTools/DateTools.framework",
 				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
-				"${BUILT_PRODUCTS_DIR}/IHKeyboardAvoiding/IHKeyboardAvoiding.framework",
 				"${BUILT_PRODUCTS_DIR}/KMNavigationBarTransition/KMNavigationBarTransition.framework",
 				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
 				"${BUILT_PRODUCTS_DIR}/MMCaptchaView/MMCaptchaView.framework",
 				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
+				"${BUILT_PRODUCTS_DIR}/QMUIKit/QMUIKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SQLCipher/SQLCipher.framework",
 				"${BUILT_PRODUCTS_DIR}/UITableView+FDTemplateLayoutCell/UITableView_FDTemplateLayoutCell.framework",
@@ -2664,11 +2659,11 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CYLTabBarController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DateTools.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IHKeyboardAvoiding.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KMNavigationBarTransition.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MMCaptchaView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/QMUIKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SQLCipher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UITableView_FDTemplateLayoutCell.framework",
@@ -2880,7 +2875,6 @@
 				103519462147A34000EDC7AD /* NSArray+WLPersistanceRecordTransform.m in Sources */,
 				10351A662147C74B00EDC7AD /* NSData+Godzippa.m in Sources */,
 				10351A922147CB0300EDC7AD /* LGAlertViewButtonProperties.m in Sources */,
-				1011343E2148CDC40082F74B /* UITextField+LeftRightView.m in Sources */,
 				103518E02147A34000EDC7AD /* RETextItem.m in Sources */,
 				10351A0C2147B73200EDC7AD /* NSObject+WLAddForKVO.m in Sources */,
 				10351A112147B73200EDC7AD /* WLCGUtilities.m in Sources */,
@@ -3067,7 +3061,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = K32A79922W;
+				DEVELOPMENT_TEAM = V6JKEEZATW;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3112,7 +3106,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = K32A79922W;
+				DEVELOPMENT_TEAM = V6JKEEZATW;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

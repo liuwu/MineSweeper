@@ -8,6 +8,8 @@
 
 #import "LWLoginTextFieldView.h"
 #import "UITextField+Limit.h"
+#import <MMCaptchaView/MMCaptchaView.h>
+#import "NNValidationView.h"
 
 @interface LWLoginTextFieldView()<UITextFieldDelegate>
 
@@ -15,6 +17,7 @@
 @property (nonatomic, strong) UIButton *leftButton;
 @property (nonatomic, strong) UIButton *rightButton;
 @property (nonatomic, strong) UIView *leftView;
+@property (nonatomic, strong) NNValidationView *captchaView;
 
 @end
 
@@ -120,24 +123,47 @@
                 _textField.placeholder = @"图形验证码";
                 _textField.returnKeyType = UIReturnKeyGo;
                 
-                UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-                [rightButton setImage:[UIImage imageNamed:@"password_icon_Cansee_nor"] forState:UIControlStateNormal];
-                rightButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-                rightButton.adjustsImageWhenHighlighted = NO;
-                [rightButton addTarget:self action:@selector(passwordTextFieldPlaintext) forControlEvents:UIControlEventTouchUpInside];
-                [self addSubview:rightButton];
-                self.rightButton = rightButton;
+                NNValidationView *captchaView = [[NNValidationView alloc] initWithFrame:CGRectZero andCharCount:4 andLineCount:4];
+//                captchaView.captchaFont = WLFONT(20);
+                [self addSubview:captchaView];
+                self.captchaView = captchaView;
                 
-                [_rightButton sizeToFit];
-                [_rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
+                __weak typeof(self) weakSelf = self;
+                /// 返回验证码数字
+                captchaView.changeValidationCodeBlock = ^(void){
+                    DLog(@"验证码被点击了：%@", weakSelf.captchaView.charString);
+                };
+                
+//                MMCaptchaView *captchaView = [[MMCaptchaView alloc] initWithFrame:CGRectZero];
+//                captchaView.captchaFont = WLFONT(20);
+//                [self addSubview:captchaView];
+//                [captchaView wl_setDebug:YES];
+                
+//                UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//                [rightButton setImage:[UIImage imageNamed:@"password_icon_Cansee_nor"] forState:UIControlStateNormal];
+//                rightButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+//                rightButton.adjustsImageWhenHighlighted = NO;
+//                [rightButton addTarget:self action:@selector(passwordTextFieldPlaintext) forControlEvents:UIControlEventTouchUpInside];
+//                [self addSubview:rightButton];
+//                self.rightButton = rightButton;
+                
+//                [_rightButton sizeToFit];
+//                [_rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
+//                    make.right.mas_equalTo(self).offset(-kWL_NormalMarginWidth_10);
+//                    make.top.bottom.mas_equalTo(self);
+//                    make.width.mas_equalTo(kWL_NormalMarginWidth_20);
+//                }];
+                [captchaView mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.right.mas_equalTo(self).offset(-kWL_NormalMarginWidth_10);
-                    make.top.bottom.mas_equalTo(self);
-                    make.width.mas_equalTo(kWL_NormalMarginWidth_20);
+//                    make.top.bottom.mas_equalTo(self).mas_offset(-4.f);
+                    make.top.mas_equalTo(self).mas_offset(4.f);
+                    make.bottom.mas_equalTo(self).mas_offset(-4.f);
+                    make.width.mas_equalTo(80);
                 }];
                 
                 [self.textField mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(self.leftView.mas_right);
-                    make.right.mas_equalTo(self.rightButton.mas_left);
+                    make.right.mas_equalTo(captchaView.mas_left);
                     make.top.bottom.mas_equalTo(self);
                 }];
             }

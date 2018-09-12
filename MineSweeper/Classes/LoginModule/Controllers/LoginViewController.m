@@ -14,6 +14,8 @@
 
 #import "AppDelegate.h"
 
+#import <IQKeyboardManager/IQKeyboardManager.h>
+
 @interface LoginViewController ()
 
 
@@ -33,17 +35,17 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    [[YYTextKeyboardManager defaultManager] addObserver:self];
-    [DaiDodgeKeyboard addRegisterTheViewNeedDodgeKeyboard:self.view];
+    [[YYTextKeyboardManager defaultManager] addObserver:self];
+//    [DaiDodgeKeyboard addRegisterTheViewNeedDodgeKeyboard:self.view];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:WLColoerRGB(255.f)] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setShadowImage:[UIImage imageWithColor:WLColoerRGB(255.f)]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-//    [self.view endEditing:YES];
-//    [[YYTextKeyboardManager defaultManager] removeObserver:self];
-    [DaiDodgeKeyboard removeRegisterTheViewNeedDodgeKeyboard];
+    [self.view endEditing:YES];
+    [[YYTextKeyboardManager defaultManager] removeObserver:self];
+//    [DaiDodgeKeyboard removeRegisterTheViewNeedDodgeKeyboard];
 }
 
 - (void)viewDidLoad {
@@ -62,6 +64,11 @@
 #pragma mark setup
 // 添加页面UI组件
 - (void)addSubviews {
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"注册"
+                                                                              style:UIBarButtonItemStylePlain
+                                                                             target:self
+                                                                             action:@selector(rightBarButtonItemClicked)];
+    
     LWLoginTextFieldView *phoneTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePhone];
     [self.view addSubview:phoneTxtView];
     self.phoneTxtView = phoneTxtView;
@@ -97,16 +104,14 @@
     [self.view addSubview:forgetBtn];
     self.forgetBtn = forgetBtn;
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"注册"
-                                                                              style:UIBarButtonItemStylePlain
-                                                                             target:self
-                                                                             action:@selector(rightBarButtonItemClicked)];
+    [[IQKeyboardManager sharedManager] setEnable:YES];
     
     
-//    [self.view bk_whenTapped:^{
-//        [self find] resignFirstResponder];
-//    }];
-    
+    //添加单击手势
+    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+         [[self.view wl_findFirstResponder] resignFirstResponder];
+    }];
+    [self.view addGestureRecognizer:tap];
 }
 
 // 布局控制
@@ -162,7 +167,7 @@
     
 }
 
-//
+// 右侧导航按钮点击
 - (void)rightBarButtonItemClicked {
     SmsLoginViewController *smsLoginVc = [[SmsLoginViewController alloc] init];
     smsLoginVc.useType = UseTypeRegist;

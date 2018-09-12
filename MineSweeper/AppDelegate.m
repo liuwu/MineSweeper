@@ -23,6 +23,8 @@ single_implementation(AppDelegate);
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self.window makeKeyAndVisible];
     
+    [self setupUIStyle];
+    
     LoginViewController *loginVC = [[LoginViewController alloc] init];
     NavViewController *nav = [[NavViewController alloc] initWithRootViewController:loginVC];
     self.window.rootViewController = nav;
@@ -55,6 +57,22 @@ single_implementation(AppDelegate);
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+/// 统一设置UI样式
+- (void)setupUIStyle {
+    
+    // 设置BarButtonItem
+//    [[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class], [UINavigationBar class]]] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(14), NSForegroundColorAttributeName:WLColoerRGB(51.f)} forState:UIControlStateNormal];
+    // navBar设置
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(18), NSForegroundColorAttributeName:WLColoerRGB(51.f)}];
+    
+    //设置整个项目的item状态
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(14), NSForegroundColorAttributeName: WLColoerRGB(51.f)} forState:UIControlStateNormal];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(14), NSForegroundColorAttributeName: WLColoerRGB(51.f)} forState:UIControlStateHighlighted];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(14), NSForegroundColorAttributeName: WLColoerRGB(51.f)} forState:UIControlStateSelected];
+    
+    [UITextField appearance].tintColor = WLColoerRGB(255.f);
 }
 
 #pragma mark - 退出登录

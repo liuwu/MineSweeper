@@ -14,6 +14,7 @@
 		1011343F2148CDC40082F74B /* UITextField+Limit.m in Sources */ = {isa = PBXBuildFile; fileRef = 1011343A2148CDC40082F74B /* UITextField+Limit.m */; };
 		101134402148CDC40082F74B /* WLLoginTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 1011343B2148CDC40082F74B /* WLLoginTextField.m */; };
 		101134432148CEAF0082F74B /* LWLoginTextFieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 101134422148CEAF0082F74B /* LWLoginTextFieldView.m */; };
+		10113447214915E10082F74B /* NNValidationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 10113446214915E10082F74B /* NNValidationView.m */; };
 		103518C72147A34000EDC7AD /* RETableViewTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 103517242147A33F00EDC7AD /* RETableViewTextCell.m */; };
 		103518C82147A34000EDC7AD /* RETableViewBoolCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 103517252147A33F00EDC7AD /* RETableViewBoolCell.m */; };
 		103518C92147A34000EDC7AD /* RETableViewLongTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 103517262147A33F00EDC7AD /* RETableViewLongTextCell.m */; };
@@ -297,6 +298,8 @@
 		1011343C2148CDC40082F74B /* UITextField+LeftRightView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+LeftRightView.h"; sourceTree = "<group>"; };
 		101134412148CEAF0082F74B /* LWLoginTextFieldView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LWLoginTextFieldView.h; sourceTree = "<group>"; };
 		101134422148CEAF0082F74B /* LWLoginTextFieldView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LWLoginTextFieldView.m; sourceTree = "<group>"; };
+		10113445214915E10082F74B /* NNValidationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNValidationView.h; sourceTree = "<group>"; };
+		10113446214915E10082F74B /* NNValidationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NNValidationView.m; sourceTree = "<group>"; };
 		103517232147A33F00EDC7AD /* RETableViewNumberCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RETableViewNumberCell.h; sourceTree = "<group>"; };
 		103517242147A33F00EDC7AD /* RETableViewTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RETableViewTextCell.m; sourceTree = "<group>"; };
 		103517252147A33F00EDC7AD /* RETableViewBoolCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RETableViewBoolCell.m; sourceTree = "<group>"; };
@@ -941,6 +944,15 @@
 			path = UITextField;
 			sourceTree = "<group>";
 		};
+		10113444214915E10082F74B /* NNValidationView */ = {
+			isa = PBXGroup;
+			children = (
+				10113445214915E10082F74B /* NNValidationView.h */,
+				10113446214915E10082F74B /* NNValidationView.m */,
+			);
+			path = NNValidationView;
+			sourceTree = "<group>";
+		};
 		103517202147A33F00EDC7AD /* Utilites */ = {
 			isa = PBXGroup;
 			children = (
@@ -1294,6 +1306,7 @@
 		103517F82147A33F00EDC7AD /* Librarys */ = {
 			isa = PBXGroup;
 			children = (
+				10113444214915E10082F74B /* NNValidationView */,
 				103518052147A33F00EDC7AD /* AXBadgeView */,
 				1035180F2147A33F00EDC7AD /* printValue */,
 				103518122147A33F00EDC7AD /* JKCountDownButton */,
@@ -2630,8 +2643,11 @@
 				"${BUILT_PRODUCTS_DIR}/CYLTabBarController/CYLTabBarController.framework",
 				"${BUILT_PRODUCTS_DIR}/DateTools/DateTools.framework",
 				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
+				"${BUILT_PRODUCTS_DIR}/IHKeyboardAvoiding/IHKeyboardAvoiding.framework",
+				"${BUILT_PRODUCTS_DIR}/IQKeyboardManager/IQKeyboardManager.framework",
 				"${BUILT_PRODUCTS_DIR}/KMNavigationBarTransition/KMNavigationBarTransition.framework",
 				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
+				"${BUILT_PRODUCTS_DIR}/MMCaptchaView/MMCaptchaView.framework",
 				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SQLCipher/SQLCipher.framework",
@@ -2649,8 +2665,11 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CYLTabBarController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DateTools.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IHKeyboardAvoiding.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManager.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KMNavigationBarTransition.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MMCaptchaView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SQLCipher.framework",
@@ -2804,6 +2823,7 @@
 				103518D12147A34000EDC7AD /* RETableViewPickerCell.m in Sources */,
 				103519502147A34000EDC7AD /* WLOSSUploadFileTool.m in Sources */,
 				10351A8F2147CB0300EDC7AD /* LGAlertViewTextField.m in Sources */,
+				10113447214915E10082F74B /* NNValidationView.m in Sources */,
 				103518F52147A34000EDC7AD /* WLScrollViewEmptyAssistant.m in Sources */,
 				103519482147A34000EDC7AD /* WLPersistanceQueryCommand.m in Sources */,
 				103518D52147A34000EDC7AD /* RETableViewCell.m in Sources */,

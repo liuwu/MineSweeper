@@ -39,12 +39,15 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [DaiDodgeKeyboard addRegisterTheViewNeedDodgeKeyboard:self.view];
+     [[YYTextKeyboardManager defaultManager] addObserver:self];
+//    [DaiDodgeKeyboard addRegisterTheViewNeedDodgeKeyboard:self.view];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [DaiDodgeKeyboard removeRegisterTheViewNeedDodgeKeyboard];
+     [self.view endEditing:YES];
+//    [DaiDodgeKeyboard removeRegisterTheViewNeedDodgeKeyboard];
+    [[YYTextKeyboardManager defaultManager] removeObserver:self];
 }
 
 - (void)viewDidLoad {
@@ -82,17 +85,6 @@
     }
     
     UIButton *loginBtn = [[UIButton alloc] init];
-    switch (_useType) {
-        case UseTypeSMS:
-            [loginBtn setTitle:@"登录" forState:UIControlStateNormal];
-            break;
-        case UseTypeRegist:
-            [loginBtn setTitle:@"注册" forState:UIControlStateNormal];
-            break;
-        default:
-            [loginBtn setTitle:@"" forState:UIControlStateNormal];
-            break;
-    }
     [loginBtn wl_setBackgroundColor:WLRGB(249.f, 75.f, 44.f) forState:UIControlStateNormal];
     [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     loginBtn.titleLabel.font = WLFONT(18);
@@ -101,16 +93,43 @@
     [self.view addSubview:loginBtn];
     self.loginBtn = loginBtn;
     
-    if (_useType == UseTypeSMS) {
-        UIButton *pwdLoginBtn = [[UIButton alloc] init];
-        [pwdLoginBtn setTitle:@"密码登录" forState:UIControlStateNormal];
-        [pwdLoginBtn setTitleColor:WLRGB(249.f, 75.f, 44.f) forState:UIControlStateNormal];
-        pwdLoginBtn.titleLabel.font = WLFONT(14);
-        [pwdLoginBtn addTarget:self action:@selector(didPwdLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:pwdLoginBtn];
-        self.pwdLoginBtn = pwdLoginBtn;
+    switch (_useType) {
+        case UseTypeSMS:
+        {
+            [loginBtn setTitle:@"登录" forState:UIControlStateNormal];
+            
+            UIButton *pwdLoginBtn = [[UIButton alloc] init];
+            [pwdLoginBtn setTitle:@"密码登录" forState:UIControlStateNormal];
+            [pwdLoginBtn setTitleColor:WLRGB(249.f, 75.f, 44.f) forState:UIControlStateNormal];
+            pwdLoginBtn.titleLabel.font = WLFONT(14);
+            [pwdLoginBtn addTarget:self action:@selector(didPwdLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
+            [self.view addSubview:pwdLoginBtn];
+            self.pwdLoginBtn = pwdLoginBtn;
+            
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"注册"
+                                                                                      style:UIBarButtonItemStylePlain
+                                                                                     target:self
+                                                                                     action:@selector(rightBarButtonItemClicked)];
+        }
+            break;
+        case UseTypeRegist:
+            [loginBtn setTitle:@"注册" forState:UIControlStateNormal];
+            
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"登录"
+                                                                                      style:UIBarButtonItemStylePlain
+                                                                                     target:self
+                                                                                     action:@selector(rightBarButtonItemClicked)];
+            break;
+        default:
+            [loginBtn setTitle:@"" forState:UIControlStateNormal];
+            break;
     }
     
+    //添加单击手势
+    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+        [[self.view wl_findFirstResponder] resignFirstResponder];
+    }];
+    [self.view addGestureRecognizer:tap];
 }
 
 // 布局控制
@@ -193,7 +212,28 @@
 
 // 密码登录按钮点击
 - (void)didPwdLoginBtn:(UIButton *)sender {
-    
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+// 右侧导航按钮点击
+- (void)rightBarButtonItemClicked {
+    switch (_useType) {
+        case UseTypeSMS:
+        {
+            SmsLoginViewController *smsLoginVc = [[SmsLoginViewController alloc] init];
+            smsLoginVc.useType = UseTypeRegist;
+            [self.navigationController pushViewController:smsLoginVc animated:YES];
+        }
+            break;
+        case UseTypeRegist:
+        {
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        }
+            break;
+        default:
+            
+            break;
+    }
 }
 
 @end

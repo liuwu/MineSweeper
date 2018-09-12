@@ -171,8 +171,8 @@
     
     UITabBarItem *tabBarItem = [[UITabBarItem alloc] initWithTitle:title image:[UIImage wl_imageNameAlwaysOriginal:imageName] selectedImage:[UIImage wl_imageNameAlwaysOriginal:[imageName stringByAppendingString:@"_active"]]];
     
-    [tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName :WLRGB(254.f, 72.f, 30.f),NSFontAttributeName:WLFONT(10)} forState:UIControlStateSelected];
-    [tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor wl_HexBDBDBD],NSFontAttributeName:WLFONT(10)} forState:UIControlStateNormal];
+    [tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName :WLRGB(254.f, 72.f, 30.f),NSFontAttributeName:WLFONT(11)} forState:UIControlStateSelected];
+    [tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : WLColoerRGB(153.f),NSFontAttributeName:WLFONT(11)} forState:UIControlStateNormal];
     
     navController.tabBarItem = tabBarItem;
     return navController;
@@ -189,6 +189,7 @@
 //        [NSUserDefaults setBool:YES forKey:MeTtemRedDotKey];
 //        [self.tabBar hideBadgeOnItemIndex:3];
 //    }
+    
     _normalItem = item;
 }
 

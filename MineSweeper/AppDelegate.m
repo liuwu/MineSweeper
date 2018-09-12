@@ -67,8 +67,7 @@ single_implementation(AppDelegate);
 #pragma mark - 登录成功
 - (void)loginSucceed {
     MainViewController *mainVc = [[MainViewController alloc] init];
-    NavViewController *rootNav = [[NavViewController alloc] initWithRootViewController:mainVc];
-    self.window.rootViewController = rootNav;
+    self.window.rootViewController = mainVc;
     
 //    [WLSystemManager init3DTouchActionShow:YES];
 //    // 初始化登录用户信息

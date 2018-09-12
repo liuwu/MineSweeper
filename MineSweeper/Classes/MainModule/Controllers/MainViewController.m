@@ -87,10 +87,6 @@
     [self.navigationController.navigationBar setShadowImage:[UIImage imageWithColor:WLColoerRGB(255.f)]];
 }
 
-- (NSString *)title {
-    return @"主页";
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -124,10 +120,10 @@
 #pragma mark – Private methods
 /// 设置页面UI
 - (void)setupMainUI{
-    NavViewController *homeNav = [self tabBarChildController:[HomeViewController class] title:@"首页" imageName:@"common_addressBook_icon"];
-    NavViewController *chatNav = [self tabBarChildController:[ChatListViewController class] title:@"消息" imageName:@"common_chat_icon_normal"];
-    NavViewController *friendItem = [self tabBarChildController:[FriendListViewController class] title:@"通讯录" imageName:@"common_group_icon_normal"];
-    NavViewController *meNav = [self tabBarChildController:[MeViewController class] title:@"我的" imageName:@"common_mine_icon_normal"];
+    NavViewController *homeNav = [self tabBarChildController:[HomeViewController class] title:@"群组" imageName:@"common_group_icon"];
+    NavViewController *chatNav = [self tabBarChildController:[ChatListViewController class] title:@"消息" imageName:@"common_chat_icon"];
+    NavViewController *friendItem = [self tabBarChildController:[FriendListViewController class] title:@"通讯录" imageName:@"common_group_icon"];
+    NavViewController *meNav = [self tabBarChildController:[MeViewController class] title:@"我的" imageName:@"common_mine_icon"];
     
     self.viewControllers = @[homeNav,chatNav,friendItem,meNav];
     self.chatItem = chatNav.tabBarItem;

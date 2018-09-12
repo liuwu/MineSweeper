@@ -105,14 +105,14 @@
 - (void)setupUIInfo {
 //    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-//    [[UITabBar appearance] setShadowImage:[UIImage new]];
-//    [[UITabBar appearance] setBackgroundImage:[UIImage new]];
+    [[UITabBar appearance] setShadowImage:[UIImage new]];
+    [[UITabBar appearance] setBackgroundImage:[UIImage new]];
     self.tabBar.backgroundColor = [UIColor whiteColor];
-    [self.tabBar.layer setLayerShadow:WLRGBA(60, 60, 60, 0.1) offset:CGSizeMake(0, -1.f) radius:3];
+    [self.tabBar.layer setLayerShadow:WLColoerRGB(242.f) offset:CGSizeMake(0, -1.f) radius:1];
     if (iPhoneX) {
         WLTabar *baseTabBar = [[WLTabar alloc] init];
         baseTabBar.backgroundColor = [UIColor whiteColor];
-        [baseTabBar.layer setLayerShadow:WLRGBA(60, 60, 60, 0.1) offset:CGSizeMake(0, -1.f) radius:3];
+        [baseTabBar.layer setLayerShadow:WLColoerRGB(242.f) offset:CGSizeMake(0, -1.f) radius:1];
         [self setValue:baseTabBar forKey:@"tabBar"];
     }
 }

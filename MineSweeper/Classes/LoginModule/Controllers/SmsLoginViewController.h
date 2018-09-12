@@ -8,6 +8,14 @@
 
 #import "BaseViewController.h"
 
+typedef NS_ENUM(NSInteger, UseType)
+{
+    UseTypeSMS,
+    UseTypeRegist,
+};
+
 @interface SmsLoginViewController : BaseViewController
+
+@property (nonatomic, assign) UseType useType;
 
 @end

@@ -1464,15 +1464,15 @@
 		1035184A2147A33F00EDC7AD /* DaiDodgeKeyboard */ = {
 			isa = PBXGroup;
 			children = (
+				103518502147A33F00EDC7AD /* DaiDodgeKeyboardObjects.h */,
 				1035184B2147A33F00EDC7AD /* DaiDodgeKeyboardObjects.m */,
+				103518522147A33F00EDC7AD /* DaiDodgeKeyboard+Animation.h */,
 				1035184C2147A33F00EDC7AD /* DaiDodgeKeyboard+Animation.m */,
 				1035184D2147A33F00EDC7AD /* DaiDodgeKeyboard.h */,
-				1035184E2147A33F00EDC7AD /* DaiDodgeKeyboard+AccessObject.h */,
-				1035184F2147A33F00EDC7AD /* UIView+FirstResponderNotify.h */,
-				103518502147A33F00EDC7AD /* DaiDodgeKeyboardObjects.h */,
 				103518512147A33F00EDC7AD /* DaiDodgeKeyboard.m */,
-				103518522147A33F00EDC7AD /* DaiDodgeKeyboard+Animation.h */,
+				1035184F2147A33F00EDC7AD /* UIView+FirstResponderNotify.h */,
 				103518532147A33F00EDC7AD /* UIView+FirstResponderNotify.m */,
+				1035184E2147A33F00EDC7AD /* DaiDodgeKeyboard+AccessObject.h */,
 				103518542147A33F00EDC7AD /* DaiDodgeKeyboard+AccessObject.m */,
 			);
 			path = DaiDodgeKeyboard;

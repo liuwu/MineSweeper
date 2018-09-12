@@ -13,6 +13,8 @@ typedef NS_ENUM(NSInteger, LWLoginTextFieldType)
     LWLoginTextFieldTypeDefault,
     LWLoginTextFieldTypePassword,
     LWLoginTextFieldTypePhone,
+    LWLoginTextFieldTypeImageVcode,
+    LWLoginTextFieldTypeVcode,
 };
 
 

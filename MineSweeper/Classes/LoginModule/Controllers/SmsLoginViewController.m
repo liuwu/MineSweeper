@@ -50,16 +50,10 @@
     [[YYTextKeyboardManager defaultManager] removeObserver:self];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
+- (void)initSubviews {
+    [super initSubviews];
     [self addSubviews];
     [self addConstrainsForSubviews];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark setup
@@ -84,12 +78,10 @@
         self.pwdTxtView = pwdTxtView;
     }
     
-    UIButton *loginBtn = [[UIButton alloc] init];
-    [loginBtn wl_setBackgroundColor:WLRGB(249.f, 75.f, 44.f) forState:UIControlStateNormal];
-    [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    QMUIFillButton *loginBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
     loginBtn.titleLabel.font = WLFONT(18);
     [loginBtn addTarget:self action:@selector(didClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [loginBtn wl_setCornerRadius:4];
+    [loginBtn setCornerRadius:4];
     [self.view addSubview:loginBtn];
     self.loginBtn = loginBtn;
     
@@ -135,7 +127,11 @@
 // 布局控制
 - (void)addConstrainsForSubviews {
     [_phoneTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.view.mas_top).offset(kWL_NormalMarginWidth_14);
+        if (@available(iOS 11.0, *)) {
+            make.top.mas_equalTo(self.view.mas_safeAreaLayoutGuideTop).offset(kWL_NormalMarginWidth_14);
+        } else {
+            make.top.mas_equalTo(self.view.mas_top).offset(kWL_NormalMarginWidth_14);
+        }
         make.centerX.mas_equalTo(self.view);
         make.width.mas_equalTo(ScreenWidth - kWL_NormalMarginWidth_10 * 2.f);
         make.height.mas_equalTo(kWL_NormalTextFieldHeight);

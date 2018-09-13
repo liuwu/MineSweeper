@@ -68,7 +68,7 @@
 
 @end
 
-@interface MainViewController ()<UINavigationControllerDelegate,UITabBarControllerDelegate>
+@interface MainViewController ()
 
 @property (weak,nonatomic) UITabBarItem *normalItem;
 
@@ -81,16 +81,8 @@
 
 @implementation MainViewController
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:WLColoerRGB(255.f)] forBarMetrics:UIBarMetricsDefault];
-    [self.navigationController.navigationBar setShadowImage:[UIImage imageWithColor:WLColoerRGB(255.f)]];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    self.delegate = self;
     // 设置ui相关信息
     [self setupUIInfo];
     [self setupMainUI];
@@ -174,38 +166,5 @@
     return navController;
 }
 
-#pragma mark – UITabBarDelegate
-- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
-//    if (_normalItem == _findItem && item == _findItem) {
-//        NavViewController *homeNav = self.viewControllers[1];
-//        WLHomePageController *homeVC = homeNav.viewControllers[0];
-//        [homeVC tableviewbeginRefreshing];
-//    }
-//    if (item == _meItem && ![NSUserDefaults boolForKey:MeTtemRedDotKey] && configTool.loginUser.isLogin) {
-//        [NSUserDefaults setBool:YES forKey:MeTtemRedDotKey];
-//        [self.tabBar hideBadgeOnItemIndex:3];
-//    }
-    
-    _normalItem = item;
-}
-
-#pragma mark – UITabBarControllerDelegate
-- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
-//    if (_normalItem == _homeItem) {
-//        return YES;
-//    }else {
-//        return [WLAccessControlPresenter perfectLoginAndInformation:^BOOL(BOOL haveLoginUser) {
-//            return YES;
-//        } haveJWT:^BOOL(BOOL needBandPhone, BOOL needComplete) {
-//            return YES;
-//        }];
-//        return NO;
-//    }
-    return YES;
-}
-
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
-    
-}
 
 @end

@@ -558,7 +558,7 @@ typedef enum {
             const CGRect imageFrame = {kMarginX * 2, kMarginY, maxImageWidth, maxImageWidth};
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:imageFrame];
             imageView.centerY = maxItemHeight*0.5;
-            [imageView sd_setImageWithURL:[NSURL URLWithString:menuItem.imageURLStr]];
+            [imageView setImageURL:[NSURL URLWithString:menuItem.imageURLStr]];
             imageView.clipsToBounds = YES;
             imageView.contentMode = UIViewContentModeScaleAspectFit;
             imageView.autoresizingMask = UIViewAutoresizingNone;

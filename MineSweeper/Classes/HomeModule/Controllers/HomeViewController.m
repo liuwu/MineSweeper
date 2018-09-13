@@ -7,8 +7,9 @@
 //
 
 #import "HomeViewController.h"
+#import "DCCycleScrollView.h"
 
-@interface HomeViewController ()
+@interface HomeViewController ()<DCCycleScrollViewDelegate>
 
 @end
 
@@ -27,6 +28,23 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    NSArray *imageArr = @[@"h1.jpg",
+                          @"h2.jpg",
+                          @"h3.jpg",
+                          @"h4.jpg",
+                          ];
+    DCCycleScrollView *banner = [DCCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 100, ScreenWidth, 135) shouldInfiniteLoop:YES imageGroups:imageArr];
+    //    banner.placeholderImage = [UIImage imageNamed:@"placeholderImage"];
+//        banner.cellPlaceholderImage = [UIImage imageNamed:@"placeholderImage"];
+    banner.autoScrollTimeInterval = 5;
+    banner.autoScroll = YES;
+    banner.isZoom = YES;
+    banner.itemSpace = 0;
+    banner.imgCornerRadius = 10;
+    banner.itemWidth = ScreenWidth - 100.f;
+    banner.delegate = self;
+    [self.view addSubview:banner];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -34,14 +52,10 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+//点击图片的代理
+-(void)cycleScrollView:(DCCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index {
+    DLog(@"index = %ld",(long)index);
 }
-*/
 
 @end

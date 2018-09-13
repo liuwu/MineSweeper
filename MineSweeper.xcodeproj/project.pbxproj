@@ -274,6 +274,9 @@
 		10351AE82147D3F400EDC7AD /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351AE72147D3F400EDC7AD /* HomeViewController.m */; };
 		10351AEB2147EB2E00EDC7AD /* LWLoginTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351AEA2147EB2E00EDC7AD /* LWLoginTextField.m */; };
 		10351AEE21481BB900EDC7AD /* SmsLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351AED21481BB900EDC7AD /* SmsLoginViewController.m */; };
+		1069EE6D214A66E10006FFCA /* DCCycleScrollViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE6A214A66E10006FFCA /* DCCycleScrollViewFlowLayout.m */; };
+		1069EE6E214A66E10006FFCA /* DCCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE6B214A66E10006FFCA /* DCCycleScrollView.m */; };
+		1069EE6F214A66E10006FFCA /* DCCycleScrollViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE6C214A66E10006FFCA /* DCCycleScrollViewCell.m */; };
 		1089C5492146AD9700363537 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1089C5482146AD9700363537 /* AppDelegate.m */; };
 		1089C54F2146AD9700363537 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1089C54D2146AD9700363537 /* Main.storyboard */; };
 		1089C5512146AD9900363537 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1089C5502146AD9900363537 /* Assets.xcassets */; };
@@ -850,6 +853,12 @@
 		10351AEA2147EB2E00EDC7AD /* LWLoginTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LWLoginTextField.m; sourceTree = "<group>"; };
 		10351AEC21481BB900EDC7AD /* SmsLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SmsLoginViewController.h; sourceTree = "<group>"; };
 		10351AED21481BB900EDC7AD /* SmsLoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SmsLoginViewController.m; sourceTree = "<group>"; };
+		1069EE67214A66E10006FFCA /* DCCycleScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCCycleScrollView.h; sourceTree = "<group>"; };
+		1069EE68214A66E10006FFCA /* DCCycleScrollViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCCycleScrollViewFlowLayout.h; sourceTree = "<group>"; };
+		1069EE69214A66E10006FFCA /* DCCycleScrollViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCCycleScrollViewCell.h; sourceTree = "<group>"; };
+		1069EE6A214A66E10006FFCA /* DCCycleScrollViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCCycleScrollViewFlowLayout.m; sourceTree = "<group>"; };
+		1069EE6B214A66E10006FFCA /* DCCycleScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCCycleScrollView.m; sourceTree = "<group>"; };
+		1069EE6C214A66E10006FFCA /* DCCycleScrollViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCCycleScrollViewCell.m; sourceTree = "<group>"; };
 		1089C5442146AD9700363537 /* MineSweeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MineSweeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1089C5472146AD9700363537 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1089C5482146AD9700363537 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -1301,6 +1310,7 @@
 		103517F82147A33F00EDC7AD /* Librarys */ = {
 			isa = PBXGroup;
 			children = (
+				1069EE66214A66E10006FFCA /* DCCycleScrollView */,
 				10113444214915E10082F74B /* NNValidationView */,
 				103518052147A33F00EDC7AD /* AXBadgeView */,
 				1035180F2147A33F00EDC7AD /* printValue */,
@@ -2457,6 +2467,19 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		1069EE66214A66E10006FFCA /* DCCycleScrollView */ = {
+			isa = PBXGroup;
+			children = (
+				1069EE68214A66E10006FFCA /* DCCycleScrollViewFlowLayout.h */,
+				1069EE6A214A66E10006FFCA /* DCCycleScrollViewFlowLayout.m */,
+				1069EE67214A66E10006FFCA /* DCCycleScrollView.h */,
+				1069EE6B214A66E10006FFCA /* DCCycleScrollView.m */,
+				1069EE69214A66E10006FFCA /* DCCycleScrollViewCell.h */,
+				1069EE6C214A66E10006FFCA /* DCCycleScrollViewCell.m */,
+			);
+			path = DCCycleScrollView;
+			sourceTree = "<group>";
+		};
 		1089C53B2146AD9700363537 = {
 			isa = PBXGroup;
 			children = (
@@ -2736,6 +2759,7 @@
 				10351A742147C94F00EDC7AD /* WLCellCardView.m in Sources */,
 				103518EC2147A34000EDC7AD /* NSError+REValidation.m in Sources */,
 				103519F42147B73200EDC7AD /* UIScreen+WLAdd.m in Sources */,
+				1069EE6E214A66E10006FFCA /* DCCycleScrollView.m in Sources */,
 				103518E62147A34000EDC7AD /* REDateTimeItem.m in Sources */,
 				10351A942147CB0300EDC7AD /* LGAlertView.m in Sources */,
 				103518E82147A34000EDC7AD /* REFloatItem.m in Sources */,
@@ -2760,6 +2784,7 @@
 				1011343D2148CDC40082F74B /* WLTextField.m in Sources */,
 				103519F12147B73200EDC7AD /* UINavigationController+WLAdd.m in Sources */,
 				10351A2E2147B84500EDC7AD /* WLHUDView.m in Sources */,
+				1069EE6F214A66E10006FFCA /* DCCycleScrollViewCell.m in Sources */,
 				103519372147A34000EDC7AD /* KSProgressLayer.m in Sources */,
 				103519FD2147B73200EDC7AD /* NSString+WLAddForSize.m in Sources */,
 				103519382147A34000EDC7AD /* KSPhotoItem.m in Sources */,
@@ -2901,6 +2926,7 @@
 				1035195A2147A34000EDC7AD /* WLRequestCriteria.m in Sources */,
 				103519162147A34000EDC7AD /* WLPhotoViewController.m in Sources */,
 				10351A712147C88A00EDC7AD /* CustomCardMessage.m in Sources */,
+				1069EE6D214A66E10006FFCA /* DCCycleScrollViewFlowLayout.m in Sources */,
 				1035195B2147A34000EDC7AD /* WLNetWorkingProcessFilter.m in Sources */,
 				1035193B2147A34000EDC7AD /* WLPersistanceRecord.m in Sources */,
 				103518DF2147A34000EDC7AD /* RECreditCardItem.m in Sources */,

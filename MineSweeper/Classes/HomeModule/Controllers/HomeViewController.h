@@ -7,7 +7,8 @@
 //
 
 #import "BaseViewController.h"
+#import "SLCommonGroupListViewController.h"
 
-@interface HomeViewController : BaseViewController
+@interface HomeViewController : SLCommonGroupListViewController //BaseViewController
 
 @end

@@ -18,6 +18,7 @@
 {
     if(self = [super initWithFrame:frame])
     {
+        [self.contentView wl_setCornerRadius:10.f];
         [self.contentView addSubview:self.imageView];
     }
     return self;
@@ -25,6 +26,7 @@
 -(void)layoutSubviews
 {
     self.imageView.frame = self.bounds;
+//    [_imageView wl_setCornerRadius:self.imgCornerRadius];
     
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.imageView.bounds cornerRadius:self.imgCornerRadius];
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc]init];
@@ -33,6 +35,7 @@
     //设置图形样子
     maskLayer.path = maskPath.CGPath;
     _imageView.layer.mask = maskLayer;
+    [_imageView wl_setRoundedCorners:UIRectCornerAllCorners radius:self.imgCornerRadius];
 }
 
 -(UIImageView *)imageView

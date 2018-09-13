@@ -63,6 +63,7 @@ extern CGFloat const kWL_NormalMarginWidth_14;
 extern CGFloat const kWL_NormalMarginWidth_15;
 extern CGFloat const kWL_NormalMarginWidth_16;
 extern CGFloat const kWL_NormalMarginWidth_20;
+extern CGFloat const kWL_NormalMarginWidth_23;
 ///常用的间距10.f
 extern CGFloat const kWL_NormalMarginWidth_11;
 extern CGFloat const kWL_NormalMarginWidth_12;

@@ -40,6 +40,7 @@ CGFloat const kWL_NormalMarginWidth_15      = 15.f;
 CGFloat const kWL_NormalMarginWidth_14      = 14.f;
 CGFloat const kWL_NormalMarginWidth_16      = 16.f;
 CGFloat const kWL_NormalMarginWidth_20      = 20.f;
+CGFloat const kWL_NormalMarginWidth_23      = 23.f;
 ///常用的间距10.f
 CGFloat const kWL_NormalMarginWidth_11      = 11.f;
 CGFloat const kWL_NormalMarginWidth_12      = 12.f;

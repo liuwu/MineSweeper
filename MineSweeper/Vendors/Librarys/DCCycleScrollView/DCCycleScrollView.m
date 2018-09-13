@@ -70,7 +70,7 @@ static NSString *const cellID = @"cellID";
 {
     [super layoutSubviews];
     
-    self.collectionView.frame = self.bounds;
+    self.collectionView.frame = CGRectMake(0, 10, self.width, self.bounds.size.height - 40.f);
     self.pageControl.frame = CGRectMake(0, self.bounds.size.height - 30, self.bounds.size.width, 30);
     self.flowLayout.itemSize = CGSizeMake(_itemWidth, self.bounds.size.height);
     self.flowLayout.minimumLineSpacing = self.itemSpace;
@@ -193,6 +193,13 @@ static NSString *const cellID = @"cellID";
         }
     cell.imageView.contentMode = self.bannerImageViewContentMode;
     cell.imgCornerRadius = self.imgCornerRadius;
+    cell.backgroundColor = [UIColor clearColor];
+    [cell wl_setCornerRadius:10.f];
+    [cell.imageView wl_setCornerRadius:10.f];
+    [cell.imageView wl_setRoundedCorners:UIRectCornerAllCorners radius:10.f];
+    [cell wl_setRoundedCorners:UIRectCornerAllCorners radius:10.f];
+    
+//    [cell wl_setDebug:YES];
     return cell;
 }
 #pragma mark  - 代理方法
@@ -351,7 +358,7 @@ static NSString *const cellID = @"cellID";
     if(_pageControl == nil)
     {
         _pageControl = [[UIPageControl alloc]init];
-        _pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+        _pageControl.currentPageIndicatorTintColor = WLRGB(254.f, 72.f, 30.f);
         _pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
     }
     return _pageControl;
@@ -364,7 +371,6 @@ static NSString *const cellID = @"cellID";
         _flowLayout.isZoom = self.isZoom;
         _flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         _flowLayout.minimumLineSpacing = 0;
-
     }
     return _flowLayout;
 }

@@ -274,6 +274,7 @@
 		1069EE6D214A66E10006FFCA /* DCCycleScrollViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE6A214A66E10006FFCA /* DCCycleScrollViewFlowLayout.m */; };
 		1069EE6E214A66E10006FFCA /* DCCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE6B214A66E10006FFCA /* DCCycleScrollView.m */; };
 		1069EE6F214A66E10006FFCA /* DCCycleScrollViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE6C214A66E10006FFCA /* DCCycleScrollViewCell.m */; };
+		1069EE74214A9D3A0006FFCA /* HomeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE73214A9D3A0006FFCA /* HomeTableViewCell.m */; };
 		1089C5492146AD9700363537 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1089C5482146AD9700363537 /* AppDelegate.m */; };
 		1089C54F2146AD9700363537 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1089C54D2146AD9700363537 /* Main.storyboard */; };
 		1089C5512146AD9900363537 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1089C5502146AD9900363537 /* Assets.xcassets */; };
@@ -852,6 +853,8 @@
 		1069EE6A214A66E10006FFCA /* DCCycleScrollViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCCycleScrollViewFlowLayout.m; sourceTree = "<group>"; };
 		1069EE6B214A66E10006FFCA /* DCCycleScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCCycleScrollView.m; sourceTree = "<group>"; };
 		1069EE6C214A66E10006FFCA /* DCCycleScrollViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCCycleScrollViewCell.m; sourceTree = "<group>"; };
+		1069EE72214A9D3A0006FFCA /* HomeTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeTableViewCell.h; sourceTree = "<group>"; };
+		1069EE73214A9D3A0006FFCA /* HomeTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeTableViewCell.m; sourceTree = "<group>"; };
 		1089C5442146AD9700363537 /* MineSweeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MineSweeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1089C5472146AD9700363537 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1089C5482146AD9700363537 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -2458,6 +2461,8 @@
 		10351AE52147D3E600EDC7AD /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				1069EE72214A9D3A0006FFCA /* HomeTableViewCell.h */,
+				1069EE73214A9D3A0006FFCA /* HomeTableViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2737,6 +2742,7 @@
 				10351A072147B73200EDC7AD /* NSData+WLAdd.m in Sources */,
 				103518C92147A34000EDC7AD /* RETableViewLongTextCell.m in Sources */,
 				103518CB2147A34000EDC7AD /* RETableViewNumberCell.m in Sources */,
+				1069EE74214A9D3A0006FFCA /* HomeTableViewCell.m in Sources */,
 				10351A052147B73200EDC7AD /* NSTimer+WLAdd.m in Sources */,
 				103519522147A34000EDC7AD /* WLBatchRequestManager.m in Sources */,
 				1035192D2147A34000EDC7AD /* DRNRealTimeBlurView.m in Sources */,

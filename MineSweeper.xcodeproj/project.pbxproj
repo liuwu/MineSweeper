@@ -227,10 +227,7 @@
 		10351A662147C74B00EDC7AD /* NSData+Godzippa.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A632147C74B00EDC7AD /* NSData+Godzippa.m */; };
 		10351A672147C74B00EDC7AD /* NSFileManager+Godzippa.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A642147C74B00EDC7AD /* NSFileManager+Godzippa.m */; };
 		10351A6D2147C82A00EDC7AD /* WLNormalInputAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A692147C82A00EDC7AD /* WLNormalInputAlertView.m */; };
-		10351A6E2147C82A00EDC7AD /* CardAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A6B2147C82A00EDC7AD /* CardAlertView.m */; };
 		10351A712147C88A00EDC7AD /* CustomCardMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A6F2147C88900EDC7AD /* CustomCardMessage.m */; };
-		10351A742147C94F00EDC7AD /* WLCellCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A722147C94F00EDC7AD /* WLCellCardView.m */; };
-		10351A772147C9BA00EDC7AD /* CardStatuModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A752147C9BA00EDC7AD /* CardStatuModel.m */; };
 		10351A7B2147C9F500EDC7AD /* WLMessageTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A7A2147C9F500EDC7AD /* WLMessageTextView.m */; };
 		10351A7E2147CAC900EDC7AD /* WLPackAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A7D2147CAC900EDC7AD /* WLPackAlertController.m */; };
 		10351A8F2147CB0300EDC7AD /* LGAlertViewTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351A802147CB0300EDC7AD /* LGAlertViewTextField.m */; };
@@ -284,6 +281,8 @@
 		1089C5572146AD9900363537 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1089C5562146AD9900363537 /* main.m */; };
 		1089C55F2146AF4700363537 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1089C55E2146AF4700363537 /* LoginViewController.m */; };
 		C4DB55F6C9DBF48EA5AD7F59 /* Pods_MineSweeper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8AFE025042466EB1193918F /* Pods_MineSweeper.framework */; };
+		F543C3C8214A46A400F863CC /* SLCommonTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F543C3C7214A46A400F863CC /* SLCommonTableViewController.m */; };
+		F543C3CB214A4B1D00F863CC /* SLCommonGroupListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F543C3CA214A4B1D00F863CC /* SLCommonGroupListViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -783,15 +782,9 @@
 		10351A642147C74B00EDC7AD /* NSFileManager+Godzippa.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+Godzippa.m"; sourceTree = "<group>"; };
 		10351A652147C74B00EDC7AD /* NSData+Godzippa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Godzippa.h"; sourceTree = "<group>"; };
 		10351A692147C82A00EDC7AD /* WLNormalInputAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLNormalInputAlertView.m; sourceTree = "<group>"; };
-		10351A6A2147C82A00EDC7AD /* CardAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardAlertView.h; sourceTree = "<group>"; };
-		10351A6B2147C82A00EDC7AD /* CardAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardAlertView.m; sourceTree = "<group>"; };
 		10351A6C2147C82A00EDC7AD /* WLNormalInputAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLNormalInputAlertView.h; sourceTree = "<group>"; };
 		10351A6F2147C88900EDC7AD /* CustomCardMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomCardMessage.m; sourceTree = "<group>"; };
 		10351A702147C88A00EDC7AD /* CustomCardMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCardMessage.h; sourceTree = "<group>"; };
-		10351A722147C94F00EDC7AD /* WLCellCardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLCellCardView.m; sourceTree = "<group>"; };
-		10351A732147C94F00EDC7AD /* WLCellCardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLCellCardView.h; sourceTree = "<group>"; };
-		10351A752147C9BA00EDC7AD /* CardStatuModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardStatuModel.m; sourceTree = "<group>"; };
-		10351A762147C9BA00EDC7AD /* CardStatuModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardStatuModel.h; sourceTree = "<group>"; };
 		10351A792147C9F500EDC7AD /* WLMessageTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLMessageTextView.h; sourceTree = "<group>"; };
 		10351A7A2147C9F500EDC7AD /* WLMessageTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLMessageTextView.m; sourceTree = "<group>"; };
 		10351A7C2147CAC900EDC7AD /* WLPackAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLPackAlertController.h; sourceTree = "<group>"; };
@@ -872,6 +865,10 @@
 		A8AFE025042466EB1193918F /* Pods_MineSweeper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MineSweeper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E37D4B5778204A574CF96A28 /* Pods-MineSweeper.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MineSweeper.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MineSweeper/Pods-MineSweeper.debug.xcconfig"; sourceTree = "<group>"; };
 		F37BFC99A878510AF9E2CC19 /* Pods-MineSweeper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MineSweeper.release.xcconfig"; path = "Pods/Target Support Files/Pods-MineSweeper/Pods-MineSweeper.release.xcconfig"; sourceTree = "<group>"; };
+		F543C3C6214A46A400F863CC /* SLCommonTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLCommonTableViewController.h; sourceTree = "<group>"; };
+		F543C3C7214A46A400F863CC /* SLCommonTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLCommonTableViewController.m; sourceTree = "<group>"; };
+		F543C3C9214A4B1D00F863CC /* SLCommonGroupListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLCommonGroupListViewController.h; sourceTree = "<group>"; };
+		F543C3CA214A4B1D00F863CC /* SLCommonGroupListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLCommonGroupListViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1963,8 +1960,6 @@
 		1035196E2147A41300EDC7AD /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				10351A762147C9BA00EDC7AD /* CardStatuModel.h */,
-				10351A752147C9BA00EDC7AD /* CardStatuModel.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1978,6 +1973,10 @@
 				10351A5E2147C6AA00EDC7AD /* NavViewController.m */,
 				101134312148B5CC0082F74B /* BaseViewController.h */,
 				101134322148B5CC0082F74B /* BaseViewController.m */,
+				F543C3C6214A46A400F863CC /* SLCommonTableViewController.h */,
+				F543C3C7214A46A400F863CC /* SLCommonTableViewController.m */,
+				F543C3C9214A4B1D00F863CC /* SLCommonGroupListViewController.h */,
+				F543C3CA214A4B1D00F863CC /* SLCommonGroupListViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -2344,11 +2343,7 @@
 		10351A682147C82A00EDC7AD /* CardAlertView */ = {
 			isa = PBXGroup;
 			children = (
-				10351A732147C94F00EDC7AD /* WLCellCardView.h */,
-				10351A722147C94F00EDC7AD /* WLCellCardView.m */,
 				10351A692147C82A00EDC7AD /* WLNormalInputAlertView.m */,
-				10351A6A2147C82A00EDC7AD /* CardAlertView.h */,
-				10351A6B2147C82A00EDC7AD /* CardAlertView.m */,
 				10351A6C2147C82A00EDC7AD /* WLNormalInputAlertView.h */,
 			);
 			path = CardAlertView;
@@ -2657,7 +2652,6 @@
 				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/AliyunOSSiOS/AliyunOSSiOS.framework",
 				"${BUILT_PRODUCTS_DIR}/BlocksKit/BlocksKit.framework",
-				"${BUILT_PRODUCTS_DIR}/CHIPageControl/CHIPageControl.framework",
 				"${BUILT_PRODUCTS_DIR}/CYLTabBarController/CYLTabBarController.framework",
 				"${BUILT_PRODUCTS_DIR}/DateTools/DateTools.framework",
 				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
@@ -2666,7 +2660,6 @@
 				"${BUILT_PRODUCTS_DIR}/MMCaptchaView/MMCaptchaView.framework",
 				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
 				"${BUILT_PRODUCTS_DIR}/QMUIKit/QMUIKit.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SQLCipher/SQLCipher.framework",
 				"${BUILT_PRODUCTS_DIR}/UITableView+FDTemplateLayoutCell/UITableView_FDTemplateLayoutCell.framework",
 				"${BUILT_PRODUCTS_DIR}/WebViewJavascriptBridge/WebViewJavascriptBridge.framework",
@@ -2678,7 +2671,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AliyunOSSiOS.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BlocksKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CHIPageControl.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CYLTabBarController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DateTools.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
@@ -2687,7 +2679,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MMCaptchaView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/QMUIKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SQLCipher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UITableView_FDTemplateLayoutCell.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebViewJavascriptBridge.framework",
@@ -2756,7 +2747,6 @@
 				103519582147A34000EDC7AD /* WLRequest.m in Sources */,
 				103519572147A34000EDC7AD /* WLRequest+WLAdd.m in Sources */,
 				103518D42147A34000EDC7AD /* RETableViewItem.m in Sources */,
-				10351A742147C94F00EDC7AD /* WLCellCardView.m in Sources */,
 				103518EC2147A34000EDC7AD /* NSError+REValidation.m in Sources */,
 				103519F42147B73200EDC7AD /* UIScreen+WLAdd.m in Sources */,
 				1069EE6E214A66E10006FFCA /* DCCycleScrollView.m in Sources */,
@@ -2810,6 +2800,7 @@
 				10351A002147B73200EDC7AD /* NSString+WLAdd.m in Sources */,
 				10351A0A2147B73200EDC7AD /* NSIndexPath+WLAdd.m in Sources */,
 				103518EA2147A34000EDC7AD /* REValidator.m in Sources */,
+				F543C3CB214A4B1D00F863CC /* SLCommonGroupListViewController.m in Sources */,
 				1035191E2147A34000EDC7AD /* WLImagePickerHelper.m in Sources */,
 				103519FC2147B73200EDC7AD /* UINavigationBar+WLAwesome.m in Sources */,
 				10351A092147B73200EDC7AD /* NSBundle+WLAdd.m in Sources */,
@@ -2838,6 +2829,7 @@
 				103518E22147A34000EDC7AD /* REMultipleChoiceItem.m in Sources */,
 				103518F32147A34000EDC7AD /* UIScrollView+EmptyDataSet.m in Sources */,
 				10351A132147B73200EDC7AD /* CALayer+WLAdd.m in Sources */,
+				F543C3C8214A46A400F863CC /* SLCommonTableViewController.m in Sources */,
 				103518D12147A34000EDC7AD /* RETableViewPickerCell.m in Sources */,
 				103519502147A34000EDC7AD /* WLOSSUploadFileTool.m in Sources */,
 				10351A8F2147CB0300EDC7AD /* LGAlertViewTextField.m in Sources */,
@@ -2854,7 +2846,6 @@
 				103519332147A34000EDC7AD /* WLSystemAuth.m in Sources */,
 				1035192F2147A34000EDC7AD /* DaiDodgeKeyboard+Animation.m in Sources */,
 				10351ACF2147D16400EDC7AD /* MainViewController.m in Sources */,
-				10351A6E2147C82A00EDC7AD /* CardAlertView.m in Sources */,
 				10351A142147B73200EDC7AD /* WLSystemManager.m in Sources */,
 				101134432148CEAF0082F74B /* LWLoginTextFieldView.m in Sources */,
 				1035192E2147A34000EDC7AD /* DaiDodgeKeyboardObjects.m in Sources */,
@@ -2869,7 +2860,6 @@
 				10351A122147B73200EDC7AD /* CALayer+WLBorderConfig.m in Sources */,
 				1089C5572146AD9900363537 /* main.m in Sources */,
 				103518FF2147A34000EDC7AD /* Order.m in Sources */,
-				10351A772147C9BA00EDC7AD /* CardStatuModel.m in Sources */,
 				103518DD2147A34000EDC7AD /* REInlineDatePickerItem.m in Sources */,
 				1035193C2147A34000EDC7AD /* WLPersistanceUtils.m in Sources */,
 				10351A042147B73200EDC7AD /* NSUserDefaults+WLAdd.m in Sources */,

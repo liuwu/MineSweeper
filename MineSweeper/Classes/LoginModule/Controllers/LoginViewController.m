@@ -33,8 +33,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [[YYTextKeyboardManager defaultManager] addObserver:self];
-//    [DaiDodgeKeyboard addRegisterTheViewNeedDodgeKeyboard:self.view];
+    [DaiDodgeKeyboard addRegisterTheViewNeedDodgeKeyboard:self.view];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:WLColoerRGB(255.f)] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setShadowImage:[UIImage imageWithColor:WLColoerRGB(255.f)]];
 }
@@ -42,14 +41,11 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.view endEditing:YES];
-    [[YYTextKeyboardManager defaultManager] removeObserver:self];
-//    [DaiDodgeKeyboard removeRegisterTheViewNeedDodgeKeyboard];
+    [DaiDodgeKeyboard removeRegisterTheViewNeedDodgeKeyboard];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-//    self.view.alpha = 1.f;
     [self addSubviews];
     [self addConstrainsForSubviews];
 }
@@ -76,13 +72,11 @@
     [self.view addSubview:pwdTxtView];
     self.pwdTxtView = pwdTxtView;
     
-    UIButton *loginBtn = [[UIButton alloc] init];
+    QMUIFillButton *loginBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
     [loginBtn setTitle:@"登录" forState:UIControlStateNormal];
-    [loginBtn wl_setBackgroundColor:WLRGB(254.f, 72.f, 30.f) forState:UIControlStateNormal];
-    [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     loginBtn.titleLabel.font = WLFONT(18);
     [loginBtn addTarget:self action:@selector(didClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [loginBtn wl_setCornerRadius:5];
+    [loginBtn setCornerRadius:4];
     [self.view addSubview:loginBtn];
     self.loginBtn = loginBtn;
     
@@ -102,8 +96,6 @@
     [self.view addSubview:forgetBtn];
     self.forgetBtn = forgetBtn;
     
-//    [[IQKeyboardManager sharedManager] setEnable:YES];
-    
     
     //添加单击手势
     UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
@@ -116,7 +108,11 @@
 - (void)addConstrainsForSubviews {
     
     [_phoneTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.view.mas_top).offset(kWL_NormalMarginWidth_14);
+        if (@available(iOS 11.0, *)) {
+            make.top.mas_equalTo(self.view.mas_safeAreaLayoutGuideTop).offset(kWL_NormalMarginWidth_14);
+        } else {
+            make.top.mas_equalTo(self.view.mas_top).offset(kWL_NormalMarginWidth_14);
+        }
         make.centerX.mas_equalTo(self.view);
         make.width.mas_equalTo(ScreenWidth - kWL_NormalMarginWidth_10 * 2.f);
         make.height.mas_equalTo(kWL_NormalTextFieldHeight);

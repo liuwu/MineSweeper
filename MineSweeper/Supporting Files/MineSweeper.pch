@@ -22,10 +22,6 @@
 
     #import <DateTools/DateTools.h>
 
-    #import <SDWebImage/SDImageCache.h>
-    #import <SDWebImage/UIButton+WebCache.h>
-    #import <SDWebImage/UIImageView+WebCache.h>
-
     #import <AFNetworking/AFNetworking.h>
     #import <AFNetworking/UIKit+AFNetworking.h>
 
@@ -36,6 +32,8 @@
 
     #import <Masonry/Masonry.h>
     #import <MJRefresh/MJRefresh.h>
+
+    #import <QMUIKit/QMUIKit.h>
 
     #pragma mark - Custom
     #import "WLKit.h"

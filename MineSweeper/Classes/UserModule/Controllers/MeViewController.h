@@ -6,8 +6,8 @@
 //  Copyright © 2018年 liuwu. All rights reserved.
 //
 
-#import "BaseViewController.h"
+#import "SLCommonGroupListViewController.h"
 
-@interface MeViewController : BaseViewController
+@interface MeViewController : SLCommonGroupListViewController
 
 @end

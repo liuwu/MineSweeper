@@ -1,27 +1,23 @@
 //
-//  BaseViewController.m
+//  SLCommonTableViewController.m
 //  MineSweeper
 //
-//  Created by liuwu on 2018/9/12.
+//  Created by dong on 2018/9/13.
 //  Copyright © 2018年 liuwu. All rights reserved.
 //
 
-#import "BaseViewController.h"
+#import "SLCommonTableViewController.h"
 
-@interface BaseViewController ()
+@interface SLCommonTableViewController ()
 
 @end
 
-@implementation BaseViewController
+@implementation SLCommonTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // 不管navigationBar的backgroundImage如何设置，都让布局撑到屏幕顶部，方便布局的统一
-//    self.extendedLayoutIncludesOpaqueBars = NO;
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = WLColoerRGB(248.f);
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

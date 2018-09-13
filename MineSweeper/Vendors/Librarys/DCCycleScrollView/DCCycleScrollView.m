@@ -7,7 +7,7 @@
 //
 
 #import "DCCycleScrollView.h"
-#import "UIImageView+WebCache.h"
+//#import "UIImageView+WebCache.h"
 #import "DCCycleScrollViewCell.h"
 #import "DCCycleScrollViewFlowLayout.h"
 #define kScreenWidth  [UIScreen mainScreen].bounds.size.width
@@ -177,7 +177,13 @@ static NSString *const cellID = @"cellID";
     NSString *imagePath = self.imgArr[itemIndex];
    
         if ([imagePath hasPrefix:@"http"]) {
-            [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imagePath] placeholderImage:self.cellPlaceholderImage];
+            [cell.imageView setImageWithURL:[NSURL URLWithString:imagePath]
+                                placeholder:self.cellPlaceholderImage
+                                    options:YYWebImageOptionShowNetworkActivity|YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur
+                                 completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                                        
+                                    }];
+//            [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imagePath] placeholderImage:self.cellPlaceholderImage];
         } else {
             UIImage *image = [UIImage imageNamed:imagePath];
             if (!image) {

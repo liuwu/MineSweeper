@@ -95,11 +95,13 @@
     self.tableView.mj_footer = footer;
     self.tableView.mj_footer.hidden = YES;
     
+    self.tableView.backgroundColor = [UIColor whiteColor];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.tableView setSectionIndexColor:[UIColor wl_hex0F6EF4]];
-    [self.tableView setSectionIndexBackgroundColor:[UIColor clearColor]];
+    self.tableView.allowsSelection = NO;// 去除默认选中效果
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//去除默认分割线
+//    [self.tableView setSectionIndexColor:[UIColor wl_hex0F6EF4]];
+//    [self.tableView setSectionIndexBackgroundColor:[UIColor clearColor]];
     self.tableView.tableHeaderView = headerView;
     
 //    self.manager = [[RETableViewManager alloc] initWithTableView:self.tableView];
@@ -131,7 +133,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 10.f;
+    return 2.f;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -142,9 +144,15 @@
     return cell;
 }
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
 //    return kNoteHeight + kBannerHeight;
-//}
+    return 0.01f;
+}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 153.f;

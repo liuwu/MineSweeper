@@ -24,11 +24,16 @@
 }
 
 - (void)setupUI {
+    UIView *backView = [[UIView alloc] init];
+    backView.backgroundColor = [UIColor wl_HexE5E5E5];
+    self.selectedBackgroundView = backView;
+    
     UIView *contentView = [[UIView alloc] init];
     contentView.backgroundColor = UIColorMake(254.f, 72.f, 30.f);
     [self.contentView addSubview:contentView];
-    [contentView wl_setCornerRadius:10.f];
-    [contentView wl_setLayerShadow:[UIColor grayColor] offset:CGSizeMake(2.f, 2.f) radius:3.f];
+//    [contentView wl_setCornerRadius:10.f];
+    contentView.layer.cornerRadius = 10.f;
+    [contentView wl_setLayerShadow:[UIColor grayColor] offset:CGSizeMake(2.f, 2.f) radius:5.f];
     
     [contentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.contentView).with.insets(UIEdgeInsetsMake(16, 10, 16, 10));
@@ -44,7 +49,7 @@
     
     [_nameLabel sizeToFit];
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(20.f);
+        make.top.mas_equalTo(15.f);
         make.left.mas_equalTo(20.f);
     }];
     
@@ -66,7 +71,9 @@
     [beginBtn setTitleColor:UIColorMake(254,72,30) forState:UIControlStateNormal];
     beginBtn.backgroundColor = UIColorMake(254,234,69);
     [contentView addSubview:beginBtn];
-    [beginBtn wl_setCornerRadius:5.f];
+//    [beginBtn wl_setCornerRadius:5.f];
+    beginBtn.layer.cornerRadius = 5.f;
+    [beginBtn wl_setLayerShadow:[UIColor lightGrayColor] offset:CGSizeMake(2.f, 2.f) radius:1.f];
     self.beginBtn = beginBtn;
     
     [_beginBtn mas_makeConstraints:^(MASConstraintMaker *make) {

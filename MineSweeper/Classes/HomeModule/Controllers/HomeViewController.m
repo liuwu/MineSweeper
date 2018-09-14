@@ -44,8 +44,7 @@
 
 - (void)initSubviews {
     [super initSubviews];
-    
-    UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:UIImageMake(@"home_notice_btn")] target:self action:@selector(leftBtnItemClicked)];
+    UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"home_notice_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(leftBtnItemClicked)];
     self.navigationItem.leftBarButtonItem = leftBtnItem;
     QMUICMI.badgeBackgroundColor = UIColorRed;
 //    UITabBarItem 上的未读数的背景色

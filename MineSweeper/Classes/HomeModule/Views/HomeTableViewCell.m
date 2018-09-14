@@ -28,11 +28,12 @@
     backView.backgroundColor = [UIColor wl_HexE5E5E5];
     self.selectedBackgroundView = backView;
     
-    UIView *contentView = [[UIView alloc] init];
-    contentView.backgroundColor = UIColorMake(254.f, 72.f, 30.f);
+    UIImageView *contentView = [[UIImageView alloc] initWithImage:[UIImage imageWithColor:UIColorMake(254.f, 72.f, 30.f)]];
+//    contentView.backgroundColor = UIColorMake(254.f, 72.f, 30.f);
     [self.contentView addSubview:contentView];
 //    [contentView wl_setCornerRadius:10.f];
     contentView.layer.cornerRadius = 10.f;
+    contentView.userInteractionEnabled = YES;
     [contentView wl_setLayerShadow:[UIColor grayColor] offset:CGSizeMake(2.f, 2.f) radius:5.f];
     
     [contentView mas_makeConstraints:^(MASConstraintMaker *make) {

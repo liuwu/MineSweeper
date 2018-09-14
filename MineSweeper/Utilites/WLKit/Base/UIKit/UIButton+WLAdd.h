@@ -45,10 +45,19 @@ typedef NS_ENUM(NSUInteger, WLImagePosition) {
 - (void)wl_setBackgroundColor:(UIColor *)backgroundColor
                      forState:(UIControlState)state;
 
+/**
+ 扩大UIButton点击区域
+ */
+- (void)wl_setEnlargeEdgeWithTop:(CGFloat)top
+                           right:(CGFloat)right
+                          bottom:(CGFloat)bottom
+                            left:(CGFloat)left;
+
 
 //获取按钮对象
 + (UIButton *)wl_getBtnWithTitle:(nullable NSString *)title
                            image:(nullable UIImage *)image;
+
 
 @end
 

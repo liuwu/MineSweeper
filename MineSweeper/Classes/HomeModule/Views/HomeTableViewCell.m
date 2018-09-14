@@ -36,8 +36,23 @@
     [contentView wl_setLayerShadow:[UIColor grayColor] offset:CGSizeMake(2.f, 2.f) radius:5.f];
     
     [contentView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.contentView).with.insets(UIEdgeInsetsMake(16, 10, 16, 10));
+        make.edges.equalTo(self.contentView).with.insets(UIEdgeInsetsMake(16, kWL_NormalMarginWidth_10, 16, kWL_NormalMarginWidth_10));
     }];
+    
+    UIImageView *iconImageView = [[UIImageView alloc] init];
+    iconImageView.image = [UIImage imageNamed:@"home_boom_img"];
+//    iconImageView.contentMode = UIViewContentModeScaleToFill;
+    //    _iconImageView.hidden = YES;
+    [contentView addSubview:iconImageView];
+    self.iconImageView = iconImageView;
+//    [iconImageView wl_setDebug:YES];
+    
+    [_iconImageView sizeToFit];
+    [_iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(contentView);
+        make.width.mas_equalTo(self.iconImageView.width - kWL_NormalMarginWidth_12);
+        make.bottom.mas_equalTo(contentView);
+        make.right.mas_equalTo(contentView);    }];
     
     
     UILabel *nameLabel = [[UILabel alloc] init];
@@ -49,19 +64,22 @@
     
     [_nameLabel sizeToFit];
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(15.f);
-        make.left.mas_equalTo(20.f);
+        make.top.mas_equalTo(kWL_NormalMarginWidth_15);
+        make.left.mas_equalTo(kWL_NormalMarginWidth_20);
     }];
     
     UIButton *noteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [noteBtn setTitle:@"查看游戏规则>>" forState:UIControlStateNormal];
     noteBtn.titleLabel.font = UIFontMake(14.f);
+    // 扩大点击区域
+    [noteBtn wl_setEnlargeEdgeWithTop:20 right:0.f bottom:0.f left:0.f];
+    [noteBtn addTarget:self action:@selector(noteBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [contentView addSubview:noteBtn];
     self.noteBtn = noteBtn;
     
     [_noteBtn sizeToFit];
     [_noteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.nameLabel.bottom + 10.f);
+        make.top.mas_equalTo(self.nameLabel.bottom + kWL_NormalMarginWidth_10);
         make.left.mas_equalTo(self.nameLabel);
     }];
     
@@ -70,31 +88,18 @@
     beginBtn.titleLabel.font = UIFontMake(14.f);
     [beginBtn setTitleColor:UIColorMake(254,72,30) forState:UIControlStateNormal];
     beginBtn.backgroundColor = UIColorMake(254,234,69);
+    [beginBtn addTarget:self action:@selector(beginBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [contentView addSubview:beginBtn];
 //    [beginBtn wl_setCornerRadius:5.f];
     beginBtn.layer.cornerRadius = 5.f;
+    beginBtn.userInteractionEnabled = NO;
     [beginBtn wl_setLayerShadow:[UIColor lightGrayColor] offset:CGSizeMake(2.f, 2.f) radius:1.f];
     self.beginBtn = beginBtn;
     
     [_beginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(110.f, 30.f));
-        make.bottom.mas_equalTo(-20.f);
-        make.left.mas_equalTo(20.f);
-    }];
-    
-    UIImageView *iconImageView = [[UIImageView alloc] init];
-    iconImageView.image = [UIImage imageNamed:@"home_boom_img"];
-//    iconImageView.contentMode = UIViewContentModeScaleAspectFit;
-//    _iconImageView.hidden = YES;
-    [contentView addSubview:iconImageView];
-    self.iconImageView = iconImageView;
-    
-//    [_iconImageView sizeToFit];
-    [_iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(contentView);
-        make.right.mas_equalTo(contentView);
-        make.top.mas_equalTo(12.f);
-        make.left.mas_equalTo(self.beginBtn.right + 74.f);
+        make.bottom.mas_equalTo(-kWL_NormalMarginWidth_20);
+        make.left.mas_equalTo(kWL_NormalMarginWidth_20);
     }];
     
 }
@@ -117,6 +122,13 @@
 //    _infoLabel.attributedText = [NSString wl_getAttributedInfoString:_infoLabel.text searchStr:_searchText color:[UIColor wl_hex0F6EF4] font:_infoLabel.font];
 //}
 
+- (void)noteBtnClicked:(UIButton *)sender {
+    DLog(@"noteBtnClicked-----");
+}
+
+- (void)beginBtnClicked:(UIButton *)sender {
+    DLog(@"beginBtnClicked-----");
+}
 
 - (void)layoutSubviews {
     [super layoutSubviews];

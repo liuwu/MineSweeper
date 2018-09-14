@@ -9,10 +9,16 @@
 #import "UIButton+WLAdd.h"
 #import "UIImage+WLAdd.h"
 #import "WLCGUtilities.h"
+#import <objc/runtime.h>
 
 WLSYNTH_DUMMY_CLASS(UIButton_WLAdd)
 
 @implementation UIButton (WLAdd)
+static char topNameKey;
+static char rightNameKey;
+static char bottomNameKey;
+static char leftNameKey;
+
 
 /**
  *  利用UIButton的titleEdgeInsets和imageEdgeInsets来实现文字和图片的自由排列
@@ -73,13 +79,43 @@ WLSYNTH_DUMMY_CLASS(UIButton_WLAdd)
 }
 
 
+- (void)wl_setEnlargeEdgeWithTop:(CGFloat) top right:(CGFloat) right bottom:(CGFloat) bottom left:(CGFloat) left {
+    objc_setAssociatedObject(self, &topNameKey, [NSNumber numberWithFloat:top], OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, &rightNameKey, [NSNumber numberWithFloat:right], OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, &bottomNameKey, [NSNumber numberWithFloat:bottom], OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, &leftNameKey, [NSNumber numberWithFloat:left], OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (CGRect)enlargedRect {
+    NSNumber* topEdge = objc_getAssociatedObject(self, &topNameKey);
+    NSNumber* rightEdge = objc_getAssociatedObject(self, &rightNameKey);
+    NSNumber* bottomEdge = objc_getAssociatedObject(self, &bottomNameKey);
+    NSNumber* leftEdge = objc_getAssociatedObject(self, &leftNameKey);
+    if (topEdge && rightEdge && bottomEdge && leftEdge) {
+        return CGRectMake(self.bounds.origin.x - leftEdge.floatValue,
+                          self.bounds.origin.y - topEdge.floatValue,
+                          self.bounds.size.width + leftEdge.floatValue + rightEdge.floatValue,
+                          self.bounds.size.height + topEdge.floatValue + bottomEdge.floatValue);
+    } else {
+        return self.bounds;
+    }
+}
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    CGRect rect = [self enlargedRect];
+    if (CGRectEqualToRect(rect, self.bounds)) {
+        return [super hitTest:point withEvent:event];
+    }
+    return CGRectContainsPoint(rect, point) ? self : nil;
+}
+
 //获取按钮对象
 + (UIButton *)wl_getBtnWithTitle:(nullable NSString *)title image:(nullable UIImage *)image {
     UIButton *button = [self buttonWithType:UIButtonTypeCustom];
     button.backgroundColor = [UIColor whiteColor];
     button.titleLabel.font = [UIFont systemFontOfSize:14.f];
     [button setTitle:title forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [button setImage:image forState:UIControlStateNormal];
     if (title && image) {
         button.imageEdgeInsets = UIEdgeInsetsMake(0.f, -10.f, 0.f, 0.f);

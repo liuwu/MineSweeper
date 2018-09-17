@@ -31,7 +31,13 @@
 
 @interface RETableViewItem : NSObject
 
+// 自定义logo
+@property (strong, nonatomic) UIImage *logoImage;
+
 @property (copy, nonatomic) NSString *title;
+// 标题颜色和字体
+@property (copy, nonatomic) UIColor *titleLabelTextColor;
+@property (copy, nonatomic) UIFont *titleLabelTextFont;
 @property (strong, nonatomic) UIImage *image;
 @property (strong, nonatomic) UIImage *highlightedImage;
 @property (assign, nonatomic) NSTextAlignment textAlignment;
@@ -39,6 +45,15 @@
 @property (weak, nonatomic) RETableViewSection *section;
 
 @property (copy, nonatomic) NSString *detailLabelText;
+// 副标题颜色和字体
+@property (copy, nonatomic) UIColor *titleDetailTextColor;
+@property (copy, nonatomic) UIFont *titleDetailTextFont;
+// 是否使用label中加亮字体，如果是YES，一下字段有效
+@property (assign, nonatomic) BOOL detailLabelHintColor;
+@property (copy, nonatomic) NSString *detailLabelHintText;
+@property (copy, nonatomic) UIColor *titleDetailHintColor;
+@property (copy, nonatomic) UIFont *titleDetailHintFont;
+
 @property (assign, nonatomic) UITableViewCellStyle style;
 @property (assign, nonatomic) UITableViewCellSelectionStyle selectionStyle;
 @property (assign, nonatomic) UITableViewCellAccessoryType accessoryType;

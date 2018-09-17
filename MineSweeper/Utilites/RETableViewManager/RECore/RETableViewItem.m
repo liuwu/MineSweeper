@@ -90,6 +90,10 @@ accessoryButtonTapHandler:(void(^)(RETableViewItem *item))accessoryButtonTapHand
     if (!self)
         return nil;
     
+    // 默认字体颜色、和大小
+    self.titleLabelTextColor = WLColoerRGB(51.f);
+    self.titleLabelTextFont = UIFontMake(15.f);
+    
     self.title = title;
     self.accessoryType = accessoryType;
     self.selectionHandler = selectionHandler;

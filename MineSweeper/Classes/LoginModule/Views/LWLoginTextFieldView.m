@@ -19,6 +19,8 @@
 @property (nonatomic, strong) UIView *leftView;
 @property (nonatomic, strong) NNValidationView *captchaView;
 
+@property (nonatomic, assign) BOOL isHaveDian;
+
 @end
 
 @implementation LWLoginTextFieldView
@@ -66,6 +68,10 @@
         textField.delegate = self;
         [self addSubview:textField];
         self.textField = textField;
+        [textField setBk_shouldReturnBlock:^BOOL(UITextField *field) {
+            [field resignFirstResponder];
+            return YES;
+        }];
         
         switch (_textFieldType) {
             case LWLoginTextFieldTypePhone:{
@@ -168,6 +174,52 @@
                 }];
             }
                 break;
+            case LWLoginTextFieldTypeMoney: {
+                _textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+                _textField.placeholder = @"0.00";
+                _textField.textAlignment = NSTextAlignmentRight;
+                //                _textField.limitMaxCount = 18;
+                _textField.returnKeyType = UIReturnKeyGo;
+                
+                QMUILabel *titleLabel = [[QMUILabel alloc] init];
+                titleLabel.font = UIFontMake(15.f);
+                titleLabel.textColor = WLColoerRGB(51.f);
+                titleLabel.text = @"转账金额";
+                [self addSubview:titleLabel];
+                self.titleLabel = titleLabel;
+                
+                QMUILabel *subTitleLabel = [[QMUILabel alloc] init];
+                subTitleLabel.font = UIFontMake(15.f);
+                subTitleLabel.textColor = WLColoerRGB(51.f);
+                subTitleLabel.text = @"元";
+                subTitleLabel.textAlignment = NSTextAlignmentRight;
+                [self addSubview:subTitleLabel];
+                self.subTitleLabel = subTitleLabel;
+//                [subTitleLabel wl_setDebug:YES];
+                
+                [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(11.f);
+                    make.width.mas_equalTo(80.f);
+                    make.height.mas_equalTo(self);
+                    make.centerY.mas_equalTo(self);
+                }];
+                
+                [_subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.right.mas_equalTo(self.mas_right).offset(-11.f);
+                    make.height.mas_equalTo(self);
+                    make.width.mas_equalTo(20.f);
+                    make.centerY.mas_equalTo(self);
+                }];
+                
+//                [_textField wl_setDebug:YES];
+                [_textField mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(self.titleLabel.mas_right);
+                    make.right.mas_equalTo(self.subTitleLabel.mas_left);
+                    make.top.bottom.mas_equalTo(self);
+                }];
+                
+            }
+                break;
             case LWLoginTextFieldTypeVcode:{
                 _textField.secureTextEntry = YES;
                 _textField.keyboardType = UIKeyboardTypeASCIICapable;
@@ -251,6 +303,79 @@
 
 - (void)setPlaceholder:(NSString *)placeholder {
     self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:placeholder attributes:@{NSForegroundColorAttributeName:_placeholderColor}];
+}
+
+//textField.text 输入之前的值 string 输入的字符
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+//    self.waitPayLabel.text = [NSString stringWithFormat:@"待支付¥%@ |优惠¥%@",self.totalTF.text,self.exclusiveMoneyTF.text];
+    if (_textFieldType != LWLoginTextFieldTypeMoney) {
+        return YES;
+    }
+    if ([textField.text rangeOfString:@"."].location==NSNotFound) {
+        _isHaveDian=NO;
+    }
+    if ([string length]>0) {
+        unichar single=[string characterAtIndex:0];//当前输入的字符
+        //数据格式正确
+        if ((single >='0' && single<='9') || single=='.') {
+            //首字母不能为0和小数点
+            if([textField.text length]==0) {
+                if(single == '.') {
+                    [textField.text stringByReplacingCharactersInRange:range withString:@""];
+                    return NO;
+                }
+                if (single == '0') {
+                }
+            }
+            
+            if([textField.text length]==1) {
+                
+                NSString *first = [textField.text substringToIndex:1];//字符串开始
+                //首字母是0的时候
+                if ([first isEqualToString:@"0"]) {
+                    if(single == '.') {
+                        _isHaveDian=YES;
+                        return YES;
+                    } else {
+                        [textField.text stringByReplacingCharactersInRange:range withString:@""];
+                        return NO;
+                    }
+                } else {
+                    return YES;
+                }
+            }
+            if (single=='.') {
+                //text中还没有小数点
+                if(!_isHaveDian) {
+                    _isHaveDian=YES;
+                    return YES;
+                } else {
+                    [textField.text stringByReplacingCharactersInRange:range withString:@""];
+                    return NO;
+                }
+            } else {
+                //存在小数点
+                if (_isHaveDian) {
+                    //判断小数点的位数
+                    NSRange ran=[textField.text rangeOfString:@"."];
+                    int tt=range.location-ran.location;
+                    if (tt <= 2) {
+                        return YES;
+                    } else {
+                        return NO;
+                    }
+                } else {
+                    return YES;
+                }
+            }
+        } else {
+            //输入的数据格式不正确
+            [textField.text stringByReplacingCharactersInRange:range withString:@""];
+            return NO;
+        }
+    } else {
+        return YES;
+    }
 }
 
 @end

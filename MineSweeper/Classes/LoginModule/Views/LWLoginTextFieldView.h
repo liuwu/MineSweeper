@@ -15,12 +15,17 @@ typedef NS_ENUM(NSInteger, LWLoginTextFieldType)
     LWLoginTextFieldTypePhone,
     LWLoginTextFieldTypeImageVcode,
     LWLoginTextFieldTypeVcode,
+    LWLoginTextFieldTypeMoney,
 };
 
 
 @interface LWLoginTextFieldView : UIView
 
 @property (nonatomic, strong) UITextField *textField;
+
+// 类型是LWLoginTextFieldTypeMoney时，设置的
+@property (nonatomic, strong) QMUILabel *titleLabel;
+@property (nonatomic, strong) QMUILabel *subTitleLabel;
 
 //type为WLLoginTextFieldTypePhone时有用
 @property (nonatomic, copy,readonly) NSString *phone;

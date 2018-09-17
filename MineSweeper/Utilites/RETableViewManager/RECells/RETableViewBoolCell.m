@@ -29,6 +29,7 @@
 @interface RETableViewBoolCell ()
 
 @property (strong, nonatomic) UISwitch *switchView;
+@property (strong, nonatomic) UIView *lineView;
 
 @property (assign, nonatomic) BOOL enabled;
 
@@ -68,9 +69,18 @@
                                                                   constant:0]];
     UISwitch *switchView = self.switchView;
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[switchView]-margin-|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(switchView)]];
+    
+    if (self.tableViewManager.showBottomLine) {
+        UIView *lineView = [[UIView alloc] initWithFrame:CGRectZero];
+        lineView.backgroundColor = WLColoerRGB(242.f);
+        [self.contentView addSubview:lineView];
+        self.lineView = lineView;
+    }
 }
 
 - (void)cellWillAppear {
+    self.textLabel.textColor = self.item.titleLabelTextColor != nil ? self.item.titleLabelTextColor: self.tableViewManager.defaultTitleLabelTextColor;
+    self.textLabel.font = self.item.titleLabelTextFont != nil ? self.item.titleLabelTextFont : self.tableViewManager.defaultTitleLabelTextFont;
     
     self.textLabel.backgroundColor = [UIColor clearColor];
     self.textLabel.text = self.item.title;
@@ -84,6 +94,10 @@
 - (void)layoutSubviews {
     
     [super layoutSubviews];
+    if (self.tableViewManager.showBottomLine) {
+        self.lineView.frame = CGRectMake(0.f, self.contentView.size.height - .8f, ScreenWidth, .8f);
+    }
+    
     if (self.textLabel.frame.origin.x + self.textLabel.frame.size.width >= self.switchView.frame.origin.x)
         self.textLabel.frame = CGRectMake(self.textLabel.frame.origin.x, self.textLabel.frame.origin.y, self.textLabel.frame.size.width - self.switchView.frame.size.width - self.section.style.contentViewMargin - 10.0, self.textLabel.frame.size.height);
     self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;

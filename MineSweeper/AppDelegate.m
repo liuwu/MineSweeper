@@ -10,6 +10,9 @@
 #import "LoginViewController.h"
 #import "NavViewController.h"
 #import "MainViewController.h"
+#import "QMUIConfigurationTemplate.h"
+#import "QDCommonUI.h"
+#import "QDUIHelper.h"
 
 @interface AppDelegate ()
 
@@ -62,15 +65,27 @@ single_implementation(AppDelegate);
 /// 统一设置UI样式
 - (void)setupUIStyle {
     
+    // QD自定义的全局样式渲染
+    [QDCommonUI renderGlobalAppearances];
+    // 预加载 QQ 表情，避免第一次使用时卡顿
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [QDUIHelper qmuiEmotions];
+    });
+    
+    // 启动QMUI的配置模板
+//    [QMUIConfigurationTemplate setupConfigurationTemplate];
+    // 将全局的控件样式渲染出来
+//    [QMUIConfigurationManager renderGlobalAppearances];
+    
     // 设置BarButtonItem
 //    [[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class], [UINavigationBar class]]] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(14), NSForegroundColorAttributeName:WLColoerRGB(51.f)} forState:UIControlStateNormal];
     // navBar设置
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(18), NSForegroundColorAttributeName:WLColoerRGB(51.f)}];
+//    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(18), NSForegroundColorAttributeName:WLColoerRGB(51.f)}];
     
     //设置整个项目的item状态
-    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(14), NSForegroundColorAttributeName: WLColoerRGB(51.f)} forState:UIControlStateNormal];
-    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(14), NSForegroundColorAttributeName: WLColoerRGB(51.f)} forState:UIControlStateHighlighted];
-    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(14), NSForegroundColorAttributeName: WLColoerRGB(51.f)} forState:UIControlStateSelected];
+//    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(14), NSForegroundColorAttributeName: WLColoerRGB(51.f)} forState:UIControlStateNormal];
+//    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(14), NSForegroundColorAttributeName: WLColoerRGB(51.f)} forState:UIControlStateHighlighted];
+//    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(14), NSForegroundColorAttributeName: WLColoerRGB(51.f)} forState:UIControlStateSelected];
     
     [UITextField appearance].tintColor = WLColoerRGB(255.f);
 }

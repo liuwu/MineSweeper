@@ -31,10 +31,18 @@
         case UseTypeRegist:
             return @"注册";
             break;
+        case UseTypeForget:
+            return @"重置密码";
+            break;
         default:
             return @"";
             break;
     }
+}
+
+- (instancetype)initWithUseType:(UseType)useType {
+    self.useType = useType;
+    return [super init];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -72,7 +80,7 @@
     [self.view addSubview:vcodeTxtView];
     self.vcodeTxtView = vcodeTxtView;
     
-    if (_useType == UseTypeRegist) {
+    if (_useType != UseTypeSMS) {
         LWLoginTextFieldView *pwdTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePassword];
         [self.view addSubview:pwdTxtView];
         self.pwdTxtView = pwdTxtView;
@@ -81,7 +89,7 @@
     QMUIFillButton *loginBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
     loginBtn.titleLabel.font = WLFONT(18);
     [loginBtn addTarget:self action:@selector(didClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [loginBtn setCornerRadius:4];
+    [loginBtn setCornerRadius:5.f];
     [self.view addSubview:loginBtn];
     self.loginBtn = loginBtn;
     
@@ -112,8 +120,16 @@
                                                                                      target:self
                                                                                      action:@selector(rightBarButtonItemClicked)];
             break;
+        case UseTypeForget:
+            [loginBtn setTitle:@"重置密码" forState:UIControlStateNormal];
+            
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"登录"
+                                                                                      style:UIBarButtonItemStylePlain
+                                                                                     target:self
+                                                                                     action:@selector(rightBarButtonItemClicked)];
+            break;
         default:
-            [loginBtn setTitle:@"" forState:UIControlStateNormal];
+            [loginBtn setTitle:@"其他" forState:UIControlStateNormal];
             break;
     }
     
@@ -137,21 +153,21 @@
         make.height.mas_equalTo(kWL_NormalTextFieldHeight);
     }];
     
-    [_imageVcodeTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.equalTo(self.phoneTxtView);
-        make.centerX.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.phoneTxtView.mas_bottom).offset(kWL_NormalMarginWidth_11);
-    }];
-    
-    [_vcodeTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.equalTo(self.phoneTxtView);
-        make.centerX.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.imageVcodeTxtView.mas_bottom).offset(kWL_NormalMarginWidth_11);
-    }];
-    
     switch (_useType) {
         case UseTypeSMS:
         {
+            [_imageVcodeTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.size.equalTo(self.phoneTxtView);
+                make.centerX.mas_equalTo(self.view);
+                make.top.mas_equalTo(self.phoneTxtView.mas_bottom).offset(kWL_NormalMarginWidth_11);
+            }];
+            
+            [_vcodeTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.size.equalTo(self.phoneTxtView);
+                make.centerX.mas_equalTo(self.view);
+                make.top.mas_equalTo(self.imageVcodeTxtView.mas_bottom).offset(kWL_NormalMarginWidth_11);
+            }];
+            
             [_loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.size.equalTo(self.phoneTxtView);
                 make.centerX.mas_equalTo(self.view);
@@ -167,6 +183,18 @@
             break;
         case UseTypeRegist:
            {
+               [_imageVcodeTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+                   make.size.equalTo(self.phoneTxtView);
+                   make.centerX.mas_equalTo(self.view);
+                   make.top.mas_equalTo(self.phoneTxtView.mas_bottom).offset(kWL_NormalMarginWidth_11);
+               }];
+               
+               [_vcodeTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+                   make.size.equalTo(self.phoneTxtView);
+                   make.centerX.mas_equalTo(self.view);
+                   make.top.mas_equalTo(self.imageVcodeTxtView.mas_bottom).offset(kWL_NormalMarginWidth_11);
+               }];
+               
                [_pwdTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
                    make.size.equalTo(self.phoneTxtView);
                    make.centerX.mas_equalTo(self.view);
@@ -180,7 +208,42 @@
                }];
            }
             break;
+        case UseTypeForget:
+        {
+            _imageVcodeTxtView.hidden = YES;
+            
+            [_vcodeTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.size.mas_equalTo(self.phoneTxtView);
+                make.centerX.mas_equalTo(self.view);
+                make.top.mas_equalTo(self.phoneTxtView.mas_bottom).offset(kWL_NormalMarginWidth_11);
+            }];
+            
+            [_pwdTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.size.mas_equalTo(self.phoneTxtView);
+                make.centerX.mas_equalTo(self.view);
+                make.top.mas_equalTo(self.vcodeTxtView.mas_bottom).offset(kWL_NormalMarginWidth_11);
+            }];
+            
+            [_loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.size.mas_equalTo(self.phoneTxtView);
+                make.centerX.mas_equalTo(self.view);
+                make.top.mas_equalTo(self.pwdTxtView.mas_bottom).offset(kWL_NormalMarginWidth_20);
+            }];
+        }
+            break;
         default:
+            [_imageVcodeTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.size.equalTo(self.phoneTxtView);
+                make.centerX.mas_equalTo(self.view);
+                make.top.mas_equalTo(self.phoneTxtView.mas_bottom).offset(kWL_NormalMarginWidth_11);
+            }];
+            
+            [_vcodeTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.size.equalTo(self.phoneTxtView);
+                make.centerX.mas_equalTo(self.view);
+                make.top.mas_equalTo(self.imageVcodeTxtView.mas_bottom).offset(kWL_NormalMarginWidth_11);
+            }];
+            
             [_loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.size.equalTo(self.phoneTxtView);
                 make.centerX.mas_equalTo(self.view);
@@ -200,6 +263,9 @@
         case UseTypeRegist:
             
             break;
+        case UseTypeForget:
+            
+            break;
         default:
             
             break;
@@ -216,12 +282,16 @@
     switch (_useType) {
         case UseTypeSMS:
         {
-            SmsLoginViewController *smsLoginVc = [[SmsLoginViewController alloc] init];
-            smsLoginVc.useType = UseTypeRegist;
+            SmsLoginViewController *smsLoginVc = [[SmsLoginViewController alloc] initWithUseType:UseTypeRegist];
             [self.navigationController pushViewController:smsLoginVc animated:YES];
         }
             break;
         case UseTypeRegist:
+        {
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        }
+            break;
+        case UseTypeForget:
         {
             [self.navigationController popToRootViewControllerAnimated:YES];
         }

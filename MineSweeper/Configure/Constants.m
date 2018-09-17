@@ -24,6 +24,9 @@ CGFloat const kWL_NormalNavBarHeight        = 44.f;
 ///常用的UITextField高度
 CGFloat const kWL_NormalTextFieldHeight     = 44.f;
 
+///常用的UIButton高度
+CGFloat const kWL_NormalButtonHeight     = 44.f;
+
 //------------ TableView 相关-------------------
 ///常规的Tableview的header高度
 CGFloat const kWL_TableNormalHeaderHeight   = 12.f;
@@ -39,6 +42,7 @@ CGFloat const kWL_NormalMarginWidth_10      = 10.f;
 CGFloat const kWL_NormalMarginWidth_15      = 15.f;
 CGFloat const kWL_NormalMarginWidth_14      = 14.f;
 CGFloat const kWL_NormalMarginWidth_16      = 16.f;
+CGFloat const kWL_NormalMarginWidth_17      = 17.f;
 CGFloat const kWL_NormalMarginWidth_20      = 20.f;
 CGFloat const kWL_NormalMarginWidth_23      = 23.f;
 ///常用的间距10.f
@@ -48,7 +52,7 @@ CGFloat const kWL_NormalMarginWidth_12      = 12.f;
 
 //------------ 图片相关 ----------------
 /// 头像图片的尺寸
-CGFloat const kWL_NormalIconSmallWidth      = 40.f;
+CGFloat const kWL_NormalIconSmallWidth      = 30.f;
 
 
 #pragma mark 本地存储时用到的key

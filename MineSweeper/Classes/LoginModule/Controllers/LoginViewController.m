@@ -34,8 +34,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [DaiDodgeKeyboard addRegisterTheViewNeedDodgeKeyboard:self.view];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:WLColoerRGB(255.f)] forBarMetrics:UIBarMetricsDefault];
-    [self.navigationController.navigationBar setShadowImage:[UIImage imageWithColor:WLColoerRGB(255.f)]];
+//    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:WLColoerRGB(255.f)] forBarMetrics:UIBarMetricsDefault];
+//    [self.navigationController.navigationBar setShadowImage:[UIImage imageWithColor:WLColoerRGB(255.f)]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -44,10 +44,17 @@
     [DaiDodgeKeyboard removeRegisterTheViewNeedDodgeKeyboard];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (void)initSubviews {
+    // 子类重写
+    [super initSubviews];
     [self addSubviews];
     [self addConstrainsForSubviews];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+//    [self addSubviews];
+//    [self addConstrainsForSubviews];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -58,11 +65,14 @@
 #pragma mark setup
 // 添加页面UI组件
 - (void)addSubviews {
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"注册"
-                                                                              style:UIBarButtonItemStylePlain
-                                                                             target:self
-                                                                             action:@selector(rightBarButtonItemClicked)];
+    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithTitle:@"注册" target:self action:@selector(rightBarButtonItemClicked)];
+    self.navigationItem.rightBarButtonItem = rightBtnItem;
     
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"注册"
+//                                                                              style:UIBarButtonItemStylePlain
+//                                                                             target:self
+//                                                                             action:@selector(rightBarButtonItemClicked)];
+//
     LWLoginTextFieldView *phoneTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePhone];
     [self.view addSubview:phoneTxtView];
     self.phoneTxtView = phoneTxtView;
@@ -76,7 +86,7 @@
     [loginBtn setTitle:@"登录" forState:UIControlStateNormal];
     loginBtn.titleLabel.font = WLFONT(18);
     [loginBtn addTarget:self action:@selector(didClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [loginBtn setCornerRadius:4];
+    [loginBtn setCornerRadius:5.f];
     [self.view addSubview:loginBtn];
     self.loginBtn = loginBtn;
     
@@ -95,7 +105,6 @@
     [forgetBtn addTarget:self action:@selector(didForgetBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:forgetBtn];
     self.forgetBtn = forgetBtn;
-    
     
     //添加单击手势
     UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
@@ -150,22 +159,19 @@
 
 // 短信登录按钮点击
 - (void)didSmsLoginBtn:(UIButton *)sender {
-    SmsLoginViewController *smsLoginVc = [[SmsLoginViewController alloc] init];
-    smsLoginVc.useType = UseTypeSMS;
-//    [self.navigationController presentViewController:smsLoginVc animated:YES completion:NULL];
+    SmsLoginViewController *smsLoginVc = [[SmsLoginViewController alloc] initWithUseType:UseTypeSMS];
     [self.navigationController pushViewController:smsLoginVc animated:YES];
 }
 
-// 短信登录按钮点击
+// 忘记密码按钮点击
 - (void)didForgetBtn:(UIButton *)sender {
-    
+    SmsLoginViewController *smsLoginVc = [[SmsLoginViewController alloc] initWithUseType:UseTypeForget];
+    [self.navigationController pushViewController:smsLoginVc animated:YES];
 }
 
 // 右侧导航按钮点击
 - (void)rightBarButtonItemClicked {
-    SmsLoginViewController *smsLoginVc = [[SmsLoginViewController alloc] init];
-    smsLoginVc.useType = UseTypeRegist;
-    //    [self.navigationController presentViewController:smsLoginVc animated:YES completion:NULL];
+    SmsLoginViewController *smsLoginVc = [[SmsLoginViewController alloc] initWithUseType:UseTypeRegist];
     [self.navigationController pushViewController:smsLoginVc animated:YES];
 }
 

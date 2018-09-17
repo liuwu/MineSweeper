@@ -7,15 +7,19 @@
 //
 
 #import "BaseViewController.h"
+#import "QDCommonViewController.h"
 
 typedef NS_ENUM(NSInteger, UseType)
 {
     UseTypeSMS,
     UseTypeRegist,
+    UseTypeForget,
 };
 
-@interface SmsLoginViewController : BaseViewController
+@interface SmsLoginViewController : QDCommonViewController//BaseViewController
 
 @property (nonatomic, assign) UseType useType;
+
+- (instancetype)initWithUseType:(UseType)useType;
 
 @end

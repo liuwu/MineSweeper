@@ -271,6 +271,38 @@
 		10351AE82147D3F400EDC7AD /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351AE72147D3F400EDC7AD /* HomeViewController.m */; };
 		10351AEB2147EB2E00EDC7AD /* LWLoginTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351AEA2147EB2E00EDC7AD /* LWLoginTextField.m */; };
 		10351AEE21481BB900EDC7AD /* SmsLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351AED21481BB900EDC7AD /* SmsLoginViewController.m */; };
+		10454668214B77A500DA7F9F /* QDThemeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 10454649214B77A400DA7F9F /* QDThemeManager.m */; };
+		10454669214B77A500DA7F9F /* QMUIConfigurationTemplatePinkRose.m in Sources */ = {isa = PBXBuildFile; fileRef = 1045464A214B77A400DA7F9F /* QMUIConfigurationTemplatePinkRose.m */; };
+		1045466A214B77A500DA7F9F /* QMUIConfigurationTemplateGrass.m in Sources */ = {isa = PBXBuildFile; fileRef = 1045464C214B77A400DA7F9F /* QMUIConfigurationTemplateGrass.m */; };
+		1045466B214B77A500DA7F9F /* QMUIConfigurationTemplateGrapefruit.m in Sources */ = {isa = PBXBuildFile; fileRef = 1045464E214B77A400DA7F9F /* QMUIConfigurationTemplateGrapefruit.m */; };
+		1045466C214B77A500DA7F9F /* QMUIConfigurationTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = 10454651214B77A400DA7F9F /* QMUIConfigurationTemplate.m */; };
+		1045466D214B77A500DA7F9F /* QDUIHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 10454655214B77A400DA7F9F /* QDUIHelper.m */; };
+		1045466E214B77A500DA7F9F /* UIImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 10454656214B77A400DA7F9F /* UIImageEffects.m */; };
+		1045466F214B77A500DA7F9F /* QDCommonUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 10454657214B77A400DA7F9F /* QDCommonUI.m */; };
+		10454670214B77A500DA7F9F /* QDCommonGroupListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1045465A214B77A400DA7F9F /* QDCommonGroupListViewController.m */; };
+		10454671214B77A500DA7F9F /* QDCommonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1045465D214B77A400DA7F9F /* QDCommonViewController.m */; };
+		10454672214B77A500DA7F9F /* QDCommonGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10454660214B77A400DA7F9F /* QDCommonGridViewController.m */; };
+		10454673214B77A500DA7F9F /* QDTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10454661214B77A400DA7F9F /* QDTabBarViewController.m */; };
+		10454674214B77A500DA7F9F /* QDCommonListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10454663214B77A400DA7F9F /* QDCommonListViewController.m */; };
+		10454675214B77A500DA7F9F /* QDNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10454666214B77A400DA7F9F /* QDNavigationController.m */; };
+		10454676214B77A500DA7F9F /* QDCommonTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10454667214B77A400DA7F9F /* QDCommonTableViewController.m */; };
+		1064DDDD214C96A9002A9DD6 /* MessageNotifiListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDDC214C96A9002A9DD6 /* MessageNotifiListViewController.m */; };
+		1064DDE0214C9791002A9DD6 /* GameDetailListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDDF214C9791002A9DD6 /* GameDetailListViewController.m */; };
+		1064DDE3214C9908002A9DD6 /* MessageNotifiDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDE2214C9908002A9DD6 /* MessageNotifiDetailViewController.m */; };
+		1064DDE6214C9ABF002A9DD6 /* MyRecommendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDE5214C9ABF002A9DD6 /* MyRecommendViewController.m */; };
+		1064DDE9214C9B92002A9DD6 /* RecommendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDE8214C9B92002A9DD6 /* RecommendListViewController.m */; };
+		1064DDEC214C9C76002A9DD6 /* WallentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDEB214C9C76002A9DD6 /* WallentViewController.m */; };
+		1064DDEF214C9DA2002A9DD6 /* PosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDEE214C9DA2002A9DD6 /* PosterViewController.m */; };
+		1064DDF2214C9E24002A9DD6 /* WithdrawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDF1214C9E24002A9DD6 /* WithdrawViewController.m */; };
+		1064DDF5214C9F30002A9DD6 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDF4214C9F30002A9DD6 /* SettingViewController.m */; };
+		1064DDF8214CA0C1002A9DD6 /* AccountSafeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDF7214CA0C1002A9DD6 /* AccountSafeViewController.m */; };
+		1064DDFB214CA1D6002A9DD6 /* NewMessageSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDFA214CA1D6002A9DD6 /* NewMessageSetViewController.m */; };
+		1064DDFE214CA2D9002A9DD6 /* MyInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDFD214CA2D9002A9DD6 /* MyInfoViewController.m */; };
+		1064DE01214CA343002A9DD6 /* RechargeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DE00214CA343002A9DD6 /* RechargeViewController.m */; };
+		1064DE04214CA436002A9DD6 /* NewFriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DE03214CA436002A9DD6 /* NewFriendListViewController.m */; };
+		1064DE07214CA60C002A9DD6 /* TransferViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DE06214CA60C002A9DD6 /* TransferViewController.m */; };
+		1064DE0A214CA695002A9DD6 /* ChatUserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DE09214CA695002A9DD6 /* ChatUserInfoViewController.m */; };
+		1064DE0D214CA6DE002A9DD6 /* ChatSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DE0C214CA6DE002A9DD6 /* ChatSettingViewController.m */; };
 		1069EE6D214A66E10006FFCA /* DCCycleScrollViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE6A214A66E10006FFCA /* DCCycleScrollViewFlowLayout.m */; };
 		1069EE6E214A66E10006FFCA /* DCCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE6B214A66E10006FFCA /* DCCycleScrollView.m */; };
 		1069EE6F214A66E10006FFCA /* DCCycleScrollViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE6C214A66E10006FFCA /* DCCycleScrollViewCell.m */; };
@@ -847,6 +879,71 @@
 		10351AEA2147EB2E00EDC7AD /* LWLoginTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LWLoginTextField.m; sourceTree = "<group>"; };
 		10351AEC21481BB900EDC7AD /* SmsLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SmsLoginViewController.h; sourceTree = "<group>"; };
 		10351AED21481BB900EDC7AD /* SmsLoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SmsLoginViewController.m; sourceTree = "<group>"; };
+		10454647214B77A400DA7F9F /* QMUIConfigurationTemplateGrass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMUIConfigurationTemplateGrass.h; sourceTree = "<group>"; };
+		10454648214B77A400DA7F9F /* QMUIConfigurationTemplateGrapefruit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMUIConfigurationTemplateGrapefruit.h; sourceTree = "<group>"; };
+		10454649214B77A400DA7F9F /* QDThemeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QDThemeManager.m; sourceTree = "<group>"; };
+		1045464A214B77A400DA7F9F /* QMUIConfigurationTemplatePinkRose.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMUIConfigurationTemplatePinkRose.m; sourceTree = "<group>"; };
+		1045464B214B77A400DA7F9F /* QMUIConfigurationTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMUIConfigurationTemplate.h; sourceTree = "<group>"; };
+		1045464C214B77A400DA7F9F /* QMUIConfigurationTemplateGrass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMUIConfigurationTemplateGrass.m; sourceTree = "<group>"; };
+		1045464D214B77A400DA7F9F /* QDThemeProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QDThemeProtocol.h; sourceTree = "<group>"; };
+		1045464E214B77A400DA7F9F /* QMUIConfigurationTemplateGrapefruit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMUIConfigurationTemplateGrapefruit.m; sourceTree = "<group>"; };
+		1045464F214B77A400DA7F9F /* QDThemeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QDThemeManager.h; sourceTree = "<group>"; };
+		10454650214B77A400DA7F9F /* QMUIConfigurationTemplatePinkRose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMUIConfigurationTemplatePinkRose.h; sourceTree = "<group>"; };
+		10454651214B77A400DA7F9F /* QMUIConfigurationTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMUIConfigurationTemplate.m; sourceTree = "<group>"; };
+		10454653214B77A400DA7F9F /* UIImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageEffects.h; sourceTree = "<group>"; };
+		10454654214B77A400DA7F9F /* QDCommonUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QDCommonUI.h; sourceTree = "<group>"; };
+		10454655214B77A400DA7F9F /* QDUIHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QDUIHelper.m; sourceTree = "<group>"; };
+		10454656214B77A400DA7F9F /* UIImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageEffects.m; sourceTree = "<group>"; };
+		10454657214B77A400DA7F9F /* QDCommonUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QDCommonUI.m; sourceTree = "<group>"; };
+		10454658214B77A400DA7F9F /* QDUIHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QDUIHelper.h; sourceTree = "<group>"; };
+		1045465A214B77A400DA7F9F /* QDCommonGroupListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QDCommonGroupListViewController.m; sourceTree = "<group>"; };
+		1045465B214B77A400DA7F9F /* QDTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QDTabBarViewController.h; sourceTree = "<group>"; };
+		1045465C214B77A400DA7F9F /* QDCommonListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QDCommonListViewController.h; sourceTree = "<group>"; };
+		1045465D214B77A400DA7F9F /* QDCommonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QDCommonViewController.m; sourceTree = "<group>"; };
+		1045465E214B77A400DA7F9F /* QDNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QDNavigationController.h; sourceTree = "<group>"; };
+		1045465F214B77A400DA7F9F /* QDCommonTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QDCommonTableViewController.h; sourceTree = "<group>"; };
+		10454660214B77A400DA7F9F /* QDCommonGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QDCommonGridViewController.m; sourceTree = "<group>"; };
+		10454661214B77A400DA7F9F /* QDTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QDTabBarViewController.m; sourceTree = "<group>"; };
+		10454662214B77A400DA7F9F /* QDCommonGroupListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QDCommonGroupListViewController.h; sourceTree = "<group>"; };
+		10454663214B77A400DA7F9F /* QDCommonListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QDCommonListViewController.m; sourceTree = "<group>"; };
+		10454664214B77A400DA7F9F /* QDCommonGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QDCommonGridViewController.h; sourceTree = "<group>"; };
+		10454665214B77A400DA7F9F /* QDCommonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QDCommonViewController.h; sourceTree = "<group>"; };
+		10454666214B77A400DA7F9F /* QDNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QDNavigationController.m; sourceTree = "<group>"; };
+		10454667214B77A400DA7F9F /* QDCommonTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QDCommonTableViewController.m; sourceTree = "<group>"; };
+		1064DDDB214C96A9002A9DD6 /* MessageNotifiListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageNotifiListViewController.h; sourceTree = "<group>"; };
+		1064DDDC214C96A9002A9DD6 /* MessageNotifiListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessageNotifiListViewController.m; sourceTree = "<group>"; };
+		1064DDDE214C9791002A9DD6 /* GameDetailListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameDetailListViewController.h; sourceTree = "<group>"; };
+		1064DDDF214C9791002A9DD6 /* GameDetailListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameDetailListViewController.m; sourceTree = "<group>"; };
+		1064DDE1214C9908002A9DD6 /* MessageNotifiDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageNotifiDetailViewController.h; sourceTree = "<group>"; };
+		1064DDE2214C9908002A9DD6 /* MessageNotifiDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessageNotifiDetailViewController.m; sourceTree = "<group>"; };
+		1064DDE4214C9ABF002A9DD6 /* MyRecommendViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyRecommendViewController.h; sourceTree = "<group>"; };
+		1064DDE5214C9ABF002A9DD6 /* MyRecommendViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyRecommendViewController.m; sourceTree = "<group>"; };
+		1064DDE7214C9B92002A9DD6 /* RecommendListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RecommendListViewController.h; sourceTree = "<group>"; };
+		1064DDE8214C9B92002A9DD6 /* RecommendListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RecommendListViewController.m; sourceTree = "<group>"; };
+		1064DDEA214C9C76002A9DD6 /* WallentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WallentViewController.h; sourceTree = "<group>"; };
+		1064DDEB214C9C76002A9DD6 /* WallentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WallentViewController.m; sourceTree = "<group>"; };
+		1064DDED214C9DA2002A9DD6 /* PosterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PosterViewController.h; sourceTree = "<group>"; };
+		1064DDEE214C9DA2002A9DD6 /* PosterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PosterViewController.m; sourceTree = "<group>"; };
+		1064DDF0214C9E24002A9DD6 /* WithdrawViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WithdrawViewController.h; sourceTree = "<group>"; };
+		1064DDF1214C9E24002A9DD6 /* WithdrawViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WithdrawViewController.m; sourceTree = "<group>"; };
+		1064DDF3214C9F30002A9DD6 /* SettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
+		1064DDF4214C9F30002A9DD6 /* SettingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
+		1064DDF6214CA0C1002A9DD6 /* AccountSafeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AccountSafeViewController.h; sourceTree = "<group>"; };
+		1064DDF7214CA0C1002A9DD6 /* AccountSafeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AccountSafeViewController.m; sourceTree = "<group>"; };
+		1064DDF9214CA1D6002A9DD6 /* NewMessageSetViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewMessageSetViewController.h; sourceTree = "<group>"; };
+		1064DDFA214CA1D6002A9DD6 /* NewMessageSetViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewMessageSetViewController.m; sourceTree = "<group>"; };
+		1064DDFC214CA2D9002A9DD6 /* MyInfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyInfoViewController.h; sourceTree = "<group>"; };
+		1064DDFD214CA2D9002A9DD6 /* MyInfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyInfoViewController.m; sourceTree = "<group>"; };
+		1064DDFF214CA343002A9DD6 /* RechargeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RechargeViewController.h; sourceTree = "<group>"; };
+		1064DE00214CA343002A9DD6 /* RechargeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RechargeViewController.m; sourceTree = "<group>"; };
+		1064DE02214CA436002A9DD6 /* NewFriendListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewFriendListViewController.h; sourceTree = "<group>"; };
+		1064DE03214CA436002A9DD6 /* NewFriendListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewFriendListViewController.m; sourceTree = "<group>"; };
+		1064DE05214CA60C002A9DD6 /* TransferViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransferViewController.h; sourceTree = "<group>"; };
+		1064DE06214CA60C002A9DD6 /* TransferViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TransferViewController.m; sourceTree = "<group>"; };
+		1064DE08214CA695002A9DD6 /* ChatUserInfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatUserInfoViewController.h; sourceTree = "<group>"; };
+		1064DE09214CA695002A9DD6 /* ChatUserInfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatUserInfoViewController.m; sourceTree = "<group>"; };
+		1064DE0B214CA6DE002A9DD6 /* ChatSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatSettingViewController.h; sourceTree = "<group>"; };
+		1064DE0C214CA6DE002A9DD6 /* ChatSettingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatSettingViewController.m; sourceTree = "<group>"; };
 		1069EE67214A66E10006FFCA /* DCCycleScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCCycleScrollView.h; sourceTree = "<group>"; };
 		1069EE68214A66E10006FFCA /* DCCycleScrollViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCCycleScrollViewFlowLayout.h; sourceTree = "<group>"; };
 		1069EE69214A66E10006FFCA /* DCCycleScrollViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCCycleScrollViewCell.h; sourceTree = "<group>"; };
@@ -987,29 +1084,29 @@
 			isa = PBXGroup;
 			children = (
 				103517232147A33F00EDC7AD /* RETableViewNumberCell.h */,
-				103517242147A33F00EDC7AD /* RETableViewTextCell.m */,
+				1035172F2147A33F00EDC7AD /* RETableViewNumberCell.m */,
+				103517342147A33F00EDC7AD /* RETableViewBoolCell.h */,
 				103517252147A33F00EDC7AD /* RETableViewBoolCell.m */,
-				103517262147A33F00EDC7AD /* RETableViewLongTextCell.m */,
 				103517272147A33F00EDC7AD /* RETableViewFloatCell.h */,
+				103517312147A33F00EDC7AD /* RETableViewFloatCell.m */,
 				103517282147A33F00EDC7AD /* RETableViewInlinePickerCell.h */,
+				103517322147A33F00EDC7AD /* RETableViewInlinePickerCell.m */,
 				103517292147A33F00EDC7AD /* RETableViewCreditCardCell.h */,
+				103517382147A33F00EDC7AD /* RETableViewCreditCardCell.m */,
 				1035172A2147A33F00EDC7AD /* RETableViewSegmentedCell.h */,
+				103517372147A33F00EDC7AD /* RETableViewSegmentedCell.m */,
+				103517362147A33F00EDC7AD /* RETableViewInlineDatePickerCell.h */,
 				1035172B2147A33F00EDC7AD /* RETableViewInlineDatePickerCell.m */,
 				1035172C2147A33F00EDC7AD /* RETableViewOptionCell.h */,
-				1035172D2147A33F00EDC7AD /* RETableViewDateTimeCell.h */,
-				1035172E2147A33F00EDC7AD /* RETableViewPickerCell.h */,
-				1035172F2147A33F00EDC7AD /* RETableViewNumberCell.m */,
-				103517302147A33F00EDC7AD /* RETableViewTextCell.h */,
-				103517312147A33F00EDC7AD /* RETableViewFloatCell.m */,
-				103517322147A33F00EDC7AD /* RETableViewInlinePickerCell.m */,
-				103517332147A33F00EDC7AD /* RETableViewLongTextCell.h */,
-				103517342147A33F00EDC7AD /* RETableViewBoolCell.h */,
 				103517352147A33F00EDC7AD /* RETableViewOptionCell.m */,
-				103517362147A33F00EDC7AD /* RETableViewInlineDatePickerCell.h */,
-				103517372147A33F00EDC7AD /* RETableViewSegmentedCell.m */,
-				103517382147A33F00EDC7AD /* RETableViewCreditCardCell.m */,
-				103517392147A33F00EDC7AD /* RETableViewPickerCell.m */,
+				1035172D2147A33F00EDC7AD /* RETableViewDateTimeCell.h */,
 				1035173A2147A33F00EDC7AD /* RETableViewDateTimeCell.m */,
+				1035172E2147A33F00EDC7AD /* RETableViewPickerCell.h */,
+				103517392147A33F00EDC7AD /* RETableViewPickerCell.m */,
+				103517302147A33F00EDC7AD /* RETableViewTextCell.h */,
+				103517242147A33F00EDC7AD /* RETableViewTextCell.m */,
+				103517332147A33F00EDC7AD /* RETableViewLongTextCell.h */,
+				103517262147A33F00EDC7AD /* RETableViewLongTextCell.m */,
 			);
 			path = RECells;
 			sourceTree = "<group>";
@@ -1018,15 +1115,15 @@
 			isa = PBXGroup;
 			children = (
 				1035173C2147A33F00EDC7AD /* RETableViewCellStyle.m */,
+				103517452147A33F00EDC7AD /* RETableViewItem.h */,
 				1035173D2147A33F00EDC7AD /* RETableViewItem.m */,
+				103517442147A33F00EDC7AD /* RETableViewCell.h */,
 				1035173E2147A33F00EDC7AD /* RETableViewCell.m */,
 				1035173F2147A33F00EDC7AD /* RETableViewSection.h */,
-				103517402147A33F00EDC7AD /* RETableViewOptionsController.m */,
-				103517412147A33F00EDC7AD /* RETableViewManager.h */,
-				103517422147A33F00EDC7AD /* RETableViewCellStyle.h */,
 				103517432147A33F00EDC7AD /* RETableViewSection.m */,
-				103517442147A33F00EDC7AD /* RETableViewCell.h */,
-				103517452147A33F00EDC7AD /* RETableViewItem.h */,
+				103517402147A33F00EDC7AD /* RETableViewOptionsController.m */,
+				103517422147A33F00EDC7AD /* RETableViewCellStyle.h */,
+				103517412147A33F00EDC7AD /* RETableViewManager.h */,
 				103517462147A33F00EDC7AD /* RETableViewManager.m */,
 				103517472147A33F00EDC7AD /* RETableViewOptionsController.h */,
 			);
@@ -1310,6 +1407,7 @@
 		103517F82147A33F00EDC7AD /* Librarys */ = {
 			isa = PBXGroup;
 			children = (
+				10454644214B77A400DA7F9F /* QMUI */,
 				1069EE66214A66E10006FFCA /* DCCycleScrollView */,
 				10113444214915E10082F74B /* NNValidationView */,
 				103518052147A33F00EDC7AD /* AXBadgeView */,
@@ -1843,6 +1941,10 @@
 			children = (
 				10351AD52147D37C00EDC7AD /* ChatListViewController.h */,
 				10351AD62147D37C00EDC7AD /* ChatListViewController.m */,
+				1064DE08214CA695002A9DD6 /* ChatUserInfoViewController.h */,
+				1064DE09214CA695002A9DD6 /* ChatUserInfoViewController.m */,
+				1064DE0B214CA6DE002A9DD6 /* ChatSettingViewController.h */,
+				1064DE0C214CA6DE002A9DD6 /* ChatSettingViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1931,6 +2033,28 @@
 			children = (
 				10351ADE2147D3B100EDC7AD /* MeViewController.h */,
 				10351ADF2147D3B100EDC7AD /* MeViewController.m */,
+				1064DDE4214C9ABF002A9DD6 /* MyRecommendViewController.h */,
+				1064DDE5214C9ABF002A9DD6 /* MyRecommendViewController.m */,
+				1064DDE7214C9B92002A9DD6 /* RecommendListViewController.h */,
+				1064DDE8214C9B92002A9DD6 /* RecommendListViewController.m */,
+				1064DDEA214C9C76002A9DD6 /* WallentViewController.h */,
+				1064DDEB214C9C76002A9DD6 /* WallentViewController.m */,
+				1064DDED214C9DA2002A9DD6 /* PosterViewController.h */,
+				1064DDEE214C9DA2002A9DD6 /* PosterViewController.m */,
+				1064DDF3214C9F30002A9DD6 /* SettingViewController.h */,
+				1064DDF4214C9F30002A9DD6 /* SettingViewController.m */,
+				1064DDF6214CA0C1002A9DD6 /* AccountSafeViewController.h */,
+				1064DDF7214CA0C1002A9DD6 /* AccountSafeViewController.m */,
+				1064DDF9214CA1D6002A9DD6 /* NewMessageSetViewController.h */,
+				1064DDFA214CA1D6002A9DD6 /* NewMessageSetViewController.m */,
+				1064DDFC214CA2D9002A9DD6 /* MyInfoViewController.h */,
+				1064DDFD214CA2D9002A9DD6 /* MyInfoViewController.m */,
+				1064DDF0214C9E24002A9DD6 /* WithdrawViewController.h */,
+				1064DDF1214C9E24002A9DD6 /* WithdrawViewController.m */,
+				1064DDFF214CA343002A9DD6 /* RechargeViewController.h */,
+				1064DE00214CA343002A9DD6 /* RechargeViewController.m */,
+				1064DE05214CA60C002A9DD6 /* TransferViewController.h */,
+				1064DE06214CA60C002A9DD6 /* TransferViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -2413,6 +2537,8 @@
 			children = (
 				10351ADB2147D39D00EDC7AD /* FriendListViewController.h */,
 				10351ADC2147D39D00EDC7AD /* FriendListViewController.m */,
+				1064DE02214CA436002A9DD6 /* NewFriendListViewController.h */,
+				1064DE03214CA436002A9DD6 /* NewFriendListViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -2454,6 +2580,12 @@
 			children = (
 				10351AE62147D3F400EDC7AD /* HomeViewController.h */,
 				10351AE72147D3F400EDC7AD /* HomeViewController.m */,
+				1064DDDB214C96A9002A9DD6 /* MessageNotifiListViewController.h */,
+				1064DDDC214C96A9002A9DD6 /* MessageNotifiListViewController.m */,
+				1064DDDE214C9791002A9DD6 /* GameDetailListViewController.h */,
+				1064DDDF214C9791002A9DD6 /* GameDetailListViewController.m */,
+				1064DDE1214C9908002A9DD6 /* MessageNotifiDetailViewController.h */,
+				1064DDE2214C9908002A9DD6 /* MessageNotifiDetailViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -2465,6 +2597,76 @@
 				1069EE73214A9D3A0006FFCA /* HomeTableViewCell.m */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		10454644214B77A400DA7F9F /* QMUI */ = {
+			isa = PBXGroup;
+			children = (
+				10454645214B77A400DA7F9F /* Common */,
+			);
+			path = QMUI;
+			sourceTree = "<group>";
+		};
+		10454645214B77A400DA7F9F /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				10454646214B77A400DA7F9F /* Configuration */,
+				10454652214B77A400DA7F9F /* Utils */,
+				10454659214B77A400DA7F9F /* Controllers */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		10454646214B77A400DA7F9F /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				1045464D214B77A400DA7F9F /* QDThemeProtocol.h */,
+				10454647214B77A400DA7F9F /* QMUIConfigurationTemplateGrass.h */,
+				10454648214B77A400DA7F9F /* QMUIConfigurationTemplateGrapefruit.h */,
+				1045464E214B77A400DA7F9F /* QMUIConfigurationTemplateGrapefruit.m */,
+				1045464F214B77A400DA7F9F /* QDThemeManager.h */,
+				10454649214B77A400DA7F9F /* QDThemeManager.m */,
+				1045464B214B77A400DA7F9F /* QMUIConfigurationTemplate.h */,
+				10454651214B77A400DA7F9F /* QMUIConfigurationTemplate.m */,
+				1045464C214B77A400DA7F9F /* QMUIConfigurationTemplateGrass.m */,
+				10454650214B77A400DA7F9F /* QMUIConfigurationTemplatePinkRose.h */,
+				1045464A214B77A400DA7F9F /* QMUIConfigurationTemplatePinkRose.m */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
+		10454652214B77A400DA7F9F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				10454653214B77A400DA7F9F /* UIImageEffects.h */,
+				10454654214B77A400DA7F9F /* QDCommonUI.h */,
+				10454655214B77A400DA7F9F /* QDUIHelper.m */,
+				10454656214B77A400DA7F9F /* UIImageEffects.m */,
+				10454657214B77A400DA7F9F /* QDCommonUI.m */,
+				10454658214B77A400DA7F9F /* QDUIHelper.h */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		10454659214B77A400DA7F9F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1045465A214B77A400DA7F9F /* QDCommonGroupListViewController.m */,
+				1045465B214B77A400DA7F9F /* QDTabBarViewController.h */,
+				1045465C214B77A400DA7F9F /* QDCommonListViewController.h */,
+				1045465D214B77A400DA7F9F /* QDCommonViewController.m */,
+				1045465E214B77A400DA7F9F /* QDNavigationController.h */,
+				1045465F214B77A400DA7F9F /* QDCommonTableViewController.h */,
+				10454660214B77A400DA7F9F /* QDCommonGridViewController.m */,
+				10454661214B77A400DA7F9F /* QDTabBarViewController.m */,
+				10454662214B77A400DA7F9F /* QDCommonGroupListViewController.h */,
+				10454663214B77A400DA7F9F /* QDCommonListViewController.m */,
+				10454664214B77A400DA7F9F /* QDCommonGridViewController.h */,
+				10454665214B77A400DA7F9F /* QDCommonViewController.h */,
+				10454666214B77A400DA7F9F /* QDNavigationController.m */,
+				10454667214B77A400DA7F9F /* QDCommonTableViewController.m */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		1069EE66214A66E10006FFCA /* DCCycleScrollView */ = {
@@ -2720,6 +2922,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10454670214B77A500DA7F9F /* QDCommonGroupListViewController.m in Sources */,
 				10351AEB2147EB2E00EDC7AD /* LWLoginTextField.m in Sources */,
 				103519F92147B73200EDC7AD /* UIColor+WLAdd.m in Sources */,
 				10351A032147B73200EDC7AD /* NSString+WLAddForPinyin.m in Sources */,
@@ -2735,9 +2938,15 @@
 				103519222147A34000EDC7AD /* WLAsset.m in Sources */,
 				103518E72147A34000EDC7AD /* REPickerItem.m in Sources */,
 				10351A022147B73200EDC7AD /* NSDate+WLAdd.m in Sources */,
+				10454668214B77A500DA7F9F /* QDThemeManager.m in Sources */,
+				1064DE0A214CA695002A9DD6 /* ChatUserInfoViewController.m in Sources */,
 				1035194D2147A34000EDC7AD /* WLLogger.m in Sources */,
 				10351A672147C74B00EDC7AD /* NSFileManager+Godzippa.m in Sources */,
+				10454673214B77A500DA7F9F /* QDTabBarViewController.m in Sources */,
 				1035191D2147A34000EDC7AD /* WLImagePickerCollectionViewCell.m in Sources */,
+				1064DDE6214C9ABF002A9DD6 /* MyRecommendViewController.m in Sources */,
+				1064DE01214CA343002A9DD6 /* RechargeViewController.m in Sources */,
+				10454674214B77A500DA7F9F /* QDCommonListViewController.m in Sources */,
 				10351A902147CB0300EDC7AD /* LGAlertViewWindow.m in Sources */,
 				10351A072147B73200EDC7AD /* NSData+WLAdd.m in Sources */,
 				103518C92147A34000EDC7AD /* RETableViewLongTextCell.m in Sources */,
@@ -2767,16 +2976,22 @@
 				1035194C2147A34000EDC7AD /* WLNetwokingConfig.m in Sources */,
 				10351ADD2147D39D00EDC7AD /* FriendListViewController.m in Sources */,
 				103519EA2147B73200EDC7AD /* UIControl+WLAdd.m in Sources */,
+				1064DE04214CA436002A9DD6 /* NewFriendListViewController.m in Sources */,
 				10351A6D2147C82A00EDC7AD /* WLNormalInputAlertView.m in Sources */,
 				103518DC2147A34000EDC7AD /* NSString+RENumberFormat.m in Sources */,
 				1035193A2147A34000EDC7AD /* WLPhoto3DTouchViewController.m in Sources */,
 				10351A272147B7FD00EDC7AD /* WLRuntimeClass.m in Sources */,
+				1064DDF2214C9E24002A9DD6 /* WithdrawViewController.m in Sources */,
 				10351A0E2147B73200EDC7AD /* NSString+WLAddForHash.m in Sources */,
+				10454675214B77A500DA7F9F /* QDNavigationController.m in Sources */,
+				1064DDF5214C9F30002A9DD6 /* SettingViewController.m in Sources */,
 				103519022147A34000EDC7AD /* openssl_wrapper.m in Sources */,
 				103519492147A34000EDC7AD /* WLPersistanceQueryCommand+WLDataManipulations.m in Sources */,
+				10454672214B77A500DA7F9F /* QDCommonGridViewController.m in Sources */,
 				103519352147A34000EDC7AD /* KSYYImageManager.m in Sources */,
 				10351A912147CB0300EDC7AD /* LGAlertViewCell.m in Sources */,
 				103519FE2147B73200EDC7AD /* NSDictionary+WLAdd.m in Sources */,
+				10454676214B77A500DA7F9F /* QDCommonTableViewController.m in Sources */,
 				1011343D2148CDC40082F74B /* WLTextField.m in Sources */,
 				103519F12147B73200EDC7AD /* UINavigationController+WLAdd.m in Sources */,
 				10351A2E2147B84500EDC7AD /* WLHUDView.m in Sources */,
@@ -2791,14 +3006,17 @@
 				1035191F2147A34000EDC7AD /* WLPhotoBottomView.m in Sources */,
 				103518E52147A34000EDC7AD /* RENumberItem.m in Sources */,
 				103519302147A34000EDC7AD /* DaiDodgeKeyboard.m in Sources */,
+				1045466C214B77A500DA7F9F /* QMUIConfigurationTemplate.m in Sources */,
 				103519562147A34000EDC7AD /* WLChainRequest.m in Sources */,
 				10351AE82147D3F400EDC7AD /* HomeViewController.m in Sources */,
 				103519252147A34000EDC7AD /* WLPhotoConst.m in Sources */,
 				10351A982147CB5000EDC7AD /* WLActionSheet.m in Sources */,
 				103519E62147B73200EDC7AD /* WLFPSLabel.m in Sources */,
 				103519552147A34000EDC7AD /* WLBatchRequest.m in Sources */,
+				1045466F214B77A500DA7F9F /* QDCommonUI.m in Sources */,
 				103518CA2147A34000EDC7AD /* RETableViewInlineDatePickerCell.m in Sources */,
 				10351A0F2147B73200EDC7AD /* NSArray+WLAdd.m in Sources */,
+				1064DDDD214C96A9002A9DD6 /* MessageNotifiListViewController.m in Sources */,
 				103519202147A34000EDC7AD /* WLZoomImageView.m in Sources */,
 				103519132147A34000EDC7AD /* JKCountDownButton.m in Sources */,
 				10351A7B2147C9F500EDC7AD /* WLMessageTextView.m in Sources */,
@@ -2814,15 +3032,18 @@
 				103519102147A34000EDC7AD /* UIView+AXBadgeView.m in Sources */,
 				103518F42147A34000EDC7AD /* WLEmptyAssistantConfiger.m in Sources */,
 				103518C72147A34000EDC7AD /* RETableViewTextCell.m in Sources */,
+				1064DE07214CA60C002A9DD6 /* TransferViewController.m in Sources */,
 				103518CC2147A34000EDC7AD /* RETableViewFloatCell.m in Sources */,
 				103519052147A34000EDC7AD /* base64.m in Sources */,
 				103518D32147A34000EDC7AD /* RETableViewCellStyle.m in Sources */,
 				103518DA2147A34000EDC7AD /* NSBundle+RETableViewManager.m in Sources */,
+				1045466A214B77A500DA7F9F /* QMUIConfigurationTemplateGrass.m in Sources */,
 				10351A082147B73200EDC7AD /* NSObject+WLAdd.m in Sources */,
 				103519042147A34000EDC7AD /* NSDataEx.m in Sources */,
 				10351A0B2147B73200EDC7AD /* NSFileManager+WLAdd.m in Sources */,
 				103519532147A34000EDC7AD /* WLNetworkManager.m in Sources */,
 				103519452147A34000EDC7AD /* NSString+WLSQL.m in Sources */,
+				1064DDE3214C9908002A9DD6 /* MessageNotifiDetailViewController.m in Sources */,
 				103518D72147A34000EDC7AD /* RETableViewSection.m in Sources */,
 				103519E82147B73200EDC7AD /* UIImage+WLAdd.m in Sources */,
 				103519432147A34000EDC7AD /* WLPersistanceTable+WLFind.m in Sources */,
@@ -2844,6 +3065,7 @@
 				103519482147A34000EDC7AD /* WLPersistanceQueryCommand.m in Sources */,
 				103518D52147A34000EDC7AD /* RETableViewCell.m in Sources */,
 				103518D82147A34000EDC7AD /* RETableViewManager.m in Sources */,
+				1064DE0D214CA6DE002A9DD6 /* ChatSettingViewController.m in Sources */,
 				103519142147A34000EDC7AD /* KxMenu.m in Sources */,
 				1035192C2147A34000EDC7AD /* UIImage+BoxBlur.m in Sources */,
 				103519422147A34000EDC7AD /* WLPersistanceTable.m in Sources */,
@@ -2851,17 +3073,23 @@
 				10351A2D2147B84500EDC7AD /* WLHubProgressView.m in Sources */,
 				103519332147A34000EDC7AD /* WLSystemAuth.m in Sources */,
 				1035192F2147A34000EDC7AD /* DaiDodgeKeyboard+Animation.m in Sources */,
+				1064DDFE214CA2D9002A9DD6 /* MyInfoViewController.m in Sources */,
 				10351ACF2147D16400EDC7AD /* MainViewController.m in Sources */,
 				10351A142147B73200EDC7AD /* WLSystemManager.m in Sources */,
 				101134432148CEAF0082F74B /* LWLoginTextFieldView.m in Sources */,
 				1035192E2147A34000EDC7AD /* DaiDodgeKeyboardObjects.m in Sources */,
+				1045466B214B77A500DA7F9F /* QMUIConfigurationTemplateGrapefruit.m in Sources */,
 				1035197E2147B3BA00EDC7AD /* Constants.m in Sources */,
 				103519E92147B73200EDC7AD /* UITableViewCell+WLAdd.m in Sources */,
 				1035190F2147A34000EDC7AD /* UIBarButtonItem+AXBadgeView.m in Sources */,
+				1045466D214B77A500DA7F9F /* QDUIHelper.m in Sources */,
 				1035194A2147A34000EDC7AD /* WLPersistanceQueryCommand+WLReadMethods.m in Sources */,
 				1035194E2147A34000EDC7AD /* WLNetworkingCacheTool.m in Sources */,
+				1064DDFB214CA1D6002A9DD6 /* NewMessageSetViewController.m in Sources */,
+				10454669214B77A500DA7F9F /* QMUIConfigurationTemplatePinkRose.m in Sources */,
 				103519ED2147B73200EDC7AD /* UIButton+WLAdd.m in Sources */,
 				103519342147A34000EDC7AD /* KSPhotoView.m in Sources */,
+				10454671214B77A500DA7F9F /* QDCommonViewController.m in Sources */,
 				103519402147A34000EDC7AD /* WLPersistanceTable+WLUpdate.m in Sources */,
 				10351A122147B73200EDC7AD /* CALayer+WLBorderConfig.m in Sources */,
 				1089C5572146AD9900363537 /* main.m in Sources */,
@@ -2887,6 +3115,7 @@
 				1035193F2147A34000EDC7AD /* WLPersistanceTable+WLInsert.m in Sources */,
 				103519EE2147B73200EDC7AD /* UISearchBar+WLAdd.m in Sources */,
 				103518DE2147A34000EDC7AD /* REBoolItem.m in Sources */,
+				1064DDEC214C9C76002A9DD6 /* WallentViewController.m in Sources */,
 				103518F02147A34000EDC7AD /* REEmailValidator.m in Sources */,
 				103518CE2147A34000EDC7AD /* RETableViewOptionCell.m in Sources */,
 				1089C5492146AD9700363537 /* AppDelegate.m in Sources */,
@@ -2901,14 +3130,17 @@
 				10351A112147B73200EDC7AD /* WLCGUtilities.m in Sources */,
 				103519292147A34000EDC7AD /* MBProgressHUD.m in Sources */,
 				103519FF2147B73200EDC7AD /* NSDecimalNumber+WLAdd.m in Sources */,
+				1064DDEF214C9DA2002A9DD6 /* PosterViewController.m in Sources */,
 				10351A102147B73200EDC7AD /* NSData+WLAddForHash.m in Sources */,
 				103519E72147B73200EDC7AD /* UIFont+WLAdd.m in Sources */,
 				10351AD72147D37C00EDC7AD /* ChatListViewController.m in Sources */,
+				1045466E214B77A500DA7F9F /* UIImageEffects.m in Sources */,
 				103519122147A34000EDC7AD /* Describe.m in Sources */,
 				101134402148CDC40082F74B /* WLLoginTextField.m in Sources */,
 				103518D92147A34000EDC7AD /* NSString+RETableViewManagerAdditions.m in Sources */,
 				103518DB2147A34000EDC7AD /* REFormattedNumberField.m in Sources */,
 				103518E92147A34000EDC7AD /* RERadioItem.m in Sources */,
+				1064DDE9214C9B92002A9DD6 /* RecommendListViewController.m in Sources */,
 				103518CD2147A34000EDC7AD /* RETableViewInlinePickerCell.m in Sources */,
 				10351A932147CB0300EDC7AD /* LGAlertViewController.m in Sources */,
 				103519392147A34000EDC7AD /* KSPhotoBrowser.m in Sources */,
@@ -2922,6 +3154,7 @@
 				1035195A2147A34000EDC7AD /* WLRequestCriteria.m in Sources */,
 				103519162147A34000EDC7AD /* WLPhotoViewController.m in Sources */,
 				10351A712147C88A00EDC7AD /* CustomCardMessage.m in Sources */,
+				1064DDF8214CA0C1002A9DD6 /* AccountSafeViewController.m in Sources */,
 				1069EE6D214A66E10006FFCA /* DCCycleScrollViewFlowLayout.m in Sources */,
 				1035195B2147A34000EDC7AD /* WLNetWorkingProcessFilter.m in Sources */,
 				1035193B2147A34000EDC7AD /* WLPersistanceRecord.m in Sources */,
@@ -2929,6 +3162,7 @@
 				10351A362147BA4300EDC7AD /* UIView+Gradient.m in Sources */,
 				103519FA2147B73200EDC7AD /* UIWindow+WLAdd.m in Sources */,
 				10351A012147B73200EDC7AD /* NSNotificationCenter+WLAdd.m in Sources */,
+				1064DDE0214C9791002A9DD6 /* GameDetailListViewController.m in Sources */,
 				103519F52147B73200EDC7AD /* UIScrollView+WLAdd.m in Sources */,
 				103518CF2147A34000EDC7AD /* RETableViewSegmentedCell.m in Sources */,
 			);
@@ -3081,7 +3315,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = V6JKEEZATW;
 				ENABLE_BITCODE = NO;
@@ -3114,8 +3349,10 @@
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/AlipaySDK_15.3.3",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/ShareSDK-iOS-4.0.1/ShareSDK/Support/PlatformSDK/WeChatSDK",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.welian.liuwu.MineSweeper;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chuansongmen.MineSweeper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "cfb8cfc5-941a-4508-b3e1-b7386901b833";
+				PROVISIONING_PROFILE_SPECIFIER = MineSweeper_dev_2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -3126,7 +3363,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = V6JKEEZATW;
 				ENABLE_BITCODE = NO;
@@ -3159,8 +3397,10 @@
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/AlipaySDK_15.3.3",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/ShareSDK-iOS-4.0.1/ShareSDK/Support/PlatformSDK/WeChatSDK",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.welian.liuwu.MineSweeper;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chuansongmen.MineSweeper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "cfb8cfc5-941a-4508-b3e1-b7386901b833";
+				PROVISIONING_PROFILE_SPECIFIER = MineSweeper_dev_2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

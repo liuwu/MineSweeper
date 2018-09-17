@@ -28,16 +28,20 @@
     backView.backgroundColor = [UIColor wl_HexE5E5E5];
     self.selectedBackgroundView = backView;
     
-    UIImageView *contentView = [[UIImageView alloc] initWithImage:[UIImage imageWithColor:UIColorMake(254.f, 72.f, 30.f)]];
-//    contentView.backgroundColor = UIColorMake(254.f, 72.f, 30.f);
-    [self.contentView addSubview:contentView];
-//    [contentView wl_setCornerRadius:10.f];
-    contentView.layer.cornerRadius = 10.f;
-    contentView.userInteractionEnabled = YES;
-    [contentView wl_setLayerShadow:[UIColor grayColor] offset:CGSizeMake(2.f, 2.f) radius:5.f];
-    
-    [contentView mas_makeConstraints:^(MASConstraintMaker *make) {
+    UIView *contView = [[UIView alloc] initWithFrame:CGRectZero];
+    contView.layer.cornerRadius = 10.f;
+    [self.contentView addSubview:contView];
+    [contView wl_setLayerShadow:[UIColor grayColor] offset:CGSizeMake(2.f, 2.f) radius:5.f];
+    [contView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.contentView).with.insets(UIEdgeInsetsMake(16, kWL_NormalMarginWidth_10, 16, kWL_NormalMarginWidth_10));
+    }];
+    
+    UIImageView *contentView = [[UIImageView alloc] initWithImage:[UIImage imageWithColor:UIColorMake(254.f, 72.f, 30.f)]];
+    [contView addSubview:contentView];
+    [contentView wl_setCornerRadius:10.f];
+    contentView.userInteractionEnabled = YES;
+    [contentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(contView);
     }];
     
     UIImageView *iconImageView = [[UIImageView alloc] init];
@@ -86,9 +90,10 @@
     
     UIButton *beginBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [beginBtn setTitle:@"开始游戏" forState:UIControlStateNormal];
+    [beginBtn setBackgroundImage:[UIImage imageWithColor:UIColorMake(254,234,69)] forState:UIControlStateNormal];
     beginBtn.titleLabel.font = UIFontMake(14.f);
     [beginBtn setTitleColor:UIColorMake(254,72,30) forState:UIControlStateNormal];
-    beginBtn.backgroundColor = UIColorMake(254,234,69);
+//    beginBtn.backgroundColor = UIColorMake(254,234,69);
     [beginBtn addTarget:self action:@selector(beginBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [contentView addSubview:beginBtn];
 //    [beginBtn wl_setCornerRadius:5.f];

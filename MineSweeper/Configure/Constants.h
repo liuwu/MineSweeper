@@ -45,6 +45,8 @@ extern CGFloat const kWL_NromalTabbarHeight;
 extern CGFloat const kWL_NormalNavBarHeight;
 ///常用的UITextField高度
 extern CGFloat const kWL_NormalTextFieldHeight;
+///常用的UIButton高度
+extern CGFloat const kWL_NormalButtonHeight;
 
 
 //------------ TableView 相关-------------------
@@ -62,6 +64,7 @@ extern CGFloat const kWL_NormalMarginWidth_10;
 extern CGFloat const kWL_NormalMarginWidth_14;
 extern CGFloat const kWL_NormalMarginWidth_15;
 extern CGFloat const kWL_NormalMarginWidth_16;
+extern CGFloat const kWL_NormalMarginWidth_17;
 extern CGFloat const kWL_NormalMarginWidth_20;
 extern CGFloat const kWL_NormalMarginWidth_23;
 ///常用的间距10.f

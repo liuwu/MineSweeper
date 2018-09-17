@@ -34,6 +34,9 @@
     #import <MJRefresh/MJRefresh.h>
 
     #import <QMUIKit/QMUIKit.h>
+    #import "QDCommonUI.h"
+    #import "QDUIHelper.h"
+    #import "QDThemeManager.h"
 
     #pragma mark - Custom
     #import "WLKit.h"

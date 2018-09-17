@@ -7,7 +7,8 @@
 //
 
 #import "BaseViewController.h"
+#import "QDCommonViewController.h"
 
-@interface LoginViewController : BaseViewController
+@interface LoginViewController : QDCommonViewController// BaseViewController
 
 @end

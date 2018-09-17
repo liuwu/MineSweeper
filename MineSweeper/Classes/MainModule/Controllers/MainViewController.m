@@ -12,6 +12,7 @@
 #import "ChatListViewController.h"
 #import "FriendListViewController.h"
 #import "MeViewController.h"
+#import "QDNavigationController.h"
 
 @interface WLTabar : UITabBar
 
@@ -97,10 +98,10 @@
 - (void)setupUIInfo {
 //    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    [[UITabBar appearance] setShadowImage:[UIImage new]];
-    [[UITabBar appearance] setBackgroundImage:[UIImage new]];
-    self.tabBar.backgroundColor = [UIColor whiteColor];
-    [self.tabBar.layer setLayerShadow:WLColoerRGB(242.f) offset:CGSizeMake(0, -1.f) radius:1];
+//    [[UITabBar appearance] setShadowImage:[UIImage new]];
+//    [[UITabBar appearance] setBackgroundImage:[UIImage new]];
+//    self.tabBar.backgroundColor = [UIColor whiteColor];
+//    [self.tabBar.layer setLayerShadow:WLColoerRGB(242.f) offset:CGSizeMake(0, -1.f) radius:1];
     if (iPhoneX) {
         WLTabar *baseTabBar = [[WLTabar alloc] init];
         baseTabBar.backgroundColor = [UIColor whiteColor];
@@ -112,16 +113,36 @@
 #pragma mark – Private methods
 /// 设置页面UI
 - (void)setupMainUI{
-    NavViewController *homeNav = [self tabBarChildController:[HomeViewController class] title:@"群组" imageName:@"common_group_icon"];
-    NavViewController *chatNav = [self tabBarChildController:[ChatListViewController class] title:@"消息" imageName:@"common_chat_icon"];
-    NavViewController *friendItem = [self tabBarChildController:[FriendListViewController class] title:@"通讯录" imageName:@"common_group_icon"];
-    NavViewController *meNav = [self tabBarChildController:[MeViewController class] title:@"我的" imageName:@"common_mine_icon"];
+    QDNavigationController *homeNav = [self tabBarChildController:[HomeViewController class]
+                                                            title:@"群组"
+                                                        imageName:@"common_group_icon"
+                                                              tag:0];
     
-    self.viewControllers = @[homeNav,chatNav,friendItem,meNav];
+    QDNavigationController *chatNav = [self tabBarChildController:[ChatListViewController class]
+                                                              title:@"消息"
+                                                          imageName:@"common_chat_icon"
+                                                                tag:1];
+    
+    QDNavigationController *friendNav = [self tabBarChildController:[FriendListViewController class]
+                                                          title:@"通讯录"
+                                                      imageName:@"common_addressBook_icon"
+                                                            tag:2];
+    
+    QDNavigationController *meNav = [self tabBarChildController:[MeViewController class]
+                                                          title:@"我的"
+                                                      imageName:@"common_mine_icon"
+                                                            tag:3];
+    
+//    NavViewController *homeNav = [self tabBarChildController:[HomeViewController class] title:@"群组" imageName:@"common_group_icon"];
+//    NavViewController *chatNav = [self tabBarChildController:[ChatListViewController class] title:@"消息" imageName:@"common_chat_icon"];
+//    NavViewController *friendItem = [self tabBarChildController:[FriendListViewController class] title:@"通讯录" imageName:@"common_group_icon"];
+//    NavViewController *meNav = [self tabBarChildController:[MeViewController class] title:@"我的" imageName:@"common_mine_icon"];
+    
+    self.viewControllers = @[homeNav,chatNav,friendNav,meNav];
     self.chatItem = chatNav.tabBarItem;
     self.homeItem = homeNav.tabBarItem;
     self.meItem = meNav.tabBarItem;
-    self.FriendItem = friendItem.tabBarItem;
+    self.FriendItem = friendNav.tabBarItem;
     
     self.normalItem = self.homeItem;
     self.selectedIndex = 0;
@@ -153,18 +174,33 @@
 
 //所有的属性都使用getter和setter
 #pragma mark – Getters and Setters
-- (NavViewController *)tabBarChildController:(Class)controllerClass title:(NSString *)title imageName:(NSString *)imageName {
+- (QDNavigationController *)tabBarChildController:(Class)controllerClass
+                                            title:(NSString *)title
+                                        imageName:(NSString *)imageName
+                                              tag:(NSInteger)tag{
     UIViewController *controller = [[controllerClass alloc] init];
-    NavViewController *navController = [[NavViewController alloc] initWithRootViewController:controller];
-    
-    UITabBarItem *tabBarItem = [[UITabBarItem alloc] initWithTitle:title image:[UIImage wl_imageNameAlwaysOriginal:imageName] selectedImage:[UIImage wl_imageNameAlwaysOriginal:[imageName stringByAppendingString:@"_active"]]];
-    
-    [tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName :WLRGB(254.f, 72.f, 30.f),NSFontAttributeName:WLFONT(11)} forState:UIControlStateSelected];
-    [tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : WLColoerRGB(153.f),NSFontAttributeName:WLFONT(11)} forState:UIControlStateNormal];
-    
-    navController.tabBarItem = tabBarItem;
-    return navController;
+    controller.hidesBottomBarWhenPushed = NO;
+    QDNavigationController *nav = [[QDNavigationController alloc] initWithRootViewController:controller];
+    nav.tabBarItem = [QDUIHelper
+                        tabBarItemWithTitle:title
+                        image:[UIImageMake(imageName) imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]
+                      selectedImage:[UIImageMake([imageName stringByAppendingString:@"_active"]) imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]
+                      tag:tag];
+    return nav;
 }
+
+//- (NavViewController *)tabBarChildController:(Class)controllerClass title:(NSString *)title imageName:(NSString *)imageName {
+//    UIViewController *controller = [[controllerClass alloc] init];
+//    NavViewController *navController = [[NavViewController alloc] initWithRootViewController:controller];
+//
+//    UITabBarItem *tabBarItem = [[UITabBarItem alloc] initWithTitle:title image:[UIImage wl_imageNameAlwaysOriginal:imageName] selectedImage:[UIImage wl_imageNameAlwaysOriginal:[imageName stringByAppendingString:@"_active"]]];
+//
+//    [tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName :WLRGB(254.f, 72.f, 30.f),NSFontAttributeName:WLFONT(11)} forState:UIControlStateSelected];
+//    [tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : WLColoerRGB(153.f),NSFontAttributeName:WLFONT(11)} forState:UIControlStateNormal];
+//
+//    navController.tabBarItem = tabBarItem;
+//    return navController;
+//}
 
 
 @end

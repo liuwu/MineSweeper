@@ -63,6 +63,17 @@
  */
 @interface RETableViewManager : NSObject <UITableViewDelegate, UITableViewDataSource>
 
+// 默认cell中textLabel的字体颜色
+@property (copy, nonatomic) UIColor *defaultTitleLabelTextColor;
+// 默认cell中textLabel的字体大小
+@property (copy, nonatomic) UIFont *defaultTitleLabelTextFont;
+// 默认cell中textDetailLabel的字体颜色
+@property (copy, nonatomic) UIColor *defaultDetailLabelTextColor;
+// 默认cell中textDetailLabel的字体大小
+@property (copy, nonatomic) UIFont *defaultDetailLabelTextFont;
+// 是否显示底部自定义下划线
+@property (nonatomic) BOOL showBottomLine;
+
 ///-----------------------------
 /// @name Managing Table View and Sections
 ///-----------------------------

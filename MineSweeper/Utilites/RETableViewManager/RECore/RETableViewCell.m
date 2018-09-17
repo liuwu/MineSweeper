@@ -31,6 +31,9 @@
 @property (assign, nonatomic) BOOL loaded;
 @property (strong, nonatomic) UIImageView *backgroundImageView;
 @property (strong, nonatomic) UIImageView *selectedBackgroundImageView;
+@property (strong, nonatomic) UIView *lineView;
+// 自定义logo
+@property (strong, nonatomic) UIImageView *logoImageView;
 
 @end
 
@@ -85,7 +88,6 @@
 #pragma mark Cell life cycle
 
 - (void)cellDidLoad {
-    
     self.loaded = YES;
     self.actionBar = [[REActionBar alloc] initWithDelegate:self];
     self.selectionStyle = self.tableViewManager.style.defaultCellSelectionStyle;
@@ -97,12 +99,42 @@
     if ([self.tableViewManager.style hasCustomSelectedBackgroundImage]) {
         [self addSelectedBackgroundImage];
     }
+    
+    if (self.tableViewManager.showBottomLine) {
+        UIView *lineView = [[UIView alloc] initWithFrame:CGRectZero];
+        lineView.backgroundColor = WLColoerRGB(242.f);
+        [self.contentView addSubview:lineView];
+        self.lineView = lineView;
+    }
+    
+    if (self.item.logoImage) {
+        UIImageView *logoImageView = [[UIImageView alloc] initWithImage:self.item.logoImage];
+        [self.contentView addSubview:logoImageView];
+        self.logoImageView = logoImageView;
+    }
 }
 
 - (void)cellWillAppear {
     
     [self updateActionBarNavigationControl];
     self.selectionStyle = self.section.style.defaultCellSelectionStyle;
+    
+    self.textLabel.textColor = self.item.titleLabelTextColor != nil ? self.item.titleLabelTextColor: self.tableViewManager.defaultTitleLabelTextColor;
+    self.textLabel.font = self.item.titleLabelTextFont != nil ? self.item.titleLabelTextFont : self.tableViewManager.defaultTitleLabelTextFont;
+    
+    self.detailTextLabel.textColor = self.item.titleDetailTextColor != nil ? self.item.titleDetailTextColor: self.tableViewManager.defaultDetailLabelTextColor;
+    self.detailTextLabel.font = self.item.titleDetailTextFont != nil ? self.item.titleDetailTextFont: self.tableViewManager.defaultDetailLabelTextFont;
+    
+    // 使用字体特殊处理
+    if (self.item.detailLabelHintColor) {
+        NSMutableAttributedString *hintString = [[NSMutableAttributedString alloc] initWithString:self.item.detailLabelText];
+        //获取要调整颜色的文字位置,调整颜色
+        NSRange range = [[hintString string] rangeOfString:self.item.detailLabelHintText];
+        UIColor *hintColor = self.item.titleDetailHintColor != nil ? self.item.titleDetailHintColor : self.detailTextLabel.textColor;
+        UIFont *hintFont = self.item.titleDetailHintFont != nil ? self.item.titleDetailHintFont : self.detailTextLabel.font;
+        [hintString addAttributes:@{NSForegroundColorAttributeName:hintColor,NSFontAttributeName:hintFont} range:range];
+        self.detailTextLabel.attributedText = hintString;
+    }
     
     if ([self.item isKindOfClass:[NSString class]]) {
         self.textLabel.text = (NSString *)self.item;
@@ -132,9 +164,19 @@
 - (void)layoutSubviews {
     
     [super layoutSubviews];
-    
     // Set content frame
     //
+    if (self.tableViewManager.showBottomLine) {
+        self.lineView.frame = CGRectMake(0.f, self.contentView.size.height - .8f, ScreenWidth, .8f);
+    }
+    
+    //    self.accessoryType = UITableViewCellAccessoryNone
+    if (self.logoImageView) {
+        self.logoImageView.size = CGSizeMake(50.f, 50.f);
+        self.logoImageView.right = self.contentView.width;
+        self.logoImageView.centerY = self.contentView.centerY;
+    }
+    
     CGRect contentFrame = self.contentView.bounds;
     contentFrame.origin.x = contentFrame.origin.x + self.section.style.contentViewMargin;
     contentFrame.size.width = contentFrame.size.width - self.section.style.contentViewMargin * 2;

@@ -8,6 +8,6 @@
 
 #import "SLCommonGroupListViewController.h"
 
-@interface MeViewController : SLCommonGroupListViewController
+@interface MeViewController :  SLCommonGroupListViewController
 
 @end

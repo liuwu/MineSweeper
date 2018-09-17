@@ -78,6 +78,12 @@
     tableView.dataSource = self;
     
     self.tableView = tableView;
+    
+    // 默认字体颜色、和大小
+    self.defaultTitleLabelTextColor = WLColoerRGB(51.f);
+    self.defaultTitleLabelTextFont = UIFontMake(15.f);
+    self.defaultDetailLabelTextColor = WLColoerRGB(51.f);
+    self.defaultDetailLabelTextFont = UIFontMake(15.f);
 
     self.mutableSections = [[NSMutableArray alloc] init];
     self.registeredClasses = [[NSMutableDictionary alloc] init];

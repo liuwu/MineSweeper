@@ -83,10 +83,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-}
-
 // 添加表格内容
 - (void)addViews {
     self.view.backgroundColor = WLColoerRGB(248.f);
@@ -233,6 +229,11 @@
 #pragma mark - private
 // 立即提现按钮点击
 - (void)payBtnClicked:(UIButton *)sender {
+    
+}
+
+// 支付选中支付方式页面
+- (void)payTypeSelect {
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.f, 0.f, DEVICE_WIDTH, 244.f) style:UITableViewStylePlain];
     self.tableView.scrollEnabled = NO;
     
@@ -270,7 +271,7 @@
     RETableViewItem *titleItem = [RETableViewItem itemWithTitle:@"请选中支付方式" accessoryType:UITableViewCellAccessoryNone selectionHandler:^(RETableViewItem *item) {
         
     }];
-//    titleItem.style = UITableViewCellStyleValue1;
+    //    titleItem.style = UITableViewCellStyleValue1;
     titleItem.titleLabelTextColor = WLColoerRGB(102.f);
     titleItem.titleLabelTextFont = UIFontMake(13.f);
     titleItem.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -350,6 +351,7 @@
     [modalViewController showWithAnimated:YES completion:nil];
 }
 
+// 支付金额按钮选择
 - (void)momeyBtnSelected:(QMUIFillButton *)sender {
     [[self.view wl_findFirstResponder] resignFirstResponder];
     

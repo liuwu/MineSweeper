@@ -7,6 +7,7 @@
 //
 
 #import "RecommendListViewController.h"
+#import "BaseTableViewCell.h"
 
 @interface RecommendListViewController ()
 
@@ -20,6 +21,8 @@
 
 - (void)initSubviews {
     [super initSubviews];
+    // 隐藏分割线
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     //下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
@@ -41,10 +44,31 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"message_notifi_cell"];
+    
+    BaseTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"recommend_list_cell"];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"message_notifi_cell"];
+        cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleValue1 reuseIdentifier:@"recommend_list_cell"];
     }
+    cell.showBottomLine = YES;
+    cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
+    cell.textLabel.textColor = WLColoerRGB(51.f);
+    cell.textLabel.font = UIFontMake(15.f);
+    cell.detailTextLabel.textColor = WLColoerRGB(153.f);
+    cell.detailTextLabel.font = UIFontMake(15.f);
+    cell.textLabel.text = @"小尹子";
+    cell.detailTextLabel.text = @"2018-8-12";
+    
+    // reset
+    cell.imageEdgeInsets = UIEdgeInsetsZero;
+    cell.textLabelEdgeInsets = UIEdgeInsetsZero;
+    cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
+    cell.accessoryEdgeInsets = UIEdgeInsetsZero;
+
+//    cell.imageEdgeInsets = UIEdgeInsetsMake(0, 40, 0, 0);
+    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, 40, 0, 0);
+//    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
+    [cell updateCellAppearanceWithIndexPath:indexPath];
     return cell;
 }
 
@@ -55,8 +79,11 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    //    return kNoteHeight + kBannerHeight;
-    return 0.01f;
+    return 10.f;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 0.f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

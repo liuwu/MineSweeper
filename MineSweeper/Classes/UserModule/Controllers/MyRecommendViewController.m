@@ -9,6 +9,8 @@
 #import "MyRecommendViewController.h"
 #import "RecommendListViewController.h"
 
+#import "GridTableViewCell.h"
+
 @interface MyRecommendViewController ()
 
 @property (nonatomic, strong) QMUILabel *momeyLabel;
@@ -39,6 +41,8 @@
 
 // 添加头部信息
 - (void)addHeaderView {
+    // 隐藏分割线
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     //下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
     
@@ -144,6 +148,7 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 2.f;
 }
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0) {
         return 1;
@@ -152,9 +157,25 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"message_notifi_cell"];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"message_notifi_cell"];
+    GridTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"my_recommend_cell"];
+    if (indexPath.section == 0) {
+        if (!cell) {
+            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"my_recommend_cell" gridTitles:@[@"昵称", @"金额(元)", @"级别", @"时间"]];
+        }
+        cell.titleColor = UIColorMake(254,72,30);
+        cell.titleFont = UIFontMake(14.f);
+    } else {
+        if (!cell) {
+            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"my_recommend_cell" gridTitles:@[@"张三", @"500.00", @"1级", @"2018-10-12 12:12:44"]];
+        }
+        cell.titleColor = WLColoerRGB(51.f);
+        cell.titleFont = UIFontMake(13.f);
+        
+        if (indexPath.row % 2 == 0) {
+            cell.backgroundColor = [UIColor whiteColor];
+        } else {
+            cell.backgroundColor = WLColoerRGB(250.f);
+        }
     }
     return cell;
 }
@@ -167,7 +188,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if (section == 0) {
-        return kWL_NormalMarginWidth_10;
+        return 12.f;
     }
     return 0.f;
 }

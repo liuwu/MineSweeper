@@ -307,6 +307,14 @@
 		1069EE6E214A66E10006FFCA /* DCCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE6B214A66E10006FFCA /* DCCycleScrollView.m */; };
 		1069EE6F214A66E10006FFCA /* DCCycleScrollViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE6C214A66E10006FFCA /* DCCycleScrollViewCell.m */; };
 		1069EE74214A9D3A0006FFCA /* HomeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE73214A9D3A0006FFCA /* HomeTableViewCell.m */; };
+		10886BA5214F9FC2003DC40A /* HMSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 10886BA4214F9FC2003DC40A /* HMSegmentedControl.m */; };
+		10886BAB214FA724003DC40A /* GridTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 10886BAA214FA724003DC40A /* GridTableViewCell.m */; };
+		10886BAE214FC1A9003DC40A /* BaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 10886BAD214FC1A9003DC40A /* BaseTableViewCell.m */; };
+		10886BC1214FE8B2003DC40A /* TOWebViewControllerLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 10886BB0214FE8B1003DC40A /* TOWebViewControllerLocalizable.strings */; };
+		10886BC2214FE8B2003DC40A /* TOActivitySafari.m in Sources */ = {isa = PBXBuildFile; fileRef = 10886BB6214FE8B1003DC40A /* TOActivitySafari.m */; };
+		10886BC3214FE8B2003DC40A /* UIImage+TOWebViewControllerIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 10886BB7214FE8B1003DC40A /* UIImage+TOWebViewControllerIcons.m */; };
+		10886BC4214FE8B2003DC40A /* TOActivityChrome.m in Sources */ = {isa = PBXBuildFile; fileRef = 10886BBA214FE8B1003DC40A /* TOActivityChrome.m */; };
+		10886BC5214FE8B2003DC40A /* TOWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10886BC0214FE8B1003DC40A /* TOWebViewController.m */; };
 		1089C5492146AD9700363537 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1089C5482146AD9700363537 /* AppDelegate.m */; };
 		1089C54F2146AD9700363537 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1089C54D2146AD9700363537 /* Main.storyboard */; };
 		1089C5512146AD9900363537 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1089C5502146AD9900363537 /* Assets.xcassets */; };
@@ -952,6 +960,28 @@
 		1069EE6C214A66E10006FFCA /* DCCycleScrollViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCCycleScrollViewCell.m; sourceTree = "<group>"; };
 		1069EE72214A9D3A0006FFCA /* HomeTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeTableViewCell.h; sourceTree = "<group>"; };
 		1069EE73214A9D3A0006FFCA /* HomeTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeTableViewCell.m; sourceTree = "<group>"; };
+		10886BA3214F9FC2003DC40A /* HMSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HMSegmentedControl.h; sourceTree = "<group>"; };
+		10886BA4214F9FC2003DC40A /* HMSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HMSegmentedControl.m; sourceTree = "<group>"; };
+		10886BA9214FA724003DC40A /* GridTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GridTableViewCell.h; sourceTree = "<group>"; };
+		10886BAA214FA724003DC40A /* GridTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GridTableViewCell.m; sourceTree = "<group>"; };
+		10886BAC214FC1A9003DC40A /* BaseTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseTableViewCell.h; sourceTree = "<group>"; };
+		10886BAD214FC1A9003DC40A /* BaseTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseTableViewCell.m; sourceTree = "<group>"; };
+		10886BB1214FE8B1003DC40A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/TOWebViewControllerLocalizable.strings; sourceTree = "<group>"; };
+		10886BB2214FE8B1003DC40A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/TOWebViewControllerLocalizable.strings"; sourceTree = "<group>"; };
+		10886BB3214FE8B1003DC40A /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/TOWebViewControllerLocalizable.strings; sourceTree = "<group>"; };
+		10886BB4214FE8B1003DC40A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/TOWebViewControllerLocalizable.strings; sourceTree = "<group>"; };
+		10886BB5214FE8B1003DC40A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/TOWebViewControllerLocalizable.strings; sourceTree = "<group>"; };
+		10886BB6214FE8B1003DC40A /* TOActivitySafari.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOActivitySafari.m; sourceTree = "<group>"; };
+		10886BB7214FE8B1003DC40A /* UIImage+TOWebViewControllerIcons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TOWebViewControllerIcons.m"; sourceTree = "<group>"; };
+		10886BB8214FE8B1003DC40A /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/TOWebViewControllerLocalizable.strings; sourceTree = "<group>"; };
+		10886BB9214FE8B1003DC40A /* TOWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOWebViewController.h; sourceTree = "<group>"; };
+		10886BBA214FE8B1003DC40A /* TOActivityChrome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOActivityChrome.m; sourceTree = "<group>"; };
+		10886BBB214FE8B1003DC40A /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/TOWebViewControllerLocalizable.strings"; sourceTree = "<group>"; };
+		10886BBC214FE8B1003DC40A /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/TOWebViewControllerLocalizable.strings; sourceTree = "<group>"; };
+		10886BBD214FE8B1003DC40A /* UIImage+TOWebViewControllerIcons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+TOWebViewControllerIcons.h"; sourceTree = "<group>"; };
+		10886BBE214FE8B1003DC40A /* TOActivitySafari.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOActivitySafari.h; sourceTree = "<group>"; };
+		10886BBF214FE8B1003DC40A /* TOActivityChrome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOActivityChrome.h; sourceTree = "<group>"; };
+		10886BC0214FE8B1003DC40A /* TOWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOWebViewController.m; sourceTree = "<group>"; };
 		1089C5442146AD9700363537 /* MineSweeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MineSweeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1089C5472146AD9700363537 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1089C5482146AD9700363537 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -1407,6 +1437,8 @@
 		103517F82147A33F00EDC7AD /* Librarys */ = {
 			isa = PBXGroup;
 			children = (
+				10886BAF214FE8B1003DC40A /* TOWebViewController */,
+				10886BA2214F9FC2003DC40A /* HMSegmentedControl */,
 				10454644214B77A400DA7F9F /* QMUI */,
 				1069EE66214A66E10006FFCA /* DCCycleScrollView */,
 				10113444214915E10082F74B /* NNValidationView */,
@@ -2062,6 +2094,8 @@
 		1035196B2147A41300EDC7AD /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				10886BA9214FA724003DC40A /* GridTableViewCell.h */,
+				10886BAA214FA724003DC40A /* GridTableViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2118,6 +2152,8 @@
 				10351A782147C9F500EDC7AD /* MessageInputView */,
 				10351A682147C82A00EDC7AD /* CardAlertView */,
 				10351A282147B84500EDC7AD /* HUDView */,
+				10886BAC214FC1A9003DC40A /* BaseTableViewCell.h */,
+				10886BAD214FC1A9003DC40A /* BaseTableViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2233,9 +2269,10 @@
 				103519862147B73100EDC7AD /* UINavigationController+WLAdd.h */,
 				103519872147B73100EDC7AD /* UIFont+WLAdd.m */,
 				103519882147B73100EDC7AD /* UIView+WLAdd.h */,
+				103519A82147B73200EDC7AD /* UIImage+WLAdd.h */,
+				1035198B2147B73100EDC7AD /* UIImage+WLAdd.m */,
 				103519892147B73100EDC7AD /* UIImage+WLRoundedCorner.h */,
 				1035198A2147B73100EDC7AD /* UISearchBar+WLAdd.h */,
-				1035198B2147B73100EDC7AD /* UIImage+WLAdd.m */,
 				1035198C2147B73100EDC7AD /* UITableView+WLAdd.h */,
 				1035198D2147B73100EDC7AD /* UIScrollView+WLAdd.h */,
 				1035198E2147B73100EDC7AD /* UIScreen+WLAdd.h */,
@@ -2270,7 +2307,6 @@
 				103519A52147B73200EDC7AD /* UITableViewCell+WLAdd.h */,
 				103519A62147B73200EDC7AD /* UIScreen+WLAdd.m */,
 				103519A72147B73200EDC7AD /* UIScrollView+WLAdd.m */,
-				103519A82147B73200EDC7AD /* UIImage+WLAdd.h */,
 				103519A92147B73200EDC7AD /* UITableView+WLAdd.m */,
 				103519AB2147B73200EDC7AD /* UIView+WLRoundedCorner.m */,
 				103519AE2147B73200EDC7AD /* UIWindow+WLAdd.m */,
@@ -2682,6 +2718,31 @@
 			path = DCCycleScrollView;
 			sourceTree = "<group>";
 		};
+		10886BA2214F9FC2003DC40A /* HMSegmentedControl */ = {
+			isa = PBXGroup;
+			children = (
+				10886BA3214F9FC2003DC40A /* HMSegmentedControl.h */,
+				10886BA4214F9FC2003DC40A /* HMSegmentedControl.m */,
+			);
+			path = HMSegmentedControl;
+			sourceTree = "<group>";
+		};
+		10886BAF214FE8B1003DC40A /* TOWebViewController */ = {
+			isa = PBXGroup;
+			children = (
+				10886BB0214FE8B1003DC40A /* TOWebViewControllerLocalizable.strings */,
+				10886BB6214FE8B1003DC40A /* TOActivitySafari.m */,
+				10886BB7214FE8B1003DC40A /* UIImage+TOWebViewControllerIcons.m */,
+				10886BBA214FE8B1003DC40A /* TOActivityChrome.m */,
+				10886BBD214FE8B1003DC40A /* UIImage+TOWebViewControllerIcons.h */,
+				10886BBE214FE8B1003DC40A /* TOActivitySafari.h */,
+				10886BBF214FE8B1003DC40A /* TOActivityChrome.h */,
+				10886BB9214FE8B1003DC40A /* TOWebViewController.h */,
+				10886BC0214FE8B1003DC40A /* TOWebViewController.m */,
+			);
+			path = TOWebViewController;
+			sourceTree = "<group>";
+		};
 		1089C53B2146AD9700363537 = {
 			isa = PBXGroup;
 			children = (
@@ -2803,6 +2864,12 @@
 				en,
 				Base,
 				"zh-Hans",
+				de,
+				ja,
+				es,
+				ko,
+				"zh-Hant",
+				pl,
 			);
 			mainGroup = 1089C53B2146AD9700363537;
 			productRefGroup = 1089C5452146AD9700363537 /* Products */;
@@ -2820,6 +2887,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				103519182147A34000EDC7AD /* photo_check_selected@3x.png in Resources */,
+				10886BC1214FE8B2003DC40A /* TOWebViewControllerLocalizable.strings in Resources */,
 				103518FD2147A34000EDC7AD /* Emoji.plist in Resources */,
 				103519012147A34000EDC7AD /* AlipaySDK.bundle in Resources */,
 				10351A542147BD2600EDC7AD /* ShareSDKUI.bundle in Resources */,
@@ -2979,6 +3047,7 @@
 				1064DE04214CA436002A9DD6 /* NewFriendListViewController.m in Sources */,
 				10351A6D2147C82A00EDC7AD /* WLNormalInputAlertView.m in Sources */,
 				103518DC2147A34000EDC7AD /* NSString+RENumberFormat.m in Sources */,
+				10886BC3214FE8B2003DC40A /* UIImage+TOWebViewControllerIcons.m in Sources */,
 				1035193A2147A34000EDC7AD /* WLPhoto3DTouchViewController.m in Sources */,
 				10351A272147B7FD00EDC7AD /* WLRuntimeClass.m in Sources */,
 				1064DDF2214C9E24002A9DD6 /* WithdrawViewController.m in Sources */,
@@ -3000,6 +3069,7 @@
 				103519FD2147B73200EDC7AD /* NSString+WLAddForSize.m in Sources */,
 				103519382147A34000EDC7AD /* KSPhotoItem.m in Sources */,
 				103519442147A34000EDC7AD /* WLPersistanceCriteria.m in Sources */,
+				10886BAE214FC1A9003DC40A /* BaseTableViewCell.m in Sources */,
 				103519272147A34000EDC7AD /* CMPopTipView.m in Sources */,
 				103519592147A34000EDC7AD /* WLServiceInfo.m in Sources */,
 				103518EE2147A34000EDC7AD /* REPresenceValidator.m in Sources */,
@@ -3087,12 +3157,14 @@
 				1035194E2147A34000EDC7AD /* WLNetworkingCacheTool.m in Sources */,
 				1064DDFB214CA1D6002A9DD6 /* NewMessageSetViewController.m in Sources */,
 				10454669214B77A500DA7F9F /* QMUIConfigurationTemplatePinkRose.m in Sources */,
+				10886BA5214F9FC2003DC40A /* HMSegmentedControl.m in Sources */,
 				103519ED2147B73200EDC7AD /* UIButton+WLAdd.m in Sources */,
 				103519342147A34000EDC7AD /* KSPhotoView.m in Sources */,
 				10454671214B77A500DA7F9F /* QDCommonViewController.m in Sources */,
 				103519402147A34000EDC7AD /* WLPersistanceTable+WLUpdate.m in Sources */,
 				10351A122147B73200EDC7AD /* CALayer+WLBorderConfig.m in Sources */,
 				1089C5572146AD9900363537 /* main.m in Sources */,
+				10886BAB214FA724003DC40A /* GridTableViewCell.m in Sources */,
 				103518FF2147A34000EDC7AD /* Order.m in Sources */,
 				103518DD2147A34000EDC7AD /* REInlineDatePickerItem.m in Sources */,
 				1035193C2147A34000EDC7AD /* WLPersistanceUtils.m in Sources */,
@@ -3106,6 +3178,7 @@
 				103519EB2147B73200EDC7AD /* UIViewController+WLAdd.m in Sources */,
 				10351A322147B9AE00EDC7AD /* AFgzipRequestSerializer.m in Sources */,
 				1035193D2147A34000EDC7AD /* WLPersistanceHelper.m in Sources */,
+				10886BC4214FE8B2003DC40A /* TOActivityChrome.m in Sources */,
 				10351AEE21481BB900EDC7AD /* SmsLoginViewController.m in Sources */,
 				103519512147A34000EDC7AD /* WLChainRequestManager.m in Sources */,
 				1035190E2147A34000EDC7AD /* AXBadgeView.m in Sources */,
@@ -3120,6 +3193,7 @@
 				103518CE2147A34000EDC7AD /* RETableViewOptionCell.m in Sources */,
 				1089C5492146AD9700363537 /* AppDelegate.m in Sources */,
 				103519F72147B73200EDC7AD /* UIView+WLRoundedCorner.m in Sources */,
+				10886BC2214FE8B2003DC40A /* TOActivitySafari.m in Sources */,
 				1011343F2148CDC40082F74B /* UITextField+Limit.m in Sources */,
 				10351A5F2147C6AA00EDC7AD /* NavViewController.m in Sources */,
 				103519462147A34000EDC7AD /* NSArray+WLPersistanceRecordTransform.m in Sources */,
@@ -3132,6 +3206,7 @@
 				103519FF2147B73200EDC7AD /* NSDecimalNumber+WLAdd.m in Sources */,
 				1064DDEF214C9DA2002A9DD6 /* PosterViewController.m in Sources */,
 				10351A102147B73200EDC7AD /* NSData+WLAddForHash.m in Sources */,
+				10886BC5214FE8B2003DC40A /* TOWebViewController.m in Sources */,
 				103519E72147B73200EDC7AD /* UIFont+WLAdd.m in Sources */,
 				10351AD72147D37C00EDC7AD /* ChatListViewController.m in Sources */,
 				1045466E214B77A500DA7F9F /* UIImageEffects.m in Sources */,
@@ -3178,6 +3253,21 @@
 				103517952147A33F00EDC7AD /* en */,
 			);
 			name = RongCloudKit.strings;
+			sourceTree = "<group>";
+		};
+		10886BB0214FE8B1003DC40A /* TOWebViewControllerLocalizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				10886BB1214FE8B1003DC40A /* de */,
+				10886BB2214FE8B1003DC40A /* zh-Hans */,
+				10886BB3214FE8B1003DC40A /* ja */,
+				10886BB4214FE8B1003DC40A /* en */,
+				10886BB5214FE8B1003DC40A /* es */,
+				10886BB8214FE8B1003DC40A /* ko */,
+				10886BBB214FE8B1003DC40A /* zh-Hant */,
+				10886BBC214FE8B1003DC40A /* pl */,
+			);
+			name = TOWebViewControllerLocalizable.strings;
 			sourceTree = "<group>";
 		};
 		1089C54D2146AD9700363537 /* Main.storyboard */ = {

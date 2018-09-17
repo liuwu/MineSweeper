@@ -7,6 +7,9 @@
 //
 
 #import "WallentViewController.h"
+#import "HMSegmentedControl.h"
+
+#import "GridTableViewCell.h"
 
 @interface WallentViewController ()
 
@@ -38,15 +41,46 @@
 
 // 添加头部信息
 - (void)addHeaderView {
+    // 隐藏分割线
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     //下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
     
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, SCREEN_WIDTH, 64.f)];
-    headerView.backgroundColor = UIColorMake(254.f, 72.f, 30.f);
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, SCREEN_WIDTH, 108.f)];
+    headerView.backgroundColor = [UIColor whiteColor];
     self.tableView.tableHeaderView = headerView;
     
+    // 用户信息
+    UIView *userView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, headerView.width, 64.f)];
+    userView.backgroundColor = UIColorMake(254.f, 72.f, 30.f);
+    [headerView addSubview:userView];
+    
+    NSArray<NSString *> *titles = @[@"充值记录", @"转账记录", @"提现记录", @"支付记录"];
+    HMSegmentedControl *segmentedControl = [[HMSegmentedControl alloc] initWithSectionTitles:titles];
+    segmentedControl.frame = CGRectMake(0, userView.bottom, headerView.width, 44.f);
+    segmentedControl.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
+    // 滑块高度控制
+    segmentedControl.selectionIndicatorHeight = 3.f;
+    segmentedControl.selectionIndicatorColor = UIColorMake(254.f, 72.f, 30.f);
+    segmentedControl.backgroundColor = [UIColor whiteColor];
+    segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
+    segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
+    segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
+    // 设置默认字体颜色
+    segmentedControl.titleTextAttributes = @{NSFontAttributeName : UIFontMake(14.f),
+                                              NSForegroundColorAttributeName : WLColoerRGB(153.f),
+                                              };
+    // 选中颜色
+    segmentedControl.selectedTitleTextAttributes = @{NSFontAttributeName :  UIFontBoldMake(14.f),
+                                                      NSForegroundColorAttributeName : UIColorMake(254.f, 72.f, 30.f),
+                                                      };
+    // 底部滑块的宽度控制
+    segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0.f, 10.f, 0.f, 20.f);
+    [segmentedControl addTarget:self action:@selector(segmentedControlChangedValue:) forControlEvents:UIControlEventValueChanged];
+    [headerView addSubview:segmentedControl];
+    
     UIImageView *bgImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mine_bg_img"]];
-    [headerView addSubview:bgImg];
+    [userView addSubview:bgImg];
     [bgImg sizeToFit];
     [bgImg mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(headerView);
@@ -61,7 +95,7 @@
     momeyTitleLabel.font = UIFontMake(12);
     momeyTitleLabel.textColor = [UIColor whiteColor];
     //    momeyTitleLabel.canPerformCopyAction = YES;
-    [headerView addSubview:momeyTitleLabel];
+    [userView addSubview:momeyTitleLabel];
     [momeyTitleLabel sizeToFit];
     [momeyTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(6.f);
@@ -73,7 +107,7 @@
     momeyLabel.text = @"25,684.65";
     momeyLabel.font = UIFontMake(25);
     momeyLabel.textColor = [UIColor whiteColor];
-    [headerView addSubview:momeyLabel];
+    [userView addSubview:momeyLabel];
     self.momeyLabel = momeyLabel;
     [momeyLabel sizeToFit];
     [momeyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -86,7 +120,7 @@
     balanceTitleLabel.text = @"不可用余额(元)";
     balanceTitleLabel.font = UIFontMake(12);
     balanceTitleLabel.textColor = [UIColor whiteColor];
-    [headerView addSubview:balanceTitleLabel];
+    [userView addSubview:balanceTitleLabel];
     [balanceTitleLabel sizeToFit];
     [balanceTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(momeyTitleLabel);
@@ -98,7 +132,7 @@
     balanceMomeyLabel.text = @"1240.00";
     balanceMomeyLabel.font = UIFontMake(25);
     balanceMomeyLabel.textColor = [UIColor whiteColor];
-    [headerView addSubview:balanceMomeyLabel];
+    [userView addSubview:balanceMomeyLabel];
     self.balanceMomeyLabel = balanceMomeyLabel;
     [balanceMomeyLabel sizeToFit];
     [balanceMomeyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -135,14 +169,37 @@
 }
 
 #pragma mark - UITableView Datasource & Delegate
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2.f;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (section == 0) {
+        return 1;
+    }
     return 10.f;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"message_notifi_cell"];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"message_notifi_cell"];
+    GridTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"wallent_cell"];
+    if (indexPath.section == 0) {
+        if (!cell) {
+            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"wallent_cell" gridTitles:@[@"时间", @"金额", @"状态"]];
+        }
+        cell.titleColor = UIColorMake(254,72,30);
+        cell.titleFont = UIFontMake(14.f);
+    } else {
+        if (!cell) {
+            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"wallent_cell" gridTitles:@[@"2018-10-12 12:12:44", @"500.00", @"成功"]];
+        }
+        cell.titleColor = WLColoerRGB(51.f);
+        cell.titleFont = UIFontMake(13.f);
+        
+        if (indexPath.row % 2 == 0) {
+            cell.backgroundColor = [UIColor whiteColor];
+        } else {
+            cell.backgroundColor = WLColoerRGB(250.f);
+        }
     }
     return cell;
 }
@@ -154,8 +211,14 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    //    return kNoteHeight + kBannerHeight;
-    return 0.01f;
+    if (section == 0) {
+        return 12.f;
+    }
+    return 0.f;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 0.f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -167,6 +230,11 @@
 - (void)beginPullDownRefreshingNew {
     [self.tableView.mj_header endRefreshing];
     [self.tableView.mj_footer endRefreshing];
+}
+
+// 分隔栏切换
+- (void)segmentedControlChangedValue:(HMSegmentedControl *)segmentedControl {
+    DLog(@"Selected index %ld (via UIControlEventValueChanged)", (long)segmentedControl.selectedSegmentIndex);
 }
 
 @end

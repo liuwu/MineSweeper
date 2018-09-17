@@ -248,6 +248,7 @@ WLSYNTH_DUMMY_CLASS(UIView_WLAdd)
 - (void)wl_setLayerShadow:(nullable UIColor*)color
                    offset:(CGSize)offset
                    radius:(CGFloat)radius {
+    self.layer.masksToBounds = NO;
     [self setLayerShadow:color offset:offset radius:radius];
 }
 

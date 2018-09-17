@@ -15,6 +15,7 @@
 #import "MyInfoViewController.h"
 #import "RechargeViewController.h"
 #import "TransferViewController.h"
+#import "TOWebViewController.h"
 
 #import "RETableViewManager.h"
 
@@ -267,7 +268,11 @@
     promotionPosterItem.image = [UIImage imageNamed:@"mine_share_icon"];
     [section addItem:promotionPosterItem];
     RETableViewItem *lotteryItem = [RETableViewItem itemWithTitle:@"抽奖" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        
+        TOWebViewController *webVC = [[TOWebViewController alloc] initWithURLString:@"http://www.baidu.com/"];
+        webVC.navigationButtonsHidden = YES;//隐藏底部操作栏目
+        webVC.title = @"抽奖";
+        webVC.showPageTitles = NO;
+        [self.navigationController pushViewController:webVC animated:YES];
     }];
     lotteryItem.image = [UIImage imageNamed:@"mine_award_icon"];
     [section addItem:lotteryItem];

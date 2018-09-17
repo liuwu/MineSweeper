@@ -99,7 +99,7 @@
     phoneItem.selectionStyle = UITableViewCellSelectionStyleNone;
     [section addItem:phoneItem];
     
-    RETableViewItem *cityItem = [RETableViewItem itemWithTitle:@"城市" accessoryType:UITableViewCellAccessoryNone selectionHandler:^(RETableViewItem *item) {
+    RETableViewItem *cityItem = [RETableViewItem itemWithTitle:@"城市" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
         
     }];
     cityItem.style = UITableViewCellStyleValue1;

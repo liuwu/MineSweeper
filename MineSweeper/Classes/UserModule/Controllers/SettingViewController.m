@@ -49,6 +49,7 @@
     section.footerHeight = 10.f;
     [self.manager addSection:section];
     
+    WEAKSELF
     RETableViewItem *accountSafeItem = [RETableViewItem itemWithTitle:@"账号安全" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
         AccountSafeViewController *vc = [[AccountSafeViewController alloc] initWithStyle:UITableViewStylePlain];
         [self.navigationController pushViewController:vc animated:YES];
@@ -89,8 +90,9 @@
     [self.manager addSection:section2];
     
     RETableViewItem *logoutItem = [RETableViewItem itemWithTitle:@"退出登录" accessoryType:UITableViewCellAccessoryNone selectionHandler:^(RETableViewItem *item) {
-        item.title = @"Pressed!";
-        [item reloadRowWithAnimation:UITableViewRowAnimationAutomatic];
+//        item.title = @"Pressed!";
+//        [item reloadRowWithAnimation:UITableViewRowAnimationAutomatic];
+        [weakSelf alertLogout];
     }];
     logoutItem.textAlignment = NSTextAlignmentCenter;
     logoutItem.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -102,14 +104,29 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+#pragma mark - Private
+// 提醒退出登录
+- (void)alertLogout {
+    QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+        DLog(@"取消");
+    }];
+    QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"退出登录" style:QMUIAlertActionStyleDestructive handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+        DLog(@"退出登录");
+        
+    }];
+    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:nil message:@"确认退出？" preferredStyle:QMUIAlertControllerStyleActionSheet];
+    [alertController addAction:action1];
+    [alertController addAction:action2];
+//    QMUIVisualEffectView *visualEffectView = [[QMUIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+//    visualEffectView.foregroundColor = UIColorMakeWithRGBA(255, 255, 255, .6);// 一般用默认值就行，不用主动去改，这里只是为了展示用法
+//    alertController.mainVisualEffectView = visualEffectView;// 这个负责上半部分的磨砂
+//
+//    visualEffectView = [[QMUIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+//    visualEffectView.foregroundColor = UIColorMakeWithRGBA(255, 255, 255, .6);// 一般用默认值就行，不用主动去改，这里只是为了展示用法
+//    alertController.cancelButtonVisualEffectView = visualEffectView;// 这个负责取消按钮的磨砂
+//    alertController.sheetHeaderBackgroundColor = nil;
+//    alertController.sheetButtonBackgroundColor = nil;
+    [alertController showWithAnimated:YES];
 }
-*/
 
 @end

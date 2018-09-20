@@ -13,7 +13,7 @@
 /// 接口返回状态类型
 typedef NS_ENUM(NSUInteger, WLNetWorkingResultStateType) {
     /// --------- 普通的接口信息错误 ----------
-    WLNetWorkingResultStateTypeSuccess = 1000,           /// 接口调用成功
+    WLNetWorkingResultStateTypeSuccess = 1,           /// 接口调用成功
     WLNetWorkingResultStateTypeNormal = 1001,            /// 系统普通的错误，不做任何处理的
     WLNetWorkingResultStateTypeNoLogin = 1010,           /// 用户未登录，session过期
     WLNetWorkingResultStateTypeHub = 1101,               /// 需要hub提醒的，最常用的错误提醒

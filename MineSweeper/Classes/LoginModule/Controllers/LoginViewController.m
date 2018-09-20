@@ -14,6 +14,8 @@
 
 #import "AppDelegate.h"
 
+#import "LoginModuleClient.h"
+
 @interface LoginViewController ()
 
 
@@ -155,6 +157,12 @@
 // 登录按钮点击
 - (void)didClickLoginBtn:(UIButton *)sender {
     [[AppDelegate sharedAppDelegate] loginSucceed];
+//    [LoginModuleClient loginWithParameterParams:@{@"mobile":[_phoneTxtView.textField.text wl_trimWhitespaceAndNewlines] ,@"width":@"120",@"height":@"30"}
+//                                        Success:^(id resultInfo) {
+//
+//                                        } Failed:^(NSError *error) {
+//
+//                                        }];
 }
 
 // 短信登录按钮点击

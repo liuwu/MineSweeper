@@ -26,6 +26,7 @@ single_implementation(AppDelegate);
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self.window makeKeyAndVisible];
     
+    [self setupNetworkingInfo];
     [self setupUIStyle];
     
     LoginViewController *loginVC = [[LoginViewController alloc] init];
@@ -35,6 +36,11 @@ single_implementation(AppDelegate);
     return YES;
 }
 
+/// 设置网络库相关信息
+- (void)setupNetworkingInfo {
+    WLNetWorkingProcessFilter *filter = [[WLNetWorkingProcessFilter alloc] init];
+    [WLNetwokingConfig sharedInstance].processRule = filter;
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

@@ -15,7 +15,9 @@
 #import "MyInfoViewController.h"
 #import "RechargeViewController.h"
 #import "TransferViewController.h"
-#import "TOWebViewController.h"
+
+#import "AXWebViewController.h"
+#import <AXPracticalHUD/AXPracticalHUD.h>
 
 #import "RETableViewManager.h"
 
@@ -268,15 +270,29 @@
     promotionPosterItem.image = [UIImage imageNamed:@"mine_share_icon"];
     [section addItem:promotionPosterItem];
     RETableViewItem *lotteryItem = [RETableViewItem itemWithTitle:@"抽奖" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        TOWebViewController *webVC = [[TOWebViewController alloc] initWithURLString:@"http://www.baidu.com/"];
-        webVC.navigationButtonsHidden = YES;//隐藏底部操作栏目
+        AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:@"https://www.apple.com"];
+        webVC.showsToolBar = NO;
         webVC.title = @"抽奖";
-        webVC.showPageTitles = NO;
+        // webVC.showsNavigationCloseBarButtonItem = NO;
+        if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
+            webVC.webView.allowsLinkPreview = YES;
+        }
         [self.navigationController pushViewController:webVC animated:YES];
+        
+        // 加载显示pdf文件
+//        AXWebViewController *webVC = [[AXWebViewController alloc] initWithURL:[NSURL URLWithString:@"http://restest.welian.com/onmy1492081266459.pdf"]];
+//        webVC.title = @"Swift.pdf";
+//        webVC.showsToolBar = NO;
+//        if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
+//            webVC.webView.allowsLinkPreview = YES;
+//        }
+//        [self.navigationController pushViewController:webVC animated:YES];
     }];
     lotteryItem.image = [UIImage imageNamed:@"mine_award_icon"];
     [section addItem:lotteryItem];
+    
     RETableViewItem *customerServiceItem = [RETableViewItem itemWithTitle:@"客服中心" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
+        
         
     }];
     customerServiceItem.image = [UIImage imageNamed:@"mine_service_icon"];

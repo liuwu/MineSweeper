@@ -108,7 +108,7 @@
         sharedInstance.magicWindowAppKey = @"UDK8G0ZQ0M5GNLITC8GBK4NXDVHMG0IK";
         
         if (isTest) {
-            sharedInstance.serviceBaseUrl = httpServer ? httpServer : @"https://sevnew.welian.com";
+            sharedInstance.serviceBaseUrl = httpServer ? httpServer : @"https://test.cnsunrun.com/saoleiapp/";
 //            sharedInstance.ossBucket = kWL_ossBucketTest;
 //            sharedInstance.ossFileBucket = kWL_ossFileBucketTest;
             
@@ -130,7 +130,7 @@
             sharedInstance.QYLoginGroupId = 309612;
 //            sharedInstance.h5ServiceBaseUrl = kWL_H5ServiceUrlTest;
         }else{
-            sharedInstance.serviceBaseUrl = httpServer ? httpServer : @"https://sevnew.welian.com";
+            sharedInstance.serviceBaseUrl = httpServer ? httpServer : @"https://test.cnsunrun.com/saoleiapp/";
 //            sharedInstance.ossBucket = kWL_ossBucket;
 //            sharedInstance.ossFileBucket = kWL_ossFileBucket;
             

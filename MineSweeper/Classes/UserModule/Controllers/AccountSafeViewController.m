@@ -7,6 +7,9 @@
 //
 
 #import "AccountSafeViewController.h"
+#import "SetPayPwdViewController.h"
+#import "ChangePhoneViewController.h"
+#import "RestPayPwdViewController.h"
 
 #import "RETableViewManager.h"
 #import "RETableViewItem.h"
@@ -53,17 +56,20 @@
     [self.manager addSection:section];
     
     RETableViewItem *phoneItem = [RETableViewItem itemWithTitle:@"手机号" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-       
+        ChangePhoneViewController *vc = [[ChangePhoneViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
     }];
     [section addItem:phoneItem];
 
     RETableViewItem *loginPwdItem = [RETableViewItem itemWithTitle:@"登录密码" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        
+        RestPayPwdViewController *vc = [[RestPayPwdViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
     }];
     [section addItem:loginPwdItem];
     
     RETableViewItem *payPwdItem = [RETableViewItem itemWithTitle:@"支付密码" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        
+        SetPayPwdViewController *setPayVc = [[SetPayPwdViewController alloc] init];
+        [self.navigationController pushViewController:setPayVc animated:YES];
     }];
     [section addItem:payPwdItem];
     

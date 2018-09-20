@@ -26,7 +26,7 @@
     QMUICMI.grayDarkenColor = UIColorGray3;                                     // UIColorGrayDarken : 深一点的灰色
     QMUICMI.grayLightenColor = UIColorGray7;                                    // UIColorGrayLighten : 浅一点的灰色
     QMUICMI.redColor = UIColorMake(254,72,30);                                // UIColorRed : 红色
-    QMUICMI.greenColor = UIColorTheme4;                                         // UIColorGreen : 绿色
+    QMUICMI.greenColor = UIColorMake(109,176,93);//UIColorTheme4;                                         // UIColorGreen : 绿色
     QMUICMI.blueColor = UIColorMake(49, 189, 243);                              // UIColorBlue : 蓝色
     QMUICMI.yellowColor = UIColorTheme3;                                        // UIColorYellow : 黄色
     
@@ -120,17 +120,17 @@
     
 #pragma mark - SearchBar
     
-    QMUICMI.searchBarTextFieldBackground = UIColorMake(237, 238, 240);          // SearchBarTextFieldBackground : QMUISearchBar 里的文本框的背景颜色
-    QMUICMI.searchBarTextFieldBorderColor = nil;                                // SearchBarTextFieldBorderColor : QMUISearchBar 里的文本框的边框颜色
+    QMUICMI.searchBarTextFieldBackground = UIColorMake(248, 248, 248);          // SearchBarTextFieldBackground : QMUISearchBar 里的文本框的背景颜色
+    QMUICMI.searchBarTextFieldBorderColor = UIColorMake(242, 242, 242);                                // SearchBarTextFieldBorderColor : QMUISearchBar 里的文本框的边框颜色
     QMUICMI.searchBarBottomBorderColor = UIColorClear;                          // SearchBarBottomBorderColor : QMUISearchBar 底部分隔线颜色
     QMUICMI.searchBarBarTintColor = UIColorWhite;                               // SearchBarBarTintColor : QMUISearchBar 的 barTintColor，也即背景色
     QMUICMI.searchBarTintColor = self.themeTintColor;                           // SearchBarTintColor : QMUISearchBar 的 tintColor，也即上面的操作控件的主题色
-    QMUICMI.searchBarTextColor = UIColorBlack;                                  // SearchBarTextColor : QMUISearchBar 里的文本框的文字颜色
-    QMUICMI.searchBarPlaceholderColor = UIColorMake(136, 136, 143);             // SearchBarPlaceholderColor : QMUISearchBar 里的文本框的 placeholder 颜色
-    QMUICMI.searchBarFont = nil;                                                // SearchBarFont : QMUISearchBar 里的文本框的文字字体及 placeholder 的字体
+    QMUICMI.searchBarTextColor = UIColorMake(51, 51, 51);//UIColorBlack;                                  // SearchBarTextColor : QMUISearchBar 里的文本框的文字颜色
+    QMUICMI.searchBarPlaceholderColor = UIColorMake(153, 153, 153);             // SearchBarPlaceholderColor : QMUISearchBar 里的文本框的 placeholder 颜色
+    QMUICMI.searchBarFont = UIFontMake(12.f);                                                // SearchBarFont : QMUISearchBar 里的文本框的文字字体及 placeholder 的字体
     QMUICMI.searchBarSearchIconImage = nil;                                     // SearchBarSearchIconImage : QMUISearchBar 里的放大镜 icon
     QMUICMI.searchBarClearIconImage = nil;                                      // SearchBarClearIconImage : QMUISearchBar 里的文本框输入文字时右边的清空按钮的图片
-    QMUICMI.searchBarTextFieldCornerRadius = 4.0;                               // SearchBarTextFieldCornerRadius : QMUISearchBar 里的文本框的圆角大小
+    QMUICMI.searchBarTextFieldCornerRadius = 5.0;                               // SearchBarTextFieldCornerRadius : QMUISearchBar 里的文本框的圆角大小
     
 #pragma mark - TableView / TableViewCell
     

@@ -150,19 +150,19 @@ NSString *const kWLNeedCompleteInfoNotification = @"kWLNeedCompleteInfoNoti";
 
         if ([request isKindOfClass:[NSDictionary class]]) {
             NSDictionary *resultInfo = request;
-            NSString *errormsg = resultInfo[@"errormsg"] ? : @"";
-            NSNumber *state = resultInfo[@"state"];
-            NSString *sessionid = resultInfo[@"sessionid"];
-            id data = resultInfo[@"data"];
+            NSString *msg = resultInfo[@"msg"] ? : @"";
+            NSNumber *state = resultInfo[@"status"];
+//            NSString *sessionid = resultInfo[@"sessionid"];
+            id data = resultInfo[@"info"];
             
             //1100 1200 1201 聊天室相关，已废弃，没有用，当前普通错误处理
             //很多地方校验参数失败都返回的是1020,当作普通错误处理
             if (state.integerValue == WLNetWorkingResultStateTypeSuccess) {
                 /// 接口返回成功，且数据正确
-                if (sessionid.length > 0) {
+//                if (sessionid.length > 0) {
                     ///保存sessionid
 //                    [NSUserDefaults setObject:sessionid forKey:kWL_UserSessionIdKey];
-                }
+//                }
                 return data;
             }else{
                 /*
@@ -175,7 +175,7 @@ NSString *const kWLNeedCompleteInfoNotification = @"kWLNeedCompleteInfoNoti";
                 NSInteger errorCode = state.integerValue;
                 if (state.integerValue > WLNetWorkingResultStateTypeSuccess && state.integerValue < WLNetWorkingResultStateTypeService) {
                     errorCode = state.integerValue;
-                    
+
                 }else if (state.integerValue >= WLNetWorkingResultStateTypeService && state.integerValue < WLNetWorkingResultStateTypeSystem) {
                     errorCode = state.integerValue;
                 }else if (state.integerValue >= WLNetWorkingResultStateTypeSystem) {
@@ -190,7 +190,7 @@ NSString *const kWLNeedCompleteInfoNotification = @"kWLNeedCompleteInfoNoti";
                             errorCode = state.integerValue;
                             break;
                     }
-                    
+
                 }else {
                     //其它，都当作普通的错误，在这里不做统一提醒处理，交给接口调用的地方进行处理
                     errorCode = WLNetWorkingResultStateTypeNormal;
@@ -198,7 +198,7 @@ NSString *const kWLNeedCompleteInfoNotification = @"kWLNeedCompleteInfoNoti";
                 
                 NSMutableDictionary *info = [NSMutableDictionary dictionary];
                 /// 错误信息
-                [info setObject:errormsg forKey:NSLocalizedDescriptionKey];
+                [info setObject:msg forKey:NSLocalizedDescriptionKey];
                 
                 /// 跳转的页面url
                 NSString *jumpUrl = resultInfo[@"url"];

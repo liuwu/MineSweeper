@@ -124,6 +124,7 @@
     
     self.detailTextLabel.textColor = self.item.titleDetailTextColor != nil ? self.item.titleDetailTextColor: self.tableViewManager.defaultDetailLabelTextColor;
     self.detailTextLabel.font = self.item.titleDetailTextFont != nil ? self.item.titleDetailTextFont: self.tableViewManager.defaultDetailLabelTextFont;
+    self.detailTextLabel.numberOfLines = self.item.showTitleDetailTextNumberOfLine ? 2 : 1;
     
     // 使用字体特殊处理
     if (self.item.detailLabelHintColor) {

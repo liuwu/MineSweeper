@@ -23,8 +23,14 @@ def shared_pods
     
     # 使用： https://github.com/ChenYilong/CYLTabBarController
     pod 'CYLTabBarController', '~> 1.17.4'
-
     pod 'QMUIKit'
+    
+    # webview
+#    pod 'AXWebViewController', '~> 0.6.0'
+    pod 'AXNavigationBackItemInjection'
+    pod 'NJKWebViewProgress'
+    pod 'Aspects'
+    pod 'AXPracticalHUD'
 end
 
 target 'MineSweeper' do

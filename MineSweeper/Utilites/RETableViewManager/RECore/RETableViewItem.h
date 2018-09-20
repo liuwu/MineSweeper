@@ -48,6 +48,7 @@
 // 副标题颜色和字体
 @property (copy, nonatomic) UIColor *titleDetailTextColor;
 @property (copy, nonatomic) UIFont *titleDetailTextFont;
+@property (assign, nonatomic) BOOL showTitleDetailTextNumberOfLine;
 // 是否使用label中加亮字体，如果是YES，一下字段有效
 @property (assign, nonatomic) BOOL detailLabelHintColor;
 @property (copy, nonatomic) NSString *detailLabelHintText;

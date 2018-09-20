@@ -154,7 +154,7 @@ WLSYNTH_DUMMY_CLASS(NSString_WLAdd)
     NSDictionary *attrsDic = @{NSForegroundColorAttributeName:sColor,NSFontAttributeName:sFont};
     NSMutableAttributedString *attrstr = [[NSMutableAttributedString alloc] initWithString:str];
     if (searchStr) {
-        NSRange searchRange = [str rangeOfString:searchStr options:NSCaseInsensitiveSearch];
+        NSRange searchRange = [[attrstr string] rangeOfString:searchStr options:NSCaseInsensitiveSearch];
         [attrstr addAttributes:attrsDic range:searchRange];
     }
     return attrstr;

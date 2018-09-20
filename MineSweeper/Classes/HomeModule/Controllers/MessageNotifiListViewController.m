@@ -9,6 +9,8 @@
 #import "MessageNotifiListViewController.h"
 #import "MessageNotifiDetailViewController.h"
 
+#import "BaseTableViewCell.h"
+
 @interface MessageNotifiListViewController ()
 
 @end
@@ -22,6 +24,9 @@
 - (void)initSubviews {
     [super initSubviews];
     
+    // 隐藏分割线
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = WLColoerRGB(248.f);
 }
 
 - (void)viewDidLoad {
@@ -36,14 +41,30 @@
 
 #pragma mark - UITableView Datasource & Delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 10.f;
+    return 15.f;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"message_notifi_cell"];
+    BaseTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"message_notifi_list_cell"];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"message_notifi_cell"];
+        cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"message_notifi_list_cell"];
     }
+    cell.showBottomLine = YES;
+//    cell.imageView.image = [UIImage imageNamed:@"game_group_icon"];
+    cell.textLabel.text = @"这是消息通知标题";
+    cell.textLabel.textColor = WLColoerRGB(51.f);
+    cell.textLabel.font = UIFontMake(15.f);
+    cell.detailTextLabel.text = @"2018-10-12 12:12:12";
+    cell.detailTextLabel.textColor = WLColoerRGB(102.f);
+    cell.detailTextLabel.font = UIFontMake(14.f);
+    
+    // reset
+    cell.imageEdgeInsets = UIEdgeInsetsZero;
+    cell.textLabelEdgeInsets = UIEdgeInsetsZero;
+    cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
+    cell.accessoryEdgeInsets = UIEdgeInsetsZero;
+    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, 40, 0, 0);
+    [cell updateCellAppearanceWithIndexPath:indexPath];
     return cell;
 }
 

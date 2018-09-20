@@ -21,6 +21,9 @@
 - (void)initSubviews {
     [super initSubviews];
     
+    // 隐藏分割线
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = WLColoerRGB(248.f);
 }
 
 - (void)viewDidLoad {

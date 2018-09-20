@@ -8,6 +8,8 @@
 
 #import "ChatListViewController.h"
 
+#import "RedPacketViewController.h"
+
 @interface ChatListViewController ()
 
 @end
@@ -26,6 +28,10 @@
 
 - (void)initSubviews {
     [super initSubviews];
+    
+    // 隐藏分割线
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = WLColoerRGB(248.f);
     
 }
 
@@ -55,7 +61,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     DLog(@"didSelectRowAtIndexPath------");
-    
+    RedPacketViewController *vc = [[RedPacketViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

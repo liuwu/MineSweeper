@@ -197,9 +197,10 @@
                 self.subTitleLabel = subTitleLabel;
 //                [subTitleLabel wl_setDebug:YES];
                 
+                [_titleLabel sizeToFit];
                 [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(11.f);
-                    make.width.mas_equalTo(80.f);
+//                    make.width.mas_equalTo(150.f);
                     make.height.mas_equalTo(self);
                     make.centerY.mas_equalTo(self);
                 }];

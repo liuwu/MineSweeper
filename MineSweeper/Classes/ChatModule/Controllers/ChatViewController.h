@@ -7,7 +7,8 @@
 //
 
 #import "QDCommonViewController.h"
+#import "WLChatBaseViewController.h"
 
-@interface ChatViewController : QDCommonViewController
+@interface ChatViewController : WLChatBaseViewController//QDCommonViewController
 
 @end

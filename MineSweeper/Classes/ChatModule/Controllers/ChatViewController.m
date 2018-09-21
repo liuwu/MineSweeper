@@ -9,6 +9,8 @@
 #import "ChatViewController.h"
 #import "ChatGroupDetailViewController.h"
 
+#import "QMUINavigationButton.h"
+
 @interface ChatViewController ()
 
 @end
@@ -19,19 +21,24 @@
     return @"聊天";
 }
 
-- (void)initSubviews {
-    [super initSubviews];
-    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"chats_more_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
-    self.navigationItem.rightBarButtonItem = rightBtnItem;
-    
+//- (void)initSubviews {
+//    [super initSubviews];
+//    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"chats_more_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
+//    self.navigationItem.rightBarButtonItem = rightBtnItem;
+
     // 隐藏分割线
 //    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 //    self.tableView.backgroundColor = WLColoerRGB(248.f);
-}
+//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"chats_more_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
+    self.navigationItem.rightBarButtonItem = rightBtnItem;
+    
+    // 设置扩展功能按钮图片
+    [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateNormal];
 }
 
 - (void)didReceiveMemoryWarning {

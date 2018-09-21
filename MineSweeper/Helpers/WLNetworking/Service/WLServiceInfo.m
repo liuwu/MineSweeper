@@ -112,8 +112,8 @@
 //            sharedInstance.ossBucket = kWL_ossBucketTest;
 //            sharedInstance.ossFileBucket = kWL_ossFileBucketTest;
             
-            sharedInstance.rongCloudAppKey = @"lmxuhwagx82sd";
-            sharedInstance.uMengAppKey = @"56ca9c0ee0f55a52970028bf";
+            sharedInstance.rongCloudAppKey = @"z3v5yqkbz1na0";
+            sharedInstance.uMengAppKey = @"";
             
             
 #ifdef WELIANST
@@ -134,8 +134,8 @@
 //            sharedInstance.ossBucket = kWL_ossBucket;
 //            sharedInstance.ossFileBucket = kWL_ossFileBucket;
             
-            sharedInstance.rongCloudAppKey = @"z3v5yqkbvojw0";
-            sharedInstance.uMengAppKey = @"545c8c97fd98c59807006c67";
+            sharedInstance.rongCloudAppKey = @"z3v5yqkbz1na0";
+            sharedInstance.uMengAppKey = @"";
             
 #ifdef WELIANST
             sharedInstance.QYSDKAppName = @"welianSTDis";

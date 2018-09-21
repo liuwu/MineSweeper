@@ -208,13 +208,13 @@
         cell.accessoryView = moenyLabel;
         
         // reset
-        cell.imageEdgeInsets = UIEdgeInsetsZero;
-        cell.textLabelEdgeInsets = UIEdgeInsetsZero;
-        cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
-        cell.accessoryEdgeInsets = UIEdgeInsetsZero;
-        
-        cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, 40, 0, 0);
-        cell.detailTextLabelEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 15);
+//        cell.imageEdgeInsets = UIEdgeInsetsZero;
+//        cell.textLabelEdgeInsets = UIEdgeInsetsZero;
+//        cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
+//        cell.accessoryEdgeInsets = UIEdgeInsetsZero;
+        cell.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+        cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+        cell.detailTextLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
         cell.accessoryEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -25);
         [cell updateCellAppearanceWithIndexPath:indexPath];
     }

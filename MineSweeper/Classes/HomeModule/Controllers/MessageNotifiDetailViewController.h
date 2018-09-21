@@ -6,8 +6,8 @@
 //  Copyright © 2018年 liuwu. All rights reserved.
 //
 
-#import "QDCommonViewController.h"
+#import "SLCommonTableViewController.h"
 
-@interface MessageNotifiDetailViewController : QDCommonViewController
+@interface MessageNotifiDetailViewController : SLCommonTableViewController
 
 @end

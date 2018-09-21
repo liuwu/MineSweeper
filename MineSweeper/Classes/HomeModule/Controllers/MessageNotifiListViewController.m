@@ -50,7 +50,7 @@
         cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"message_notifi_list_cell"];
     }
     cell.showBottomLine = YES;
-//    cell.imageView.image = [UIImage imageNamed:@"game_group_icon"];
+    cell.imageView.image = [UIImage imageNamed:@"home_newNotice_icon"];
     cell.textLabel.text = @"这是消息通知标题";
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
@@ -59,11 +59,11 @@
     cell.detailTextLabel.font = UIFontMake(14.f);
     
     // reset
-    cell.imageEdgeInsets = UIEdgeInsetsZero;
-    cell.textLabelEdgeInsets = UIEdgeInsetsZero;
-    cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
-    cell.accessoryEdgeInsets = UIEdgeInsetsZero;
-    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, 40, 0, 0);
+//    cell.imageEdgeInsets = UIEdgeInsetsZero;
+//    cell.textLabelEdgeInsets = UIEdgeInsetsZero;
+//    cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
+//    cell.accessoryEdgeInsets = UIEdgeInsetsZero;
+//    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     [cell updateCellAppearanceWithIndexPath:indexPath];
     return cell;
 }

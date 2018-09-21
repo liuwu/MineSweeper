@@ -7,8 +7,9 @@
 //
 
 //#import "BaseViewController.h"
-#import "SLCommonGroupListViewController.h"
+//#import "SLCommonGroupListViewController.h"
+#import <RongIMKit/RongIMKit.h>
 
-@interface ChatListViewController : SLCommonGroupListViewController
+@interface ChatListViewController : RCConversationListViewController//SLCommonGroupListViewController
 
 @end

@@ -16,8 +16,11 @@
 #import "RechargeViewController.h"
 #import "TransferViewController.h"
 
+#import "SWQRCode.h"
+
 #import "AXWebViewController.h"
 #import <AXPracticalHUD/AXPracticalHUD.h>
+#import "QDUIHelper.h"
 
 #import "RETableViewManager.h"
 
@@ -26,9 +29,14 @@
 @property (nonatomic, strong) RETableViewManager *manager;
 @property (nonatomic, strong) UIView *headerView;
 
+@property (nonatomic, strong) UIView *qrUserCodeView;
+@property (nonatomic, strong) UIImage *codeImage;
+@property (nonatomic, strong) QMUIModalPresentationViewController *modalViewController;
+
 @end
 
 @implementation MeViewController
+@synthesize modalViewController;
 
 - (NSString *)title {
     return @"我的";
@@ -103,6 +111,7 @@
     [nameBtn setTitle:@"尚软科技" forState:UIControlStateNormal];
     nameBtn.titleLabel.font = UIFontMake(14.f);
 //    nameBtn.qmui_borderPosition = QMUIViewBorderPositionTop | QMUIViewBorderPositionBottom;
+    [nameBtn addTarget:self action:@selector(nameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [userView addSubview:nameBtn];
     
     [nameBtn sizeToFit];
@@ -374,10 +383,187 @@
     [self.navigationController pushViewController:wallentVc animated:YES];
 }
 
+// 个人信息二维码点击
+- (void)nameBtnClicked:(UIButton *)sender {
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 250, 300)];
+    [contentView wl_setCornerRadius:5.f];
+    contentView.backgroundColor = [UIColor whiteColor];
+    self.qrUserCodeView = contentView;
+    
+    UIImageView *iconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"openRedP_redP_img"]];
+    //    contentView.backgroundColor = UIColorWhite;
+    [iconImageView wl_setCornerRadius:27.5f];
+    [contentView addSubview:iconImageView];
+    [iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(55.f, 55.f));
+        make.top.mas_equalTo(15.f);
+        make.left.mas_equalTo(15.f);
+    }];
+    
+    QMUILabel *nameLabel = [[QMUILabel alloc] init];
+    nameLabel.font = UIFontBoldMake(15);
+    nameLabel.textColor = WLColoerRGB(51.f);
+    nameLabel.text = @"小银子";
+    [contentView addSubview:nameLabel];
+    [nameLabel sizeToFit];
+    [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(iconImageView.mas_right).mas_offset(11.f);
+        make.top.mas_equalTo(iconImageView.mas_top).mas_offset(2.f);
+    }];
+    
+    UIImageView *sexImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.f, 0., 10.f, 13.f)];
+    sexImageView.image = [UIImage imageNamed:@"icon_female_nor"];
+    [contentView addSubview:sexImageView];
+    [sexImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(nameLabel.mas_right);
+        make.centerY.mas_equalTo(nameLabel);
+    }];
+    
+    QMUILabel *nickNameLabel = [[QMUILabel alloc] init];
+    nickNameLabel.font = UIFontMake(11);
+    nickNameLabel.textColor = WLColoerRGB(153.f);
+    nickNameLabel.text = @"昵称：小十点多";
+    [contentView addSubview:nickNameLabel];
+    [nickNameLabel sizeToFit];
+    [nickNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(nameLabel);
+        make.top.mas_equalTo(nameLabel.mas_bottom).mas_offset(3.f);
+    }];
+    
+    QMUILabel *idLabel = [[QMUILabel alloc] init];
+    idLabel.font = UIFontMake(11);
+    idLabel.textColor = WLColoerRGB(153.f);
+    idLabel.text = @"ID：12121212";
+    [contentView addSubview:idLabel];
+    [idLabel sizeToFit];
+    [idLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(nameLabel);
+        make.top.mas_equalTo(nickNameLabel.mas_bottom).mas_offset(3.f);
+    }];
+    
+    UIImageView *qrImageView = [[UIImageView alloc] init];
+    qrImageView.image = [UIImage wl_createQRImageFormString:@"哈哈哈客户库呼呼呼呼哈" sizeSquareWidth:150.f];;
+    [contentView addSubview:qrImageView];
+    [qrImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(150.f, 150.f));
+        make.top.mas_equalTo(iconImageView.mas_bottom).mas_offset(20.f);
+        make.centerX.mas_equalTo(contentView);
+    }];
+    
+    UIButton *saveImageBtn = [[UIButton alloc] init];
+    [saveImageBtn setTitle:@"保存到手机" forState:UIControlStateNormal];
+    [saveImageBtn setTitleColor:WLColoerRGB(51.f) forState:UIControlStateNormal];
+    saveImageBtn.titleLabel.font = UIFontBoldMake(15);
+    [saveImageBtn addTarget:self action:@selector(saveImageBtnClickedBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [contentView addSubview:saveImageBtn];
+//    [saveImageBtn wl_setDebug:YES];
+    [saveImageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(125.f);
+        make.height.mas_equalTo(44.f);
+        make.left.mas_equalTo(contentView);
+        make.top.mas_equalTo(256.f);
+    }];
+    
+    UIButton *scanQrCodeBtn = [[UIButton alloc] init];
+    [scanQrCodeBtn setTitle:@"扫描二维码" forState:UIControlStateNormal];
+    [scanQrCodeBtn setTitleColor:UIColorMake(254,72,30) forState:UIControlStateNormal];
+    scanQrCodeBtn.titleLabel.font = UIFontBoldMake(15);
+    [scanQrCodeBtn addTarget:self action:@selector(scanQrCodeBtnClickedBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [contentView addSubview:scanQrCodeBtn];
+    [scanQrCodeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(125.f);
+        make.height.mas_equalTo(44.f);
+        make.left.mas_equalTo(saveImageBtn.mas_right);
+        make.centerY.mas_equalTo(saveImageBtn);
+    }];
+    
+    UIView *lineView = [[UIView alloc] init];
+    lineView.backgroundColor = WLColoerRGB(222.f);
+    [contentView addSubview:lineView];
+    [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(250, .8f));
+        make.bottom.mas_equalTo(saveImageBtn.mas_top);
+        make.left.mas_equalTo(contentView);
+    }];
+    
+    UIView *lineView2 = [[UIView alloc] init];
+    lineView2.backgroundColor = WLColoerRGB(242.f);
+    [contentView addSubview:lineView2];
+    [lineView2 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(1.f, 44.f));
+        make.top.mas_equalTo(saveImageBtn);
+        make.centerX.mas_equalTo(contentView);
+    }];
+    
+    QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
+    modalViewController.animationStyle = QMUIModalPresentationAnimationStylePopup;
+    modalViewController.contentView = contentView;
+    //    modalViewController.delegate = self;
+    [modalViewController showWithAnimated:YES completion:nil];
+    self.modalViewController = modalViewController;
+}
 
+// 保存图片到相册
+- (void)saveImageBtnClickedBtn:(UIButton *)sender {
+    [self.modalViewController hideWithAnimated:YES completion:nil];
+    self.codeImage = [UIImage qmui_imageWithView:self.qrUserCodeView];
+    // 保存到相册
+    [self handleSaveButtonClick];
+}
 
+// 扫描二维码
+- (void)scanQrCodeBtnClickedBtn:(UIButton *)sender {
+    [self.modalViewController hideWithAnimated:YES completion:nil];
+    SWQRCodeConfig *config = [[SWQRCodeConfig alloc] init];
+    config.scannerType = SWScannerTypeBoth;
+    
+    SWQRCodeViewController *qrcodeVC = [[SWQRCodeViewController alloc] init];
+    qrcodeVC.codeConfig = config;
+    [self.navigationController pushViewController:qrcodeVC animated:YES];
+}
 
+// 相册操作权限校验
+- (void)handleSaveButtonClick {
+    if ([QMUIAssetsManager authorizationStatus] == QMUIAssetAuthorizationStatusNotDetermined) {
+        [QMUIAssetsManager requestAuthorization:^(QMUIAssetAuthorizationStatus status) {
+            // requestAuthorization:(void(^)(QMUIAssetAuthorizationStatus status))handler 不在主线程执行，因此涉及 UI 相关的操作需要手工放置到主流程执行。
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (status == QMUIAssetAuthorizationStatusAuthorized) {
+                    [self saveImageToAlbum];
+                } else {
+                    [QDUIHelper showAlertWhenSavedPhotoFailureByPermissionDenied];
+                }
+            });
+        }];
+    } else if ([QMUIAssetsManager authorizationStatus] == QMUIAssetAuthorizationStatusNotAuthorized) {
+        [QDUIHelper showAlertWhenSavedPhotoFailureByPermissionDenied];
+    } else {
+        [self saveImageToAlbum];
+    }
+}
 
+// 保存图片到相册
+- (void)saveImageToAlbum {
+    UIImageWriteToSavedPhotosAlbum(self.codeImage, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+    
+//    // 显示空相册，不显示智能相册
+//    [[QMUIAssetsManager sharedInstance] enumerateAllAlbumsWithAlbumContentType:QMUIAlbumContentTypeOnlyPhoto showEmptyAlbum:YES showSmartAlbumIfSupported:NO usingBlock:^(QMUIAssetsGroup *resultAssetsGroup) {
+//        if (resultAssetsGroup) {
+//            QMUIImageWriteToSavedPhotosAlbumWithAlbumAssetsGroup(self.codeImage, resultAssetsGroup, ^(QMUIAsset *asset, NSError *error) {
+//                if (asset) {
+//                    [QMUITips showSucceed:[NSString stringWithFormat:@"已保存到相册-%@", [resultAssetsGroup name]] inView:self.navigationController.view hideAfterDelay:2];
+//                }
+//            });
+//        }
+//    }];
+}
 
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    if (error != NULL) {
+        [WLHUDView showErrorHUD:@"保存失败，请重试"];
+    }else {
+        [WLHUDView showSuccessHUD:@"已保存到系统相册"];
+    }
+}
 
 @end

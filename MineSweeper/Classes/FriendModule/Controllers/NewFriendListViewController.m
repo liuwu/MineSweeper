@@ -108,9 +108,10 @@
     cell.accessoryEdgeInsets = UIEdgeInsetsZero;
     cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
     
+    cell.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
     cell.accessoryEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -5);
-    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, 40, 0, 0);
-    cell.detailTextLabelEdgeInsets = UIEdgeInsetsMake(0, -10, 0, 0);
+    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+    cell.detailTextLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
     [cell updateCellAppearanceWithIndexPath:indexPath];
     return cell;
 }

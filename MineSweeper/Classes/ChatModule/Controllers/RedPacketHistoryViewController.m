@@ -161,17 +161,19 @@
     moenyLabel.text = @"1.12元";
     cell.accessoryView = moenyLabel;
     
-    // reset
-    cell.imageEdgeInsets = UIEdgeInsetsZero;
-    cell.textLabelEdgeInsets = UIEdgeInsetsZero;
-    cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
-    cell.accessoryEdgeInsets = UIEdgeInsetsZero;
-    
-    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, 40, 0,0);
+    // resetc
+//    cell.imageView.image = [UIImage imageWithColor:[UIColor whiteColor]];
+//    cell.imageView.size = CGSizeMake(5, 10);
+//    cell.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+//    cell.textLabelEdgeInsets = UIEdgeInsetsZero;
+//    cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
+//    cell.accessoryEdgeInsets = UIEdgeInsetsZero;
+//    [cell.imageView wl_setDebug:YES];
 //    [cell.textLabel wl_setDebug:YES];
-    cell.detailTextLabelEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 5);
+    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+    cell.detailTextLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
     cell.accessoryEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -25);
-//    [cell updateCellAppearanceWithIndexPath:indexPath];
+    [cell updateCellAppearanceWithIndexPath:indexPath];
     return cell;
 }
 

@@ -8,6 +8,7 @@
 
 #import "GameDetailListViewController.h"
 #import "ChatViewController.h"
+#import "ChatGroupNoteInfoViewController.h"
 
 #import "BaseTableViewCell.h"
 
@@ -24,6 +25,10 @@
 - (void)initSubviews {
     [super initSubviews];
     
+    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithTitle:@"保存" target:self action:@selector(rightBarButtonItemClicked)];
+    self.navigationItem.rightBarButtonItem = rightBtnItem;
+    
+    
     // 隐藏分割线
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = WLColoerRGB(248.f);
@@ -38,6 +43,12 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)rightBarButtonItemClicked {
+    ChatGroupNoteInfoViewController *vc = [[ChatGroupNoteInfoViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 
 #pragma mark - UITableView Datasource & Delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -56,11 +67,7 @@
     cell.textLabel.font = UIFontMake(15.f);
     
     // reset
-    cell.imageEdgeInsets = UIEdgeInsetsZero;
-    cell.textLabelEdgeInsets = UIEdgeInsetsZero;
-    cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
-    cell.accessoryEdgeInsets = UIEdgeInsetsZero;
-    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, 40, 0, 0);
+    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
     [cell updateCellAppearanceWithIndexPath:indexPath];
     return cell;
 }

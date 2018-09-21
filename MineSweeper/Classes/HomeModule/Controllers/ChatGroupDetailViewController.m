@@ -28,7 +28,7 @@
 
 - (void)initSubviews {
     [super initSubviews];
-    self.userArray = @[@"1小尹", @"2小尹", @"3小尹", @"4小尹", @"5小尹"];
+    self.userArray = @[@"1小尹", @"2小尹ddd", @"3小尹asa", @"4小尹dfdf", @"5小尹dfdfdfdfdf", @"4小尹dfdf", @"4小尹dfdf"];
     [self addTableHeaderInfo];
     [self addTableViewCell];
 }
@@ -69,10 +69,18 @@
     //设置headerView的尺寸大小
     //    layout.headerReferenceSize = CGSizeMake(self.view.frame.size.width, 100);
     //该方法也可以设置itemSize
-    layout.itemSize =CGSizeMake(DEVICE_WIDTH/5.f, 90.f);
+//    layout.itemSize =CGSizeMake((DEVICE_WIDTH - 30.f )/5.f, 90.f);
+    layout.itemSize =CGSizeMake(50.f, 90.f);
+    layout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);//设置边距
+    layout.minimumLineSpacing = 0;//(DEVICE_WIDTH - 250) / 4.f;
+    CGFloat itemSpaceWith = (DEVICE_WIDTH - 250) / 6.f;
+    layout.minimumInteritemSpacing = itemSpaceWith;
+//    layout.minimumLineSpacing = (DEVICE_WIDTH - kWL_NormalMarginWidth_15 * 2.f - layout.itemSize.width) / 4.f;//每个相邻layout的上下
+//    layout.minimumInteritemSpacing = (ScreenWidth - kWL_NormalMarginWidth_15 * 2.f - layout.itemSize.width) / 4;//每个相邻layout的左右
+    // 移动方向的设置
     
     //2.初始化collectionView
-    UICollectionView *mainCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0., 0., DEVICE_WIDTH, headerHeight) collectionViewLayout:layout];
+    UICollectionView *mainCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(itemSpaceWith, 0., DEVICE_WIDTH - itemSpaceWith * 2.f, headerHeight) collectionViewLayout:layout];
     mainCollectionView.scrollEnabled = NO;
     [headerView addSubview:mainCollectionView];
     mainCollectionView.backgroundColor = [UIColor clearColor];
@@ -203,7 +211,7 @@
     UserItemCollectionViewCell *cell = (UserItemCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"user_item_cell" forIndexPath:indexPath];
     
     if (indexPath.row == _userArray.count) {
-        cell.logoImageView.image = [UIImage imageNamed:@"redP_head_img"];
+        cell.logoImageView.image = [UIImage imageNamed:@"chatDetail_icon_add"];
     } else {
         cell.logoImageView.image = [UIImage imageNamed:@"redP_head_img"];
         cell.titleLabel.text = _userArray[indexPath.row];
@@ -213,7 +221,7 @@
 
 //设置每个item的尺寸
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake(DEVICE_WIDTH / 5.f, 90.f);
+    return CGSizeMake(50.f, 90.f);
 }
 
 //footer的size
@@ -229,20 +237,20 @@
 //}
 
 //设置每个item的UIEdgeInsets
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
-    return UIEdgeInsetsMake(0, 0, 0, 0);
-}
-
-//设置每个item水平间距
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
-    return 0;
-}
+//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
+//    return UIEdgeInsetsMake(0, 0, 0, 0);
+//}
+//
+////设置每个item水平间距
+//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+//    return 0;
+//}
 
 
 //设置每个item垂直间距
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
-    return 0;
-}
+//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+//    return 0;
+//}
 
 
 //通过设置SupplementaryViewOfKind 来设置头部或者底部的view，其中 ReuseIdentifier 的值必须和 注册是填写的一致，本例都为 “reusableView”

@@ -24,27 +24,27 @@
 }
 
 - (void)setup {
-    [self.contentView wl_setDebug:YES];
-    
     UIImageView *logoImageView  = [[UIImageView alloc] initWithFrame:CGRectZero];
-    logoImageView.backgroundColor = [UIColor redColor];
     [logoImageView wl_setCornerRadius:25.f];
+//    [logoImageView wl_setBorderWidth:0.8f color:WLColoerRGB(153.f)];
     [self.contentView addSubview:logoImageView];
     self.logoImageView = logoImageView;
     [logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(49, 49));
-        make.top.left.mas_equalTo(20.f);
+        make.top.mas_equalTo(20.f);
+        make.centerX.mas_equalTo(self.contentView);
     }];
     
     QMUILabel *titleLabel = [[QMUILabel alloc] init];
     titleLabel.font = UIFontMake(13);
     titleLabel.textColor = WLColoerRGB(51.f);
     titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.minimumScaleFactor = .8f;
     [self.contentView addSubview:titleLabel];
 //    [titleLabel wl_setDebug:YES];
     self.titleLabel = titleLabel;
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(self.contentView.width, 20.f));
+        make.size.mas_equalTo(CGSizeMake(self.contentView.width + 20.f, 20.f));
         make.centerX.mas_equalTo(self.contentView);
         make.top.mas_equalTo(self.logoImageView.mas_bottom).mas_offset(5.f);
     }];

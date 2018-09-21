@@ -199,7 +199,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     BaseTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"friend_list_cell"];
     if (!cell) {
-        cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleValue1 reuseIdentifier:@"friend_list_cell"];
+        cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleDefault reuseIdentifier:@"friend_list_cell"];
     }
     cell.showBottomLine = YES;
     
@@ -215,15 +215,9 @@
     cell.textLabel.font = UIFontMake(15.f);
     
     // reset
-    cell.imageEdgeInsets = UIEdgeInsetsZero;
-    cell.textLabelEdgeInsets = UIEdgeInsetsZero;
-    cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
-    cell.accessoryEdgeInsets = UIEdgeInsetsZero;
-    
-    //    cell.imageEdgeInsets = UIEdgeInsetsMake(0, 40, 0, 0);
-    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, 40, 0, 0);
+    cell.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
     //    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    
+    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
     [cell updateCellAppearanceWithIndexPath:indexPath];
     return cell;
 }

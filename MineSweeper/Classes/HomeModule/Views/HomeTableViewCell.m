@@ -88,24 +88,53 @@
         make.left.mas_equalTo(self.nameLabel);
     }];
     
+    UIView *shadowView = [[UIView alloc] init];
+    shadowView.layer.shadowColor = [UIColor grayColor].CGColor;
+    shadowView.layer.shadowOffset = CGSizeMake(0, 0);
+    shadowView.layer.shadowRadius = 10.f;
+    shadowView.layer.shadowOpacity = .6f;
+    shadowView.layer.shouldRasterize = YES;
+    shadowView.clipsToBounds = NO;
+    shadowView.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    [contentView addSubview:shadowView];
+    //    [shadowView wl_setDebug:YES];
+    [shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(110.f, 30.f));
+        make.bottom.mas_equalTo(-kWL_NormalMarginWidth_20);
+        make.left.mas_equalTo(kWL_NormalMarginWidth_20);
+    }];
+    
+//    QMUILabel *logoLabel = [[QMUILabel alloc] init];
+//    logoLabel.text = @"开始游戏";
+//    logoLabel.font = UIFontMake(14);
+//    logoLabel.backgroundColor = UIColorMake(254,234,69);
+//    logoLabel.textColor = UIColorMake(254,72,30);
+//    logoLabel.textAlignment = NSTextAlignmentCenter;
+//    [logoLabel wl_setCornerRadius:5.f];
+//    [shadowView addSubview:logoLabel];
+//    //    [logoLabel wl_setDebug:YES];
+//    [logoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.edges.mas_equalTo(shadowView);
+//    }];
+    
     UIButton *beginBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [beginBtn setTitle:@"开始游戏" forState:UIControlStateNormal];
     [beginBtn setBackgroundImage:[UIImage imageWithColor:UIColorMake(254,234,69)] forState:UIControlStateNormal];
     beginBtn.titleLabel.font = UIFontMake(14.f);
     [beginBtn setTitleColor:UIColorMake(254,72,30) forState:UIControlStateNormal];
 //    beginBtn.backgroundColor = UIColorMake(254,234,69);
-    [beginBtn addTarget:self action:@selector(beginBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [contentView addSubview:beginBtn];
-//    [beginBtn wl_setCornerRadius:5.f];
-    beginBtn.layer.cornerRadius = 5.f;
+//    [beginBtn addTarget:self action:@selector(beginBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [shadowView addSubview:beginBtn];
+    [beginBtn wl_setCornerRadius:5.f];
+//    beginBtn.layer.cornerRadius = 5.f;
     beginBtn.userInteractionEnabled = NO;
-    [beginBtn wl_setLayerShadow:[UIColor lightGrayColor] offset:CGSizeMake(2.f, 2.f) radius:1.f];
+//    [beginBtn wl_setLayerShadow:[UIColor lightGrayColor] offset:CGSizeMake(2.f, 2.f) radius:1.f];
     self.beginBtn = beginBtn;
-    
     [_beginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(110.f, 30.f));
-        make.bottom.mas_equalTo(-kWL_NormalMarginWidth_20);
-        make.left.mas_equalTo(kWL_NormalMarginWidth_20);
+        make.edges.mas_equalTo(shadowView);
+//        make.size.mas_equalTo(CGSizeMake(110.f, 30.f));
+//        make.bottom.mas_equalTo(-kWL_NormalMarginWidth_20);
+//        make.left.mas_equalTo(kWL_NormalMarginWidth_20);
     }];
     
 }

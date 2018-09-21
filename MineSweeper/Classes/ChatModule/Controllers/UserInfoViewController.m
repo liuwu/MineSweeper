@@ -7,6 +7,7 @@
 //
 
 #import "UserInfoViewController.h"
+#import "FriendRquestViewController.h"
 
 #import "RETableViewManager.h"
 #import "RETableViewItem.h"
@@ -64,7 +65,7 @@
     }];
     
     UIImageView *iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.f, 0., 10.f, 13.f)];
-    iconImageView.image = [UIImage imageNamed:@"common_mine_icon_active"];
+    iconImageView.image = [UIImage imageNamed:@"icon_female_nor"];
     [headerView addSubview:iconImageView];
     [iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(nameLabel.mas_right);
@@ -103,7 +104,7 @@
     QMUIFillButton *sendBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
     [sendBtn setTitle:@"发消息" forState:UIControlStateNormal];
     sendBtn.titleLabel.font = WLFONT(18);
-    [sendBtn addTarget:self action:@selector(quitBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [sendBtn addTarget:self action:@selector(sendBtn:) forControlEvents:UIControlEventTouchUpInside];
     [sendBtn setCornerRadius:5.f];
     [footerView addSubview:sendBtn];
     [sendBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -172,6 +173,11 @@
     //    alertController.sheetHeaderBackgroundColor = nil;
     //    alertController.sheetButtonBackgroundColor = nil;
     [alertController showWithAnimated:YES];
+}
+// 发消息
+- (void)sendBtn:(UIButton *)sender {
+    FriendRquestViewController *vc = [[FriendRquestViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 // 查看更多用户

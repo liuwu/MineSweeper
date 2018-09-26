@@ -103,12 +103,13 @@ NSString *const kWLNeedCompleteInfoNotification = @"kWLNeedCompleteInfoNoti";
 //    NSString *sessionId = jwtModel.sessionId?:[NSUserDefaults objectForKey:kWL_UserSessionIdKey];
     NSMutableDictionary *requestHeaderDic = [NSMutableDictionary dictionary];
 //    [requestHeaderDic setValue:sessionId forKey:@"sessionid"];
-    [requestHeaderDic setValue:kAppVersion forKey:@"version"];
-    [requestHeaderDic setValue:kPlatformType forKey:@"platform"];
-    [requestHeaderDic setValue:kDeviceUdid forKey:@"platform"];
+//    [requestHeaderDic setValue:kAppVersion forKey:@"version"];
+//    [requestHeaderDic setValue:kPlatformType forKey:@"platform"];
+//    [requestHeaderDic setValue:kDeviceUdid forKey:@"platform"];
     return [NSDictionary dictionaryWithDictionary:requestHeaderDic];
 }
 
+// 全局的请求头
 - (NSDictionary *)httpHeaderInfos {
 //    WLUserJWTModel *jwtModel = [[WLUserDataCenter sharedInstance] getLoginUserJWT];
     /// 每次启动App时都会新生成
@@ -117,9 +118,12 @@ NSString *const kWLNeedCompleteInfoNotification = @"kWLNeedCompleteInfoNoti";
     NSMutableDictionary *requestHeaderDic = [NSMutableDictionary dictionary];
 //    [requestHeaderDic setValue:sessionId forKey:@"sessionid"];
 //    [requestHeaderDic setValue:userJWT forKey:@"jwt"];
-    [requestHeaderDic setValue:kAppVersion forKey:@"version"];
-    [requestHeaderDic setValue:kPlatformType forKey:@"platform"];
-    [requestHeaderDic setValue:kDeviceUdid forKey:@"platform"];
+//    [requestHeaderDic setValue:kAppVersion forKey:@"version"];
+//    [requestHeaderDic setValue:kPlatformType forKey:@"platform"];
+//    [requestHeaderDic setValue:kDeviceUdid forKey:@"platform"];s
+    if ([configTool getToken]) {
+        [requestHeaderDic setValue:[configTool getToken] forKey:@"Authorization"];
+    }
     return [NSDictionary dictionaryWithDictionary:requestHeaderDic];
 }
 
@@ -166,34 +170,17 @@ NSString *const kWLNeedCompleteInfoNotification = @"kWLNeedCompleteInfoNoti";
                 return data;
             }else{
                 /*
-                 1  错误码：1101，App通过toast提示服务端通过errormsg传回的内容
-                 2. 错误码：1102，App通过Alert提示服务端通过errormsg传回的内容
-                 3. 错误码：3101，App通过Alert提示服务端通过errormsg传回的内容，并在用户点击“确定”以后退出登录
-                 4. 错误码：3102，App通过Alert提示服务端通过errormsg传回的内容，并在用户点击“确定”以后跳转到服务端通过url传回的链接
-                 5. 错误码：3103，App通过Alert提示服务端通过errormsg传回的内容。用户点击"取消"不做操作，点击“确定”以后跳转到服务端通过url传回的链接
-                 */
+                 1  错误码：1001，token错误*/
                 NSInteger errorCode = state.integerValue;
-                if (state.integerValue > WLNetWorkingResultStateTypeSuccess && state.integerValue < WLNetWorkingResultStateTypeService) {
+                if (state.integerValue == WLNetWorkingResultStateTypeNormal) {
                     errorCode = state.integerValue;
-
-                }else if (state.integerValue >= WLNetWorkingResultStateTypeService && state.integerValue < WLNetWorkingResultStateTypeSystem) {
-                    errorCode = state.integerValue;
-                }else if (state.integerValue >= WLNetWorkingResultStateTypeSystem) {
-                    switch (errorCode) {
-                        case WLNetWorkingResultStateTypeSystemAlertCancelOrJump:
-                        case WLNetWorkingResultStateTypeSystemAlertAndJump:
-                        case WLNetWorkingResultStateTypeSystemLogout:{
-                            errorCode = state.integerValue;
-                        }
-                            break;
-                        default:
-                            errorCode = state.integerValue;
-                            break;
-                    }
-
                 }else {
                     //其它，都当作普通的错误，在这里不做统一提醒处理，交给接口调用的地方进行处理
                     errorCode = WLNetWorkingResultStateTypeNormal;
+                }
+                if ([msg containsString:@"token 已失效"]) {
+                    // 检测过期，重新获取token
+                    [[AppDelegate sharedAppDelegate] checkTokenExpires];
                 }
                 
                 NSMutableDictionary *info = [NSMutableDictionary dictionary];
@@ -349,7 +336,9 @@ NSString *const kWLNeedCompleteInfoNotification = @"kWLNeedCompleteInfoNoti";
                         /// 被踢出，需要重新登录
                         errorMsg = errorInfo.localizedDescription;
                         //退出登录
-                        [[AppDelegate sharedAppDelegate] logoutWithErrormsg:errorMsg];
+                        [NSUserDefaults setObject:nil forKey:kWLLoginUserIdKey];
+                        [[AppDelegate sharedAppDelegate] checkLoginStatus];
+//                        [[AppDelegate sharedAppDelegate] logoutWithErrormsg:errorMsg];
                         
                         break;
                     }

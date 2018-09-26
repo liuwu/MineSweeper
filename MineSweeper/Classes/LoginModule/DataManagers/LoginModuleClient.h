@@ -11,6 +11,16 @@
 @interface LoginModuleClient : BaseModelClient
 
 
+// 我的 - 刷新 token
++ (WLRequest *)refreshTokenWithParams:(NSDictionary *)params
+                              Success:(SuccessBlock)success
+                               Failed:(FailedBlock)failed ;
+
+// 我的 - token
++ (WLRequest *)getUserTokenWithParams:(NSDictionary *)params
+                              Success:(SuccessBlock)success
+                               Failed:(FailedBlock)failed;
+
 // 获取图形验证码
 + (WLRequest *)getImageVcodeWithParams:(NSDictionary *)params
                                Success:(SuccessBlock)success

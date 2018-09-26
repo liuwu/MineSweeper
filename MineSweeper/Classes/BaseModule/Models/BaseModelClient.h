@@ -22,4 +22,10 @@
                      Success:(SuccessBlock)success
                       Failed:(FailedBlock)failed;
 
++ (WLRequest *)updateFileWithParams:(NSDictionary *)params
+                      apiMethodName:(NSString *)apiMethodName
+                              image:(UIImage *)image
+                            Success:(SuccessBlock)success
+                             Failed:(FailedBlock)failed ;
+
 @end

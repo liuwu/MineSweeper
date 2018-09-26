@@ -10,4 +10,7 @@
 
 @interface FriendRquestViewController : QDCommonViewController
 
+// 需要添加的好友ID
+@property (nonatomic, copy) NSString *uid;
+
 @end

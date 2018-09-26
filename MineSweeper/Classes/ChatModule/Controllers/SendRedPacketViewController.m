@@ -12,6 +12,8 @@
 #import "RETableViewItem.h"
 #import "LWLoginTextFieldView.h"
 
+#import "ImModelClient.h"
+
 @interface SendRedPacketViewController ()<QMUIModalPresentationViewControllerDelegate>
 
 @property (nonatomic, strong) LWLoginTextFieldView *moenyTxtView;
@@ -34,10 +36,15 @@
     [self addViewConstraints];
     
     //添加单击手势
-    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
-        [[self.view wl_findFirstResponder] resignFirstResponder];
-    }];
-    [self.view addGestureRecognizer:tap];
+//    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+//        [[self.view wl_findFirstResponder] resignFirstResponder];
+//    }];
+//    [self.view addGestureRecognizer:tap];
+}
+
+- (BOOL)shouldHideKeyboardWhenTouchInView:(UIView *)view {
+    // 表示点击空白区域都会降下键盘
+    return YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -143,76 +150,56 @@
 #pragma mark - private
 // 发送
 - (void)sendBtnClicked:(UIButton *)sender {
-    [self showOpenPacket];
+    if (_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入红包金额"];
+        return;
+    }
+    if (_packetNountTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入红包个数"];
+        return;
+    }
+    if (_mineCountTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入雷数"];
+        return;
+    }
+    
+    if (_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue == 0) {
+        [WLHUDView showOnlyTextHUD:@"红包金额大于0元"];
+        return;
+    }
+    if (_packetNountTxtView.textField.text.wl_trimWhitespaceAndNewlines.integerValue == 0) {
+        [WLHUDView showOnlyTextHUD:@"红包个数大于0个"];
+        return;
+    }
+    
+    WEAKSELF
+    QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:NULL];
+    QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"发送" style:QMUIAlertActionStyleDestructive handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+        [weakSelf sendPacket];
+    }];
+    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:@"确定发送？" message:nil preferredStyle:QMUIAlertControllerStyleAlert];
+    [alertController addAction:action1];
+    [alertController addAction:action2];
+    [alertController showWithAnimated:YES];
+    
 }
 
-// 打开红包页面
-- (void)showOpenPacket {
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 250, 300)];
-    
-    UIImageView *bgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"openRedP_redP_img"]];
-    //    contentView.backgroundColor = UIColorWhite;
-    [contentView addSubview:bgView];
-    [bgView sizeToFit];
-    [bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(contentView);
-        make.centerY.mas_equalTo(contentView);
+- (void)sendPacket {
+    NSDictionary *params = @{@"group_id" : [NSNumber numberWithInteger:_groupId.integerValue],
+                             @"money" : [NSNumber numberWithFloat:_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue],
+                             @"num" : [NSNumber numberWithInteger:_packetNountTxtView.textField.text.wl_trimWhitespaceAndNewlines.integerValue],
+                             @"thunder" : [NSNumber numberWithInteger:_mineCountTxtView.textField.text.wl_trimWhitespaceAndNewlines.integerValue]
+                             };
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    WEAKSELF
+    [ImModelClient imSendRedpackWithParams:params Success:^(id resultInfo) {
+        if (!resultInfo) {
+            [WLHUDView showSuccessHUD:resultInfo];
+            [weakSelf.navigationController popViewControllerAnimated:YES];
+        }
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
     }];
-    
-    QMUILabel *nameLabel = [[QMUILabel alloc] init];
-    nameLabel.font = UIFontMake(15);
-    nameLabel.textColor = [UIColor whiteColor];
-    nameLabel.text = @"你抢到了";
-    [contentView addSubview:nameLabel];
-    //    self.idLabel = nameLabel;
-    [nameLabel sizeToFit];
-    [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(contentView);
-        make.top.mas_equalTo(bgView.mas_top).mas_offset(165.f);
-    }];
-    
-    QMUILabel *moneyLabel = [[QMUILabel alloc] init];
-    moneyLabel.font = UIFontMake(30);
-    moneyLabel.textColor = [UIColor whiteColor];
-    moneyLabel.attributedText = [NSString wl_getAttributedInfoString:@"2.00元"
-                                                 searchStr:@"元"
-                                                     color:[UIColor whiteColor]
-                                                      font:UIFontMake(10.f)] ;
-    [contentView addSubview:moneyLabel];
-    [moneyLabel sizeToFit];
-    [moneyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(contentView);
-        make.top.mas_equalTo(nameLabel.mas_bottom).mas_offset(8.f);
-    }];
-    
-    UIButton *lookMoreBtn = [[UIButton alloc] init];
-    [lookMoreBtn setTitle:@"查看全部" forState:UIControlStateNormal];
-    [lookMoreBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    lookMoreBtn.titleLabel.font = WLFONT(14);
-    [lookMoreBtn addTarget:self action:@selector(lookMoreBtnClickedBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [contentView addSubview:lookMoreBtn];
-    [lookMoreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(200.f);
-        make.height.mas_equalTo(44.f);
-        make.centerX.mas_equalTo(contentView);
-        make.top.mas_equalTo(moneyLabel.mas_bottom).mas_offset(-5.f);
-    }];
-    
-    QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
-    modalViewController.animationStyle = QMUIModalPresentationAnimationStylePopup;
-    modalViewController.contentView = contentView;
-//    modalViewController.delegate = self;
-    [modalViewController showWithAnimated:YES completion:nil];
-}
-
-//- (BOOL)shouldHideModalPresentationViewController:(QMUIModalPresentationViewController *)controller {
-//     DLog(@"shouldHideModalPresentationViewController --------");
-//
-//    return NO;
-//}
-
-- (void)lookMoreBtnClickedBtn:(UIButton *)sender {
-    DLog(@"lookMoreBtnClickedBtn --------");
 }
 
 @end

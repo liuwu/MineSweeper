@@ -7,10 +7,13 @@
 //
 
 #import "RechargeViewController.h"
+#import "AXWebViewController.h"
 
 #import "RETableViewManager.h"
 #import "RETableViewItem.h"
 #import "LWLoginTextFieldView.h"
+
+#import "UserModelClient.h"
 
 @interface RechargeViewController ()
 
@@ -55,10 +58,15 @@
     [self addViewConstraints];
     
     //添加单击手势
-    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
-        [[self.view wl_findFirstResponder] resignFirstResponder];
-    }];
-    [self.view addGestureRecognizer:tap];
+//    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+//        [[self.view wl_findFirstResponder] resignFirstResponder];
+//    }];
+//    [self.view addGestureRecognizer:tap];
+}
+
+- (BOOL)shouldHideKeyboardWhenTouchInView:(UIView *)view {
+    // 表示点击空白区域都会降下键盘
+    return YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -227,8 +235,35 @@
 }
 
 #pragma mark - private
-// 立即提现按钮点击
+// 立即充值按钮点击
 - (void)payBtnClicked:(UIButton *)sender {
+    if (_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入充值金额"];
+        return;
+    }
+    if ([_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines floatValue] == 0) {
+        [WLHUDView showOnlyTextHUD:@"充值金额大于0"];
+        return;
+    }
+    NSDictionary *params = @{@"money": [NSNumber numberWithFloat:[_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines floatValue]],
+                             @"pay_method" : @2
+                             };
+    [WLHUDView showHUDWithStr:@"充值中..." dim:YES];
+    WEAKSELF
+    [UserModelClient rechargeWallentWithParams:params Success:^(id resultInfo) {
+        [WLHUDView hiddenHud];
+        AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:resultInfo];
+        webVC.showsToolBar = NO;
+        webVC.title = @"充值";
+        // webVC.showsNavigationCloseBarButtonItem = NO;
+        if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
+            webVC.webView.allowsLinkPreview = YES;
+        }
+        [weakSelf.navigationController pushViewController:webVC animated:YES];
+        // https://qr.alipay.com/bax070319pqypzwglyvq40b0
+    } Failed:^(NSError *error) {
+         [WLHUDView hiddenHud];
+    }];
     
 }
 

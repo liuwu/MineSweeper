@@ -16,6 +16,9 @@
 #import "UILabel+QMUI.h"
 #import "HomeTableViewCell.h"
 
+#import "BannerImgModel.h"
+#import "ImGroupModelClient.h"
+
 #define kNoteHeight 30.f
 #define kBannerHeight 186.f
 
@@ -23,6 +26,7 @@
 
 @property (nonatomic, strong) RETableViewManager *manager;
 @property (nonatomic, strong) UIView *headerView;
+@property (nonatomic, strong) DCCycleScrollView *banner;
 
 @end
 
@@ -90,7 +94,7 @@
         make.width.mas_equalTo(headerView.width - imageView.right - kWL_NormalMarginWidth_11 * 3.f);
     }];
     
-    DCCycleScrollView *banner = [DCCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 30, ScreenWidth, kBannerHeight) shouldInfiniteLoop:YES imageGroups:imageArr];
+    DCCycleScrollView *banner = [DCCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 30, ScreenWidth, kBannerHeight - 36.f) shouldInfiniteLoop:YES imageGroups:imageArr];
     //    banner.placeholderImage = [UIImage imageNamed:@"placeholderImage"];
     //        banner.cellPlaceholderImage = [UIImage imageNamed:@"placeholderImage"];
     banner.autoScrollTimeInterval = 5.f;
@@ -103,6 +107,7 @@
 //    banner.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
     banner.backgroundColor = WLColoerRGB(248.f);
     [headerView addSubview:banner];
+    self.banner = banner;
     //    [banner wl_setDebug:YES];
     
     //下拉刷新
@@ -117,40 +122,22 @@
     self.tableView.dataSource = self;
 //    self.tableView.allowsSelection = NO;// 去除默认选中效果
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//去除默认分割线
-//    [self.tableView setSectionIndexColor:[UIColor wl_hex0F6EF4]];
-//    [self.tableView setSectionIndexBackgroundColor:[UIColor clearColor]];
     self.tableView.tableHeaderView = headerView;
-    
-//    self.manager = [[RETableViewManager alloc] initWithTableView:self.tableView];
-//    _manager.tableView.backgroundColor = [UIColor whiteColor];
-//    RETableViewSection *section = [RETableViewSection section];
-//    section.headerHeight = kNoteHeight + kBannerHeight;
-//    section.headerView = headerView;
-//
-//    RETableViewItem *commendItem = [RETableViewItem itemWithTitle:@"我的推荐" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-//
-//    }];
-//    [section addItem:commendItem];
-//    RETableViewItem *promotionPosterItem = [RETableViewItem itemWithTitle:@"推广海报" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-//
-//    }];
-//    [section addItem:promotionPosterItem];
-//    RETableViewItem *lotteryItem = [RETableViewItem itemWithTitle:@"抽奖" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-//
-//    }];
-//    [section addItem:lotteryItem];
-//    RETableViewItem *customerServiceItem = [RETableViewItem itemWithTitle:@"客服" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-//    }];
-//    [section addItem:customerServiceItem];
-    
-    
-//    RETableViewCell *cell = [RETableViewCell heightWithItem:<#(RETableViewItem *)#> tableViewManager:<#(RETableViewManager *)#>]
-    
-//    [self.manager addSection:section];
+    [self loadBannerData];
+}
+
+- (void)loadBannerData {
+    WEAKSELF
+    [ImGroupModelClient getImBannerWithParams:nil Success:^(id resultInfo) {
+//        weakSelf.datasource = [NSArray modelArrayWithClass:[BannerImgModel class] json:resultInfo];
+        weakSelf.banner.imageDataArray = [NSArray modelArrayWithClass:[BannerImgModel class] json:resultInfo];
+    } Failed:^(NSError *error) {
+        
+    }];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2.f;
+    return 1.f;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

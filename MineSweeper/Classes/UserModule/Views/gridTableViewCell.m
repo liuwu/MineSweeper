@@ -63,7 +63,7 @@
         momeyLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
         momeyLabel.textAlignment = NSTextAlignmentCenter;
         // 控制文本内部宽度，让时间换行
-        momeyLabel.contentEdgeInsets = UIEdgeInsetsMake(10, 19.f, 10.f, 19.f);
+        momeyLabel.contentEdgeInsets = UIEdgeInsetsMake(10, 18.f, 10.f, 18.f);
         momeyLabel.tag = 100+i;
         [self.gridView addSubview:momeyLabel];
         //        [momeyLabel wl_setDebug:YES];

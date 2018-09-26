@@ -22,6 +22,7 @@
 
 // 个人中心 - 头像修改
 + (WLRequest *)changeUserLogoWithParams:(NSDictionary *)params
+                                  image:(UIImage *)image
                                 Success:(SuccessBlock)success
                                  Failed:(FailedBlock)failed;
 
@@ -47,6 +48,11 @@
 
 // 钱包 - 提现
 + (WLRequest *)withdrawWallentWithParams:(NSDictionary *)params
+                                 Success:(SuccessBlock)success
+                                  Failed:(FailedBlock)failed;
+
+// 钱包 - 转账
++ (WLRequest *)transferWallentWithParams:(NSDictionary *)params
                                  Success:(SuccessBlock)success
                                   Failed:(FailedBlock)failed;
 
@@ -97,6 +103,11 @@
 
 // 获取省市区数据
 + (WLRequest *)getSystemCityListWithParams:(NSDictionary *)params
+                                   Success:(SuccessBlock)success
+                                    Failed:(FailedBlock)failed;
+
+// 我的 - 设置 - 账户与安全
++ (WLRequest *)getUserSafeIndexWithParams:(NSDictionary *)params
                                    Success:(SuccessBlock)success
                                     Failed:(FailedBlock)failed;
 

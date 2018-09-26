@@ -11,7 +11,12 @@
 
 #import "BaseTableViewCell.h"
 
+#import "ImGroupModelClient.h"
+#import "INoticeModel.h"
+
 @interface MessageNotifiListViewController ()
+
+@property (nonatomic, strong) NSArray *datasource;
 
 @end
 
@@ -27,6 +32,8 @@
     // 隐藏分割线
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = WLColoerRGB(248.f);
+    
+    [self initData];
 }
 
 - (void)viewDidLoad {
@@ -39,9 +46,22 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Private
+- (void)initData {
+    WEAKSELF
+    [WLHUDView showHUDWithStr:@"加载中..." dim:YES];
+    [ImGroupModelClient getImSystemNoticeWithParams:nil Success:^(id resultInfo) {
+        [WLHUDView hiddenHud];
+        weakSelf.datasource = [NSArray modelArrayWithClass:[INoticeModel class] json:resultInfo];
+        [weakSelf.tableView reloadData];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
+    }];
+}
+
 #pragma mark - UITableView Datasource & Delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 15.f;
+    return _datasource.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -50,8 +70,9 @@
         cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"message_notifi_list_cell"];
     }
     cell.showBottomLine = YES;
-    cell.imageView.image = [UIImage imageNamed:@"home_newNotice_icon"];
-    cell.textLabel.text = @"这是消息通知标题";
+    INoticeModel *model = _datasource[indexPath.row];
+//    cell.imageView.image = [UIImage imageNamed:@"home_newNotice_icon"];
+    cell.textLabel.text = model.title;// @"这是消息通知标题";
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
     cell.detailTextLabel.text = @"2018-10-12 12:12:12";
@@ -72,6 +93,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     DLog(@"didSelectRowAtIndexPath------");
     MessageNotifiDetailViewController *detailVc = [[MessageNotifiDetailViewController alloc] init];
+    detailVc.noticeModel = _datasource[indexPath.row];
     [self.navigationController pushViewController:detailVc animated:YES];
 }
 

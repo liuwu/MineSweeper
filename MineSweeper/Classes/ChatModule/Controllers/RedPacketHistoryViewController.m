@@ -11,9 +11,17 @@
 
 #import "BaseTableViewCell.h"
 
+#import "ImModelClient.h"
+#import "IMyRedPacketResultModel.h"
+
 @interface RedPacketHistoryViewController ()
 
 @property (nonatomic, strong) QMUILabel *momeyLabel;
+@property (nonatomic, assign) NSInteger page;
+
+@property (nonatomic, strong) NSMutableArray *datasource;
+@property (nonatomic, strong) IMyRedPacketResultModel *model;
+
 
 @end
 
@@ -25,13 +33,36 @@
 
 - (void)initSubviews {
     [super initSubviews];
-    
+    self.page = 1;
+    self.datasource = [NSMutableArray array];
     UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithTitle:@"红包记录"
                                                                  target:self
                                                                  action:@selector(rightBarButtonItemClicked)];
     self.navigationItem.rightBarButtonItem = rightBtnItem;
     
     [self addHeaderView];
+//    [self loadData];
+    
+    [self.tableView.mj_header beginRefreshing];
+}
+
+- (void)loadData {
+    WEAKSELF
+    [ImModelClient getImRedpackHistoryWithParams:@{@"p" : [NSNumber numberWithInteger:_page]} Success:^(id resultInfo) {
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+        weakSelf.model = [IMyRedPacketResultModel modelWithDictionary:resultInfo];
+        [weakSelf updateUI];
+    } Failed:^(NSError *error) {
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+    }];
+}
+
+- (void)updateUI {
+    [self.datasource addObjectsFromArray:_model.list];
+    
+    [self.tableView reloadData];
 }
 
 - (void)viewDidLoad {
@@ -47,6 +78,7 @@
     self.tableView.backgroundColor = WLColoerRGB(248.f);
     //下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
+    self.tableView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(beginPullUpRefreshingNew)];
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, SCREEN_WIDTH, 64.f)];
     headerView.backgroundColor = UIColorMake(254.f, 72.f, 30.f);
@@ -204,8 +236,15 @@
 
 // 下拉刷新
 - (void)beginPullDownRefreshingNew {
-    [self.tableView.mj_header endRefreshing];
-    [self.tableView.mj_footer endRefreshing];
+    self.page = 1;
+    self.datasource = [NSMutableArray array];
+    [self loadData];
+}
+
+// 上拉加载更多
+- (void)beginPullUpRefreshingNew {
+    self.page++;
+    [self loadData];
 }
 
 @end

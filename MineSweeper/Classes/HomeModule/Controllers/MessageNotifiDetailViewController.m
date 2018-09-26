@@ -9,10 +9,13 @@
 #import "MessageNotifiDetailViewController.h"
 #import "BaseTableViewCell.h"
 
+#import "ImGroupModelClient.h"
+
 @interface MessageNotifiDetailViewController ()<QMUITextViewDelegate>
 
-@property(nonatomic,strong) QMUITextView *textView;
-@property(nonatomic, assign) CGFloat textViewMinimumHeight;
+@property (nonatomic,strong) QMUITextView *textView;
+@property (nonatomic, assign) CGFloat textViewMinimumHeight;
+@property (nonatomic, strong) NSArray *datasource;
 
 @end
 
@@ -27,6 +30,7 @@
     self.textViewMinimumHeight = 206;
     
     [self addViews];
+    [self intData];
 }
 
 - (void)addViews {
@@ -41,7 +45,7 @@
 //    textView.placeholder = @"支持 placeholder、支持自适应高度、支持限制文本输入长度";
 //    textView.placeholderColor = UIColorPlaceholder; // 自定义 placeholder 的颜色
     textView.editable = NO;
-    textView.text = @"这里是公告内容这里是公告内容这里是公告内容这里是公告内容这里是公告内容这里是公告内容";
+    textView.text = @"";
     textView.textContainerInset = UIEdgeInsetsMake(20, 7, 10, 7);
     textView.returnKeyType = UIReturnKeyDone;
     textView.enablesReturnKeyAutomatically = YES;
@@ -59,7 +63,6 @@
     self.textView = textView;
     
     self.tableView.tableFooterView = textView;
-    
 }
 
 - (void)viewDidLoad {
@@ -70,6 +73,26 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Private
+- (void)intData {
+    WEAKSELF
+    [WLHUDView showHUDWithStr:@"加载中..." dim:YES];
+    NSDictionary *params = @{@"id": self.noticeModel.titleId};
+    [ImGroupModelClient getImSystemNoticeDetailWithParams:params Success:^(id resultInfo) {
+        [WLHUDView hiddenHud];
+        INoticeModel *data = [INoticeModel modelWithDictionary:resultInfo];
+        [weakSelf updateInfo:data];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
+    }];
+}
+
+- (void)updateInfo:(INoticeModel *)data {
+    self.textView.text = data.content;
+    self.datasource = [NSArray arrayWithObject:data];
+    [self.tableView reloadData];
 }
 
 #pragma mark - <QMUITextViewDelegate>
@@ -98,7 +121,7 @@
 
 #pragma mark - UITableView Datasource & Delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 1.f;
+    return _datasource.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -107,10 +130,11 @@
         cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"message_notifi_detail_cell"];
     }
     cell.showBottomLine = YES;
-    cell.textLabel.text = @"这里是公告标题";
+    INoticeModel *model = _datasource[indexPath.row];
+    cell.textLabel.text = model.title;// @"这里是公告标题";
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
-    cell.detailTextLabel.text = @"2017/09/12  12:30:23";
+    cell.detailTextLabel.text = model.add_time;// @"2017/09/12  12:30:23";
     cell.detailTextLabel.textColor = WLColoerRGB(153.f);
     cell.detailTextLabel.font = UIFontMake(11.f);
     cell.backgroundColor = [UIColor clearColor];

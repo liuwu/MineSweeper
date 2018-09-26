@@ -7,7 +7,10 @@
 //
 
 #import "SLCommonTableViewController.h"
+#import "INoticeModel.h"
 
 @interface MessageNotifiDetailViewController : SLCommonTableViewController
+
+@property (nonatomic, strong) INoticeModel *noticeModel;
 
 @end

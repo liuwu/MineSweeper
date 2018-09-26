@@ -8,6 +8,9 @@
 
 #import "PosterViewController.h"
 
+#import "UserModelClient.h"
+#import "IUserQrCodeModel.h"
+
 @interface PosterViewController ()
 
 @property (nonatomic, strong) UIImageView *codeImageView;
@@ -24,6 +27,7 @@
     [super initSubviews];
     
     [self addSubViews];
+//    [self getUserVcode];
 }
 
 - (void)viewDidLoad {
@@ -96,8 +100,6 @@
 //        make.centerY.mas_equalTo(cotentView.mas_top);
     }];
     
-    
-    
     QMUILabel *titleLabel = [[QMUILabel alloc] init];
     titleLabel.text = @"扫雷游戏APP";
     titleLabel.font = UIFontMake(18);
@@ -121,7 +123,8 @@
         make.bottom.mas_equalTo(cotentView.mas_bottom).offset(-37.f);
     }];
     
-    UIImageView *codeImageView = [[UIImageView alloc] initWithImage:[UIImage wl_createQRImageFormString:@"哈哈哈哈" sizeSquareWidth:132.f]];
+    UIImageView *codeImageView = [[UIImageView alloc] initWithImage:[UIImage wl_createQRImageFormString:configTool.userInfoModel.invite_code ? : @"" sizeSquareWidth:132.f]];
+    codeImageView.contentMode = UIViewContentModeScaleAspectFit;
     [codeBgView addSubview:codeImageView];
     self.codeImageView = codeImageView;
     [codeImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -138,6 +141,18 @@
     [noteLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.view);
         make.top.mas_equalTo(codeBgView.mas_bottom).offset(5.f);
+    }];
+}
+
+- (void)getUserVcode {
+    WEAKSELF
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    [UserModelClient getUserQrcodeWithParams:nil Success:^(id resultInfo) {
+        [WLHUDView hiddenHud];
+        IUserQrCodeModel *userQrCodeModel = [IUserQrCodeModel modelWithDictionary:resultInfo];
+        [weakSelf.codeImageView setImageWithURL:[NSURL URLWithString:userQrCodeModel.qrcode] options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
     }];
 }
 

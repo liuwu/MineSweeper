@@ -73,10 +73,15 @@
     self.textView = textView;
     
     //添加单击手势
-    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
-        [[self.view wl_findFirstResponder] resignFirstResponder];
-    }];
-    [self.view addGestureRecognizer:tap];
+//    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+//        [[self.view wl_findFirstResponder] resignFirstResponder];
+//    }];
+//    [self.view addGestureRecognizer:tap];
+}
+
+- (BOOL)shouldHideKeyboardWhenTouchInView:(UIView *)view {
+    // 表示点击空白区域都会降下键盘
+    return YES;
 }
 
 // 布局控制

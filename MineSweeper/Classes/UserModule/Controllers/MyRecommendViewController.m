@@ -11,10 +11,15 @@
 
 #import "GridTableViewCell.h"
 
+#import "UserModelClient.h"
+#import "IRecommendModel.h"
+#import "IRecommendInfoModel.h"
+
 @interface MyRecommendViewController ()
 
 @property (nonatomic, strong) QMUILabel *momeyLabel;
 @property (nonatomic, strong) QMUILabel *todayMomeyLabel;
+@property (nonatomic, strong) NSArray *datasource;
 
 @end
 
@@ -37,6 +42,27 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self addHeaderView];
+    [self loadData];
+}
+
+- (void)loadData {
+    WEAKSELF
+    [UserModelClient getRecommoneListWithParams:nil Success:^(id resultInfo) {
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+        IRecommendModel *model = [IRecommendModel modelWithDictionary:resultInfo];
+        [weakSelf loadUI:model];
+    } Failed:^(NSError *error) {
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+    }];
+}
+
+- (void)loadUI:(IRecommendModel *)model {
+    self.momeyLabel.text = model.total_money;
+    self.todayMomeyLabel.text = model.today_total_money;
+    self.datasource = model.list;
+    [self.tableView reloadData];
 }
 
 // 添加头部信息
@@ -110,7 +136,6 @@
         make.left.mas_equalTo(todayTitleLabel);
         make.centerY.mas_equalTo(momeyLabel);
     }];
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -153,7 +178,7 @@
     if (section == 0) {
         return 1;
     }
-    return 10.f;
+    return _datasource.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -166,7 +191,8 @@
         cell.titleFont = UIFontMake(14.f);
     } else {
         if (!cell) {
-            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"my_recommend_cell" gridTitles:@[@"张三", @"500.00", @"1级", @"2018-10-12 12:12:44"]];
+            IRecommendInfoModel *mode = _datasource[indexPath.row];
+            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"my_recommend_cell" gridTitles:@[mode.from_nickname, mode.total_money, mode.level, mode.add_time]];
         }
         cell.titleColor = WLColoerRGB(51.f);
         cell.titleFont = UIFontMake(13.f);
@@ -210,8 +236,7 @@
 
 // 下拉刷新
 - (void)beginPullDownRefreshingNew {
-    [self.tableView.mj_header endRefreshing];
-    [self.tableView.mj_footer endRefreshing];
+    [self loadData];
 }
 
 @end

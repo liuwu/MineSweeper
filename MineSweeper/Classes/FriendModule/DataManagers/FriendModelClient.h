@@ -26,7 +26,7 @@
                                   Failed:(FailedBlock)failed;
 
 // IM - 添加好友请求
-+ (WLRequest *)getImFriendRequestWithParams:(NSDictionary *)params
++ (WLRequest *)sendImFriendRequestWithParams:(NSDictionary *)params
                                     Success:(SuccessBlock)success
                                      Failed:(FailedBlock)failed;
 

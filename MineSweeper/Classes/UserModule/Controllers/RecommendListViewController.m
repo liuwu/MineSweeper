@@ -9,7 +9,13 @@
 #import "RecommendListViewController.h"
 #import "BaseTableViewCell.h"
 
+#import "UserModelClient.h"
+#import "IRecommendModel.h"
+#import "IRecommendInfoModel.h"
+
 @interface RecommendListViewController ()
+
+@property (nonatomic, strong) NSArray *datasource;
 
 @end
 
@@ -26,6 +32,30 @@
     
     //下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
+    
+    [self loadData];
+}
+
+- (void)loadData {
+    NSDictionary *params = @{
+                             @"member_pid": @713,
+                             @"distance" : @1
+                             };
+    WEAKSELF
+    [UserModelClient getRecommoneNextListWithParams:params Success:^(id resultInfo) {
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+        IRecommendModel *model = [IRecommendModel modelWithDictionary:resultInfo];
+        [weakSelf loadUI:model];
+    } Failed:^(NSError *error) {
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+    }];
+}
+
+- (void)loadUI:(IRecommendModel *)model {
+    self.datasource = model.list;
+    [self.tableView reloadData];
 }
 
 - (void)viewDidLoad {
@@ -40,7 +70,7 @@
 
 #pragma mark - UITableView Datasource & Delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 10.f;
+    return _datasource.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -50,13 +80,14 @@
         cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleValue1 reuseIdentifier:@"recommend_list_cell"];
     }
     cell.showBottomLine = YES;
+    IRecommendInfoModel *mode = _datasource[indexPath.row];
     cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
     cell.detailTextLabel.textColor = WLColoerRGB(153.f);
     cell.detailTextLabel.font = UIFontMake(15.f);
-    cell.textLabel.text = @"小尹子";
-    cell.detailTextLabel.text = @"2018-8-12";
+    cell.textLabel.text = mode.from_nickname;
+    cell.detailTextLabel.text = mode.add_time;// @"2018-8-12";
     
     // reset
     cell.imageEdgeInsets = UIEdgeInsetsZero;
@@ -94,8 +125,7 @@
 #pragma mark - private
 // 下拉刷新
 - (void)beginPullDownRefreshingNew {
-    [self.tableView.mj_header endRefreshing];
-    [self.tableView.mj_footer endRefreshing];
+    [self loadData];
 }
 
 

@@ -14,6 +14,7 @@
 typedef NS_ENUM(NSUInteger, WLNetWorkingResultStateType) {
     /// --------- 普通的接口信息错误 ----------
     WLNetWorkingResultStateTypeSuccess = 1,           /// 接口调用成功
+    WLNetWorkingResultStateTypeError = 0,           /// 接口调用失败
     WLNetWorkingResultStateTypeNormal = 1001,            /// 系统普通的错误，不做任何处理的
     WLNetWorkingResultStateTypeNoLogin = 1010,           /// 用户未登录，session过期
     WLNetWorkingResultStateTypeHub = 1101,               /// 需要hub提醒的，最常用的错误提醒
@@ -224,6 +225,8 @@ typedef void(^WLRequestCompletionBlock)(WLRequest *request);
 @property (nonatomic, copy, readonly) NSString *apiMethodName;
 /// 文件下载目录
 @property (nonatomic, copy, readonly) NSString *downfileFolderName;
+/// 文件下载目录
+@property (nonatomic, strong, readonly) UIImage *updateImage;
 /// 请求的参数内容
 @property (nonatomic, strong, readonly) NSDictionary *requestParamInfos;
 /// 接口请求的超时时间，默认：60秒

@@ -8,6 +8,8 @@
 
 #import "FriendRquestViewController.h"
 
+#import "FriendModelClient.h"
+
 @interface FriendRquestViewController ()<QMUITextViewDelegate>
 
 @property(nonatomic, strong) QMUITextView *textView;
@@ -53,7 +55,8 @@
     textView.delegate = self;
     textView.placeholder = @"验证信息……";
     textView.placeholderColor = UIColorPlaceholder; // 自定义 placeholder 的颜色
-    textView.text = @"";
+//    textView.text = @"";
+    textView.editable = YES;
     textView.textContainerInset = UIEdgeInsetsMake(10, 7, 10, 7);
     textView.returnKeyType = UIReturnKeyDone;
     textView.enablesReturnKeyAutomatically = YES;
@@ -69,6 +72,8 @@
     //    self.textView.layer.cornerRadius = 4;
     [self.view addSubview:textView];
     self.textView = textView;
+//    [textView wl_setDebug:YES];
+    [textView becomeFirstResponder];
     
     QMUIFillButton *sendBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
     sendBtn.titleLabel.font = WLFONT(18);
@@ -79,16 +84,16 @@
     self.sendBtn = sendBtn;
     
     //添加单击手势
-    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
-        [[self.view wl_findFirstResponder] resignFirstResponder];
-    }];
-    [self.view addGestureRecognizer:tap];
+//    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+//        [[self.view wl_findFirstResponder] resignFirstResponder];
+//    }];
+//    [self.view addGestureRecognizer:tap];
 }
 
 // 布局控制
 - (void)addConstrainsForSubviews {
     [_textView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.qmui_navigationBarMaxYInViewCoordinator);
+        make.top.mas_equalTo(self.view).mas_offset(self.qmui_navigationBarMaxYInViewCoordinator);
         make.centerX.mas_equalTo(self.view);
         make.width.mas_equalTo(DEVICE_WIDTH);
         make.height.mas_equalTo(206.f);
@@ -100,6 +105,11 @@
         make.width.mas_equalTo(DEVICE_WIDTH - kWL_NormalMarginWidth_10 * 2.f);
         make.height.mas_equalTo(44.f);
     }];
+}
+
+- (BOOL)shouldHideKeyboardWhenTouchInView:(UIView *)view {
+    // 表示点击空白区域都会降下键盘
+    return YES;
 }
 
 #pragma mark - <QMUITextViewDelegate>
@@ -127,9 +137,24 @@
 }
 
 #pragma mark - Private
-- (void)sendButtonItemClicked {
+- (void)didClickLoginBtn:(UIButton *)sender {
     [[self.view wl_findFirstResponder] resignFirstResponder];
+    if (_textView.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入请求内容"];
+        return;
+    }
     
+    NSDictionary *params = @{@"uid" : [NSNumber numberWithInteger:_uid.integerValue],
+                             @"message" : _textView.text.wl_trimWhitespaceAndNewlines
+                             };
+    [WLHUDView showHUDWithStr:@"发送中..." dim:YES];
+    WEAKSELF
+    [FriendModelClient sendImFriendRequestWithParams:params Success:^(id resultInfo) {
+        [WLHUDView showErrorHUD:@"已发送"];
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
+    }];
 }
 
 @end

@@ -8,13 +8,30 @@
 
 #import "UserInfoViewController.h"
 #import "FriendRquestViewController.h"
+#import "ChatViewController.h"
+#import "UserInfoChangeViewController.h"
+#import "FriendRquestViewController.h"
 
 #import "RETableViewManager.h"
 #import "RETableViewItem.h"
 
+#import "FriendModelClient.h"
+#import "IFriendDetailInfoModel.h"
+
 @interface UserInfoViewController ()
 
 @property (nonatomic, strong) RETableViewManager *manager;
+
+@property (nonatomic, strong) UIImageView *logoImageView;
+@property (nonatomic, strong) QMUILabel *nameLabel;
+@property (nonatomic, strong) UIImageView *iconImageView;
+@property (nonatomic, strong) QMUILabel *nickNameLabel;
+@property (nonatomic, strong) QMUILabel *idLabel;
+
+@property (nonatomic, strong) QMUIFillButton *sendBtn;
+@property (nonatomic, strong) QMUIFillButton *deleteBtn;
+
+@property (nonatomic, strong) IFriendDetailInfoModel *userModel;
 
 @end
 
@@ -27,12 +44,56 @@
     [super initSubviews];
     [self addTableHeaderInfo];
     [self addTableViewCell];
+    [self loadData];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
+
+- (void)loadData {
+//    NSDictionary *params = @{@"uid" : _friendModel.uid};
+    NSDictionary *params = @{@"uid" : _userId};
+    WEAKSELF
+    [WLHUDView showHUDWithStr:@"加载中..." dim:YES];
+    [FriendModelClient getImMemberInfoWithParams:params Success:^(id resultInfo) {
+        [WLHUDView hiddenHud];
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+        weakSelf.userModel = [IFriendDetailInfoModel modelWithDictionary:resultInfo];
+        [weakSelf updateUI];
+//        [weakSelf.tableView reloadData];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+    }];
+}
+
+- (void)updateUI {
+    [_logoImageView setImageWithURL:[NSURL URLWithString:_userModel.avatar]
+                        placeholder:[UIImage imageNamed:@"redP_head_img"]
+                            options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur
+                         completion:nil];
+    _iconImageView.image = [_userModel getLoginUserSex];
+    _nameLabel.text = _userModel.nickname;
+    _nickNameLabel.text = [NSString stringWithFormat:@"昵称：%@", _userModel.nickname];
+    _idLabel.text = @"ID：";
+    if (_userModel.uid.integerValue == configTool.loginUser.uid.integerValue) {
+        _sendBtn.hidden = YES;
+        _deleteBtn.hidden = YES;
+    }
+    if (_userModel.is_friend.intValue == 0) {
+        [_sendBtn setTitle:@"添加好友" forState:UIControlStateNormal];
+        _deleteBtn.hidden = YES;
+    }
+    if (_userModel.is_friend.intValue == 1) {
+        [_sendBtn setTitle:@"发消息" forState:UIControlStateNormal];
+        _deleteBtn.hidden = NO;
+    }
+}
+
 
 - (void)addTableHeaderInfo {
     // 隐藏分割线
@@ -45,9 +106,12 @@
     
     UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.f, 0., 55.f, 55.f)];
     logoImageView.image = [UIImage imageNamed:@"redP_head_img"];
+    [logoImageView wl_setCornerRadius:27.5f];
     [headerView addSubview:logoImageView];
+    self.logoImageView = logoImageView;
 //    [logoImageView wl_setDebug:YES];
     [logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(55.f, 55.f));
         make.left.mas_equalTo(10.f);
         make.centerY.mas_equalTo(headerView);
     }];
@@ -57,7 +121,7 @@
     nameLabel.textColor = WLColoerRGB(51.f);
     nameLabel.text = @"小银子";
     [headerView addSubview:nameLabel];
-//    self.idLabel = nameLabel;
+    self.nameLabel = nameLabel;
     [nameLabel sizeToFit];
     [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(logoImageView.mas_right).mas_offset(11.f);
@@ -67,8 +131,9 @@
     UIImageView *iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.f, 0., 10.f, 13.f)];
     iconImageView.image = [UIImage imageNamed:@"icon_female_nor"];
     [headerView addSubview:iconImageView];
+    self.iconImageView = iconImageView;
     [iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(nameLabel.mas_right);
+        make.left.mas_equalTo(nameLabel.mas_right).mas_offset(3.f);
         make.centerY.mas_equalTo(nameLabel);
     }];
     
@@ -77,7 +142,7 @@
     nickNameLabel.textColor = WLColoerRGB(153.f);
     nickNameLabel.text = @"昵称：尹。。";
     [headerView addSubview:nickNameLabel];
-//    self.idLabel = idLabel;
+    self.nickNameLabel = nickNameLabel;
     [nickNameLabel sizeToFit];
     [nickNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(nameLabel);
@@ -89,7 +154,7 @@
     idLabel.textColor = WLColoerRGB(153.f);
     idLabel.text = @"ID:16854587";
     [headerView addSubview:idLabel];
-//    self.idLabel = idLabel;
+    self.idLabel = idLabel;
     [idLabel sizeToFit];
     [idLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(nickNameLabel);
@@ -101,12 +166,15 @@
     self.tableView.tableFooterView = footerView;
 //    [footerView wl_setDebug:YES];
     
+    
+    
     QMUIFillButton *sendBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
     [sendBtn setTitle:@"发消息" forState:UIControlStateNormal];
     sendBtn.titleLabel.font = WLFONT(18);
     [sendBtn addTarget:self action:@selector(sendBtn:) forControlEvents:UIControlEventTouchUpInside];
     [sendBtn setCornerRadius:5.f];
     [footerView addSubview:sendBtn];
+    self.sendBtn = sendBtn;
     [sendBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(0.f);
         make.centerX.mas_equalTo(footerView);
@@ -116,9 +184,11 @@
     QMUIFillButton *deleteBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorWhite];
     [deleteBtn setTitle:@"删除好友" forState:UIControlStateNormal];
     deleteBtn.titleLabel.font = WLFONT(18);
-    [deleteBtn addTarget:self action:@selector(quitBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [deleteBtn addTarget:self action:@selector(deleteBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [deleteBtn setCornerRadius:5.f];
+    deleteBtn.hidden = YES;
     [footerView addSubview:deleteBtn];
+    self.deleteBtn = deleteBtn;
     [deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(sendBtn.mas_bottom).mas_offset(10.f);
         make.centerX.mas_equalTo(footerView);
@@ -139,7 +209,9 @@
     
     WEAKSELF
     RETableViewItem *nameItem = [RETableViewItem itemWithTitle:@"设置备注" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        
+        UserInfoChangeViewController *vc = [[UserInfoChangeViewController alloc] initWithUserInfoChangeType:UserInfoChangeTypeSetFriendRemark];
+        vc.uid = weakSelf.userId;
+        [weakSelf.navigationController pushViewController:vc animated:YES];
     }];
     nameItem.selectionStyle = UITableViewCellSelectionStyleNone;
     [section addItem:nameItem];
@@ -151,38 +223,52 @@
 }
 
 #pragma mark - Private
-// 提醒退出登录
-- (void)quitBtn:(UIButton *)sender {
-    QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
-        DLog(@"取消");
-    }];
-    QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"退出群聊" style:QMUIAlertActionStyleDestructive handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
-        DLog(@"退出登录");
-        
-    }];
-    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:nil message:@"确认退出群聊？" preferredStyle:QMUIAlertControllerStyleActionSheet];
-    [alertController addAction:action1];
-    [alertController addAction:action2];
-    //    QMUIVisualEffectView *visualEffectView = [[QMUIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
-    //    visualEffectView.foregroundColor = UIColorMakeWithRGBA(255, 255, 255, .6);// 一般用默认值就行，不用主动去改，这里只是为了展示用法
-    //    alertController.mainVisualEffectView = visualEffectView;// 这个负责上半部分的磨砂
-    //
-    //    visualEffectView = [[QMUIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
-    //    visualEffectView.foregroundColor = UIColorMakeWithRGBA(255, 255, 255, .6);// 一般用默认值就行，不用主动去改，这里只是为了展示用法
-    //    alertController.cancelButtonVisualEffectView = visualEffectView;// 这个负责取消按钮的磨砂
-    //    alertController.sheetHeaderBackgroundColor = nil;
-    //    alertController.sheetButtonBackgroundColor = nil;
-    [alertController showWithAnimated:YES];
-}
 // 发消息
 - (void)sendBtn:(UIButton *)sender {
-    FriendRquestViewController *vc = [[FriendRquestViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    // 非好友
+    if (_userModel.is_friend.intValue == 0) {
+        // 添加好友
+        FriendRquestViewController *vc = [[FriendRquestViewController alloc] init];
+        vc.uid = _userModel.uid;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    // 好友
+    if (_userModel.is_friend.intValue == 1) {
+//        [kNSNotification postNotificationName:@"kFriendChat" object:nil];
+        ChatViewController *vc = [[ChatViewController alloc] initWithConversationType:ConversationType_PRIVATE targetId:_userModel.uid];
+        [self.navigationController pushViewController:vc animated:YES];
+        
+//        [kNSNotification postNotificationName:@"kFriendChat" object:nil];
+//        [kNSNotification postNotificationName:kWL_ChangeTapToChatList object:nil];
+        //进入好友请求页面
+//        ChatViewController *vc = [[ChatViewController alloc] initWithConversationType:ConversationType_PRIVATE targetId:_userModel.uid];
+//        [self.window.rootViewController presentViewController:[[NavViewController alloc] initWithRootViewController:friendVC] animated:YES completion:nil];
+//
+    }
+    
+    
 }
 
-// 查看更多用户
-- (void)lookMoreUserBtn:(UIButton *)sender {
-    
+// 删除好友
+- (void)deleteBtnClicked:(UIButton *)sender {
+    QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:NULL];
+    QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"删除" style:QMUIAlertActionStyleDestructive handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+        
+    }];
+    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:@"确定删除？" message:nil preferredStyle:QMUIAlertControllerStyleAlert];
+    [alertController addAction:action1];
+    [alertController addAction:action2];
+    [alertController showWithAnimated:YES];
+}
+
+- (void)deleteFriend {
+    [WLHUDView showHUDWithStr:@"删除中..." dim:YES];
+    WEAKSELF
+    [FriendModelClient deleteImFriendWithParams:@{@"fuid" : [NSNumber numberWithInteger:_userModel.uid.integerValue]} Success:^(id resultInfo) {
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
+    }];
 }
 
 @end

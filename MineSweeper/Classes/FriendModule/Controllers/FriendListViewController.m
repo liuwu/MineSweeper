@@ -9,6 +9,8 @@
 #import "FriendListViewController.h"
 #import "NewFriendListViewController.h"
 #import "GroupListViewController.h"
+#import "SearchFriendViewController.h"
+#import "TransferViewController.h"
 
 #import "UserInfoViewController.h"
 #import "ChatInfoViewController.h"
@@ -19,18 +21,40 @@
 #import "DSectionIndexItemView.h"
 #import "DSectionIndexView.h"
 
+#import "FriendModelClient.h"
+#import "IFriendModel.h"
+
 @interface FriendListViewController ()<DSectionIndexViewDelegate,DSectionIndexViewDataSource, UISearchBarDelegate>
 
 @property (nonatomic, strong) DSectionIndexView *sectionIndexView;
 @property (nonatomic, strong) NSArray<NSString *> *iconArray;
 @property (nonatomic, strong) NSArray<NSString *> *iconTitleArray;
 
+@property (nonatomic, strong) NSArray *datasouce;
+
+
 @end
 
 @implementation FriendListViewController
 
 - (NSString *)title {
-    return @"通讯录";
+    switch (_frindListType) {
+        case FriendListTypeForTransfer:
+            return @"转账";
+            break;
+        default:
+            return @"通讯录";
+            break;
+    }
+}
+
+- (instancetype)initWithFriendListType:(FriendListType)frindListType {
+    self.frindListType = frindListType;
+    self = [super init];
+    if (self) {
+        
+    }
+    return self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -39,6 +63,9 @@
 
 - (void)initSubviews {
     [super initSubviews];
+    // 显示自带的searchbar
+//    self.shouldShowSearchBar = YES;
+    
     self.iconArray = @[@"game_friend_icon", @"game_group_icon"];
     self.iconTitleArray = @[@"新朋友", @"群聊"];
     
@@ -57,14 +84,17 @@
     //下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
     
-    UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"home_notice_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(leftBtnItemClicked)];
-    self.navigationItem.leftBarButtonItem = leftBtnItem;
-    
-    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"common_addFriend_icon_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
-    self.navigationItem.rightBarButtonItem = rightBtnItem;
+    if (_frindListType == FriendListTypeNormal) {
+        UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"home_notice_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(leftBtnItemClicked)];
+        self.navigationItem.leftBarButtonItem = leftBtnItem;
+        
+        UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"common_addFriend_icon_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
+        self.navigationItem.rightBarButtonItem = rightBtnItem;
+    }
     
     QMUISearchBar *searchBar = [[QMUISearchBar alloc] qmui_initWithSize:CGSizeMake(DEVICE_WIDTH, 44.f)];
     searchBar.delegate = self;
+//    searchBar.showsCancelButton = YES;
     self.tableView.tableHeaderView = searchBar;
     
     // 索引控件
@@ -84,6 +114,8 @@
     self.sectionIndexView = sectionIndexView;
     
     [self.sectionIndexView reloadItemViews];
+    
+    [self loadData];
 }
 
 - (void)viewDidLoad {
@@ -96,10 +128,33 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)loadData {
+    WEAKSELF
+    [FriendModelClient getImFriendListWithParams:nil Success:^(id resultInfo) {
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+        weakSelf.datasouce = [NSArray modelArrayWithClass:[IFriendModel class] json:resultInfo];
+        [weakSelf.tableView reloadData];
+    } Failed:^(NSError *error) {
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+    }];
+}
+
 
 #pragma make - UISearchBar Delegate
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    searchBar.showsCancelButton = YES;
+}
+
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [[self.view wl_findFirstResponder] resignFirstResponder];
+    searchBar.showsCancelButton = NO;
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    [[self.view wl_findFirstResponder] resignFirstResponder];
+    searchBar.showsCancelButton = NO;
     
 }
 
@@ -186,14 +241,30 @@
 //}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2.f;
+    switch (_frindListType) {
+        case FriendListTypeForTransfer:
+            return 1.f;
+            break;
+        default:
+            return 2.f;
+            break;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 0) {
-        return _iconArray.count;
+    switch (_frindListType) {
+        case FriendListTypeForTransfer:
+            return _datasouce.count;
+            break;
+        default: {
+            if (section == 0) {
+                return _iconArray.count;
+            }
+            return _datasouce.count;
+        }
+            break;
     }
-    return 50.f;
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -203,14 +274,30 @@
     }
     cell.showBottomLine = YES;
     
-    if (indexPath.section == 0) {
-        cell.imageView.image = [UIImage imageNamed:_iconArray[indexPath.row]];
-        cell.textLabel.text = _iconTitleArray[indexPath.row];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    } else {
-        cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
-        cell.textLabel.text = @"小尹子";
+    switch (_frindListType) {
+        case FriendListTypeForTransfer:
+            {
+                cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
+                IFriendModel *model = _datasouce[indexPath.row];
+                cell.textLabel.text = model.nickname;// @"小尹子";
+            }
+            break;
+        default:
+        {
+            if (indexPath.section == 0) {
+                cell.imageView.image = [UIImage imageNamed:_iconArray[indexPath.row]];
+                cell.textLabel.text = _iconTitleArray[indexPath.row];
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            } else {
+                cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
+                IFriendModel *model = _datasouce[indexPath.row];
+                cell.textLabel.text = model.nickname;// @"小尹子";
+            }
+        }
+            break;
     }
+    
+    
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
     
@@ -226,17 +313,41 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     DLog(@"didSelectRowAtIndexPath------");
     [[self.view wl_findFirstResponder] resignFirstResponder];
-    if (indexPath.section == 0 && indexPath.row == 0) {
-        NewFriendListViewController *newFriendVc = [[NewFriendListViewController alloc] init];
-        [self.navigationController pushViewController:newFriendVc animated:YES];
-    }
-    if (indexPath.section == 0 && indexPath.row == 1) {
-        GroupListViewController *groupListVc = [[GroupListViewController alloc] init];
-        [self.navigationController pushViewController:groupListVc animated:YES];
-    }
     
-    UserInfoViewController *userInfoVc = [[UserInfoViewController alloc] init];
-    [self.navigationController pushViewController:userInfoVc animated:YES];
+    switch (_frindListType) {
+        case FriendListTypeForTransfer:
+        {
+            //转账
+            IFriendModel *model = _datasouce[indexPath.row];
+            if (!model) {
+                return;
+            }
+            TransferViewController *vc = [[TransferViewController alloc] init];
+            vc.friendModel = model;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        default:
+        {
+            if (indexPath.section == 0 && indexPath.row == 0) {
+                NewFriendListViewController *newFriendVc = [[NewFriendListViewController alloc] init];
+                [self.navigationController pushViewController:newFriendVc animated:YES];
+                return;
+            }
+            if (indexPath.section == 0 && indexPath.row == 1) {
+                GroupListViewController *groupListVc = [[GroupListViewController alloc] init];
+                [self.navigationController pushViewController:groupListVc animated:YES];
+                return;
+            }
+            
+            UserInfoViewController *userInfoVc = [[UserInfoViewController alloc] init];
+//            userInfoVc.friendModel = _datasouce[indexPath.row];
+            IFriendModel *model = _datasouce[indexPath.row];
+            userInfoVc.userId = model.uid.stringValue;
+            [self.navigationController pushViewController:userInfoVc animated:YES];
+        }
+            break;
+    }
     
 }
 
@@ -266,15 +377,15 @@
 // 右侧按钮点击
 - (void)rightBtnItemClicked {
     [[self.view wl_findFirstResponder] resignFirstResponder];
-    ChatInfoViewController *vc = [[ChatInfoViewController alloc] init];
+//    ChatInfoViewController *vc = [[ChatInfoViewController alloc] init];
+    SearchFriendViewController *vc = [[SearchFriendViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 // 下拉刷新
 - (void)beginPullDownRefreshingNew {
     [[self.view wl_findFirstResponder] resignFirstResponder];
-    [self.tableView.mj_header endRefreshing];
-    [self.tableView.mj_footer endRefreshing];
+    [self loadData];
 }
 
 

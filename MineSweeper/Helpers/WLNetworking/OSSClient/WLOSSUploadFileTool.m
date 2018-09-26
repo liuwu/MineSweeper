@@ -325,39 +325,41 @@
 - (void)uploadImageToOSSService:(UIImage *)image
                         Success:(SuccessBlock)success
                          Failed:(FailedBlock)failed {
+
+    
     //    OSSClient *client = [self createOSSClient];
-    OSSPutObjectRequest * put = [OSSPutObjectRequest new];
-    
-    put.bucketName = [WLServiceInfo sharedServiceInfo].ossBucket;
-    NSString *exestr = @"jpg";
-    NSString *widthStr = [NSString stringWithFormat:@"%.0f",image.size.width];
-    NSString *heightStr = [NSString stringWithFormat:@"%.0f",image.size.height];
-    NSData *imageData = UIImageJPEGRepresentation(image, 0.9);
-    
-    NSString *imageName = [NSString stringWithFormat:@"%@%@_%@_%@_%lu.%@",[NSString wl_randomString:4],[NSString wl_timeStamp],widthStr,heightStr,(unsigned long)imageData.length/1024,exestr];
-    
-    put.objectKey = imageName;
-    put.uploadingData = imageData;
-    
-    // optional fields
-    put.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-        DLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
-    };
-    put.contentType = exestr;
-    
-    OSSTask * putTask = [self.ossClient putObject:put];
-    [putTask continueWithBlock:^id(OSSTask *task) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (!task.error) {
-                SAFE_BLOCK_CALL(success, imageName);
-                DLog(@"Upload success!");
-            } else {
-                SAFE_BLOCK_CALL(failed, task.error);
-                DLog(@"图片上传失败-------\n图片上传失败-------\n图片上传失败-------\n图片上传失败-------\n, error: %@" , putTask.error);
-            }
-        });
-        return nil;
-    }];
+//    OSSPutObjectRequest * put = [OSSPutObjectRequest new];
+//
+//    put.bucketName = [WLServiceInfo sharedServiceInfo].ossBucket;
+//    NSString *exestr = @"jpg";
+//    NSString *widthStr = [NSString stringWithFormat:@"%.0f",image.size.width];
+//    NSString *heightStr = [NSString stringWithFormat:@"%.0f",image.size.height];
+//    NSData *imageData = UIImageJPEGRepresentation(image, 0.9);
+//
+//    NSString *imageName = [NSString stringWithFormat:@"%@%@_%@_%@_%lu.%@",[NSString wl_randomString:4],[NSString wl_timeStamp],widthStr,heightStr,(unsigned long)imageData.length/1024,exestr];
+//
+//    put.objectKey = imageName;
+//    put.uploadingData = imageData;
+//
+//    // optional fields
+//    put.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
+//        DLog(@"%lld, %lld, %lld", bytesSent, totalByteSent, totalBytesExpectedToSend);
+//    };
+//    put.contentType = exestr;
+//
+//    OSSTask * putTask = [self.ossClient putObject:put];
+//    [putTask continueWithBlock:^id(OSSTask *task) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (!task.error) {
+//                SAFE_BLOCK_CALL(success, imageName);
+//                DLog(@"Upload success!");
+//            } else {
+//                SAFE_BLOCK_CALL(failed, task.error);
+//                DLog(@"图片上传失败-------\n图片上传失败-------\n图片上传失败-------\n图片上传失败-------\n, error: %@" , putTask.error);
+//            }
+//        });
+//        return nil;
+//    }];
 }
 
 #pragma mark - getter & setter

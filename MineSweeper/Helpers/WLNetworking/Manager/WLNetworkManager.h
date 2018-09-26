@@ -75,5 +75,14 @@ typedef void( ^ WLResponseFailed)(NSURLSessionTask *task, NSError *error);
                                   DownLoadProgress:(WLDownloadProgress)progress;
 
 
+// 上传图片
+- (NSURLSessionUploadTask *)wl_updateFileWithUrlString:(NSString *)urlString
+                                            parameters:(NSDictionary *)parameters
+                                                 image:(UIImage *)image
+                                          SuccessBlock:(WLResponseSuccess)successBlock
+                                          FailureBlock:(WLResponseFailed)failureBlock
+                                      DownLoadProgress:(WLDownloadProgress)progress;
+
+
 
 @end

@@ -7,7 +7,11 @@
 //
 
 #import "QDCommonViewController.h"
+#import "IFriendModel.h"
 
 @interface TransferViewController : QDCommonViewController
+
+// 转账的用户
+@property (nonatomic, strong) IFriendModel *friendModel;
 
 @end

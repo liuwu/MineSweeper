@@ -10,6 +10,57 @@
 
 @interface ImModelClient : BaseModelClient
 
+// IM - 获取 token
++ (WLRequest *)getImTokenWithParams:(NSDictionary *)params
+                               Success:(SuccessBlock)success
+                                Failed:(FailedBlock)failed;
+
+// IM - 添加好友 - 搜索
++ (WLRequest *)searchAddFriendWithParams:(NSDictionary *)params
+                                 Success:(SuccessBlock)success
+                                  Failed:(FailedBlock)failed;
+
+// IM - 用户信息
++ (WLRequest *)getImMemberInfoWithParams:(NSDictionary *)params
+                                 Success:(SuccessBlock)success
+                                  Failed:(FailedBlock)failed;
+
+// IM - 添加好友
++ (WLRequest *)sendImFriendRequestWithParams:(NSDictionary *)params
+                                     Success:(SuccessBlock)success
+                                      Failed:(FailedBlock)failed;
+
+// IM - 好友申请列表
++ (WLRequest *)getImFriendRequestListWithParams:(NSDictionary *)params
+                                        Success:(SuccessBlock)success
+                                         Failed:(FailedBlock)failed;
+
+// IM - 好友申请 - 接受
++ (WLRequest *)acceptImFriendRequestWithParams:(NSDictionary *)params
+                                       Success:(SuccessBlock)success
+                                        Failed:(FailedBlock)failed;
+
+// IM - 好友申请 - 拒绝
++ (WLRequest *)rejectImFriendRequestWithParams:(NSDictionary *)params
+                                       Success:(SuccessBlock)success
+                                        Failed:(FailedBlock)failed;
+
+// IM - 通讯录
++ (WLRequest *)getImFriendListWithParams:(NSDictionary *)params
+                                 Success:(SuccessBlock)success
+                                  Failed:(FailedBlock)failed;
+
+// IM - 好友信息 - 设置备注
++ (WLRequest *)saveImFriendRemarkWithParams:(NSDictionary *)params
+                                    Success:(SuccessBlock)success
+                                     Failed:(FailedBlock)failed;
+
+// IM - 好友信息 - 删除
++ (WLRequest *)deleteImFriendWithParams:(NSDictionary *)params
+                                Success:(SuccessBlock)success
+                                 Failed:(FailedBlock)failed;
+
+
 
 // IM - 聊天信息
 + (WLRequest *)getImChatInfoWithParams:(NSDictionary *)params

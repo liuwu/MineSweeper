@@ -9,15 +9,12 @@
 #import "LWLoginTextFieldView.h"
 #import "UITextField+Limit.h"
 #import <MMCaptchaView/MMCaptchaView.h>
-#import "NNValidationView.h"
 
 @interface LWLoginTextFieldView()<UITextFieldDelegate>
 
 @property (nonatomic, assign) LWLoginTextFieldType textFieldType;
 @property (nonatomic, strong) UIButton *leftButton;
-@property (nonatomic, strong) UIButton *rightButton;
 @property (nonatomic, strong) UIView *leftView;
-@property (nonatomic, strong) NNValidationView *captchaView;
 
 @property (nonatomic, assign) BOOL isHaveDian;
 
@@ -97,7 +94,8 @@
                 _textField.keyboardType = UIKeyboardTypeASCIICapable;
                 _textField.placeholder = @"密码";
 //                _textField.limitMaxCount = 18;
-                _textField.returnKeyType = UIReturnKeyGo;
+                _textField.clearsOnBeginEditing = YES;
+                _textField.returnKeyType = UIReturnKeyDone;
                 
                 UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
                 //                UIImage *visualImage = [WLDicHQFontImage iconWithName:@"invisual" fontSize:18 color:UIColor.wl_HexCCCCCC];
@@ -124,52 +122,35 @@
             }
                 break;
             case LWLoginTextFieldTypeImageVcode:{
-                _textField.secureTextEntry = YES;
-                _textField.keyboardType = UIKeyboardTypeASCIICapable;
+                _textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
                 _textField.placeholder = @"图形验证码";
-                _textField.returnKeyType = UIReturnKeyGo;
+                _textField.returnKeyType = UIReturnKeyDone;
+                _textField.clearsOnBeginEditing = YES;
                 
-                NNValidationView *captchaView = [[NNValidationView alloc] initWithFrame:CGRectZero andCharCount:4 andLineCount:4];
-//                captchaView.captchaFont = WLFONT(20);
-                [self addSubview:captchaView];
-                self.captchaView = captchaView;
+                UIImageView *vcodeImageView = [[UIImageView alloc] init];
+                [self addSubview:vcodeImageView];
+                self.vcodeImageView = vcodeImageView;
                 
-                __weak typeof(self) weakSelf = self;
-                /// 返回验证码数字
-                captchaView.changeValidationCodeBlock = ^(void){
-                    DLog(@"验证码被点击了：%@", weakSelf.captchaView.charString);
-                };
-                
-//                MMCaptchaView *captchaView = [[MMCaptchaView alloc] initWithFrame:CGRectZero];
-//                captchaView.captchaFont = WLFONT(20);
+//                NNValidationView *captchaView = [[NNValidationView alloc] initWithFrame:CGRectZero andCharCount:4 andLineCount:4];
+////                captchaView.captchaFont = WLFONT(20);
 //                [self addSubview:captchaView];
-//                [captchaView wl_setDebug:YES];
-                
-//                UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//                [rightButton setImage:[UIImage imageNamed:@"password_icon_Cansee_nor"] forState:UIControlStateNormal];
-//                rightButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-//                rightButton.adjustsImageWhenHighlighted = NO;
-//                [rightButton addTarget:self action:@selector(passwordTextFieldPlaintext) forControlEvents:UIControlEventTouchUpInside];
-//                [self addSubview:rightButton];
-//                self.rightButton = rightButton;
-                
-//                [_rightButton sizeToFit];
-//                [_rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
-//                    make.right.mas_equalTo(self).offset(-kWL_NormalMarginWidth_10);
-//                    make.top.bottom.mas_equalTo(self);
-//                    make.width.mas_equalTo(kWL_NormalMarginWidth_20);
-//                }];
-                [captchaView mas_makeConstraints:^(MASConstraintMaker *make) {
+//                self.captchaView = captchaView;
+//
+//                __weak typeof(self) weakSelf = self;
+//                /// 返回验证码数字
+//                captchaView.changeValidationCodeBlock = ^(void){
+//                    DLog(@"验证码被点击了：%@", weakSelf.captchaView.charString);
+//                };
+                [vcodeImageView mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.right.mas_equalTo(self).offset(-kWL_NormalMarginWidth_10);
-//                    make.top.bottom.mas_equalTo(self).mas_offset(-4.f);
-                    make.top.mas_equalTo(self).mas_offset(4.f);
-                    make.bottom.mas_equalTo(self).mas_offset(-4.f);
-                    make.width.mas_equalTo(80);
+                    make.width.mas_equalTo(120);
+                    make.height.mas_equalTo(30.f);
+                    make.centerY.mas_equalTo(self);
                 }];
                 
                 [self.textField mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(self.leftView.mas_right);
-                    make.right.mas_equalTo(captchaView.mas_left);
+                    make.right.mas_equalTo(vcodeImageView.mas_left);
                     make.top.bottom.mas_equalTo(self);
                 }];
             }
@@ -178,6 +159,7 @@
                 _textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
                 _textField.placeholder = @"0.00";
                 _textField.textAlignment = NSTextAlignmentRight;
+                _textField.clearsOnBeginEditing = YES;
                 //                _textField.limitMaxCount = 18;
                 _textField.returnKeyType = UIReturnKeyGo;
                 
@@ -222,10 +204,10 @@
             }
                 break;
             case LWLoginTextFieldTypeVcode:{
-                _textField.secureTextEntry = YES;
-                _textField.keyboardType = UIKeyboardTypeASCIICapable;
+                _textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
                 _textField.placeholder = @"验证码";
-                _textField.returnKeyType = UIReturnKeyGo;
+                _textField.clearsOnBeginEditing = YES;
+                _textField.returnKeyType = UIReturnKeyDone;
                 
                 UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
                 [rightButton setTitle:@"获取验证码" forState:UIControlStateNormal];
@@ -233,7 +215,6 @@
                 rightButton.titleLabel.font = WLFONT(15);
 //                rightButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
 //                rightButton.adjustsImageWhenHighlighted = NO;
-                [rightButton addTarget:self action:@selector(getVcode) forControlEvents:UIControlEventTouchUpInside];
                 [self addSubview:rightButton];
                 self.rightButton = rightButton;
 //                [rightButton wl_setDebug:YES];
@@ -247,6 +228,38 @@
                 [self.textField mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(self.leftView.mas_right);
                     make.right.mas_equalTo(self.rightButton.mas_left);
+                    make.top.bottom.mas_equalTo(self);
+                }];
+            }
+                break;
+            case LWLoginTextFieldTypeInvest:
+            {
+                _textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+                _textField.placeholder = @"请输入邀请码";
+                _textField.textAlignment = NSTextAlignmentRight;
+                _textField.clearsOnBeginEditing = YES;
+                //                _textField.limitMaxCount = 18;
+                _textField.returnKeyType = UIReturnKeyDone;
+                
+                QMUILabel *titleLabel = [[QMUILabel alloc] init];
+                titleLabel.font = UIFontMake(15.f);
+                titleLabel.textColor = WLColoerRGB(51.f);
+                titleLabel.text = @"邀请码";
+                [self addSubview:titleLabel];
+                self.titleLabel = titleLabel;
+                
+                [_titleLabel sizeToFit];
+                [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(11.f);
+                    //                    make.width.mas_equalTo(150.f);
+                    make.height.mas_equalTo(self);
+                    make.centerY.mas_equalTo(self);
+                }];
+                
+                //                [_textField wl_setDebug:YES];
+                [_textField mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(self.titleLabel.mas_right);
+                    make.right.mas_equalTo(self.mas_right).mas_offset(-11.f);
                     make.top.bottom.mas_equalTo(self);
                 }];
             }
@@ -278,11 +291,6 @@
     }else {
         [self.rightButton setImage:[UIImage imageNamed:@"password_icon_Notvisible_nor"] forState:UIControlStateNormal];
     }
-}
-
-// 获取验证码
-- (void)getVcode {
-    
 }
 
 - (NSString *)phone {

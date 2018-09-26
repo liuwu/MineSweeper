@@ -10,4 +10,6 @@
 
 @interface ChatInfoViewController : SLCommonTableViewController
 
+@property (nonatomic, copy) NSString *uid;
+
 @end

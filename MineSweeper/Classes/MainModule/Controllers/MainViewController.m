@@ -87,6 +87,19 @@
     // 设置ui相关信息
     [self setupUIInfo];
     [self setupMainUI];
+    
+    [kNSNotification addObserver:self selector:@selector(userLogout) name:@"kUserLogout" object:nil];
+//    [kNSNotification addObserver:self selector:@selector(friendChat) name:@"kFriendChat" object:nil];
+}
+
+- (void)friendChat {
+    self.normalItem = self.chatItem;
+    self.selectedIndex = 1;
+}
+
+- (void)userLogout {
+    self.normalItem = self.homeItem;
+    self.selectedIndex = 0;
 }
 
 - (void)didReceiveMemoryWarning {

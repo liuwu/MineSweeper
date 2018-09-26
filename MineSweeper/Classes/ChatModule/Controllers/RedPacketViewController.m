@@ -12,7 +12,12 @@
 #import "BaseTableViewCell.h"
 #import "NSString+WLAdd.h"
 
+#import "ImModelClient.h"
+#import "IRedPacketResultModel.h"
+
 @interface RedPacketViewController ()
+
+@property (nonatomic, strong) IRedPacketResultModel *model;
 
 @end
 
@@ -30,12 +35,35 @@
                                                                  action:@selector(rightBarButtonItemClicked)];
     self.navigationItem.rightBarButtonItem = rightBtnItem;
     
-     [self addHeaderView];
+    [self addHeaderView];
+    [self loadData];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+- (void)loadData {
+    if (!_packetId) {
+        return;
+    }
+    WEAKSELF
+    [ImModelClient getImRedpackHistoryWithParams:@{@"id" : [NSNumber numberWithInteger:_packetId.integerValue]} Success:^(id resultInfo) {
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+        self.model = [IRedPacketResultModel modelWithDictionary:resultInfo];
+        [weakSelf updateUI];
+    } Failed:^(NSError *error) {
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+    }];
+}
+
+- (void)updateUI {
+    
+    
+     [self.tableView reloadData];
 }
 
 // 添加头部信息

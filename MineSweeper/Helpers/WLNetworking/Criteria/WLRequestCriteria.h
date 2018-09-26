@@ -16,6 +16,8 @@ typedef NS_ENUM (NSUInteger, WLRequestMethodType){
     WLRequestMethodTypePost,
     ///下载（图片、pdf、文件等）
     WLRequestMethodTypeDown,
+    ///上传（图片）
+    WLRequestMethodTypeUpdateImage,
     /// PUT请求
     WLRequestMethodTypePUT,
     ///delete
@@ -57,6 +59,9 @@ typedef NS_ENUM(NSUInteger, WLRequestCoverType) {
 
 /// 文件下载到本地的文件夹名称，当apiMethodName返回的内容包含http时使用。默认目录：@"/LocalFile/"
 @property (nonatomic, copy) NSString *fileFolderName;
+
+/// 上传的图片
+@property (nonatomic, strong) UIImage *updateImage;
 
 /// 是否需要缓存，默认： NO
 @property (nonatomic, assign) BOOL shouldCache;

@@ -9,10 +9,41 @@
 #import "LoginModuleClient.h"
 #import "BaseResultModel.h"
 
-//注册，登录 基本路径
-#define kRegisterUrl(path) [NSString stringWithFormat:@"register/%@",path]
-
 @implementation LoginModuleClient
+
+// 我的 - 刷新 token
++ (WLRequest *)refreshTokenWithParams:(NSDictionary *)params
+                              Success:(SuccessBlock)success
+                               Failed:(FailedBlock)failed {
+    WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/OAuth/refresh"
+                                  Success:^(id resultInfo) {
+                                      //                     NSDictionary *resultInfo = request.responseJSONObject;
+                                      DLog(@"我的 - 刷新 token ---- %@",describe(resultInfo));
+                                      SAFE_BLOCK_CALL(success, resultInfo);
+                                  } Failed:^(NSError *error) {
+                                      // 统一错误处理
+                                      //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                      SAFE_BLOCK_CALL(failed, error);
+                                  }];
+    return api;
+}
+
+// 我的 - token
++ (WLRequest *)getUserTokenWithParams:(NSDictionary *)params
+                              Success:(SuccessBlock)success
+                               Failed:(FailedBlock)failed {
+    WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/OAuth/token"
+                                  Success:^(id resultInfo) {
+                                      //                     NSDictionary *resultInfo = request.responseJSONObject;
+                                      DLog(@"我的 - token ---- %@",describe(resultInfo));
+                                      SAFE_BLOCK_CALL(success, resultInfo);
+                                  } Failed:^(NSError *error) {
+                                      // 统一错误处理
+                                      //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                      SAFE_BLOCK_CALL(failed, error);
+                                  }];
+    return api;
+}
 
 // 获取图形验证码
 + (WLRequest *)getImageVcodeWithParams:(NSDictionary *)params
@@ -22,7 +53,7 @@
                  Success:^(id resultInfo) {
 //                     NSDictionary *resultInfo = request.responseJSONObject;
                      DLog(@"注册-获取图形验证码 ---- %@",describe(resultInfo));
-                     SAFE_BLOCK_CALL(success,resultInfo);
+                     SAFE_BLOCK_CALL(success, resultInfo);
                  } Failed:^(NSError *error) {
                      // 统一错误处理
 //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
@@ -55,7 +86,7 @@
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Register/register"
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
-                                      DLog(@"注册-获取短信验证码 ---- %@",describe(resultInfo));
+                                      DLog(@"注册 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
                                   } Failed:^(NSError *error) {
                                       // 统一错误处理
@@ -72,7 +103,7 @@
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Login/get_login_sms"
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
-                                      DLog(@"注册-获取短信验证码 ---- %@",describe(resultInfo));
+                                      DLog(@"登录 - 短信验证码 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
                                   } Failed:^(NSError *error) {
                                       // 统一错误处理
@@ -89,7 +120,7 @@
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Login/login_sms"
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
-                                      DLog(@"注册-获取短信验证码 ---- %@",describe(resultInfo));
+                                      DLog(@"登录 - 短信登录 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
                                   } Failed:^(NSError *error) {
                                       // 统一错误处理
@@ -106,7 +137,7 @@
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Login/login"
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
-                                      DLog(@"注册-获取短信验证码 ---- %@",describe(resultInfo));
+                                      DLog(@"登录 - 密码登录 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
                                   } Failed:^(NSError *error) {
                                       // 统一错误处理
@@ -123,7 +154,7 @@
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Login/forget_password_sms"
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
-                                      DLog(@"注册-获取短信验证码 ---- %@",describe(resultInfo));
+                                      DLog(@"找回密码-发送验证码 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
                                   } Failed:^(NSError *error) {
                                       // 统一错误处理
@@ -140,7 +171,7 @@
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Login/forget_password"
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
-                                      DLog(@"注册-获取短信验证码 ---- %@",describe(resultInfo));
+                                      DLog(@"找回密码-保存 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
                                   } Failed:^(NSError *error) {
                                       // 统一错误处理

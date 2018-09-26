@@ -11,10 +11,19 @@
 
 #import "GridTableViewCell.h"
 
+#import "UserModelClient.h"
+#import "IWallentModel.h"
+
 @interface WallentViewController ()
 
 @property (nonatomic, strong) QMUILabel *momeyLabel;
 @property (nonatomic, strong) QMUILabel *balanceMomeyLabel;
+
+@property (nonatomic) NSInteger selectType;
+@property (nonatomic) NSInteger page;
+
+@property (nonatomic, strong) IWallentModel *wallentModel;
+@property (nonatomic, strong) NSMutableArray *datasource;
 
 @end
 
@@ -26,6 +35,9 @@
 
 - (void)initSubviews {
     [super initSubviews];
+    self.selectType = 1;
+    self.page = 1;
+    self.datasource = [NSMutableArray array];
     [self addHeaderView];
 }
 
@@ -45,6 +57,7 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     //下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
+    self.tableView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(beginPullUpRefreshingNew)];
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, SCREEN_WIDTH, 108.f)];
     headerView.backgroundColor = [UIColor whiteColor];
@@ -104,7 +117,7 @@
     
     // 总收益
     QMUILabel *momeyLabel = [[QMUILabel alloc] init];
-    momeyLabel.text = @"25,684.65";
+    momeyLabel.text = @"0.00";
     momeyLabel.font = UIFontMake(25);
     momeyLabel.textColor = [UIColor whiteColor];
     [userView addSubview:momeyLabel];
@@ -129,7 +142,7 @@
     
     // 不可用余额
     QMUILabel *balanceMomeyLabel = [[QMUILabel alloc] init];
-    balanceMomeyLabel.text = @"1240.00";
+    balanceMomeyLabel.text = @"0.00";
     balanceMomeyLabel.font = UIFontMake(25);
     balanceMomeyLabel.textColor = [UIColor whiteColor];
     [userView addSubview:balanceMomeyLabel];
@@ -140,6 +153,31 @@
         make.centerY.mas_equalTo(momeyLabel);
     }];
     
+     [self.tableView.mj_header beginRefreshing];
+}
+
+- (void)loadData {
+    NSDictionary *params = @{@"type" : [NSNumber numberWithInteger:_selectType],
+                             @"p": [NSNumber numberWithInteger:_page]
+                             };
+    WEAKSELF
+    [UserModelClient getWallentWithParams:params Success:^(id resultInfo) {
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+        IWallentModel *model = [IWallentModel modelWithDictionary:resultInfo];
+        weakSelf.wallentModel = model;
+        [weakSelf.datasource addObjectsFromArray:model.list];
+        [weakSelf reloadUI];
+    } Failed:^(NSError *error) {
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+    }];
+}
+
+- (void)reloadUI {
+    _momeyLabel.text = _wallentModel.balance;
+    _balanceMomeyLabel.text = _wallentModel.frozen;
+    [self.tableView reloadData];
 }
 
 #pragma mark - QMUINavigationControllerDelegate
@@ -177,7 +215,7 @@
     if (section == 0) {
         return 1;
     }
-    return 10.f;
+    return _datasource.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -190,7 +228,8 @@
         cell.titleFont = UIFontMake(14.f);
     } else {
         if (!cell) {
-            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"wallent_cell" gridTitles:@[@"2018-10-12 12:12:44", @"500.00", @"成功"]];
+            IWallentHistoryModel *model = _datasource[indexPath.row];
+            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"wallent_cell" gridTitles:@[model.add_time, model.money, model.pay_title]];
         }
         cell.titleColor = WLColoerRGB(51.f);
         cell.titleFont = UIFontMake(13.f);
@@ -228,13 +267,25 @@
 #pragma mark - private
 // 下拉刷新
 - (void)beginPullDownRefreshingNew {
-    [self.tableView.mj_header endRefreshing];
-    [self.tableView.mj_footer endRefreshing];
+    self.page = 1;
+    self.datasource = [NSMutableArray array];
+    [self loadData];
+}
+
+// 上拉加载更多
+- (void)beginPullUpRefreshingNew {
+    self.page++;
+    [self loadData];
 }
 
 // 分隔栏切换
 - (void)segmentedControlChangedValue:(HMSegmentedControl *)segmentedControl {
     DLog(@"Selected index %ld (via UIControlEventValueChanged)", (long)segmentedControl.selectedSegmentIndex);
+    self.selectType = segmentedControl.selectedSegmentIndex;
+//    self.page = 1;
+    [self.tableView.mj_header beginRefreshing];
+
+//    [self loadData];
 }
 
 @end

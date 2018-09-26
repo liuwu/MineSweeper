@@ -16,7 +16,10 @@
 
 
 @interface DCCycleScrollView : UIView
-/**是否无线循环，默认yes  如果设置成NO，则需要自己设置collectionView的pagingEnabled属性*/
+
+@property (nonatomic,strong) NSArray *imageDataArray;
+
+//*是否无线循环，默认yes
 @property (nonatomic,assign) BOOL infiniteLoop;
 //*是否自动滑动，默认yes
 @property (nonatomic,assign) BOOL autoScroll;
@@ -42,9 +45,6 @@
 @property (nonatomic,weak) id<DCCycleScrollViewDelegate> delegate;
 
 
-/**初始化方法 如果infiniteLoop设置成NO，则需要调用setCollectionViewPagingEnabled方法设置pagingEnabled属性，默认pagingEnabled是NO*/
+//初始化方法
 +(instancetype)cycleScrollViewWithFrame:(CGRect)frame shouldInfiniteLoop:(BOOL)infiniteLoop imageGroups:(NSArray<NSString *> *)imageGroups;
-
-/**设置分页滑动属性（如果infiniteLoop属性为yes，则设置无效）*/
--(void)setCollectionViewPagingEnabled:(BOOL)pagingEnabled;
 @end

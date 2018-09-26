@@ -10,4 +10,6 @@
 
 @interface SendRedPacketViewController : QDCommonViewController
 
+@property (nonatomic, copy) NSString *groupId;
+
 @end

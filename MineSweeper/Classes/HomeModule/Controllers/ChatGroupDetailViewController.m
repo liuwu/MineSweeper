@@ -13,6 +13,8 @@
 
 #import "UserItemCollectionViewCell.h"
 
+#import "ImGroupModelClient.h"
+
 @interface ChatGroupDetailViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) RETableViewManager *manager;
@@ -31,11 +33,27 @@
     self.userArray = @[@"1小尹", @"2小尹ddd", @"3小尹asa", @"4小尹dfdf", @"5小尹dfdfdfdfdf", @"4小尹dfdf", @"4小尹dfdf"];
     [self addTableHeaderInfo];
     [self addTableViewCell];
+    [self loadData];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+// 获取群主信息接口
+- (void)loadData {
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    [ImGroupModelClient getImGroupInfoWithParams:@{@"id" : [NSNumber numberWithInteger:_groupId.integerValue]}
+                                         Success:^(id resultInfo) {
+                                             [WLHUDView hiddenHud];
+                                         } Failed:^(NSError *error) {
+                                             [WLHUDView hiddenHud];
+                                         }];
+}
+
+- (void)updateUI {
+    
 }
 
 - (void)addTableHeaderInfo {

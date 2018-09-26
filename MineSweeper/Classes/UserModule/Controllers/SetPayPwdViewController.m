@@ -13,6 +13,8 @@
 #import "LWLoginTextFieldView.h"
 #import "QMUIFillButton.h"
 
+#import "UserModelClient.h"
+
 @interface SetPayPwdViewController ()
 
 @property (nonatomic, strong) LWLoginTextFieldView *pwdTxtView;
@@ -31,10 +33,15 @@
     [self addViews];
     
     //添加单击手势
-    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
-        [[self.view wl_findFirstResponder] resignFirstResponder];
-    }];
-    [self.view addGestureRecognizer:tap];
+//    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+//        [[self.view wl_findFirstResponder] resignFirstResponder];
+//    }];
+//    [self.view addGestureRecognizer:tap];
+}
+
+- (BOOL)shouldHideKeyboardWhenTouchInView:(UIView *)view {
+    // 表示点击空白区域都会降下键盘
+    return YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -93,10 +100,20 @@
 }
 
 #pragma mark - private
-// 立即提现按钮点击
+// 设置支付密码
 - (void)confirmBtnClicked:(UIButton *)sender {
+    if (_pwdTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入支付密码"];
+        return;
+    }
     [[self.view wl_findFirstResponder] resignFirstResponder];
-    
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    [UserModelClient setPayPwdWithParams:@{@"password": _pwdTxtView.textField.text.wl_trimWhitespaceAndNewlines} Success:^(id resultInfo) {
+        [WLHUDView showSuccessHUD:@"设置成功"];
+        [self.navigationController popViewControllerAnimated:YES];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
+    }];
 }
 
 @end

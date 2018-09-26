@@ -8,6 +8,8 @@
 
 #import "QDThemeProtocol.h"
 
+#import <QMUIKit/QMUIKit.h>
+
 @interface QDCommonViewController : QMUICommonViewController <QDChangingThemeDelegate>
 
 @end

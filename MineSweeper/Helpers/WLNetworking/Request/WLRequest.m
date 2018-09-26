@@ -52,8 +52,8 @@
 /// 对象初始化
 - (instancetype)initWithRequestCriteria:(WLRequestCriteria *)requestCriteria {
     NSMutableDictionary *paramsMutableDic = [NSMutableDictionary dictionaryWithDictionary:requestCriteria.requestParams];
-    [paramsMutableDic setObject:kDeviceUdid forKey:@"device_id"];
-    [paramsMutableDic setObject:kDeviceUdid forKey:@"deviceId"];
+//    [paramsMutableDic setObject:kDeviceUdid forKey:@"device_id"];
+//    [paramsMutableDic setObject:kDeviceUdid forKey:@"deviceId"];
     requestCriteria.requestParams = paramsMutableDic;
     self.requestCriteria = requestCriteria;
     return [self init];
@@ -224,6 +224,14 @@
         //默认的文件下载目录
         return @"/LocalFile/";
     }
+}
+
+// 上传的图片
+- (UIImage *)updateImage {
+    if (_requestCriteria) {
+        return _requestCriteria.updateImage;
+    }
+    return nil;
 }
 
 /// 请求的参数内容

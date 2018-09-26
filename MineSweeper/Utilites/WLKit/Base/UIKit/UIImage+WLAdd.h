@@ -32,6 +32,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (UIImage *)wl_createQRImageFormString:(NSString *)qrString sizeSquareWidth:(CGFloat)squareWidth;
 
+// 获取正向的图片
+- (UIImage *)fixOrientation;
+
+// 这里是利用了UIImage中的drawInRect方法，它会将图像绘制到画布上，并且已经考虑好了图像的方向
+- (UIImage *)normalizedImage;
+
 #pragma mark - 图片拉伸
 // 返回能够自由拉伸不变形的图片
 + (UIImage*)wl_resizedImage:(NSString *)name;

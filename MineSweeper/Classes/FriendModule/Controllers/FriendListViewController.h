@@ -9,6 +9,16 @@
 //#import "BaseViewController.h"
 #import "SLCommonGroupListViewController.h"
 
+typedef NS_ENUM(NSInteger, FriendListType)
+{
+    FriendListTypeNormal,       //普通好友列表
+    FriendListTypeForTransfer   //转账
+};
+
 @interface FriendListViewController : SLCommonGroupListViewController
+
+@property (nonatomic, assign) FriendListType frindListType;
+
+- (instancetype)initWithFriendListType:(FriendListType)frindListType;
 
 @end

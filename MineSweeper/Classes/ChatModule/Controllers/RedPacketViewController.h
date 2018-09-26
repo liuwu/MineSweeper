@@ -10,4 +10,7 @@
 
 @interface RedPacketViewController : SLCommonGroupListViewController
 
+// 红包ID
+@property (nonatomic, copy) NSString *packetId;
+
 @end

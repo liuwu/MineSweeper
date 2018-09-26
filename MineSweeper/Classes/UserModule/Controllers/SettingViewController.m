@@ -12,6 +12,10 @@
 
 #import "RETableViewManager.h"
 #import "RETableViewItem.h"
+#import "AppDelegate.h"
+
+#import "UserModelClient.h"
+#import "ISafeIndexModel.h"
 
 @interface SettingViewController ()
 
@@ -28,11 +32,20 @@
 - (void)initSubviews {
     [super initSubviews];
     [self addTableViewCell];
+    [self loadData];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+- (void)loadData {
+    [UserModelClient getUserSafeIndexWithParams:nil Success:^(id resultInfo) {
+        configTool.safeIdexModel = [ISafeIndexModel modelWithDictionary:resultInfo];
+    } Failed:^(NSError *error) {
+        
+    }];
 }
 
 // 添加表格内容
@@ -64,7 +77,7 @@
         
     }];
     currentVersionItem.style = UITableViewCellStyleValue1;
-    currentVersionItem.detailLabelText = @"V1.0";
+    currentVersionItem.detailLabelText = [NSString stringWithFormat:@"V%@", kAppVersion];
     currentVersionItem.selectionStyle = UITableViewCellSelectionStyleNone;
     [section addItem:currentVersionItem];
     
@@ -112,20 +125,15 @@
     }];
     QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"退出登录" style:QMUIAlertActionStyleDestructive handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
         DLog(@"退出登录");
-        
+        // 设置登录用户信息
+        [NSUserDefaults setObject:nil forKey:kWLLoginUserIdKey];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kUserLogout" object:nil];
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        [[AppDelegate sharedAppDelegate] checkLoginStatus];
     }];
     QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:nil message:@"确认退出？" preferredStyle:QMUIAlertControllerStyleActionSheet];
     [alertController addAction:action1];
     [alertController addAction:action2];
-//    QMUIVisualEffectView *visualEffectView = [[QMUIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
-//    visualEffectView.foregroundColor = UIColorMakeWithRGBA(255, 255, 255, .6);// 一般用默认值就行，不用主动去改，这里只是为了展示用法
-//    alertController.mainVisualEffectView = visualEffectView;// 这个负责上半部分的磨砂
-//
-//    visualEffectView = [[QMUIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
-//    visualEffectView.foregroundColor = UIColorMakeWithRGBA(255, 255, 255, .6);// 一般用默认值就行，不用主动去改，这里只是为了展示用法
-//    alertController.cancelButtonVisualEffectView = visualEffectView;// 这个负责取消按钮的磨砂
-//    alertController.sheetHeaderBackgroundColor = nil;
-//    alertController.sheetButtonBackgroundColor = nil;
     [alertController showWithAnimated:YES];
 }
 

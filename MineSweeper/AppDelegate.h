@@ -14,10 +14,17 @@ single_interface(AppDelegate)
 @property (strong, nonatomic) UIWindow *window;
 
 // 退出登录
-- (void)logoutWithErrormsg:(NSString *)errormsg;
+//- (void)logoutWithErrormsg:(NSString *)errormsg;
+//
+/////登录成功
+//- (void)loginSucceed;
 
-///登录成功
-- (void)loginSucceed;
+// 检测登录状态
+- (void)checkLoginStatus;
+// 检查登录Token已过期
+- (void)checkTokenExpires;
+// 检查登录的Token过期
+- (void)checkRefreshToken;
 
 
 @end

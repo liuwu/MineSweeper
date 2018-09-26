@@ -59,7 +59,7 @@
 }
 
 // IM - 添加好友
-+ (WLRequest *)getImFriendRequestWithParams:(NSDictionary *)params
++ (WLRequest *)sendImFriendRequestWithParams:(NSDictionary *)params
                                     Success:(SuccessBlock)success
                                      Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/friend_request"

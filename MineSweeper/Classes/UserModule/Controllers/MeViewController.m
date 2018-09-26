@@ -15,6 +15,8 @@
 #import "MyInfoViewController.h"
 #import "RechargeViewController.h"
 #import "TransferViewController.h"
+#import "FriendListViewController.h"
+#import "InviteRecommendViewController.h"
 
 #import "SWQRCode.h"
 
@@ -24,14 +26,28 @@
 
 #import "RETableViewManager.h"
 
+#import "UserModelClient.h"
+#import "IUserInfoModel.h"
+#import "IUserQrCodeModel.h"
+
 @interface MeViewController ()
 
 @property (nonatomic, strong) RETableViewManager *manager;
 @property (nonatomic, strong) UIView *headerView;
 
+@property (nonatomic, strong) UIImageView *logoImageView;
+@property (nonatomic, strong) QMUIButton *nameBtn;
+@property (nonatomic, strong) UILabel *idLabel;
+@property (nonatomic, strong) QMUILabel *momeyLabel;
 @property (nonatomic, strong) UIView *qrUserCodeView;
 @property (nonatomic, strong) UIImage *codeImage;
 @property (nonatomic, strong) QMUIModalPresentationViewController *modalViewController;
+
+@property (nonatomic, strong) UIImageView *qrImageView;
+@property (nonatomic, strong) QMUILabel *qrNameLabel;
+@property (nonatomic, strong) QMUILabel *nickNameLabel;
+@property (nonatomic, strong) QMUILabel *qrIdLabel;
+@property (nonatomic, strong) IUserQrCodeModel *userQrCodeModel;
 
 @end
 
@@ -50,12 +66,49 @@
 
 - (void)initSubviews {
     [super initSubviews];
+    [self getLoginUserInfo];
     [self addNavBarItem];
     [self addHeaderView];
     [self addTableViewCell];
+    
+    [kNSNotification addObserver:self selector:@selector(userLoginSuccess) name:@"kUserLoginSuccess" object:nil];
+    [kNSNotification addObserver:self selector:@selector(userLoginSuccess) name:@"kNickNameChanged" object:nil];
+}
+
+// 用户登录成功
+- (void)userLoginSuccess {
+    [self getLoginUserInfo];
+}
+
+- (void)getLoginUserInfo {
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    WEAKSELF
+    [UserModelClient getUserInfoWithParams:nil
+                                   Success:^(id resultInfo) {
+                                       [WLHUDView hiddenHud];
+                                       [weakSelf.tableView.mj_header endRefreshing];
+                                       [weakSelf.tableView.mj_footer endRefreshing];
+                                       IUserInfoModel *userInfoModel = [IUserInfoModel modelWithDictionary:resultInfo];
+                                       configTool.userInfoModel = userInfoModel;
+                                       [weakSelf reloadUI];
+                                   } Failed:^(NSError *error) {
+                                       [WLHUDView hiddenHud];
+                                       [weakSelf.tableView.mj_header endRefreshing];
+                                       [weakSelf.tableView.mj_footer endRefreshing];
+                                   }];
+}
+
+- (void)reloadUI {
+    [_logoImageView setImageWithURL:[NSURL URLWithString:configTool.userInfoModel.avatar]
+                  placeholderImage:nil];
+    [_nameBtn setTitle:configTool.userInfoModel.nickname forState:UIControlStateNormal];
+    _idLabel.text = [NSString stringWithFormat:@"ID：%@", configTool.userInfoModel.uid.stringValue];
+    _momeyLabel.text = configTool.userInfoModel.balance;
 }
 
 - (void)addHeaderView {
+    
+    
     //下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
     
@@ -94,8 +147,11 @@
     UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
 //    logoImageView.image = [UIImage imageNamed:@"mine_award_icon"];
     logoImageView.backgroundColor = [UIColor whiteColor];
+    [logoImageView setImageWithURL:[NSURL URLWithString:configTool.userInfoModel.avatar]
+                  placeholderImage:nil];
     [logoImageView wl_setCornerRadius:15.f];
     [userView addSubview:logoImageView];
+    self.logoImageView = logoImageView;
     [logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(kWL_NormalIconSmallWidth, kWL_NormalIconSmallWidth));
         make.left.mas_equalTo(kWL_NormalMarginWidth_17);
@@ -108,11 +164,12 @@
     nameBtn.imagePosition = QMUIButtonImagePositionRight;// 将图片位置改为在文字上方
     nameBtn.spacingBetweenImageAndTitle = 7;
     [nameBtn setImage:UIImageMake(@"common_qrCode_icon") forState:UIControlStateNormal];
-    [nameBtn setTitle:@"尚软科技" forState:UIControlStateNormal];
+    [nameBtn setTitle:configTool.userInfoModel.mobile forState:UIControlStateNormal];
     nameBtn.titleLabel.font = UIFontMake(14.f);
 //    nameBtn.qmui_borderPosition = QMUIViewBorderPositionTop | QMUIViewBorderPositionBottom;
     [nameBtn addTarget:self action:@selector(nameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [userView addSubview:nameBtn];
+    self.nameBtn = nameBtn;
     
     [nameBtn sizeToFit];
     [nameBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -125,6 +182,7 @@
     idLabel.font = UIFontMake(11.f);
     idLabel.text = @"ID:16854587";
     [userView addSubview:idLabel];
+    self.idLabel = idLabel;
     [idLabel sizeToFit];
     [idLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(nameBtn);
@@ -137,7 +195,6 @@
     infoBtn.titleLabel.font = UIFontMake(12.f);
     [infoBtn addTarget:self action:@selector(infoBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [userView addSubview:infoBtn];
-    
     [infoBtn sizeToFit];
     [infoBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(userView).mas_offset(-15.f);
@@ -170,20 +227,16 @@
     }];
     
     QMUILabel *momeyLabel = [[QMUILabel alloc] init];
-    momeyLabel.text = @"25,684.65";
+    momeyLabel.text = configTool.userInfoModel.balance;
     momeyLabel.font = UIFontMake(25);
     momeyLabel.textColor = UIColorMake(254,72,30);
     [wallentView addSubview:momeyLabel];
+    self.momeyLabel = momeyLabel;
     [momeyLabel sizeToFit];
     [momeyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(kWL_NormalMarginWidth_20);
         make.top.mas_equalTo(42.f);
     }];
-    
-//    CALayer *separatorLayer = [CALayer qmui_separatorLayer];
-//    separatorLayer.frame = CGRectMake(kWL_NormalMarginWidth_20, 80.f, wallentView.width - kWL_NormalMarginWidth_20 * 2.f, 1.f);
-////    separatorLayer.size = CGSizeMake(wallentView.width - kWL_NormalMarginWidth_20 * 2.f, PixelOne);
-//    [wallentView.layer addSublayer:separatorLayer];
     
     // 转账按钮
     QMUIButton *transferBtn = [QDUIHelper generateLightBorderedButton];
@@ -265,16 +318,24 @@
 // 添加表格内容
 - (void)addTableViewCell {
     self.manager = [[RETableViewManager alloc] initWithTableView:self.tableView];
+    WEAKSELF
     RETableViewSection *section = [RETableViewSection section];
     RETableViewItem *commendItem = [RETableViewItem itemWithTitle:@"我的推荐" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        MyRecommendViewController *myRecommedVc = [[MyRecommendViewController alloc] init];
-        [self.navigationController pushViewController:myRecommedVc animated:YES];
+        if (configTool.userInfoModel.is_enroller.intValue == 0) {
+            InviteRecommendViewController *vc = [[InviteRecommendViewController alloc] init];
+            [weakSelf.navigationController pushViewController:vc animated:YES];
+        }
+        // 1 直接我的推广页面   0填写邀请码
+        if (configTool.userInfoModel.is_enroller.intValue == 1) {
+            MyRecommendViewController *myRecommedVc = [[MyRecommendViewController alloc] init];
+            [weakSelf.navigationController pushViewController:myRecommedVc animated:YES];
+        }
     }];
     commendItem.image = [UIImage imageNamed:@"mine_recommend_icon"];
     [section addItem:commendItem];
     RETableViewItem *promotionPosterItem = [RETableViewItem itemWithTitle:@"推广海报" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
         PosterViewController *posterVc = [[PosterViewController alloc] init];
-        [self.navigationController pushViewController:posterVc animated:YES];
+        [weakSelf.navigationController pushViewController:posterVc animated:YES];
     }];
     promotionPosterItem.image = [UIImage imageNamed:@"mine_share_icon"];
     [section addItem:promotionPosterItem];
@@ -286,7 +347,7 @@
         if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
             webVC.webView.allowsLinkPreview = YES;
         }
-        [self.navigationController pushViewController:webVC animated:YES];
+        [weakSelf.navigationController pushViewController:webVC animated:YES];
         
         // 加载显示pdf文件
 //        AXWebViewController *webVC = [[AXWebViewController alloc] initWithURL:[NSURL URLWithString:@"http://restest.welian.com/onmy1492081266459.pdf"]];
@@ -349,8 +410,7 @@
 
 // 下拉刷新
 - (void)beginPullDownRefreshingNew {
-    [self.tableView.mj_header endRefreshing];
-    [self.tableView.mj_footer endRefreshing];
+    [self getLoginUserInfo];
 }
 
 // 资金记录点击
@@ -367,8 +427,8 @@
 
 // 转账点击
 - (void)transferBtnClicked:(UIButton *)sender {
-    TransferViewController *wallentVc = [[TransferViewController alloc] init];
-    [self.navigationController pushViewController:wallentVc animated:YES];
+    FriendListViewController *vc = [[FriendListViewController alloc] initWithFriendListType:FriendListTypeForTransfer];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 // 充值点击
@@ -403,8 +463,9 @@
     QMUILabel *nameLabel = [[QMUILabel alloc] init];
     nameLabel.font = UIFontBoldMake(15);
     nameLabel.textColor = WLColoerRGB(51.f);
-    nameLabel.text = @"小银子";
+    nameLabel.text = configTool.userInfoModel.mobile;// @"小银子";
     [contentView addSubview:nameLabel];
+    self.qrNameLabel = nameLabel;
     [nameLabel sizeToFit];
     [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(iconImageView.mas_right).mas_offset(11.f);
@@ -412,7 +473,7 @@
     }];
     
     UIImageView *sexImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.f, 0., 10.f, 13.f)];
-    sexImageView.image = [UIImage imageNamed:@"icon_female_nor"];
+    sexImageView.image = [configTool getLoginUserSex];
     [contentView addSubview:sexImageView];
     [sexImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(nameLabel.mas_right);
@@ -422,8 +483,9 @@
     QMUILabel *nickNameLabel = [[QMUILabel alloc] init];
     nickNameLabel.font = UIFontMake(11);
     nickNameLabel.textColor = WLColoerRGB(153.f);
-    nickNameLabel.text = @"昵称：小十点多";
+    nickNameLabel.text = [NSString stringWithFormat:@"昵称：%@", configTool.userInfoModel.nickname];// @"昵称：小十点多";
     [contentView addSubview:nickNameLabel];
+    self.nickNameLabel = nickNameLabel;
     [nickNameLabel sizeToFit];
     [nickNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(nameLabel);
@@ -433,8 +495,9 @@
     QMUILabel *idLabel = [[QMUILabel alloc] init];
     idLabel.font = UIFontMake(11);
     idLabel.textColor = WLColoerRGB(153.f);
-    idLabel.text = @"ID：12121212";
+    idLabel.text = [NSString stringWithFormat:@"ID：%@", configTool.userInfoModel.uid.stringValue];
     [contentView addSubview:idLabel];
+    self.qrIdLabel = idLabel;
     [idLabel sizeToFit];
     [idLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(nameLabel);
@@ -442,13 +505,16 @@
     }];
     
     UIImageView *qrImageView = [[UIImageView alloc] init];
-    qrImageView.image = [UIImage wl_createQRImageFormString:@"哈哈哈客户库呼呼呼呼哈" sizeSquareWidth:150.f];;
+//    qrImageView.image = [UIImage wl_createQRImageFormString:@"哈哈哈客户库呼呼呼呼哈" sizeSquareWidth:150.f];;
     [contentView addSubview:qrImageView];
+    self.qrImageView = qrImageView;
     [qrImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(150.f, 150.f));
         make.top.mas_equalTo(iconImageView.mas_bottom).mas_offset(20.f);
         make.centerX.mas_equalTo(contentView);
     }];
+    
+    [self getUserVcode];
     
     UIButton *saveImageBtn = [[UIButton alloc] init];
     [saveImageBtn setTitle:@"保存到手机" forState:UIControlStateNormal];
@@ -501,6 +567,25 @@
     //    modalViewController.delegate = self;
     [modalViewController showWithAnimated:YES completion:nil];
     self.modalViewController = modalViewController;
+}
+
+- (void)getUserVcode {
+    WEAKSELF
+    [WLHUDView showHUDWithStr:@"加载中..." dim:YES];
+    [UserModelClient getUserQrcodeWithParams:nil Success:^(id resultInfo) {
+        [WLHUDView hiddenHud];
+        weakSelf.userQrCodeModel = [IUserQrCodeModel modelWithDictionary:resultInfo];
+        [weakSelf updateVcodeUI];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
+    }];
+}
+
+- (void)updateVcodeUI {
+    _qrNameLabel.text =_userQrCodeModel.mobile;
+    _nickNameLabel.text = [NSString stringWithFormat:@"昵称：%@", _userQrCodeModel.nickname];
+    _qrIdLabel.text = [NSString stringWithFormat:@"ID：%@",_userQrCodeModel.uid];
+    [self.qrImageView setImageWithURL:[NSURL URLWithString:_userQrCodeModel.qrcode] options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur];
 }
 
 // 保存图片到相册

@@ -10,7 +10,12 @@
 
 #import "BaseTableViewCell.h"
 
+#import "ImGroupModelClient.h"
+#import "IGameGroupModel.h"
+
 @interface GroupListViewController ()
+
+@property (nonatomic, strong) NSArray *datasource;
 
 @end
 
@@ -25,6 +30,28 @@
     // 隐藏分割线
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = WLColoerRGB(248.f);
+    
+    //下拉刷新
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
+    
+    [self loadData];
+}
+
+- (void)loadData {
+    [self hideEmptyView];
+    WEAKSELF
+    [ImGroupModelClient getImGroupListWithParams:nil Success:^(id resultInfo) {
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+        weakSelf.datasource = [NSArray modelArrayWithClass:[IGameGroupModel class] json:resultInfo];
+        if (weakSelf.datasource.count == 0) {
+            [weakSelf showEmptyViewWithText:@"暂无数据" detailText:@"" buttonTitle:nil buttonAction:NULL];
+        }
+        [weakSelf.tableView reloadData];
+    } Failed:^(NSError *error) {
+        [weakSelf.tableView.mj_header endRefreshing];
+        [weakSelf.tableView.mj_footer endRefreshing];
+    }];
 }
 
 - (void)viewDidLoad {
@@ -37,9 +64,14 @@
     // Dispose of any resources that can be recreated.
 }
 
+// 下拉刷新
+- (void)beginPullDownRefreshingNew {
+    [self loadData];
+}
+
 #pragma mark - UITableView Datasource & Delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 5.f;
+    return _datasource.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -48,8 +80,13 @@
         cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleDefault reuseIdentifier:@"group_list_cell"];
     }
     cell.showBottomLine = YES;
-    cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
-    cell.textLabel.text = @"群组";
+    IGameGroupModel *model = _datasource[indexPath.row];
+//    cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
+    [cell.imageView setImageWithURL:[NSURL URLWithString:model.image]
+                        placeholder:[UIImage imageNamed:@"game_group_icon"]
+                            options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur|YYWebImageOptionIgnorePlaceHolder completion:nil];
+    
+    cell.textLabel.text = model.title;// @"群组";
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
     

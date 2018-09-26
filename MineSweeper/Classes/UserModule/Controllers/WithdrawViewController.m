@@ -12,6 +12,8 @@
 #import "RETableViewItem.h"
 #import "LWLoginTextFieldView.h"
 
+#import "UserModelClient.h"
+
 @interface WithdrawViewController ()
 
 @property (nonatomic, strong) RETableViewManager *manager;
@@ -35,10 +37,15 @@
     [self addViewConstraints];
     
     //添加单击手势
-    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
-        [[self.view wl_findFirstResponder] resignFirstResponder];
-    }];
-    [self.view addGestureRecognizer:tap];
+//    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+//        [[self.view wl_findFirstResponder] resignFirstResponder];
+//    }];
+//    [self.view addGestureRecognizer:tap];
+}
+
+- (BOOL)shouldHideKeyboardWhenTouchInView:(UIView *)view {
+    // 表示点击空白区域都会降下键盘
+    return YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -149,7 +156,32 @@
 #pragma mark - private
 // 立即提现按钮点击
 - (void)withdrawBtnClicked:(UIButton *)sender {
+    if (_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入提现金额"];
+        return;
+    }
+    if (_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue == 0) {
+        [WLHUDView showOnlyTextHUD:@"提现金额大于0元"];
+        return;
+    }
+    NSDictionary *params = @{@"user_id" : configTool.loginUser.uid,
+                             @"money" : [NSNumber numberWithFloat:_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue]};
+    [WLHUDView showHUDWithStr:@"提现中..." dim:YES];
+    [UserModelClient withdrawWallentWithParams:params Success:^(id resultInfo) {
+        [WLHUDView showSuccessHUD:resultInfo];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
+    }];
     
+//    // 钱包 - 提现 - 支付宝授权登录
+//    + (WLRequest *)aliPayLoginWithParams:(NSDictionary *)params
+//Success:(SuccessBlock)success
+//Failed:(FailedBlock)failed;
+//
+//    // 钱包 - 提现
+//    + (WLRequest *)withdrawWallentWithParams:(NSDictionary *)params
+//Success:(SuccessBlock)success
+//Failed:(FailedBlock)failed;
 }
 
 @end

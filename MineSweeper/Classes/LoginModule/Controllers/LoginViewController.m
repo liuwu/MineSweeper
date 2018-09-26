@@ -15,6 +15,7 @@
 #import "AppDelegate.h"
 
 #import "LoginModuleClient.h"
+#import "ILoginUserModel.h"
 
 @interface LoginViewController ()
 
@@ -76,6 +77,7 @@
 //                                                                             action:@selector(rightBarButtonItemClicked)];
 //
     LWLoginTextFieldView *phoneTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePhone];
+    phoneTxtView.textField.text = [NSUserDefaults stringForKey:kWLLastLoginUserPhoneKey];
     [self.view addSubview:phoneTxtView];
     self.phoneTxtView = phoneTxtView;
     [phoneTxtView.textField becomeFirstResponder];
@@ -109,10 +111,15 @@
     self.forgetBtn = forgetBtn;
     
     //添加单击手势
-    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
-         [[self.view wl_findFirstResponder] resignFirstResponder];
-    }];
-    [self.view addGestureRecognizer:tap];
+//    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+//         [[self.view wl_findFirstResponder] resignFirstResponder];
+//    }];
+//    [self.view addGestureRecognizer:tap];
+}
+
+- (BOOL)shouldHideKeyboardWhenTouchInView:(UIView *)view {
+    // 表示点击空白区域都会降下键盘
+    return YES;
 }
 
 // 布局控制
@@ -156,13 +163,29 @@
 #pragma mark - Private
 // 登录按钮点击
 - (void)didClickLoginBtn:(UIButton *)sender {
-    [[AppDelegate sharedAppDelegate] loginSucceed];
-//    [LoginModuleClient loginWithParameterParams:@{@"mobile":[_phoneTxtView.textField.text wl_trimWhitespaceAndNewlines] ,@"width":@"120",@"height":@"30"}
-//                                        Success:^(id resultInfo) {
-//
-//                                        } Failed:^(NSError *error) {
-//
-//                                        }];
+   
+    if (self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines.length != 11) {
+        [WLHUDView showOnlyTextHUD:@"请输入正确的手机号"];
+        return;
+    }
+    if (self.pwdTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入密码"];
+        return;
+    }
+    NSDictionary *params = @{
+                             @"username" : self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines,
+                             @"password" : self.pwdTxtView.textField.text.wl_trimWhitespaceAndNewlines
+                             };
+    WEAKSELF
+    [LoginModuleClient loginByPwdWithParams:params
+                                Success:^(id resultInfo) {
+                                    // 设置登录用户信息
+                                    [configTool initLoginUser:resultInfo];
+                                    [NSUserDefaults setString:weakSelf.pwdTxtView.textField.text.wl_trimWhitespaceAndNewlines forKey:[NSString stringWithFormat:@"%@%@", configTool.loginUser.uid, configTool.loginUser.mobile]];
+                                    weakSelf.pwdTxtView.textField.text = @"";
+                                } Failed:^(NSError *error) {
+                                    
+                                }];
 }
 
 // 短信登录按钮点击

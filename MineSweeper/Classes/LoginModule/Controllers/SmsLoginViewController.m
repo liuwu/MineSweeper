@@ -10,6 +10,13 @@
 #import "LWLoginTextField.h"
 #import "LWLoginTextFieldView.h"
 
+#import "LoginModuleClient.h"
+
+#import "BaseResultModel.h"
+
+#import <YYKit/YYKit.h>
+
+
 @interface SmsLoginViewController ()
 
 @property (nonatomic, strong) LWLoginTextFieldView *phoneTxtView;
@@ -32,6 +39,9 @@
             return @"注册";
             break;
         case UseTypeForget:
+            return @"重置密码";
+            break;
+        case UseTypeRestPwd:
             return @"重置密码";
             break;
         default:
@@ -72,16 +82,25 @@
     self.phoneTxtView = phoneTxtView;
     [phoneTxtView.textField becomeFirstResponder];
     
+    if (_useType != UseTypeForget || _useType != UseTypeRestPwd) {
+        WEAKSELF
+        [phoneTxtView.textField setBk_didEndEditingBlock:^(UITextField *textField) {
+            [weakSelf reloadVcodeImage:textField.text];
+        }];
+    }
+    
     LWLoginTextFieldView *imageVcodeTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeImageVcode];
     [self.view addSubview:imageVcodeTxtView];
     self.imageVcodeTxtView = imageVcodeTxtView;
     
     LWLoginTextFieldView *vcodeTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeVcode];
+    [vcodeTxtView.rightButton addTarget:self action:@selector(getVcode) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:vcodeTxtView];
     self.vcodeTxtView = vcodeTxtView;
     
     if (_useType != UseTypeSMS) {
         LWLoginTextFieldView *pwdTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePassword];
+//        pwdTxtView.textField.placeholder = @"规则6到18位数字加字母";
         [self.view addSubview:pwdTxtView];
         self.pwdTxtView = pwdTxtView;
     }
@@ -128,16 +147,24 @@
                                                                                      target:self
                                                                                      action:@selector(rightBarButtonItemClicked)];
             break;
+        case UseTypeRestPwd:
+            [loginBtn setTitle:@"重置密码" forState:UIControlStateNormal];
+            break;
         default:
             [loginBtn setTitle:@"其他" forState:UIControlStateNormal];
             break;
     }
     
     //添加单击手势
-    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
-        [[self.view wl_findFirstResponder] resignFirstResponder];
-    }];
-    [self.view addGestureRecognizer:tap];
+//    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+//        [[self.view wl_findFirstResponder] resignFirstResponder];
+//    }];
+//    [self.view addGestureRecognizer:tap];
+}
+
+- (BOOL)shouldHideKeyboardWhenTouchInView:(UIView *)view {
+    // 表示点击空白区域都会降下键盘
+    return YES;
 }
 
 // 布局控制
@@ -208,6 +235,7 @@
                }];
            }
             break;
+        case UseTypeRestPwd:
         case UseTypeForget:
         {
             _imageVcodeTxtView.hidden = YES;
@@ -254,23 +282,209 @@
 }
 
 #pragma mark - Private
-// 登录按钮点击
-- (void)didClickLoginBtn:(UIButton *)sender {
+// 重新加载图片验证码
+- (void)reloadVcodeImage:(NSString *)phone {
+    if (phone.wl_trimWhitespaceAndNewlines.length != 11) {
+//        [WLHUDView showOnlyTextHUD:@"请输入正确的手机号"];
+        return;
+    }
+    NSDictionary *params = @{
+                             @"mobile" : phone,
+                             @"width" : @120,
+                             @"height" : @30
+                             };
+    WEAKSELF
+    [LoginModuleClient getImageVcodeWithParams:params
+                                       Success:^(id resultInfo) {
+                                           [weakSelf loadVcodeImage:[NSDictionary dictionaryWithDictionary:resultInfo]];
+                                       } Failed:^(NSError *error) {
+                                           
+                                       }];
+}
+
+- (void)loadVcodeImage:(NSDictionary *)dataDic {
+    NSString *imgUrl = [dataDic objectForKey:@"url"];
+    [self.imageVcodeTxtView.vcodeImageView setImageWithURL:[NSURL URLWithString:imgUrl]
+                                                   options:YYWebImageOptionProgressive | YYWebImageOptionProgressiveBlur];
+}
+
+// 获取短信验证码
+- (void)getVcode {
+    if (self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines.length != 11) {
+        [WLHUDView showOnlyTextHUD:@"请输入正确的手机号"];
+        return;
+    }
+    NSDictionary *params = nil;
     switch (_useType) {
         case UseTypeSMS:
-            
+        {
+            if (self.imageVcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+                [WLHUDView showOnlyTextHUD:@"请输入图形验证码"];
+                return;
+            }
+            params = @{
+                       @"mobile" : self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines,
+                       @"verifi_code" : self.imageVcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines
+                       };
+            [LoginModuleClient getLoginVcodeWithParams:params
+                                               Success:^(id resultInfo) {
+                                                   
+                                               } Failed:^(NSError *error) {
+                                                   
+                                               }];
+        }
             break;
         case UseTypeRegist:
-            
+        {
+            if (self.imageVcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+                [WLHUDView showOnlyTextHUD:@"请输入图形验证码"];
+                return;
+            }
+            params = @{
+              @"mobile" : self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines,
+              @"verifi_code" : self.imageVcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines
+              };
+            [LoginModuleClient getRegistVcodeWithParams:params
+                                               Success:^(id resultInfo) {
+                                                   
+                                               } Failed:^(NSError *error) {
+                                                   [WLHUDView showOnlyTextHUD:error.localizedDescription];
+                                               }];
+        }
             break;
+        case UseTypeRestPwd:
         case UseTypeForget:
-            
+        {
+            params = @{
+                       @"mobile" : self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines
+                       };
+            [LoginModuleClient getForgetPwdVcodeWithParams:params
+                                                   Success:^(id resultInfo) {
+                                                       
+                                                   } Failed:^(NSError *error) {
+                                                       
+                                                   }];
+        }
             break;
         default:
             
             break;
     }
 }
+
+// 登录按钮点击
+- (void)didClickLoginBtn:(UIButton *)sender {
+    switch (_useType) {
+        case UseTypeSMS:
+        {
+            [self smsLogin];
+        }
+            break;
+        case UseTypeRegist:
+        {
+            [self userRegist];
+        }
+            break;
+        case UseTypeRestPwd:
+        case UseTypeForget:
+        {
+            [self resetPassword];
+        }
+            break;
+        default:
+            
+            break;
+    }
+}
+
+// 重置密码
+- (void)resetPassword {
+    if (self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines.length != 11) {
+        [WLHUDView showOnlyTextHUD:@"请输入正确的手机号"];
+        return;
+    }
+    if (self.pwdTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入密码"];
+        return;
+    }
+    if (self.vcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入验证码"];
+        return;
+    }
+    NSDictionary *params = @{
+                             @"mobile" : self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines,
+                             @"password" : self.pwdTxtView.textField.text.wl_trimWhitespaceAndNewlines,
+                             @"code" : self.vcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines
+                             };
+    WEAKSELF
+    [LoginModuleClient saveForgetPwdWithParams:params
+                                       Success:^(id resultInfo) {
+                                           [WLHUDView showSuccessHUD:@"密码修改成功"];
+                                           if (weakSelf.useType == UseTypeRestPwd) {
+                                               [NSUserDefaults setString:weakSelf.pwdTxtView.textField.text.wl_trimWhitespaceAndNewlines forKey:[NSString stringWithFormat:@"%@%@", configTool.loginUser.uid, configTool.loginUser.mobile]];
+                                               [weakSelf.navigationController popViewControllerAnimated:YES];
+                                           } else{
+                                               [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+                                           }
+                                       } Failed:^(NSError *error) {
+                                           
+                                       }];
+}
+
+// 密码登录
+- (void)smsLogin {
+    if (self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines.length != 11) {
+        [WLHUDView showOnlyTextHUD:@"请输入正确的手机号"];
+        return;
+    }
+    if (self.vcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入验证码"];
+        return;
+    }
+    NSDictionary *params = @{
+                             @"username" : self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines,
+                             @"code" : self.vcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines
+                             };
+//    WEAKSELF
+    [LoginModuleClient loginByVcodeWithParams:params
+                                      Success:^(id resultInfo) {
+                                          // 设置登录用户信息
+                                          [configTool initLoginUser:resultInfo];
+                                      } Failed:^(NSError *error) {
+                                          
+                                      }];
+}
+
+// 用户注册
+- (void)userRegist {
+    if (self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines.length != 11) {
+        [WLHUDView showOnlyTextHUD:@"请输入正确的手机号"];
+        return;
+    }
+    if (self.vcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入验证码"];
+        return;
+    }
+    if (self.pwdTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入密码"];
+        return;
+    }
+    NSDictionary *params = @{
+               @"mobile" : self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines,
+               @"password" : self.pwdTxtView.textField.text.wl_trimWhitespaceAndNewlines,
+               @"repassword" : self.pwdTxtView.textField.text.wl_trimWhitespaceAndNewlines,
+               @"code" : self.vcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines,
+               };
+    WEAKSELF
+    [LoginModuleClient registWithParams:params
+                                Success:^(id resultInfo) {
+                                    [WLHUDView showSuccessHUD:@"注册成功"];
+                                    [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+                                } Failed:^(NSError *error) {
+                                    
+                                }];
+}
+
 
 // 密码登录按钮点击
 - (void)didPwdLoginBtn:(UIButton *)sender {

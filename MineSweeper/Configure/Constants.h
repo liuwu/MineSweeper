@@ -77,6 +77,14 @@ extern CGFloat const kWL_NormalMarginWidth_12;
 extern CGFloat const kWL_NormalIconSmallWidth;
 
 #pragma mark 本地存储时用到的key
+// 登录用户手机号
+extern NSString *const kWLLastLoginUserPhoneKey;
+// 登录用户ID
+extern NSString *const kWLLoginUserIdKey;
+// 登录用户信息
+extern NSString *const kWLLoginUserInfoKey;
+///定位的城市
+extern NSString *const kWL_LocationCityKey;
 
 #pragma mark - NSNotification Key
 // 用户退出登录 通知

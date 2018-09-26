@@ -176,6 +176,70 @@
     return sessionTask;
 }
 
+// 上传图片
+- (NSURLSessionUploadTask *)wl_updateFileWithUrlString:(NSString *)urlString
+                                            parameters:(NSDictionary *)parameters
+                                                 image:(UIImage *)image
+                                          SuccessBlock:(WLResponseSuccess)successBlock
+                                          FailureBlock:(WLResponseFailed)failureBlock
+                                      DownLoadProgress:(WLDownloadProgress)progress {
+    if (urlString == nil) return nil;
+//    NSError* error = NULL;
+    NSURLSessionUploadTask *task = [self.manager POST:urlString parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        NSData *imageData = UIImageJPEGRepresentation(image, .5);
+        //        [formData appendPartWithFileData:imageData name:@"file" fileName:@"file" mimeType:@"multipart/form-data"];
+        [formData appendPartWithFileData:imageData name:@"file" fileName:@"file.jpg" mimeType:@"image/jpeg"];
+    } progress:^(NSProgress * _Nonnull uploadProgress) {
+        NSLog(@"上传进度：%.2lld%%",100 * uploadProgress.completedUnitCount/uploadProgress.totalUnitCount);
+        /*! 回到主线程刷新UI */
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (progress) {
+                progress(uploadProgress.completedUnitCount, uploadProgress.totalUnitCount);
+            }
+        });
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSLog(@"文件上传成功");
+        if (successBlock) {
+            NSLog(@"文件上传成功");
+            /*! 返回完整路径 */
+            successBlock(nil, responseObject);
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failureBlock) {
+            failureBlock(nil, error);
+        }
+    }];
+    
+//    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:urlString parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+//        NSData* imageData = UIImageJPEGRepresentation(image, 1.0);
+////        [formData appendPartWithFileData:imageData name:@"file" fileName:@"file" mimeType:@"multipart/form-data"];
+//        [formData appendPartWithFileData:imageData name:@"file" fileName:@"file.jpg" mimeType:@"image/jpeg"];
+//    } error:&error];
+//
+//    NSURLSessionUploadTask *task = [self.manager uploadTaskWithStreamedRequest:request progress:^(NSProgress * _Nonnull uploadProgress) {
+//        NSLog(@"上传进度：%.2lld%%",100 * uploadProgress.completedUnitCount/uploadProgress.totalUnitCount);
+//        /*! 回到主线程刷新UI */
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (progress) {
+//                progress(uploadProgress.completedUnitCount, uploadProgress.totalUnitCount);
+//            }
+//        });
+//    } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+//        if (error == nil) {
+//            if (successBlock) {
+//                NSLog(@"文件上传成功");
+//                /*! 返回完整路径 */
+//                successBlock(nil, responseObject);
+//            }else {
+//                if (failureBlock) {
+//                    failureBlock(nil, error);
+//                }
+//            }
+//        }
+//    }];
+    return task;
+}
+
 #pragma mark - Getter & Setter
 ///网络接口管理者
 - (AFHTTPSessionManager *)manager {

@@ -10,6 +10,8 @@ def shared_pods
     pod 'AFNetworking', '3.2.1'
     pod 'AliyunOSSiOS', :git => 'https://github.com/aliyun/AliyunOSSiOS.git'
     pod 'Masonry'
+    pod 'BaiduMapKit','4.1.1' #百度地图SDK
+    pod 'BMKLocationKit','1.2.0' #百度定位SDK
     # 二维码扫描
     pod 'ZBarSDK', '~> 1.3.1'
     pod 'UITableView+FDTemplateLayoutCell'

@@ -44,17 +44,18 @@
 
 // 个人中心 - 头像修改
 + (WLRequest *)changeUserLogoWithParams:(NSDictionary *)params
+                                  image:(UIImage *)image
                                 Success:(SuccessBlock)success
                                  Failed:(FailedBlock)failed {
-    WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Info/avatar"
-                                 Success:^(id resultInfo) {
-                                     DLog(@"个人中心 - 头像修改 ---- %@",describe(resultInfo));
-                                     SAFE_BLOCK_CALL(success,resultInfo);
-                                 } Failed:^(NSError *error) {
-                                     // 统一错误处理
-                                     //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
-                                     SAFE_BLOCK_CALL(failed, error);
-                                 }];
+    WLRequest *api = [self updateFileWithParams:nil apiMethodName:@"App/User/Info/avatar" image:image Success:^(id resultInfo) {
+        DLog(@"个人中心 - 头像修改 ---- %@",describe(resultInfo));
+        SAFE_BLOCK_CALL(success,resultInfo);
+    } Failed:^(NSError *error) {
+//        [WLHUDView showOnlyTextHUD:error.localizedDescription];
+        // 统一错误处理
+        //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+        SAFE_BLOCK_CALL(failed, error);
+    }];
     return api;
 }
 
@@ -135,6 +136,22 @@
                                      //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
                                      SAFE_BLOCK_CALL(failed, error);
                                  }];
+    return api;
+}
+
+// 钱包 - 转账
++ (WLRequest *)transferWallentWithParams:(NSDictionary *)params
+                                 Success:(SuccessBlock)success
+                                  Failed:(FailedBlock)failed {
+    WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Wallet/transfer"
+                                  Success:^(id resultInfo) {
+                                      DLog(@"钱包 - 转账 ---- %@",describe(resultInfo));
+                                      SAFE_BLOCK_CALL(success,resultInfo);
+                                  } Failed:^(NSError *error) {
+                                      // 统一错误处理
+                                      //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                      SAFE_BLOCK_CALL(failed, error);
+                                  }];
     return api;
 }
 
@@ -289,6 +306,22 @@
     WLRequest *api = [self getWithParams:params apiMethodName:@"App/User/Info/get_area_chars"
                                  Success:^(id resultInfo) {
                                      DLog(@"获取省市区数据 ---- %@",describe(resultInfo));
+                                     SAFE_BLOCK_CALL(success,resultInfo);
+                                 } Failed:^(NSError *error) {
+                                     // 统一错误处理
+                                     //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                     SAFE_BLOCK_CALL(failed, error);
+                                 }];
+    return api;
+}
+
+// 我的 - 设置 - 账户与安全
++ (WLRequest *)getUserSafeIndexWithParams:(NSDictionary *)params
+                                  Success:(SuccessBlock)success
+                                   Failed:(FailedBlock)failed {
+    WLRequest *api = [self getWithParams:params apiMethodName:@"App/User/Safe/index"
+                                 Success:^(id resultInfo) {
+                                     DLog(@"我的 - 设置 - 账户与安全 ---- %@",describe(resultInfo));
                                      SAFE_BLOCK_CALL(success,resultInfo);
                                  } Failed:^(NSError *error) {
                                      // 统一错误处理

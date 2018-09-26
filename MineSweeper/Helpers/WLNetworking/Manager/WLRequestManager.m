@@ -197,6 +197,18 @@
                 }];
                 break;
             }
+            case WLRequestMethodTypeUpdateImage: {
+                request.requestDataTask = [self.netWorkManager wl_updateFileWithUrlString:url parameters:nil image:request.updateImage SuccessBlock:^(NSURLSessionTask *task, id response) {
+                    [weakSelf handleRequestResult:request.requestDataTask responseObject:response];
+                } FailureBlock:^(NSURLSessionTask *task, NSError *error) {
+                    [weakSelf handleRequestResult:request.requestDataTask responseObject:error];
+                } DownLoadProgress:^(int64_t bytesProgress, int64_t totalBytesProgress) {
+                    if (request.progress) {
+                        request.progress(bytesProgress, totalBytesProgress);
+                    }
+                }];
+                break;
+            }
             case WLRequestMethodTypePUT:{
                 request.requestDataTask = [self.netWorkManager wl_requestWithType:WLHttpRequestTypePUT UrlString:url Parameters:params SuccessBlock:^(NSURLSessionTask *task, id response) {
                     [weakSelf handleRequestResult:task responseObject:response];

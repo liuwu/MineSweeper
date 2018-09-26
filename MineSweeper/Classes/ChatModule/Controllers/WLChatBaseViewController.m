@@ -9,14 +9,14 @@
 #import "WLChatBaseViewController.h"
 #import "UserInfoViewController.h"
 //#import "WLActivityDetailInfoController.h"
-//#import "WLChatLocationViewController.h"
+#import "WLChatLocationViewController.h"
 //#import "NavViewController.h"
-//#import "ActivityMapViewController.h"
+#import "ActivityMapViewController.h"
 //#import "InvestCerVC.h"
 //#import "WLTransactionDetailsController.h"
-//#import "WLPhotoViewController.h"
+#import "WLPhotoViewController.h"
 //
-//#import "KSPhotoBrowser.h"
+#import "KSPhotoBrowser.h"
 //
 //#import "WLChatCustomCardCell.h"
 //#import "WLChatNewCardCell.h"
@@ -29,18 +29,25 @@
 //#import "WLPayRemindMessage.h"
 //#import "IGroupChatInfo.h"
 
+#import "ChatRedPacketCell.h"
+
+#import "IGameGroupModel.h"
+
 #import "WLSystemAuth.h"
 #import "WLAssetsManager.h"
 #import "WLRongCloudDataSource.h"
+
+#import "RCRedPacketMessage.h"
 
 
 #define kImageMsgMaxCount 5000
 
 
-@interface WLChatBaseViewController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+@interface WLChatBaseViewController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate,RCMessageCellDelegate, ChatRedPacketCellDelegate, WLPhotoViewControllerDelegate>
 
 @end
 
+static NSString *redPacketCellid = @"redPacketCellid";
 static NSString *customCardCellid = @"customCardCellid";
 static NSString *newcardCellid = @"newcardCellid";
 static NSString *cardlistCellid = @"cardlistCellid";
@@ -58,14 +65,14 @@ static NSString *paylistCellid = @"paylistCellid";
     if (self) {
         @weakify(self)
         if (conversationType == ConversationType_PRIVATE) {
-            [[WLRongCloudDataSource shareInstance] getLocalUserInfoWithUserId:targetId completion:^(WLUserModel *userM) {
+            [[WLRongCloudDataSource shareInstance] getLocalUserInfoWithUserId:targetId completion:^(IFriendModel *userM) {
                 @strongify(self)
-//                self.navigationItem.title = userM.name;
+                self.navigationItem.title = userM.nickname;
             }];
         }else if(conversationType == ConversationType_GROUP){
-            [[WLRongCloudDataSource shareInstance] getLocalGroupInfoWithGroupId:targetId completion:^(IGroupChatInfo *groupChatInfo) {
+            [[WLRongCloudDataSource shareInstance] getLocalGroupInfoWithGroupId:targetId completion:^(IGameGroupModel *groupInfo) {
                 @strongify(self)
-//                self.navigationItem.title = groupChatInfo.name;
+                self.navigationItem.title = groupInfo.title;
             }];
         }
     }
@@ -75,7 +82,11 @@ static NSString *paylistCellid = @"paylistCellid";
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.chatSessionInputBarControl.pluginBoardView removeItemWithTag:104];
+    
     //* 注册消息类型，如果使用IMKit，使用此方法，不再使用RongIMLib的同名方法。如果对消息类型进行扩展，可以忽略此方法。
+    [self registerClass:[ChatRedPacketCell class] forMessageClass:[RCRedPacketMessage class]];
+//    [self registerClass:[ChatRedPacketCell class] forCellWithReuseIdentifier:redPacketCellid];
+    
 //    [self registerClass:[WLChatCustomCardCell class] forCellWithReuseIdentifier:customCardCellid];
 //    [self registerClass:[WLChatNewCardCell class] forCellWithReuseIdentifier:newcardCellid];
 //    [self registerClass:[WLChatCardListCell class] forCellWithReuseIdentifier:cardlistCellid];
@@ -93,13 +104,38 @@ static NSString *paylistCellid = @"paylistCellid";
  *  @author dong, 15-11-17 18:11:12
  *  取消WLChatCardListCell里融云手势
  */
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
-    NSString *viewClass = [NSString stringWithFormat:@"%@",touch.view.class];
-    if ([viewClass isEqualToString:@"UITableViewCellContentView"]||[viewClass isEqualToString:@"MLEmojiLabel"]) {
-        return NO;
-    }
-    return YES;
-}
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
+//    NSString *viewClass = [NSString stringWithFormat:@"%@",touch.view.class];
+////    if ([viewClass isEqualToString:@"UITableViewCellContentView"]||[viewClass isEqualToString:@"MLEmojiLabel"]) {
+////        return NO;
+////    }
+//    return NO;
+//}
+
+/*!
+ 自定义消息 Cell 的 Size
+ 
+ @param model               要显示的消息model
+ @param collectionViewWidth cell所在的collectionView的宽度
+ @param extraHeight         cell内容区域之外的高度
+ 
+ @return 自定义消息Cell的Size
+ 
+ @discussion 当应用自定义消息时，必须实现该方法来返回cell的Size。
+ 其中，extraHeight是Cell根据界面上下文，需要额外显示的高度（比如时间、用户名的高度等）。
+ 一般而言，Cell的高度应该是内容显示的高度再加上extraHeight的高度。
+ */
+//+ (CGSize)sizeForMessageModel:(RCMessageModel *)model
+//      withCollectionViewWidth:(CGFloat)collectionViewWidth
+//         referenceExtraHeight:(CGFloat)extraHeight {
+//    RCMessageModel *model = self.conversationDataRepository[indexPath.row];
+//    RCMessageContent *msgContent = model.content;
+//    if ([msgContent isMemberOfClass:[RCRedPacketMessage class]]) {
+//        // 红包cell
+//        return [ChatRedPacketCell cellHigetWithModel:model];// CGSizeMake(200.f, 65.f);
+//    }
+//    return CGSizeZero;
+//}
 
 /**
  *  重写方法实现自定义消息的显示的高度
@@ -130,6 +166,10 @@ static NSString *paylistCellid = @"paylistCellid";
 //                             withCollectionViewWidth:ScreenWidth
 //                                referenceExtraHeight:0];
 //    }
+    if ([msgContent isMemberOfClass:[RCRedPacketMessage class]]) {
+        // 红包cell
+        return [ChatRedPacketCell cellHigetWithModel:model];// CGSizeMake(200.f, 65.f);
+    }
     return CGSizeZero;
 }
 
@@ -144,6 +184,20 @@ static NSString *paylistCellid = @"paylistCellid";
 {
     RCMessageModel *model = self.conversationDataRepository[indexPath.row];
     RCMessageContent *msgContent = model.content;
+    if ([msgContent isMemberOfClass:[RCRedPacketMessage class]]) {
+        // 红包cell
+        ChatRedPacketCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:redPacketCellid forIndexPath:indexPath];
+        cell.delegate = self;
+        cell.cellDelegate = self;
+//        cell.isDisplayMessageTime = YES;
+//        cell.isDisplayMessageTime = YES;
+        if (msgContent.senderUserInfo.userId.intValue == configTool.loginUser.uid.integerValue) {
+            cell.messageDirection = MessageDirection_SEND;
+        } else {
+            cell.messageDirection = MessageDirection_RECEIVE;
+        }
+        return cell;
+    }
 //    if ([msgContent isMemberOfClass:[CustomCardMessage class]]) {
 //        CustomCardMessage *customCardM = (CustomCardMessage *)model.content;
 //        CardStatuModel *cardM = [CardStatuModel modelWithDictionary:customCardM.card];
@@ -184,6 +238,10 @@ static NSString *paylistCellid = @"paylistCellid";
 //    }
 //}
 
+- (void)chatRedPacketCell:(ChatRedPacketCell *)redPacketCell didTapCard:(RCRedPacketMessage *)model {
+    DLog(@"红包 chatRedPacketCell");
+}
+
 /**
  *  点击头像事件
  *
@@ -200,6 +258,22 @@ static NSString *paylistCellid = @"paylistCellid";
 //        [self.navigationController pushViewController:userInfoVC animated:YES];
 //    }
 }
+
+/*!
+ 点击Cell内容的回调
+ 
+ @param model 消息Cell的数据模型
+ */
+//- (void)didTapMessageCell:(RCMessageModel *)model {
+//    if ([model isMemberOfClass:[RCRedPacketMessage class]]) {
+//         DLog(@"红包 didTapMessageCell");
+//    }
+//    if ([model isMemberOfClass:[RCLocationMessage class]]) {
+//        DLog(@"位置 RCLocationMessage");
+//        [self presentLocationViewController:model];
+//    }
+//    DLog(@"didTapMessageCell");
+//}
 
 - (void)onBeginRecordEvent {
     [super onBeginRecordEvent];
@@ -245,6 +319,7 @@ static NSString *paylistCellid = @"paylistCellid";
  */
 - (void)presentImagePreviewController:(RCMessageModel *)model
 {
+    
     [self.chatSessionInputBarControl endEditing:YES];
     NSArray *messageArray = [[RCIMClient sharedRCIMClient] getLatestMessages:self.conversationType targetId:self.targetId count:1];
     if (!messageArray.count) return;
@@ -263,27 +338,27 @@ static NSString *paylistCellid = @"paylistCellid";
         if ([message.content isMemberOfClass:[RCImageMessage class]]) {
             RCImageMessage *imageMsgContent = (RCImageMessage *)message.content;
             NSString *imageURL = imageMsgContent.imageUrl;
-//            if (imageMsgContent.localPath && imageMsgContent.localPath.length) {
-//                NSString *cacheFolder = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
-//                NSString *aaaa = [[imageMsgContent.localPath componentsSeparatedByString:@"/Caches/"] lastObject];
-//                NSString *localpath = [cacheFolder stringByAppendingPathComponent:aaaa];
-//                KSPhotoItem *photo = [KSPhotoItem itemWithSourceView:nil image:[UIImage imageWithContentsOfFile:localpath]];
-//                [allImageArrayM addObject:photo];
-//            }else if ([imageURL hasPrefix:@"http://"] || [imageURL hasPrefix:@"https://"]) {
-//                KSPhotoItem *photo = [KSPhotoItem itemWithThumbImage:imageMsgContent.thumbnailImage imageUrlString:imageURL];
-//                [allImageArrayM addObject:photo];
-//            }else{
-//
-//            }
+            if (imageMsgContent.localPath && imageMsgContent.localPath.length) {
+                NSString *cacheFolder = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+                NSString *aaaa = [[imageMsgContent.localPath componentsSeparatedByString:@"/Caches/"] lastObject];
+                NSString *localpath = [cacheFolder stringByAppendingPathComponent:aaaa];
+                KSPhotoItem *photo = [KSPhotoItem itemWithSourceView:nil image:[UIImage imageWithContentsOfFile:localpath]];
+                [allImageArrayM addObject:photo];
+            }else if ([imageURL hasPrefix:@"http://"] || [imageURL hasPrefix:@"https://"]) {
+                KSPhotoItem *photo = [KSPhotoItem itemWithThumbImage:imageMsgContent.thumbnailImage imageUrlString:imageURL];
+                [allImageArrayM addObject:photo];
+            }else{
+
+            }
             if (message.messageId == model.messageId) {
                 selectedRow = idx;
             }
         }
     }];
     // 2.显示相册
-//    KSPhotoBrowser *browser = [KSPhotoBrowser browserWithPhotoItems:allImageArrayM selectedIndex:allImageArrayM.count - selectedRow-1];
-//    browser.pageindicatorStyle = KSPhotoBrowserPageIndicatorStyleText;
-//    [browser showFromViewController:self];
+    KSPhotoBrowser *browser = [KSPhotoBrowser browserWithPhotoItems:allImageArrayM selectedIndex:allImageArrayM.count - selectedRow-1];
+    browser.pageindicatorStyle = KSPhotoBrowserPageIndicatorStyleText;
+    [browser showFromViewController:self];
 }
 
 /**
@@ -293,8 +368,8 @@ static NSString *paylistCellid = @"paylistCellid";
  */
 - (void)presentLocationViewController:(RCLocationMessage *)locationMessageContent
 {
-//    ActivityMapViewController *mapVC = [[ActivityMapViewController alloc] initWithRCLocationMsg:locationMessageContent];
-//    [self.navigationController pushViewController:mapVC animated:YES];
+    ActivityMapViewController *mapVC = [[ActivityMapViewController alloc] initWithRCLocationMsg:locationMessageContent];
+    [self.navigationController pushViewController:mapVC animated:YES];
 }
 
 //- (void)selectedCardMessageWithCardM:(CardStatuModel *)cardModel
@@ -422,73 +497,73 @@ static NSString *paylistCellid = @"paylistCellid";
 // *  @param pluginBoardView 功能模板
 // *  @param tag             标记
 // */
-//-(void)pluginBoardView:(RCPluginBoardView*)pluginBoardView clickedItemWithTag:(NSInteger)tag
-//{
-//    WEAKSELF
-//    switch (tag) {
-//        case 1001: {
-//            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypePhotos completionHandler:^(WLSystemAuthStatus status) {
-//                if (status == WLSystemAuthStatusAuthorized) {
-//                    [weakSelf showPicVC];
-//                }
-//            }];
-//        }
-//            break;
-//        case 1002: {
-//            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeCamera completionHandler:^(WLSystemAuthStatus status) {
-//                if (status == WLSystemAuthStatusAuthorized) {
-//                    [weakSelf clickSheetCamera];
-//                }
-//            }];
-//        }
-//            break;
-//        case 1003: {
-//            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeLocation completionHandler:^(WLSystemAuthStatus status) {
-//                if (status == WLSystemAuthStatusAuthorized) {
-//                    [weakSelf showLocationMapVC];
-//                }
-//            }];
-//        }
-//            break;
-//        default:
-//            [super pluginBoardView:pluginBoardView clickedItemWithTag:tag];
-//            break;
-//    }
-//}
-//
-//- (void)showPicVC {
-//    WLPhotoViewController *imagePickerVC = [[WLPhotoViewController alloc] init];
-//    imagePickerVC.delegate = self;
-//    NavViewController *navigationController = [[NavViewController alloc] initWithRootViewController:imagePickerVC];
-//    [self presentViewController:navigationController animated:YES completion:nil];
-//}
-//
-//#pragma mark - WLPhotoViewControllerDelegate && WLPhotoPreviewControllerDelegate
-//- (void)photoViewControllerDidCancel:(WLPhotoViewController *)photoViewController {
-//    [photoViewController.navigationController dismissViewControllerAnimated:YES completion:NULL];
-//}
-//
-//- (void)photoViewController:(WLPhotoViewController *)photoViewController didFinishPickingImageWithImagesAssetArray:(NSMutableArray<WLAsset *> *)imagesAssetArray {
-//    [photoViewController.navigationController dismissViewControllerAnimated:YES completion:NULL];
-//
-//    dispatch_queue_t queue = dispatch_queue_create("welian.sendimagemessage.gcd", DISPATCH_QUEUE_SERIAL);
-//    for (WLAsset *asset in imagesAssetArray) {
-//        dispatch_async(queue, ^{
-//            [asset requestPreviewImageWithCompletion:^(UIImage *image, NSDictionary *info) {
-//                BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue]);
-//                if (image && downloadFinined) {
-//                    @autoreleasepool {
-//                        dispatch_async(queue, ^{
-//                            RCImageMessage *imageMessage = [RCImageMessage messageWithImage:image];
-//                            imageMessage.full = YES;
-//                            [self sendMessage:imageMessage pushContent:@"图片"];
-//                        });
-//                    }
-//                }
-//            } withProgressHandler:NULL];
-//        });
-//    }
-//}
+- (void)pluginBoardView:(RCPluginBoardView*)pluginBoardView clickedItemWithTag:(NSInteger)tag {
+//    DLog(@"pluginBoardView ----%d",tag);
+    WEAKSELF
+    switch (tag) {
+        case 1001: {
+            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypePhotos completionHandler:^(WLSystemAuthStatus status) {
+                if (status == WLSystemAuthStatusAuthorized) {
+                    [weakSelf showPicVC];
+                }
+            }];
+        }
+            break;
+        case 1002: {
+            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeCamera completionHandler:^(WLSystemAuthStatus status) {
+                if (status == WLSystemAuthStatusAuthorized) {
+                    [weakSelf clickSheetCamera];
+                }
+            }];
+        }
+            break;
+        case 1003: {
+            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeLocation completionHandler:^(WLSystemAuthStatus status) {
+                if (status == WLSystemAuthStatusAuthorized) {
+                    [weakSelf showLocationMapVC];
+                }
+            }];
+        }
+            break;
+        default:
+            [super pluginBoardView:pluginBoardView clickedItemWithTag:tag];
+            break;
+    }
+}
+
+- (void)showPicVC {
+    WLPhotoViewController *imagePickerVC = [[WLPhotoViewController alloc] init];
+    imagePickerVC.delegate = self;
+    QMUINavigationController *navigationController = [[QMUINavigationController alloc] initWithRootViewController:imagePickerVC];
+    [self presentViewController:navigationController animated:YES completion:nil];
+}
+
+#pragma mark - WLPhotoViewControllerDelegate && WLPhotoPreviewControllerDelegate
+- (void)photoViewControllerDidCancel:(WLPhotoViewController *)photoViewController {
+    [photoViewController.navigationController dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)photoViewController:(WLPhotoViewController *)photoViewController didFinishPickingImageWithImagesAssetArray:(NSMutableArray<WLAsset *> *)imagesAssetArray {
+    [photoViewController.navigationController dismissViewControllerAnimated:YES completion:NULL];
+
+    dispatch_queue_t queue = dispatch_queue_create("welian.sendimagemessage.gcd", DISPATCH_QUEUE_SERIAL);
+    for (WLAsset *asset in imagesAssetArray) {
+        dispatch_async(queue, ^{
+            [asset requestPreviewImageWithCompletion:^(UIImage *image, NSDictionary *info) {
+                BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue]);
+                if (image && downloadFinined) {
+                    @autoreleasepool {
+                        dispatch_async(queue, ^{
+                            RCImageMessage *imageMessage = [RCImageMessage messageWithImage:image];
+                            imageMessage.full = YES;
+                            [self sendMessage:imageMessage pushContent:@"图片"];
+                        });
+                    }
+                }
+            } withProgressHandler:NULL];
+        });
+    }
+}
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     [picker dismissViewControllerAnimated:YES completion:NULL];
@@ -496,7 +571,7 @@ static NSString *paylistCellid = @"paylistCellid";
     RCImageMessage *imageMessage = [RCImageMessage messageWithImage:image];
     imageMessage.full = YES;
     [self sendMessage:imageMessage pushContent:@"图片"];
-//    [self sendMessage:[RCImageMessage messageWithImage:image] pushContent:@"图片"];
+    [self sendMessage:[RCImageMessage messageWithImage:image] pushContent:@"图片"];
     
     WLImageWriteToSavedPhotosAlbumWithUserLibrary(image, ^(WLAsset *asset, NSError *error) {
         if (asset && !error) {
@@ -519,11 +594,11 @@ static NSString *paylistCellid = @"paylistCellid";
 
 - (void)showLocationMapVC {
     WEAKSELF
-//    WLChatLocationViewController *chatlocationVC = [[WLChatLocationViewController alloc] initWithSendLocationMsgeBlock:^(RCLocationMessage *locMessage) {
-//        [weakSelf sendMessage:locMessage pushContent:[NSString stringWithFormat:@"%@:[位置]",configTool.loginUser.name]];
-//    }];
-//    NavViewController *navLocation = [[NavViewController alloc] initWithRootViewController:chatlocationVC];
-//    [self presentViewController:navLocation animated:YES completion:nil];
+    WLChatLocationViewController *chatlocationVC = [[WLChatLocationViewController alloc] initWithSendLocationMsgeBlock:^(RCLocationMessage *locMessage) {
+        [weakSelf sendMessage:locMessage pushContent:[NSString stringWithFormat:@"%@:[位置]",configTool.userInfoModel.nickname]];
+    }];
+    QMUINavigationController *navLocation = [[QMUINavigationController alloc] initWithRootViewController:chatlocationVC];
+    [self presentViewController:navLocation animated:YES completion:nil];
 }
 
 @end

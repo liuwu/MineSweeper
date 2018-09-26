@@ -106,11 +106,18 @@
         [self.contentView addSubview:lineView];
         self.lineView = lineView;
     }
-    
-    if (self.item.logoImage) {
-        UIImageView *logoImageView = [[UIImageView alloc] initWithImage:self.item.logoImage];
+    if (self.item.showLogoImage) {
+        UIImageView *logoImageView = [[UIImageView alloc] init];
+        [logoImageView wl_setCornerRadius:25.f];
         [self.contentView addSubview:logoImageView];
         self.logoImageView = logoImageView;
+    }
+    if (self.item.logoImage) {
+        self.logoImageView.image =  [self.item.logoImage qmui_imageWithClippedCornerRadius:25.f];
+    }
+    if (self.item.logoImageUrl) {
+        [self.logoImageView setImageWithURL:self.item.logoImageUrl
+                       placeholderImage:nil];
     }
 }
 
@@ -172,7 +179,7 @@
     }
     
     //    self.accessoryType = UITableViewCellAccessoryNone
-    if (self.logoImageView) {
+    if (self.item.showLogoImage) {
         self.logoImageView.size = CGSizeMake(50.f, 50.f);
         self.logoImageView.right = self.contentView.width;
         self.logoImageView.centerY = self.contentView.centerY;

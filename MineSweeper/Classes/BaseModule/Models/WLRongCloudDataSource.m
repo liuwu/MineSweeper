@@ -8,6 +8,15 @@
 
 #import "WLRongCloudDataSource.h"
 
+#import "IFriendModel.h"
+#import "ILoginUserModel.h"
+#import "IFriendDetailInfoModel.h"
+
+#import "IGameGroupModel.h"
+
+#import "FriendModelClient.h"
+#import "ImGroupModelClient.h"
+
 //#import "WLUserModel.h"
 //#import "IGroupChatInfo.h"
 
@@ -33,29 +42,36 @@
 
 #pragma mark - Private
 //获取本地用户信息
-- (void)getLocalUserInfoWithUserId:(NSString*)userId completion:(void (^)(WLUserModel*))completion
+- (void)getLocalUserInfoWithUserId:(NSString*)userId completion:(void (^)(IFriendModel*))completion
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         DLog(@"getUserInfoWithUserId ----- %@", userId);
         // 此处最终代码逻辑实现需要您从本地缓存或服务器端获取用户信息。
-//        WLUserModel *user = nil;
-//        if (userId == nil || [userId length] == 0)
-//        {
-//            user = [WLUserModel new];
-//            user.uid = @(userId.integerValue);
-//            user.avatar = @"";
-//            user.name = @"";
-//            user.position = @"";
-//            user.company = @"";
-//            completion(user);
-//            return ;
-//        }
-//        WLUserDetailInfoModel *loginUser = configTool.loginUser;
-//        //自己的用户信息
-//        if (userId.longLongValue == loginUser.uid.longLongValue) {
-//            user = (WLUserModel *)loginUser;
-//            return completion(user);
-//        }
+        IFriendModel *user = nil;
+        if (userId == nil || [userId length] == 0)
+        {
+            user = [IFriendModel new];
+            user.uid = @(userId.integerValue);
+            user.avatar = @"";
+            user.nickname = @"";
+            user.mobile = @"";
+            user.remark = @"";
+            completion(user);
+            return ;
+        }
+        ILoginUserModel *loginUser = configTool.loginUser;
+        //自己的用户信息
+        if (userId.longLongValue == loginUser.uid.longLongValue) {
+            user = [IFriendModel new];
+            user.uid = @(loginUser.uid.integerValue);
+//            user.avatar = loginUser.a;
+            user.nickname = loginUser.username.length > 0 ? loginUser.username : loginUser.mobile;
+            if (configTool.userInfoModel) {
+                user.avatar = configTool.userInfoModel.avatar;
+                user.nickname = configTool.userInfoModel.nickname;
+            }
+            return completion(user);
+        }
 //        //判断好友里面是否有用户信息
 //        WLUserModel *userModel = [[WLUserDataCenter sharedInstance] getUserModelWithUid:@(userId.longLongValue)];
 //        if (userModel) {
@@ -72,6 +88,17 @@
 //        }
 //
 //        //调用接口刷新数据
+        NSDictionary *params = @{@"uid" : @(userId.longLongValue)};
+//        WEAKSELF
+        [FriendModelClient getImMemberInfoWithParams:params Success:^(id resultInfo) {
+//            IFriendDetailInfoModel *userModel = [IFriendDetailInfoModel modelWithDictionary:resultInfo];
+            IFriendModel *userModel = [IFriendModel modelWithDictionary:resultInfo];
+            return completion(userModel);
+        } Failed:^(NSError *error) {
+            return completion(nil);
+            DLog(@"getMember error:%@",error.localizedDescription);
+        }];
+        
 //        [WLUserModuleClient getMemberWithUid:@(userId.longLongValue) Success:^(id resultInfo) {
 //            //保存用户信息
 //            WLUserModel *userModel = [WLUserModel modelWithDictionary:resultInfo];
@@ -86,14 +113,24 @@
 }
 
 //获取本地群组信息
-//- (void)getLocalGroupInfoWithGroupId:(NSString*)groupId completion:(void (^)(IGroupChatInfo*))completion {
-//    IGroupChatInfo *group;
-//    if (groupId == nil || [groupId length] == 0)
-//    {
-//        group = [IGroupChatInfo new];
-//        group.groupchatid = @(groupId.longLongValue);
-//        return completion(group);
-//    }
+- (void)getLocalGroupInfoWithGroupId:(NSString*)groupId completion:(void (^)(IGameGroupModel*))completion {
+    IGameGroupModel *group;
+    if (groupId == nil || [groupId length] == 0)
+    {
+        group = [IGameGroupModel new];
+        group.groupId = groupId;
+        return completion(group);
+    }
+    
+    [ImGroupModelClient getImGroupInfoWithParams:@{@"id" : @(groupId.integerValue)}
+                                         Success:^(id resultInfo) {
+                                             
+                                         } Failed:^(NSError *error) {
+                                             [WLHUDView hiddenHud];
+                                             return completion(nil);
+                                             DLog(@"getGroup error:%@",error.localizedDescription);
+                                         }];
+    
 //
 //    //从数据库查询
 //    group = [[WLChatInfoDataCenter sharedInstance] getGroupChatInfoWithChatID:@(groupId.longLongValue)];
@@ -120,15 +157,28 @@
 //            return completion(group);
 //        }];
 //    }
-//}
+}
 
 #pragma mark - GroupInfoFetcherDelegate
 - (void)getGroupInfoWithGroupId:(NSString*)groupId completion:(void (^)(RCGroup*))completion {
-    RCGroup *group;
+//    RCGroup *group;
     if (groupId == nil || [groupId length] == 0) {
         return completion(nil);
     }
     //开发者调自己的服务器接口根据userID异步请求数据
+    [ImGroupModelClient getImGroupInfoWithParams:@{@"id" : @(groupId.integerValue)}
+                                         Success:^(id resultInfo) {
+                                             RCGroup *group = [RCGroup new];
+                                             group.groupId = groupId;
+//                                             group.groupName = groupInfo.name;
+//                                             group.portraitUri = [groupInfo.logo wl_imageUrlDownloadImageSceneAvatar];
+                                             return completion(group);
+                                         } Failed:^(NSError *error) {
+                                             [WLHUDView hiddenHud];
+                                             return completion(nil);
+                                             DLog(@"getGroup error:%@",error.localizedDescription);
+                                         }];
+    
     //从数据库查询
 //    IGroupChatInfo *iGroupChatInfo = [[WLChatInfoDataCenter sharedInstance] getGroupChatInfoWithChatID:@(groupId.longLongValue)];
 //    if (iGroupChatInfo) {
@@ -169,15 +219,40 @@
         return completion(nil);
     }
     RCUserInfo *user = [RCUserInfo new];
-//    WLUserDetailInfoModel *loginUser = configTool.loginUser;
-//    //自己的用户信息
-//    if (userId.longLongValue == loginUser.uid.longLongValue) {
-//        user = [RCUserInfo new];
-//        user.userId = loginUser.uid.stringValue;
-//        user.name = loginUser.name;
-//        user.portraitUri = [loginUser.avatar wl_imageUrlDownloadImageSceneAvatar];
-//        return completion(user);
-//    }
+    
+    ILoginUserModel *loginUser = configTool.loginUser;
+    //自己的用户信息
+    if (userId.longLongValue == loginUser.uid.longLongValue) {
+        user = [RCUserInfo new];
+        user.userId = loginUser.uid;
+        //            user.avatar = loginUser.a;
+        user.name = loginUser.username.length > 0 ? loginUser.username : loginUser.mobile;
+        if (configTool.userInfoModel) {
+            user.portraitUri = configTool.userInfoModel.avatar;
+            user.name = configTool.userInfoModel.nickname;
+        }
+        return completion(user);
+    }
+    
+    NSDictionary *params = @{@"uid" : @(userId.longLongValue)};
+    //        WEAKSELF
+    [FriendModelClient getImMemberInfoWithParams:params Success:^(id resultInfo) {
+        //            IFriendDetailInfoModel *userModel = [IFriendDetailInfoModel modelWithDictionary:resultInfo];
+        IFriendModel *userModel = [IFriendModel modelWithDictionary:resultInfo];
+//        return completion(userModel);
+        
+        RCUserInfo *user = [[RCUserInfo alloc]init];
+        user.userId = userModel.uid.stringValue;
+        user.name = userModel.nickname;
+//        user.portraitUri = [userModel.avatar wl_imageUrlDownloadImageSceneAvatar];
+        user.portraitUri = userModel.avatar;
+//        [[WLUserDataCenter sharedInstance] saveUserWithInfo:userModel isAsync:YES];
+        return completion(user);
+    } Failed:^(NSError *error) {
+        return completion(nil);
+        DLog(@"getMember error:%@",error.localizedDescription);
+    }];
+    
 //        //判断好友里面是否有用户信息
 //    WLUserModel *userModel = [[WLUserDataCenter sharedInstance] getUserModelWithUid:@(userId.longLongValue)];
 //    if (userModel) {
@@ -232,13 +307,13 @@
 }
 
 
-//- (void)refreshLogUserInfoCache:(WLUserModel *)profileM {
-//    RCUserInfo *user = [[RCUserInfo alloc]init];
-//    user.userId = profileM.uid.stringValue;
-//    user.name = profileM.name;
-//    user.portraitUri = profileM.avatar;
-//    [[RCIM sharedRCIM] refreshUserInfoCache:user withUserId:user.userId];
-//}
+- (void)refreshLogUserInfoCache:(IFriendModel *)profileM {
+    RCUserInfo *user = [[RCUserInfo alloc]init];
+    user.userId = profileM.uid.stringValue;
+    user.name = profileM.nickname;
+    user.portraitUri = profileM.avatar;
+    [[RCIM sharedRCIM] refreshUserInfoCache:user withUserId:user.userId];
+}
 
 
 @end

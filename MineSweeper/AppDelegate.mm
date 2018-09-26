@@ -14,14 +14,30 @@
 #import "QDCommonUI.h"
 #import "QDUIHelper.h"
 
+///引入地图功能所有的头文件
+#import <BaiduMapAPI_Map/BMKMapComponent.h>
+
 #import <RongIMKit/RongIMKit.h>
 #import "WLRongCloudDataSource.h"
 
-@interface AppDelegate ()<RCIMConnectionStatusDelegate,RCIMReceiveMessageDelegate>
+#import "LoginModuleClient.h"
+#import "ImModelClient.h"
+#import "IRcToken.h"
+
+#import "WLLocationManager.h"
+
+
+#import "RCRedPacketMessage.h"
+
+@interface AppDelegate ()<RCIMConnectionStatusDelegate,RCIMReceiveMessageDelegate,BMKGeneralDelegate>
+
+@property (nonatomic, strong) NavViewController *loginNav;
+@property (nonatomic, strong) MainViewController *mainVc;
 
 @end
 
 @implementation AppDelegate
+BMKMapManager* _mapManager;
 single_implementation(AppDelegate);
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -29,15 +45,15 @@ single_implementation(AppDelegate);
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self.window makeKeyAndVisible];
     
-    [self setupNetworkingInfo];
     [self setupUIStyle];
     [self initRongIM];
     
-    
-    
-    LoginViewController *loginVC = [[LoginViewController alloc] init];
-    NavViewController *nav = [[NavViewController alloc] initWithRootViewController:loginVC];
-    self.window.rootViewController = nav;
+    [configTool initLoginUserInfo];
+    [self setupNetworkingInfo];
+//    LoginViewController *loginVC = [[LoginViewController alloc] init];
+//    NavViewController *nav = [[NavViewController alloc] initWithRootViewController:loginVC];
+//    self.window.rootViewController = nav;
+    [self checkLoginStatus];
     [self.window setBackgroundColor:[UIColor whiteColor]];
     return YES;
 }
@@ -234,9 +250,11 @@ single_implementation(AppDelegate);
     //    [[RCIM sharedRCIM] registerMessageType:[WLFriendRequestMessage class]];
     //    [[RCIM sharedRCIM] registerMessageType:[WLPayRemindMessage class]];
     //    [[RCIM sharedRCIM] registerMessageType:[WLDynamicMessage class]];
+    // 注册自定义红包消息
+    [[RCIM sharedRCIM] registerMessageType:[RCRedPacketMessage class]];
     
     //设置头像形状
-    CGSize iconSize = CGSizeMake(45, 45);
+    CGSize iconSize = CGSizeMake(36, 36);
     [RCIM sharedRCIM].globalConversationPortraitSize = iconSize;
     [RCIM sharedRCIM].globalMessagePortraitSize = iconSize;
     [RCIM sharedRCIM].globalMessageAvatarStyle = RC_USER_AVATAR_CYCLE;
@@ -298,17 +316,95 @@ single_implementation(AppDelegate);
     [UITextField appearance].tintColor = WLColoerRGB(255.f);
 }
 
+// 检查登录Token已过期
+- (void)checkTokenExpires {
+    if (!configTool.loginUser) {
+        return;
+    }
+    double minutes = [[configTool.loginUser.token.expires_time wl_dateFormartNormalString] minutesUntil];
+    if (minutes < 10) {
+        //小于半小时的，重新获取token
+        NSDictionary *params = @{
+                                 @"uid" : [NSNumber numberWithInteger:configTool.loginUser.uid.integerValue],
+                                 @"password" : [NSUserDefaults stringForKey:[NSString stringWithFormat:@"%@%@", configTool.loginUser.uid, configTool.loginUser.mobile]],
+                                 @"_password" : configTool.loginUser.password
+                                 };
+        [LoginModuleClient getUserTokenWithParams:params Success:^(id resultInfo) {
+            [configTool refreshLoginUserToken:resultInfo];
+        } Failed:^(NSError *error) {
+            [WLHUDView hiddenHud];
+        }];
+    }
+}
+
+// 检查登录的Token过期
+- (void)checkRefreshToken {
+    if (!configTool.loginUser.token.refresh_token) {
+        return;
+    }
+    double minutes = [[configTool.loginUser.token.expires_time wl_dateFormartNormalString] minutesUntil];
+    if (minutes < 30) {
+        //小于半小时的，重新获取token
+        [LoginModuleClient refreshTokenWithParams:@{@"refresh_token": configTool.loginUser.token.refresh_token} Success:^(id resultInfo) {
+            [configTool refreshLoginUserToken:resultInfo];
+        } Failed:^(NSError *error) {
+            
+        }];
+    }
+}
+
+// 检测登录状态
+- (void)checkLoginStatus {
+    if (![NSUserDefaults objectForKey:kWLLoginUserIdKey]) {
+        [self logoutWithErrormsg:nil];
+    } else {
+        [self loginSucceed];
+//        if (!_mainVc) {
+//            double minutes = [[configTool.loginUser.token.expires_time wl_dateFormartNormalString] minutesUntil];
+//            if (minutes < 10) {
+//                WEAKSELF
+//                //小于半小时的，重新获取token
+//                NSDictionary *params = @{
+//                                         @"uid" : [NSNumber numberWithInteger:configTool.loginUser.uid.integerValue],
+//                                         @"password" : [NSUserDefaults stringForKey:[NSString stringWithFormat:@"%@%@", configTool.loginUser.uid, configTool.loginUser.mobile]],
+//                                         @"_password" : configTool.loginUser.password
+//                                         };
+//                [LoginModuleClient getUserTokenWithParams:params Success:^(id resultInfo) {
+//                    [configTool refreshLoginUserToken:resultInfo];
+//                    [weakSelf loginSucceed];
+//                } Failed:^(NSError *error) {
+////                    [WLHUDView hiddenHud];
+//                }];
+//            } else {
+//
+//            }
+//        }
+    }
+}
+
 #pragma mark - 退出登录
 - (void)logoutWithErrormsg:(NSString *)errormsg {
     [LGAlertView removeAlertViews];
     [self.window endEditing:YES];
-    
+    if (!_loginNav) {
+        LoginViewController *loginVC = [[LoginViewController alloc] init];
+        self.loginNav = [[NavViewController alloc] initWithRootViewController:loginVC];
+    }
+    self.window.rootViewController = _loginNav;
 }
 
 #pragma mark - 登录成功
 - (void)loginSucceed {
-    MainViewController *mainVc = [[MainViewController alloc] init];
-    self.window.rootViewController = mainVc;
+    
+    [self connectRCIM];
+    if (!_mainVc) {
+        self.mainVc = [[MainViewController alloc] init];
+    }
+    self.window.rootViewController = _mainVc;
+    
+    /// 上报定位
+    [self getCityLocationInfo];
+
     
 //    [WLSystemManager init3DTouchActionShow:YES];
 //    // 初始化登录用户信息
@@ -329,16 +425,42 @@ single_implementation(AppDelegate);
 //    [[NSNotificationCenter defaultCenter] postNotificationName:kWLUserLoginNotification object:nil];
 }
 
+/// 上报定位
+- (void)getCityLocationInfo {
+    [[WLLocationManager locationManager] wl_startUpdatingLocationWithShowAlert:NO successBlock:^(BMKLocation *location) {
+        //上传位置
+        CLLocationCoordinate2D coord2D = location.location.coordinate;
+        NSString *latitude = [NSString stringWithFormat:@"%f",coord2D.latitude];
+        NSString *longitude = [NSString stringWithFormat:@"%f",coord2D.longitude];
+        DLog(@"-----上传经纬度成功");
+    } faileBlock:^(NSError *error) {
+        
+    }];
+    
+    // 要使用百度地图，请先启动BaiduMapManager
+    _mapManager = [[BMKMapManager alloc]init];
+    [_mapManager start:@"B6d899fe8925bc5cbb547eba6fc4ccca" generalDelegate:self];
+}
+
 /// 连接融云
 - (void)connectRCIM {
+    WEAKSELF
+    [ImModelClient getImTokenWithParams:nil Success:^(id resultInfo) {
+        IRcToken *token = [IRcToken modelWithDictionary:resultInfo];
+        configTool.rcToken = token;
+        [weakSelf connectRCIMWithToken:configTool.rcToken.token];
+    } Failed:^(NSError *error) {
+        
+    }];
+    
 //    if (_rcConnectCount > krcConnectCount) return;
 //    _rcConnectCount++;
 //    if (!configTool.loginUser) return;
-    NSString *token = @"";// configTool.loginUser.rongToken;
+//    NSString *token = @"";// configTool.loginUser.rongToken;
 //    if (configTool.loginUser.uid.integerValue == 0) return;
-    if (token.length){
-        [self connectRCIMWithToken:token];
-    }else{ // token为空
+//    if (token.length){
+//        [self connectRCIMWithToken:token];
+//    }else{ // token为空
 //        if (!configTool.loginUser.name.length) return;  // 用户名为空，用户还未完善信息
 //        [WLLoginModuleClient registerRongTokenSuccess:^(id resultInfo) {
 //            if ([resultInfo isKindOfClass:[NSDictionary class]]) {
@@ -353,15 +475,15 @@ single_implementation(AppDelegate);
 //        } Failed:^(NSError *error) {
 //            [self connectRCIM];
 //        }];
-    }
+//    }
 }
 
 - (void)connectRCIMWithToken:(NSString *)token {
     [[RCIM sharedRCIM] connectWithToken:token success:^(NSString *userId) {
         //保存默认用户
 //        WLUserDetailInfoModel *loginUser = configTool.loginUser;
-//        RCUserInfo *_currentUserInfo = [[RCUserInfo alloc]initWithUserId:userId name:loginUser.name portrait:loginUser.avatar];
-//        [[RCIM sharedRCIM] setCurrentUserInfo:_currentUserInfo];
+        RCUserInfo *_currentUserInfo = [[RCUserInfo alloc]initWithUserId:userId name:configTool.userInfoModel.nickname portrait:configTool.userInfoModel.avatar];
+        [[RCIM sharedRCIM] setCurrentUserInfo:nil];
 //        self->_rcConnectCount = 0;
         [[NSNotificationCenter defaultCenter] postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
         DLog(@"++++++++++++++++++++++++++++++++++++++++++++++链接融云服务器成功++++++++++++++++++++++++++++++++++++");

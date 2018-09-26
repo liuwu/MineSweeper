@@ -11,7 +11,7 @@
 @interface BaseResultModel : NSObject
 
 // 内容
-@property (nonatomic, copy) id info;
+@property (nonatomic, copy) NSDictionary *info;
 // 消息内容
 @property (nonatomic, copy) NSString *msg;
 ///状态码

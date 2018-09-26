@@ -10,4 +10,7 @@
 
 @interface ChatGroupDetailViewController : SLCommonTableViewController
 
+
+@property (nonatomic, copy) NSString *groupId;
+
 @end

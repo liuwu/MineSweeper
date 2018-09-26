@@ -32,7 +32,9 @@
 @interface RETableViewItem : NSObject
 
 // 自定义logo
+@property (nonatomic, assign) BOOL showLogoImage;
 @property (strong, nonatomic) UIImage *logoImage;
+@property (strong, nonatomic) NSURL *logoImageUrl;
 
 @property (copy, nonatomic) NSString *title;
 // 标题颜色和字体

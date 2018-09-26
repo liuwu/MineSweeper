@@ -14,7 +14,8 @@
 
  @discussion 主要定义了View的默认大小。
  */
-@interface RCBaseViewController : UIViewController
+#import "QDCommonViewController.h"
+@interface RCBaseViewController : QDCommonViewController//UIViewController
 
 ///*!
 // 是否开启左滑返回手势,默认是 NO ,关闭状态，可以在页面 viewDidLoad 里开启

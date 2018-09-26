@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "NNValidationView.h"
+
 typedef NS_ENUM(NSInteger, LWLoginTextFieldType)
 {
     LWLoginTextFieldTypeDefault,
@@ -16,6 +18,7 @@ typedef NS_ENUM(NSInteger, LWLoginTextFieldType)
     LWLoginTextFieldTypeImageVcode,
     LWLoginTextFieldTypeVcode,
     LWLoginTextFieldTypeMoney,
+    LWLoginTextFieldTypeInvest,
 };
 
 
@@ -34,6 +37,11 @@ typedef NS_ENUM(NSInteger, LWLoginTextFieldType)
  控制当在编辑时，是否高亮文本框的Border,默认是YES
  */
 @property (nonatomic,assign) BOOL isChangeBorder;
+// 图形验证码
+//@property (nonatomic, strong) NNValidationView *captchaView;
+@property (nonatomic, strong) UIImageView *vcodeImageView;
+// 右侧按钮
+@property (nonatomic, strong) UIButton *rightButton;
 
 /**默认边框颜色*/
 @property (nonatomic,copy) UIColor *defaultBorderColor;

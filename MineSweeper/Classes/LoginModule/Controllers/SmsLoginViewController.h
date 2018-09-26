@@ -14,6 +14,7 @@ typedef NS_ENUM(NSInteger, UseType)
     UseTypeSMS,
     UseTypeRegist,
     UseTypeForget,
+    UseTypeRestPwd,
 };
 
 @interface SmsLoginViewController : QDCommonViewController//BaseViewController

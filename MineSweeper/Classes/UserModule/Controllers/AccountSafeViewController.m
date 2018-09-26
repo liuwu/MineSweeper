@@ -9,7 +9,9 @@
 #import "AccountSafeViewController.h"
 #import "SetPayPwdViewController.h"
 #import "ChangePhoneViewController.h"
+#import "SmsLoginViewController.h"
 #import "RestPayPwdViewController.h"
+#import "ChangePayPwdViewController.h"
 
 #import "RETableViewManager.h"
 #import "RETableViewItem.h"
@@ -62,14 +64,20 @@
     [section addItem:phoneItem];
 
     RETableViewItem *loginPwdItem = [RETableViewItem itemWithTitle:@"登录密码" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        RestPayPwdViewController *vc = [[RestPayPwdViewController alloc] init];
+        SmsLoginViewController *vc = [[SmsLoginViewController alloc] initWithUseType:UseTypeRestPwd];
         [self.navigationController pushViewController:vc animated:YES];
     }];
     [section addItem:loginPwdItem];
     
     RETableViewItem *payPwdItem = [RETableViewItem itemWithTitle:@"支付密码" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        SetPayPwdViewController *setPayVc = [[SetPayPwdViewController alloc] init];
-        [self.navigationController pushViewController:setPayVc animated:YES];
+        if (configTool.safeIdexModel.is_set_deal_password.integerValue == 0) {
+            SetPayPwdViewController *setPayVc = [[SetPayPwdViewController alloc] init];
+            [self.navigationController pushViewController:setPayVc animated:YES];
+        }
+        if (configTool.safeIdexModel.is_set_deal_password.integerValue == 1) {
+            ChangePayPwdViewController *vc = [[ChangePayPwdViewController alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }];
     [section addItem:payPwdItem];
     

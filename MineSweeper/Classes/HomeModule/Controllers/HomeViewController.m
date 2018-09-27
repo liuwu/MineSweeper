@@ -51,6 +51,29 @@
 
 - (void)initSubviews {
     [super initSubviews];
+    
+    [self addViews];
+    [self loadBannerData];
+    [self loadNotice];
+}
+
+// 加载轮播图
+- (void)loadBannerData {
+    WEAKSELF
+    [ImGroupModelClient getImBannerWithParams:nil Success:^(id resultInfo) {
+        //        weakSelf.datasource = [NSArray modelArrayWithClass:[BannerImgModel class] json:resultInfo];
+        weakSelf.banner.imageDataArray = [NSArray modelArrayWithClass:[BannerImgModel class] json:resultInfo];
+    } Failed:^(NSError *error) {
+        
+    }];
+}
+
+// 加载系统公告
+- (void)loadNotice {
+    
+}
+
+- (void)addViews {
     UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"home_notice_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(leftBtnItemClicked)];
     self.navigationItem.leftBarButtonItem = leftBtnItem;
     
@@ -92,7 +115,7 @@
     banner.imgCornerRadius = 10.f;
     banner.itemWidth = ScreenWidth - kWL_NormalMarginWidth_23 * 2.f;
     banner.delegate = self;
-//    banner.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
+    //    banner.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
     banner.backgroundColor = WLColoerRGB(248.f);
     [headerView addSubview:banner];
     self.banner = banner;
@@ -108,20 +131,9 @@
     self.tableView.backgroundColor = [UIColor whiteColor];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-//    self.tableView.allowsSelection = NO;// 去除默认选中效果
+    //    self.tableView.allowsSelection = NO;// 去除默认选中效果
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//去除默认分割线
     self.tableView.tableHeaderView = headerView;
-    [self loadBannerData];
-}
-
-- (void)loadBannerData {
-    WEAKSELF
-    [ImGroupModelClient getImBannerWithParams:nil Success:^(id resultInfo) {
-//        weakSelf.datasource = [NSArray modelArrayWithClass:[BannerImgModel class] json:resultInfo];
-        weakSelf.banner.imageDataArray = [NSArray modelArrayWithClass:[BannerImgModel class] json:resultInfo];
-    } Failed:^(NSError *error) {
-        
-    }];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

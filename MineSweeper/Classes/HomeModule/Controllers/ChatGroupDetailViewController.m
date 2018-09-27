@@ -10,6 +10,7 @@
 #import "ChatGourpNameViewController.h"
 #import "ChatGroupNoteInfoViewController.h"
 #import "UserInfoViewController.h"
+#import "ChatGroupRemarkViewController.h"
 
 #import "RETableViewManager.h"
 #import "RETableViewItem.h"
@@ -182,9 +183,7 @@
     
     WEAKSELF
     RETableViewItem *nameItem = [RETableViewItem itemWithTitle:@"群名称" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        ChatGourpNameViewController *vc = [[ChatGourpNameViewController alloc] init];
-        vc.groupDetailInfo = weakSelf.groupDetailInfo;
-        [weakSelf.navigationController pushViewController:vc animated:YES];
+        [weakSelf changeGroupName:item];
     }];
     nameItem.style = UITableViewCellStyleValue1;
     nameItem.detailLabelText = _groupDetailInfo.title;// @"5-10 赔率1.5倍  群组";
@@ -194,9 +193,7 @@
     self.nameItem = nameItem;
     
     RETableViewItem *noteItem = [RETableViewItem itemWithTitle:@"群公告" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        ChatGroupNoteInfoViewController *vc = [[ChatGroupNoteInfoViewController alloc] init];
-        vc.groupDetailInfo = weakSelf.groupDetailInfo;
-        [weakSelf.navigationController pushViewController:vc animated:YES];
+        [weakSelf changeGroupNotice:item];
     }];
     noteItem.style = UITableViewCellStyleSubtitle;
     noteItem.detailLabelText = _groupDetailInfo.notice ? : @"暂无";// @"温馨和谐文明真诚不欢迎广告！！的朋友你见或者不见我?我就在那这里的朋友你见或者不见我?我就在那里不悲不喜真诚我.见或者不见我?我就在那里不悲不喜真诚";
@@ -214,7 +211,7 @@
     [self.manager addSection:sectio2];
     
     RETableViewItem *cartItem = [RETableViewItem itemWithTitle:@"我的群名片" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        
+        [weakSelf changeMyCard:item];
     }];
     cartItem.style = UITableViewCellStyleValue1;
     cartItem.detailLabelText = _groupDetailInfo.remark;// @"陈敏";
@@ -287,6 +284,27 @@
 // 修改聊天置顶状态
 - (void)changeChatTop:(REBoolItem *)item {
     
+}
+
+// 修改群名称
+- (void)changeGroupName:(RETableViewItem *)item {
+    ChatGourpNameViewController *vc = [[ChatGourpNameViewController alloc] init];
+    vc.groupDetailInfo = _groupDetailInfo;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+// 修改群公告
+- (void)changeGroupNotice:(RETableViewItem *)item {
+    ChatGroupNoteInfoViewController *vc = [[ChatGroupNoteInfoViewController alloc] init];
+    vc.groupDetailInfo = _groupDetailInfo;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+// 修改我的群名片
+- (void)changeMyCard:(RETableViewItem *)item {
+    ChatGroupRemarkViewController *vc = [[ChatGroupRemarkViewController alloc] init];
+    vc.groupDetailInfo = _groupDetailInfo;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {

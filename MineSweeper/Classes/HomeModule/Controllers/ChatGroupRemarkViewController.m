@@ -1,27 +1,27 @@
 //
-//  ChatGourpNameViewController.m
+//  ChatGroupRemarkViewController.m
 //  MineSweeper
 //
-//  Created by liuwu on 2018/9/20.
+//  Created by liuwu on 2018/9/27.
 //  Copyright © 2018年 liuwu. All rights reserved.
 //
 
-#import "ChatGourpNameViewController.h"
+#import "ChatGroupRemarkViewController.h"
 
 #import "LWLoginTextFieldView.h"
 
 #import "ImGroupModelClient.h"
 
-@interface ChatGourpNameViewController ()
+@interface ChatGroupRemarkViewController ()
 
 @property (nonatomic, strong) LWLoginTextFieldView *nameTxtView;
 
 @end
 
-@implementation ChatGourpNameViewController
+@implementation ChatGroupRemarkViewController
 
 - (NSString *)title {
-    return @"群名称";
+    return @"群名片";
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -53,27 +53,27 @@
     
     LWLoginTextFieldView *nameTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeDefault];
     nameTxtView.backgroundColor = [UIColor whiteColor];
-    nameTxtView.textField.placeholder = @"群名称";
-    nameTxtView.textField.text = _groupDetailInfo.title;// @"群名称";
+    nameTxtView.textField.placeholder = @"群名片";
+    nameTxtView.textField.text = _groupDetailInfo.remark;// @"群名称";
     nameTxtView.selectBorderColor = [UIColor whiteColor];
     [nameTxtView wl_setCornerRadius:0.f];
     [self.view addSubview:nameTxtView];
     self.nameTxtView = nameTxtView;
-//    [nameTxtView.textField becomeFirstResponder];
+    //    [nameTxtView.textField becomeFirstResponder];
     
-//    QMUIFillButton *loginBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
-//    loginBtn.titleLabel.font = WLFONT(18);
-//    [loginBtn addTarget:self action:@selector(didClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
-//    [loginBtn setTitle:@"修改" forState:UIControlStateNormal];
-//    [loginBtn setCornerRadius:5.f];
-//    [self.view addSubview:loginBtn];
-//    self.loginBtn = loginBtn;
+    //    QMUIFillButton *loginBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
+    //    loginBtn.titleLabel.font = WLFONT(18);
+    //    [loginBtn addTarget:self action:@selector(didClickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
+    //    [loginBtn setTitle:@"修改" forState:UIControlStateNormal];
+    //    [loginBtn setCornerRadius:5.f];
+    //    [self.view addSubview:loginBtn];
+    //    self.loginBtn = loginBtn;
     
     //添加单击手势
-//    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
-//        [[self.view wl_findFirstResponder] resignFirstResponder];
-//    }];
-//    [self.view addGestureRecognizer:tap];
+    //    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+    //        [[self.view wl_findFirstResponder] resignFirstResponder];
+    //    }];
+    //    [self.view addGestureRecognizer:tap];
 }
 
 - (BOOL)shouldHideKeyboardWhenTouchInView:(UIView *)view {
@@ -94,7 +94,7 @@
 #pragma mark - Private
 - (void)rightBarButtonItemClicked {
     if (_nameTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
-        [WLHUDView showOnlyTextHUD:@"请输入群公告"];
+        [WLHUDView showOnlyTextHUD:@"请输入群名片"];
     }
     [[self.view wl_findFirstResponder] resignFirstResponder];
     
@@ -103,7 +103,7 @@
                              };
     WEAKSELF
     [WLHUDView showHUDWithStr:@"" dim:YES];
-    [ImGroupModelClient setImGroupTitleWithParams:params Success:^(id resultInfo) {
+    [ImGroupModelClient setImGroupRemarkWithParams:params Success:^(id resultInfo) {
         [WLHUDView showSuccessHUD:@"保存成功"];
         [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
         [weakSelf.navigationController popViewControllerAnimated:YES];

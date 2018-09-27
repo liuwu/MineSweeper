@@ -183,8 +183,8 @@
 //    [self.chatSessionInputBarControl resetToDefaultStatus];
     
     RCRedPacketMessage *msg = [[RCRedPacketMessage alloc] init];
-    RCUserInfo *senderUserInfo = [[RCUserInfo alloc] initWithUserId:@"152"// configTool.loginUser.uid
-                                                               name:@"测试"// configTool.userInfoModel.nickname
+    RCUserInfo *senderUserInfo = [[RCUserInfo alloc] initWithUserId:configTool.userInfoModel.userId
+                                                               name:configTool.userInfoModel.nickname
                                                            portrait:configTool.userInfoModel.avatar];
     msg.senderUserInfo = senderUserInfo;
     

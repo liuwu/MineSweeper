@@ -359,6 +359,8 @@
 		1064DE0A214CA695002A9DD6 /* ChatUserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DE09214CA695002A9DD6 /* ChatUserInfoViewController.m */; };
 		1064DE0D214CA6DE002A9DD6 /* ChatSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DE0C214CA6DE002A9DD6 /* ChatSettingViewController.m */; };
 		1069EE74214A9D3A0006FFCA /* HomeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE73214A9D3A0006FFCA /* HomeTableViewCell.m */; };
+		106D4AED215C77B60047E8BA /* BaseImageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 106D4AEC215C77B60047E8BA /* BaseImageTableViewCell.m */; };
+		106D4AF0215C7DE00047E8BA /* ChatGroupRemarkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 106D4AEF215C7DE00047E8BA /* ChatGroupRemarkViewController.m */; };
 		1073BC4221508BE0001EF550 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1073BC4121508BE0001EF550 /* WebViewController.m */; };
 		1073BC4D21509324001EF550 /* AXSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1073BC4521509324001EF550 /* AXSecurityPolicy.m */; };
 		1073BC4E21509324001EF550 /* AXWebViewControllerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1073BC4921509324001EF550 /* AXWebViewControllerActivity.m */; };
@@ -1132,6 +1134,10 @@
 		1064DE0C214CA6DE002A9DD6 /* ChatSettingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatSettingViewController.m; sourceTree = "<group>"; };
 		1069EE72214A9D3A0006FFCA /* HomeTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeTableViewCell.h; sourceTree = "<group>"; };
 		1069EE73214A9D3A0006FFCA /* HomeTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeTableViewCell.m; sourceTree = "<group>"; };
+		106D4AEB215C77B60047E8BA /* BaseImageTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseImageTableViewCell.h; sourceTree = "<group>"; };
+		106D4AEC215C77B60047E8BA /* BaseImageTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseImageTableViewCell.m; sourceTree = "<group>"; };
+		106D4AEE215C7DE00047E8BA /* ChatGroupRemarkViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatGroupRemarkViewController.h; sourceTree = "<group>"; };
+		106D4AEF215C7DE00047E8BA /* ChatGroupRemarkViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatGroupRemarkViewController.m; sourceTree = "<group>"; };
 		1073BC4021508BE0001EF550 /* WebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		1073BC4121508BE0001EF550 /* WebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		1073BC4521509324001EF550 /* AXSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXSecurityPolicy.m; sourceTree = "<group>"; };
@@ -2486,6 +2492,10 @@
 		103519702147A41300EDC7AD /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				10886BAC214FC1A9003DC40A /* BaseTableViewCell.h */,
+				10886BAD214FC1A9003DC40A /* BaseTableViewCell.m */,
+				106D4AEB215C77B60047E8BA /* BaseImageTableViewCell.h */,
+				106D4AEC215C77B60047E8BA /* BaseImageTableViewCell.m */,
 				101134342148CDC40082F74B /* UITextField */,
 				10351A962147CB5000EDC7AD /* WLActionSheet.h */,
 				10351A972147CB5000EDC7AD /* WLActionSheet.m */,
@@ -2493,8 +2503,6 @@
 				10351A782147C9F500EDC7AD /* MessageInputView */,
 				10351A682147C82A00EDC7AD /* CardAlertView */,
 				10351A282147B84500EDC7AD /* HUDView */,
-				10886BAC214FC1A9003DC40A /* BaseTableViewCell.h */,
-				10886BAD214FC1A9003DC40A /* BaseTableViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2996,6 +3004,8 @@
 				10082DF32153C7DE00EC3FCE /* ChatGroupNoteInfoViewController.m */,
 				10082DF52153C81300EC3FCE /* ChatGourpNameViewController.h */,
 				10082DF62153C81300EC3FCE /* ChatGourpNameViewController.m */,
+				106D4AEE215C7DE00047E8BA /* ChatGroupRemarkViewController.h */,
+				106D4AEF215C7DE00047E8BA /* ChatGroupRemarkViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -3454,6 +3464,7 @@
 				10454673214B77A500DA7F9F /* QDTabBarViewController.m in Sources */,
 				1035191D2147A34000EDC7AD /* WLImagePickerCollectionViewCell.m in Sources */,
 				1064DDE6214C9ABF002A9DD6 /* MyRecommendViewController.m in Sources */,
+				106D4AF0215C7DE00047E8BA /* ChatGroupRemarkViewController.m in Sources */,
 				1064DE01214CA343002A9DD6 /* RechargeViewController.m in Sources */,
 				102146C42152A5CF00BB7FEB /* ChatInfoViewController.m in Sources */,
 				10454674214B77A500DA7F9F /* QDCommonListViewController.m in Sources */,
@@ -3533,6 +3544,7 @@
 				103518E52147A34000EDC7AD /* RENumberItem.m in Sources */,
 				103519302147A34000EDC7AD /* DaiDodgeKeyboard.m in Sources */,
 				1045466C214B77A500DA7F9F /* QMUIConfigurationTemplate.m in Sources */,
+				106D4AED215C77B60047E8BA /* BaseImageTableViewCell.m in Sources */,
 				1018BD092157DCB4004BC57B /* ChangePayPwdViewController.m in Sources */,
 				103519562147A34000EDC7AD /* WLChainRequest.m in Sources */,
 				10351AE82147D3F400EDC7AD /* HomeViewController.m in Sources */,

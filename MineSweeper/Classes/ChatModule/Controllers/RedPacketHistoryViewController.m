@@ -16,12 +16,12 @@
 
 @interface RedPacketHistoryViewController ()
 
+@property (nonatomic, strong) QMUILabel *momeyTitleLabel;
 @property (nonatomic, strong) QMUILabel *momeyLabel;
 @property (nonatomic, assign) NSInteger page;
 
 @property (nonatomic, strong) NSMutableArray *datasource;
 @property (nonatomic, strong) IMyRedPacketResultModel *model;
-
 
 @end
 
@@ -61,7 +61,8 @@
 
 - (void)updateUI {
     [self.datasource addObjectsFromArray:_model.list];
-    
+    _momeyTitleLabel.text = [NSString stringWithFormat:@"%@共收到%@个红包,共计", _model.nickname,_model.total_num];
+    _momeyLabel.text = _model.total_money;
     [self.tableView reloadData];
 }
 
@@ -121,7 +122,7 @@
 
     // 总收益
     QMUILabel *momeyLabel = [[QMUILabel alloc] init];
-    momeyLabel.text = @"1354.23";
+    momeyLabel.text = @"0.00";
     momeyLabel.font = UIFontMake(21);
     momeyLabel.textColor = [UIColor whiteColor];
     [headerView addSubview:momeyLabel];
@@ -170,7 +171,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 10.f;
+    return _datasource.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -180,7 +181,8 @@
     }
     cell.showBottomLine = YES;
     //    cell.imageView.image = [UIImage imageNamed:@"game_group_icon"];
-    cell.textLabel.text = @"小尹子";
+    IMyRedPacketModel *model = _datasource[indexPath.row];
+    cell.textLabel.text = model.from_nickname;// @"小尹子";
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
     cell.detailTextLabel.text = @"10-12 12:12";
@@ -190,7 +192,7 @@
     QMUILabel *moenyLabel = [[QMUILabel alloc] initWithFrame:CGRectMake(0., 0., 60.f, cell.height)];
     moenyLabel.font = UIFontMake(15);
     moenyLabel.textColor = WLColoerRGB(51.f);
-    moenyLabel.text = @"1.12元";
+    moenyLabel.text = [NSString stringWithFormat:@"%@元", model.money];// @"1.12元";
     cell.accessoryView = moenyLabel;
     
     // resetc

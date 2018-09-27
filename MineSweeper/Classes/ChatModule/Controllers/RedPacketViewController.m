@@ -19,6 +19,10 @@
 
 @property (nonatomic, strong) IRedPacketResultModel *model;
 
+@property (nonatomic, strong) QMUILabel *titleLabel;
+@property (nonatomic, strong) QMUILabel *timeLabel;
+@property (nonatomic, strong) QMUILabel *momeyLabel;
+
 @end
 
 @implementation RedPacketViewController
@@ -61,9 +65,11 @@
 }
 
 - (void)updateUI {
+    _titleLabel.text = _model.title;
+    _timeLabel.text = _model.title;
+    _momeyLabel.text = _model.grab_money;
     
-    
-     [self.tableView reloadData];
+    [self.tableView reloadData];
 }
 
 // 添加头部信息
@@ -122,7 +128,7 @@
 
     // 总收益
     QMUILabel *momeyLabel = [[QMUILabel alloc] init];
-    momeyLabel.text = @"1.35";
+    momeyLabel.text = @"0.00";
     momeyLabel.font = UIFontMake(40);
     momeyLabel.textColor = WLColoerRGB(51.f);
     [headerView addSubview:momeyLabel];
@@ -200,7 +206,7 @@
     if (section == 0) {
         return 1;
     }
-    return 10.f;
+    return _model.list.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -213,26 +219,28 @@
         }
     }
     if (indexPath.section == 0) {
-        cell.textLabel.attributedText = [NSString wl_getAttributedInfoString:@"5个红包共10.00元"
-                                                                   searchStr:@"10.00"
+        NSString *titleStr = [NSString stringWithFormat:@"%@个红包共%@元",_model.num,_model.total_money];
+        cell.textLabel.attributedText = [NSString wl_getAttributedInfoString:titleStr
+                                                                   searchStr:_model.total_money
                                                                        color:UIColorMake(203,52,36)
                                                                         font:UIFontMake(14.f)];
         cell.textLabel.textColor = WLColoerRGB(153.f);
         cell.textLabel.font = UIFontMake(14.f);
         cell.imageEdgeInsets = UIEdgeInsetsZero;
     } else {
+        IRedPacektMemberModel *model = _model.list[indexPath.row];
         cell.imageView.image = [UIImage imageNamed:@"game_group_icon"];
-        cell.textLabel.text = @"小尹子";
+        cell.textLabel.text = model.nickname;// @"小尹子";
         cell.textLabel.textColor = WLColoerRGB(51.f);
         cell.textLabel.font = UIFontMake(15.f);
-        cell.detailTextLabel.text = @"10-12 12:12";
+        cell.detailTextLabel.text = model.update_time;// @"10-12 12:12";
         cell.detailTextLabel.textColor = WLColoerRGB(102.f);
         cell.detailTextLabel.font = UIFontMake(14.f);
         
         QMUILabel *moenyLabel = [[QMUILabel alloc] initWithFrame:CGRectMake(0., 0., 60.f, cell.height)];
         moenyLabel.font = UIFontMake(15);
         moenyLabel.textColor = UIColorMake(203,52,36);
-        moenyLabel.text = @"1.12元";
+        moenyLabel.text = [NSString stringWithFormat:@"%@元",model.money];// @"1.12元";
         cell.accessoryView = moenyLabel;
         
         // reset

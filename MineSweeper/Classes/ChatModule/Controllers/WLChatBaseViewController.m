@@ -104,17 +104,17 @@ static NSString *paylistCellid = @"paylistCellid";
  *  @author dong, 15-11-17 18:11:12
  *  取消WLChatCardListCell里融云手势
  */
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
-//    NSString *viewClass = [NSString stringWithFormat:@"%@",touch.view.class];
-//    DLog(@"shouldReceiveTouch : %@", viewClass);
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
+    NSString *viewClass = [NSString stringWithFormat:@"%@",touch.view.class];
+    DLog(@"shouldReceiveTouch : %@", viewClass);
 //    if ([viewClass isEqualToString:@"UIView"]) {
 //        return NO;
 //    }
-////    if ([viewClass isEqualToString:@"UITableViewCellContentView"]||[viewClass isEqualToString:@"MLEmojiLabel"]) {
-////        return NO;
-////    }
-//    return YES;
-//}
+//    if ([viewClass isEqualToString:@"UITableViewCellContentView"]||[viewClass isEqualToString:@"MLEmojiLabel"]) {
+//        return NO;
+//    }
+    return NO;
+}
 
 /*!
  自定义消息 Cell 的 Size
@@ -258,8 +258,9 @@ static NSString *paylistCellid = @"paylistCellid";
  *
  *  @param userId 用户的ID
  */
-- (void)didTapCellPortrait:(NSString *)userId
-{
+//- (void)didTapCellPortrait:(NSString *)userId
+//{
+
     //change by liuwu | 2016.03.08 | 添加userId为空的判断，防止闪退
 //    if (userId != nil && userId.length > 0) {
 //        WLUserModel *userMode = [[WLUserModel alloc] init];
@@ -268,7 +269,7 @@ static NSString *paylistCellid = @"paylistCellid";
 //        UserInfoViewController *userInfoVC = [[UserInfoViewController alloc] initWithBaseUserM:userMode OperateType:nil HidRightBtn:NO];
 //        [self.navigationController pushViewController:userInfoVC animated:YES];
 //    }
-}
+//}
 
 /*!
  点击Cell内容的回调

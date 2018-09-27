@@ -72,10 +72,10 @@
 //        UITapGestureRecognizer *tapG = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTagGest:)];
 //        tapG.numberOfTapsRequired = 1;
 //        [backView addGestureRecognizer:tapG];
-        WEAKSELF
-        [backView bk_whenTapped:^{
-            [weakSelf didRedPacketTap];
-        }];
+//        WEAKSELF
+//        [backView bk_whenTapped:^{
+//            [weakSelf didRedPacketTap];
+//        }];
         
 //        [logoImageView bk_whenTapped:^{
 //            [weakSelf didLogoImageTap];

@@ -8,6 +8,10 @@
 
 #import "QDCommonViewController.h"
 
+#import "IGroupDetailInfo.h"
+
 @interface ChatGroupNoteInfoViewController : QDCommonViewController
+
+@property (nonatomic, strong) IGroupDetailInfo *groupDetailInfo;
 
 @end

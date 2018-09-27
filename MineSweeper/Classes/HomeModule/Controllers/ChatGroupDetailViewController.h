@@ -7,10 +7,12 @@
 //
 
 #import "SLCommonTableViewController.h"
+#import "IGroupDetailInfo.h"
 
 @interface ChatGroupDetailViewController : SLCommonTableViewController
 
 
 @property (nonatomic, copy) NSString *groupId;
+@property (nonatomic, strong) IGroupDetailInfo *groupDetailInfo;
 
 @end

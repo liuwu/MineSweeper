@@ -48,11 +48,15 @@
 
 #pragma mark - Private
 - (void)initData {
+    [self hideEmptyView];
     WEAKSELF
     [WLHUDView showHUDWithStr:@"加载中..." dim:YES];
     [ImGroupModelClient getImSystemNoticeWithParams:nil Success:^(id resultInfo) {
         [WLHUDView hiddenHud];
         weakSelf.datasource = [NSArray modelArrayWithClass:[INoticeModel class] json:resultInfo];
+        if (weakSelf.datasource.count == 0) {
+            [weakSelf showEmptyViewWithText:@"暂无数据" detailText:@"" buttonTitle:nil buttonAction:NULL];
+        }
         [weakSelf.tableView reloadData];
     } Failed:^(NSError *error) {
         [WLHUDView hiddenHud];

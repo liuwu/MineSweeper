@@ -10,7 +10,10 @@
 
 @interface IFriendModel : NSObject<NSCopying>
 
-@property (nonatomic, copy) NSNumber *uid;
+// 首字母
+@property (nonatomic, copy) NSString *firstPinyin;
+// 用户ID
+@property (nonatomic, copy) NSString *uid;
 // 手机
 @property (nonatomic, copy) NSString *mobile;
 // 昵称

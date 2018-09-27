@@ -51,7 +51,7 @@
         if (userId == nil || [userId length] == 0)
         {
             user = [IFriendModel new];
-            user.uid = @(userId.integerValue);
+            user.uid = userId;
             user.avatar = @"";
             user.nickname = @"";
             user.mobile = @"";
@@ -63,7 +63,7 @@
         //自己的用户信息
         if (userId.longLongValue == loginUser.uid.longLongValue) {
             user = [IFriendModel new];
-            user.uid = @(loginUser.uid.integerValue);
+            user.uid = loginUser.uid;
 //            user.avatar = loginUser.a;
             user.nickname = loginUser.username.length > 0 ? loginUser.username : loginUser.mobile;
             if (configTool.userInfoModel) {
@@ -234,7 +234,7 @@
         return completion(user);
     }
     
-    NSDictionary *params = @{@"uid" : @(userId.longLongValue)};
+    NSDictionary *params = @{@"uid" : @(userId.integerValue)};
     //        WEAKSELF
     [FriendModelClient getImMemberInfoWithParams:params Success:^(id resultInfo) {
         //            IFriendDetailInfoModel *userModel = [IFriendDetailInfoModel modelWithDictionary:resultInfo];
@@ -242,7 +242,7 @@
 //        return completion(userModel);
         
         RCUserInfo *user = [[RCUserInfo alloc]init];
-        user.userId = userModel.uid.stringValue;
+        user.userId = userModel.uid;
         user.name = userModel.nickname;
 //        user.portraitUri = [userModel.avatar wl_imageUrlDownloadImageSceneAvatar];
         user.portraitUri = userModel.avatar;
@@ -309,7 +309,7 @@
 
 - (void)refreshLogUserInfoCache:(IFriendModel *)profileM {
     RCUserInfo *user = [[RCUserInfo alloc]init];
-    user.userId = profileM.uid.stringValue;
+    user.userId = profileM.uid;
     user.name = profileM.nickname;
     user.portraitUri = profileM.avatar;
     [[RCIM sharedRCIM] refreshUserInfoCache:user withUserId:user.userId];

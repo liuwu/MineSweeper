@@ -7,6 +7,9 @@
 //
 
 #import "ChatGroupDetailViewController.h"
+#import "ChatGourpNameViewController.h"
+#import "ChatGroupNoteInfoViewController.h"
+#import "UserInfoViewController.h"
 
 #import "RETableViewManager.h"
 #import "RETableViewItem.h"
@@ -15,10 +18,22 @@
 
 #import "ImGroupModelClient.h"
 
+#define kMoreHeight 55.f
+
 @interface ChatGroupDetailViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) RETableViewManager *manager;
-@property (nonatomic, strong) NSArray<NSString *> *userArray;
+//@property (nonatomic, strong) NSArray<NSString *> *userArray;
+
+@property (nonatomic, strong) UIView *headerView;
+@property (nonatomic, strong) UICollectionView *mainCollectionView;
+@property (nonatomic, strong) UIButton *lookMoreUserBtn;
+
+@property (nonatomic, strong) RETableViewItem *nameItem;
+@property (nonatomic, strong) RETableViewItem *noteItem;
+@property (nonatomic, strong) RETableViewItem *cartItem;
+@property (nonatomic, strong) REBoolItem *notDisturbItem;
+@property (nonatomic, strong) REBoolItem *topItem;
 
 @end
 
@@ -30,10 +45,12 @@
 
 - (void)initSubviews {
     [super initSubviews];
-    self.userArray = @[@"1小尹", @"2小尹ddd", @"3小尹asa", @"4小尹dfdf", @"5小尹dfdfdfdfdf", @"4小尹dfdf", @"4小尹dfdf"];
+//    self.userArray = @[@"1小尹", @"2小尹ddd", @"3小尹asa", @"4小尹dfdf", @"5小尹dfdfdfdfdf", @"4小尹dfdf", @"4小尹dfdf"];
     [self addTableHeaderInfo];
     [self addTableViewCell];
-    [self loadData];
+//    [self loadData];
+    
+    [kNSNotification addObserver:self selector:@selector(loadData) name:@"kGroupInfoChanged" object:nil];
 }
 
 - (void)viewDidLoad {
@@ -43,17 +60,36 @@
 
 // 获取群主信息接口
 - (void)loadData {
-    [WLHUDView showHUDWithStr:@"" dim:YES];
+//    [WLHUDView showHUDWithStr:@"" dim:YES];
+    WEAKSELF
     [ImGroupModelClient getImGroupInfoWithParams:@{@"id" : [NSNumber numberWithInteger:_groupId.integerValue]}
                                          Success:^(id resultInfo) {
-                                             [WLHUDView hiddenHud];
+//                                             [WLHUDView hiddenHud];
+                                             self.groupDetailInfo = [IGroupDetailInfo modelWithDictionary:resultInfo];
+                                             [weakSelf updateUI];
                                          } Failed:^(NSError *error) {
-                                             [WLHUDView hiddenHud];
+//                                             [WLHUDView hiddenHud];
                                          }];
 }
 
 - (void)updateUI {
-    
+    _nameItem.detailLabelText = _groupDetailInfo.title;
+    _noteItem.detailLabelText = _groupDetailInfo.remark;
+    _cartItem.detailLabelText = _groupDetailInfo.remark;
+    _notDisturbItem.value = _groupDetailInfo.not_disturb.boolValue;
+    _topItem.value = _groupDetailInfo.is_top.boolValue;
+
+//    CGFloat headerHeight = _groupDetailInfo.member_list.count > 4 ? 180.f : 90.f;
+//    _mainCollectionView.height = headerHeight + kMoreHeight;
+//    _headerView.height = headerHeight + kMoreHeight;
+//    _lookMoreUserBtn.top = headerHeight;
+//    [_lookMoreUserBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, kMoreHeight));
+//        make.top.mas_equalTo(headerHeight);
+//        make.centerX.mas_equalTo(self.headerView);
+//    }];
+//    self.tableView.tableHeaderView.height = headerHeight + kMoreHeight;
+    [_mainCollectionView reloadData];
 }
 
 - (void)addTableHeaderInfo {
@@ -61,10 +97,12 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = WLColoerRGB(248.f);
     
-    CGFloat moreHeight = 55.f;
-    CGFloat headerHeight = _userArray.count > 4 ? 180.f : 90.f;
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0., DEVICE_WIDTH, headerHeight + moreHeight)];
+//    CGFloat headerHeight = _userArray.count > 4 ? 180.f : 90.f;
+    CGFloat headerHeight = _groupDetailInfo.member_list.count > 4 ? 180.f : 90.f;
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0., DEVICE_WIDTH, headerHeight + kMoreHeight)];
     //    headerView.backgroundColor = [UIColor redColor];
+//    [headerView wl_setDebug:YES];
+    self.headerView = headerView;
     self.tableView.tableHeaderView = headerView;
     
     UIButton *lookMoreUserBtn = [[UIButton alloc] init];
@@ -73,9 +111,10 @@
     lookMoreUserBtn.titleLabel.font = WLFONT(15);
     [lookMoreUserBtn addTarget:self action:@selector(lookMoreUserBtn:) forControlEvents:UIControlEventTouchUpInside];
     [headerView addSubview:lookMoreUserBtn];
+    self.lookMoreUserBtn = lookMoreUserBtn;
 //    [lookMoreUserBtn wl_setDebug:YES];
-    [lookMoreUserBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, moreHeight));
+    [_lookMoreUserBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, kMoreHeight));
         make.top.mas_equalTo(headerHeight);
         make.centerX.mas_equalTo(headerView);
     }];
@@ -110,7 +149,8 @@
     //4.设置代理
     mainCollectionView.delegate = self;
     mainCollectionView.dataSource = self;
-    
+//    [mainCollectionView wl_setDebug:YES];
+    self.mainCollectionView = mainCollectionView;
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0., DEVICE_WIDTH, 74.f)];
     footerView.backgroundColor = [UIColor clearColor];
@@ -142,25 +182,31 @@
     
     WEAKSELF
     RETableViewItem *nameItem = [RETableViewItem itemWithTitle:@"群名称" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        
+        ChatGourpNameViewController *vc = [[ChatGourpNameViewController alloc] init];
+        vc.groupDetailInfo = weakSelf.groupDetailInfo;
+        [weakSelf.navigationController pushViewController:vc animated:YES];
     }];
     nameItem.style = UITableViewCellStyleValue1;
-    nameItem.detailLabelText = @"5-10 赔率1.5倍  群组";
+    nameItem.detailLabelText = _groupDetailInfo.title;// @"5-10 赔率1.5倍  群组";
     nameItem.titleDetailTextColor = WLColoerRGB(102.f);
     nameItem.selectionStyle = UITableViewCellSelectionStyleNone;
     [section addItem:nameItem];
+    self.nameItem = nameItem;
     
     RETableViewItem *noteItem = [RETableViewItem itemWithTitle:@"群公告" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        
+        ChatGroupNoteInfoViewController *vc = [[ChatGroupNoteInfoViewController alloc] init];
+        vc.groupDetailInfo = weakSelf.groupDetailInfo;
+        [weakSelf.navigationController pushViewController:vc animated:YES];
     }];
     noteItem.style = UITableViewCellStyleSubtitle;
-    noteItem.detailLabelText = @"温馨和谐文明真诚不欢迎广告！！的朋友你见或者不见我?我就在那这里的朋友你见或者不见我?我就在那里不悲不喜真诚我.见或者不见我?我就在那里不悲不喜真诚";
+    noteItem.detailLabelText = _groupDetailInfo.notice ? : @"暂无";// @"温馨和谐文明真诚不欢迎广告！！的朋友你见或者不见我?我就在那这里的朋友你见或者不见我?我就在那里不悲不喜真诚我.见或者不见我?我就在那里不悲不喜真诚";
     noteItem.titleDetailTextFont = UIFontMake(12.f);
     noteItem.titleDetailTextColor = WLColoerRGB(102.f);
     noteItem.showTitleDetailTextNumberOfLine = YES;
     noteItem.selectionStyle = UITableViewCellSelectionStyleNone;
     noteItem.cellHeight = 79.f;
     [section addItem:noteItem];
+    self.noteItem = noteItem;
     
     RETableViewSection *sectio2 = [RETableViewSection section];
     sectio2.headerHeight = 5.f;
@@ -171,24 +217,28 @@
         
     }];
     cartItem.style = UITableViewCellStyleValue1;
-    cartItem.detailLabelText = @"陈敏";
+    cartItem.detailLabelText = _groupDetailInfo.remark;// @"陈敏";
     cartItem.titleDetailTextColor = WLColoerRGB(102.f);
     cartItem.selectionStyle = UITableViewCellSelectionStyleNone;
     [sectio2 addItem:cartItem];
+    self.cartItem = cartItem;
     
     RETableViewSection *section3 = [RETableViewSection section];
     section3.headerHeight = 5.f;
     section3.footerHeight = 0.f;
     [self.manager addSection:section3];
     
-    REBoolItem *notDisturbItem = [REBoolItem itemWithTitle:@"消息免打扰" value:YES switchValueChangeHandler:^(REBoolItem *item) {
-        
+    REBoolItem *notDisturbItem = [REBoolItem itemWithTitle:@"消息免打扰" value:_groupDetailInfo.not_disturb.boolValue switchValueChangeHandler:^(REBoolItem *item) {
+        [weakSelf changeMsgDisturb:item];
     }];
     [section3 addItem:notDisturbItem];
-    REBoolItem *topItem = [REBoolItem itemWithTitle:@"回话置顶" value:YES switchValueChangeHandler:^(REBoolItem *item) {
-        
+    self.notDisturbItem = notDisturbItem;
+    
+    REBoolItem *topItem = [REBoolItem itemWithTitle:@"回话置顶" value:_groupDetailInfo.is_top.boolValue switchValueChangeHandler:^(REBoolItem *item) {
+        [weakSelf changeChatTop:item];
     }];
     [section3 addItem:topItem];
+    self.topItem = topItem;
     
     RETableViewSection *section4 = [RETableViewSection section];
     section4.headerHeight = 5.f;
@@ -208,6 +258,37 @@
     [section4 addItem:clearChatHistoryItem];
 }
 
+// 修改消息是否免打扰
+- (void)changeMsgDisturb:(REBoolItem *)item {
+    WEAKSELF
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    if (item.value) {
+        // 关闭打扰
+        [ImGroupModelClient cancelImGroupNotDisturbWithParams:@{@"id":@(_groupDetailInfo.groupId.integerValue)} Success:^(id resultInfo) {
+            [WLHUDView hiddenHud];
+            weakSelf.groupDetailInfo.not_disturb = @(!item.value).stringValue;
+            item.value = !item.value;
+        } Failed:^(NSError *error) {
+            [WLHUDView hiddenHud];
+        }];
+    } else {
+        // 开启免打扰
+        [ImGroupModelClient setImGroupNotDisturbWithParams:@{@"id":@(_groupDetailInfo.groupId.integerValue)} Success:^(id resultInfo) {
+            [WLHUDView hiddenHud];
+            weakSelf.groupDetailInfo.not_disturb = @(!item.value).stringValue;
+            item.value = !item.value;
+        } Failed:^(NSError *error) {
+            [WLHUDView hiddenHud];
+        }];
+    }
+    [item reloadRowWithAnimation:UITableViewRowAnimationNone];
+}
+
+// 修改聊天置顶状态
+- (void)changeChatTop:(REBoolItem *)item {
+    
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -221,19 +302,25 @@
 
 //每个section的item个数
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return _userArray.count + 1;
+    return _groupDetailInfo.member_list.count + 1;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     UserItemCollectionViewCell *cell = (UserItemCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"user_item_cell" forIndexPath:indexPath];
     
-    if (indexPath.row == _userArray.count) {
+    if (indexPath.row == _groupDetailInfo.member_list.count) {
         cell.logoImageView.image = [UIImage imageNamed:@"chatDetail_icon_add"];
     } else {
+        IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
         cell.logoImageView.image = [UIImage imageNamed:@"redP_head_img"];
-        cell.titleLabel.text = _userArray[indexPath.row];
+        cell.titleLabel.text = model.nickname;// _userArray[indexPath.row];
+        [cell.logoImageView setImageWithURL:[NSURL URLWithString:model.avatar]
+                                placeholder:nil
+                                    options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur|YYWebImageOptionUseNSURLCache
+                                 completion:nil];
     }
+    
     return cell;
 }
 
@@ -289,17 +376,22 @@
 //    NSString *msg = cell.botlabel.text;
 //    NSLog(@"%@",msg);
     DLog(@"didSelectItemAtIndexPath：");
+    IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
+    UserInfoViewController *vc = [[UserInfoViewController alloc] init];
+    vc.userId = model.uid;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - Private
 // 提醒退出登录
 - (void)quitBtn:(UIButton *)sender {
+    WEAKSELF
     QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
         DLog(@"取消");
     }];
     QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"退出群聊" style:QMUIAlertActionStyleDestructive handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
-        DLog(@"退出登录");
-        
+        DLog(@"退出群聊");
+        [weakSelf quit];
     }];
     QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:nil message:@"确认退出群聊？" preferredStyle:QMUIAlertControllerStyleActionSheet];
     [alertController addAction:action1];
@@ -314,6 +406,14 @@
     //    alertController.sheetHeaderBackgroundColor = nil;
     //    alertController.sheetButtonBackgroundColor = nil;
     [alertController showWithAnimated:YES];
+}
+
+- (void)quit {
+    [ImGroupModelClient setImGroupQuitWithParams:@{@"id" : @(_groupDetailInfo.groupId.integerValue)} Success:^(id resultInfo) {
+        
+    } Failed:^(NSError *error) {
+        
+    }];
 }
 
 // 查看更多用户

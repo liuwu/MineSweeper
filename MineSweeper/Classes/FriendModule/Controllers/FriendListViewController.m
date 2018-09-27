@@ -24,13 +24,22 @@
 #import "FriendModelClient.h"
 #import "IFriendModel.h"
 
+#import "ImGroupModelClient.h"
+
 @interface FriendListViewController ()<DSectionIndexViewDelegate,DSectionIndexViewDataSource, UISearchBarDelegate>
 
+@property (nonatomic, strong) QMUISearchBar *searchBar;
 @property (nonatomic, strong) DSectionIndexView *sectionIndexView;
 @property (nonatomic, strong) NSArray<NSString *> *iconArray;
 @property (nonatomic, strong) NSArray<NSString *> *iconTitleArray;
 
 @property (nonatomic, strong) NSArray *datasouce;
+@property (nonatomic, strong) NSArray *allKeys;
+@property (nonatomic, strong) NSMutableDictionary *friendDict;
+
+@property (nonatomic, strong) NSMutableArray *filterArray;//搜索出来的数据数组
+@property (nonatomic, strong) NSArray *filterAllKeys;
+@property (nonatomic, strong) NSMutableDictionary *filterFriendDict;
 
 
 @end
@@ -65,7 +74,13 @@
     [super initSubviews];
     // 显示自带的searchbar
 //    self.shouldShowSearchBar = YES;
+    [self addViews];
+    [self loadData];
     
+    [kNSNotification addObserver:self selector:@selector(loadData) name:@"kRefreshFriendList" object:nil];
+}
+
+- (void)addViews {
     self.iconArray = @[@"game_friend_icon", @"game_group_icon"];
     self.iconTitleArray = @[@"新朋友", @"群聊"];
     
@@ -78,8 +93,8 @@
         // 更改索引的文字颜色
         self.tableView.sectionIndexColor = UIColorMake(133,144,166);
     }
-//    self.tableView.sectionIndexTrackingBackgroundColor = [UIColor grayColor];//设置选中时，索引背景颜色
-//    self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];//设置默认时，索引的背景颜色
+    //    self.tableView.sectionIndexTrackingBackgroundColor = [UIColor grayColor];//设置选中时，索引背景颜色
+    //    self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];//设置默认时，索引的背景颜色
     
     //下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
@@ -94,7 +109,8 @@
     
     QMUISearchBar *searchBar = [[QMUISearchBar alloc] qmui_initWithSize:CGSizeMake(DEVICE_WIDTH, 44.f)];
     searchBar.delegate = self;
-//    searchBar.showsCancelButton = YES;
+    self.searchBar = searchBar;
+    //    searchBar.showsCancelButton = YES;
     self.tableView.tableHeaderView = searchBar;
     
     // 索引控件
@@ -114,8 +130,6 @@
     self.sectionIndexView = sectionIndexView;
     
     [self.sectionIndexView reloadItemViews];
-    
-    [self loadData];
 }
 
 - (void)viewDidLoad {
@@ -129,33 +143,49 @@
 }
 
 - (void)loadData {
+    [self hideEmptyView];
     WEAKSELF
     [FriendModelClient getImFriendListWithParams:nil Success:^(id resultInfo) {
         [weakSelf.tableView.mj_header endRefreshing];
         [weakSelf.tableView.mj_footer endRefreshing];
         weakSelf.datasouce = [NSArray modelArrayWithClass:[IFriendModel class] json:resultInfo];
-        [weakSelf.tableView reloadData];
+        if (weakSelf.datasouce.count == 0) {
+            [weakSelf showEmptyViewWithText:@"暂无数据" detailText:@"" buttonTitle:nil buttonAction:NULL];
+        }
+        [weakSelf makeUserArrayDic];
     } Failed:^(NSError *error) {
         [weakSelf.tableView.mj_header endRefreshing];
         [weakSelf.tableView.mj_footer endRefreshing];
     }];
 }
 
-
-#pragma make - UISearchBar Delegate
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
-    searchBar.showsCancelButton = YES;
-}
-
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-    [[self.view wl_findFirstResponder] resignFirstResponder];
-    searchBar.showsCancelButton = NO;
-}
-
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    [[self.view wl_findFirstResponder] resignFirstResponder];
-    searchBar.showsCancelButton = NO;
-    
+- (void)makeUserArrayDic {
+//    self.datasouce = [self.datasouce sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+//        return [[obj1 firstPinyin] localizedCompare:[obj2 firstPinyin]];
+//    }];
+    NSMutableDictionary *friendDict = [NSMutableDictionary dictionary];
+    NSMutableArray *array;
+    for (IFriendModel *model in _datasouce) {
+        BOOL hasKey = [friendDict bk_any:^BOOL(id key, id obj) {
+            return [key isEqualToString:model.firstPinyin];
+        }];
+        if (!hasKey) {
+            array = [NSMutableArray array];
+            [array addObject:model];
+            [friendDict setObject:array forKey:model.firstPinyin];
+        } else {
+            array = [friendDict objectForKey:model.firstPinyin];
+            [array addObject:model];
+            [friendDict setObject:array forKey:model.firstPinyin];
+        }
+    }
+    self.allKeys = [[friendDict allKeys] sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        return [obj1 localizedCompare:obj2];
+    }];
+    self.friendDict = friendDict;
+    [self.tableView reloadData];
+    [self.sectionIndexView reloadItemViews];
+//    DLog(@"----- >%@", describe(friendDict));
 }
 
 #pragma make - UIScrollView Delegate
@@ -174,12 +204,44 @@
 
 #pragma mark DSectionIndexViewDataSource && delegate method
 - (NSInteger)numberOfItemViewForSectionIndexView:(DSectionIndexView *)sectionIndexView {
-    return 18;
+    switch (_frindListType) {
+        case FriendListTypeForGroupChat:
+        case FriendListTypeForTransfer:
+            if (self.searchBar.text.length) {
+                return _filterAllKeys.count;
+            } else {
+                return _allKeys.count;
+            }
+            break;
+        default:
+            if (self.searchBar.text.length) {
+                return _filterAllKeys.count + 1;
+            } else {
+                return _allKeys.count + 1;
+            }
+            break;
+    }
 }
 
 - (DSectionIndexItemView *)sectionIndexView:(DSectionIndexView *)sectionIndexView itemViewForSection:(NSInteger)section {
     DSectionIndexItemView *itemView = [[DSectionIndexItemView alloc] init];
-    itemView.titleLabel.text = @"A";
+    switch (_frindListType) {
+        case FriendListTypeForGroupChat:
+        case FriendListTypeForTransfer:
+            if (self.searchBar.text.length) {
+                itemView.titleLabel.text = _filterAllKeys[section];
+            } else {
+                itemView.titleLabel.text = _allKeys[section];
+            }
+            break;
+        default:
+            if (self.searchBar.text.length) {
+                itemView.titleLabel.text = section == 0 ? @"#" : _filterAllKeys[section - 1];
+            } else {
+                itemView.titleLabel.text = section == 0 ? @"#" : _allKeys[section - 1];
+            }
+            break;
+    }
     itemView.titleLabel.font = UIFontMake(10.f);
     itemView.titleLabel.textColor = WLColoerRGB(51.f);///UIColorMake(133,144,166);
     itemView.titleLabel.highlightedTextColor = UIColorMake(254,72,30);
@@ -213,7 +275,23 @@
 
 - (NSString *)sectionIndexView:(DSectionIndexView *)sectionIndexView
                titleForSection:(NSInteger)section {
-    return @"AA";
+    switch (_frindListType) {
+        case FriendListTypeForGroupChat:
+        case FriendListTypeForTransfer:
+            if (self.searchBar.text.length) {
+                return _filterAllKeys[section];
+            } else {
+                return _allKeys[section];
+            }
+            break;
+        default:
+            if (self.searchBar.text.length) {
+                return section == 0 ? @"#" : _filterAllKeys[section - 1];
+            } else {
+                return section == 0 ? @"#" : _allKeys[section - 1];
+            }
+            break;
+    }
 }
 
 - (void)sectionIndexView:(DSectionIndexView *)sectionIndexView didSelectSection:(NSInteger)section {
@@ -242,25 +320,84 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     switch (_frindListType) {
+        case FriendListTypeForGroupChat:
         case FriendListTypeForTransfer:
-            return 1.f;
+            if (self.searchBar.text.length) {
+                return _filterAllKeys.count;
+            } else {
+                return _allKeys.count;
+            }
             break;
         default:
-            return 2.f;
+            if (self.searchBar.text.length) {
+                return _filterAllKeys.count + 1;
+            } else {
+                return _allKeys.count + 1;
+            }
             break;
     }
 }
 
+- (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, DEVICE_WIDTH, 28.f)];
+    headerView.backgroundColor = [UIColor clearColor];
+    
+    QMUILabel *titleLabel = [[QMUILabel alloc] init];
+    
+    titleLabel.font = UIFontMake(12);
+    titleLabel.textColor = UIColorMake(133,144,166);
+    [headerView addSubview:titleLabel];
+    switch (_frindListType) {
+        case FriendListTypeForGroupChat:
+        case FriendListTypeForTransfer:
+            if (self.searchBar.text.length) {
+                titleLabel.text = _filterAllKeys[section];
+            } else {
+                titleLabel.text = _allKeys[section];
+            }
+            break;
+        default:
+            if (self.searchBar.text.length) {
+                if (section > 0) {
+                    titleLabel.text = _filterAllKeys[section - 1];
+                }
+            } else {
+                if (section > 0) {
+                    titleLabel.text = _allKeys[section - 1];
+                }
+            }
+            break;
+    }
+    [titleLabel sizeToFit];
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(10.f);
+        make.centerY.mas_equalTo(headerView);
+    }];
+    return headerView;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     switch (_frindListType) {
+        case FriendListTypeForGroupChat:
         case FriendListTypeForTransfer:
-            return _datasouce.count;
+            if (self.searchBar.text.length) {
+                return [[_filterFriendDict objectForKey:_filterAllKeys[section]] count];
+            } else {
+                return [[_friendDict objectForKey:_allKeys[section]] count];
+            }
             break;
         default: {
-            if (section == 0) {
-                return _iconArray.count;
+            if (self.searchBar.text.length) {
+                if (section == 0) {
+                    return _iconArray.count;
+                }
+                return [[_filterFriendDict objectForKey:_filterAllKeys[section - 1]] count];
+            } else {
+                if (section == 0) {
+                    return _iconArray.count;
+                }
+                return [[_friendDict objectForKey:_allKeys[section - 1]] count];// _datasouce.count;
             }
-            return _datasouce.count;
         }
             break;
     }
@@ -275,11 +412,17 @@
     cell.showBottomLine = YES;
     
     switch (_frindListType) {
+        case FriendListTypeForGroupChat:
         case FriendListTypeForTransfer:
             {
                 cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
-                IFriendModel *model = _datasouce[indexPath.row];
-                cell.textLabel.text = model.nickname;// @"小尹子";
+                if (self.searchBar.text.length) {
+                    IFriendModel *model = [[_filterFriendDict objectForKey:_filterAllKeys[indexPath.section]] objectAtIndex:indexPath.row];
+                    cell.textLabel.text = model.nickname;// @"小尹子";
+                } else {
+                    IFriendModel *model = [[_friendDict objectForKey:_allKeys[indexPath.section]] objectAtIndex:indexPath.row];
+                    cell.textLabel.text = model.nickname;// @"小尹子";
+                }
             }
             break;
         default:
@@ -290,8 +433,13 @@
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             } else {
                 cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
-                IFriendModel *model = _datasouce[indexPath.row];
-                cell.textLabel.text = model.nickname;// @"小尹子";
+                if (self.searchBar.text.length) {
+                    IFriendModel *model = [[_filterFriendDict objectForKey:_filterAllKeys[indexPath.section - 1]] objectAtIndex:indexPath.row];
+                    cell.textLabel.text = model.nickname;// @"小尹子";
+                } else {
+                    IFriendModel *model = [[_friendDict objectForKey:_allKeys[indexPath.section - 1]] objectAtIndex:indexPath.row];
+                    cell.textLabel.text = model.nickname;// @"小尹子";
+                }
             }
         }
             break;
@@ -310,15 +458,44 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.searchBar resignFirstResponder];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     DLog(@"didSelectRowAtIndexPath------");
     [[self.view wl_findFirstResponder] resignFirstResponder];
     
     switch (_frindListType) {
+        case FriendListTypeForGroupChat:
+        {
+            //转账
+            IFriendModel *model = nil;
+            if (self.searchBar.text.length) {
+                model = [[_filterFriendDict objectForKey:_filterAllKeys[indexPath.section]] objectAtIndex:indexPath.row];
+            } else {
+                model = [[_friendDict objectForKey:_allKeys[indexPath.section]] objectAtIndex:indexPath.row];
+            }
+            if (!model) {
+                return;
+            }
+            NSDictionary *params = @{
+                                     @"title" : @"聊天交流群",
+                                     @"fuid" : @[model.uid, configTool.loginUser.uid]
+                                     };
+            [ImGroupModelClient setImGroupAddWithParams:params Success:^(id resultInfo) {
+                
+            } Failed:^(NSError *error) {
+                
+            }];
+        }
+            break;
         case FriendListTypeForTransfer:
         {
             //转账
-            IFriendModel *model = _datasouce[indexPath.row];
+            IFriendModel *model = nil;
+            if (self.searchBar.text.length) {
+                 model = [[_filterFriendDict objectForKey:_filterAllKeys[indexPath.section]] objectAtIndex:indexPath.row];
+            } else {
+                model = [[_friendDict objectForKey:_allKeys[indexPath.section]] objectAtIndex:indexPath.row];
+            }
             if (!model) {
                 return;
             }
@@ -341,9 +518,13 @@
             }
             
             UserInfoViewController *userInfoVc = [[UserInfoViewController alloc] init];
-//            userInfoVc.friendModel = _datasouce[indexPath.row];
-            IFriendModel *model = _datasouce[indexPath.row];
-            userInfoVc.userId = model.uid.stringValue;
+            IFriendModel *model = nil;
+            if (self.searchBar.text.length) {
+                model = [[_filterFriendDict objectForKey:_filterAllKeys[indexPath.section - 1]] objectAtIndex:indexPath.row];
+            } else {
+                model = [[_friendDict objectForKey:_allKeys[indexPath.section - 1]] objectAtIndex:indexPath.row];
+            }
+            userInfoVc.userId = model.uid;
             [self.navigationController pushViewController:userInfoVc animated:YES];
         }
             break;
@@ -353,10 +534,18 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     //    return kNoteHeight + kBannerHeight;
-    if (section == 0) {
-        return 10.f;
+    switch (_frindListType) {
+        case FriendListTypeForTransfer:
+            return 28.f;
+            break;
+        default: {
+            if (section == 0) {
+                return 10.f;
+            }
+            return 28.f;
+        }
+            break;
     }
-    return 28.f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
@@ -365,6 +554,65 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 50.f;
+}
+
+#pragma mark - 搜索本地好友
+///现在来实现当搜索文本改变时的回调函数。这个方法使用谓词进行比较，并讲匹配结果赋给searchResults数组:
+- (void)filterContentForSearchText:(NSString*)searchText {
+    NSPredicate *pre = [NSPredicate predicateWithFormat:@"nickname contains[cd] %@",searchText];
+    NSMutableArray *filterArray = [NSMutableArray array];
+    if (_datasouce.count > 0) {
+        [filterArray addObjectsFromArray:[self.datasouce filteredArrayUsingPredicate:pre]];
+    }
+    NSMutableDictionary *friendDict = [NSMutableDictionary dictionary];
+    NSMutableArray *array;
+    for (IFriendModel *model in filterArray) {
+        BOOL hasKey = [friendDict bk_any:^BOOL(id key, id obj) {
+            return [key isEqualToString:model.firstPinyin];
+        }];
+        if (!hasKey) {
+            array = [NSMutableArray array];
+            [array addObject:model];
+            [friendDict setObject:array forKey:model.firstPinyin];
+        } else {
+            array = [friendDict objectForKey:model.firstPinyin];
+            [array addObject:model];
+            [friendDict setObject:array forKey:model.firstPinyin];
+        }
+    }
+    self.filterAllKeys = [[friendDict allKeys] sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        return [obj1 localizedCompare:obj2];
+    }];
+    self.filterFriendDict = friendDict;
+    [self.tableView reloadData];
+    [self.sectionIndexView reloadItemViews];
+}
+
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
+    searchBar.showsCancelButton = YES;
+    return YES;
+}
+- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
+    searchBar.showsCancelButton = NO;
+    return YES;
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    self.filterAllKeys = [NSMutableArray array];
+    [self.filterFriendDict removeAllObjects];
+    [self filterContentForSearchText:searchBar.text];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    [searchBar resignFirstResponder];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    [searchBar resignFirstResponder];
+    [self.filterArray removeAllObjects];
+    [searchBar setText:nil];
+//    [self updataFootView];
+    [self.tableView reloadData];
 }
 
 #pragma mark - Private

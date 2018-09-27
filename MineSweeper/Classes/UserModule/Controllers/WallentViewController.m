@@ -157,6 +157,7 @@
 }
 
 - (void)loadData {
+    [self hideEmptyView];
     NSDictionary *params = @{@"type" : [NSNumber numberWithInteger:_selectType],
                              @"p": [NSNumber numberWithInteger:_page]
                              };
@@ -167,6 +168,9 @@
         IWallentModel *model = [IWallentModel modelWithDictionary:resultInfo];
         weakSelf.wallentModel = model;
         [weakSelf.datasource addObjectsFromArray:model.list];
+        if (weakSelf.datasource.count == 0) {
+            [weakSelf showEmptyViewWithText:@"暂无数据" detailText:@"" buttonTitle:nil buttonAction:NULL];
+        }
         [weakSelf reloadUI];
     } Failed:^(NSError *error) {
         [weakSelf.tableView.mj_header endRefreshing];

@@ -78,10 +78,13 @@
     cell.showBottomLine = YES;
     IFriendRequestModel *model = _datasource[indexPath.row];
 //    cell.imageView.image = [UIImage imageNamed:@"game_friend_icon"];
+    cell.imageView.size = CGSizeMake(40.f, 40.f);
     [cell.imageView setImageWithURL:[NSURL URLWithString:model.avatar]
                         placeholder:[UIImage imageNamed:@"game_friend_icon"]
-                            options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur|YYWebImageOptionIgnorePlaceHolder completion:nil];
-    [cell.imageView wl_setCornerRadius:cell.imageView.width / 2.f];
+                            options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur|YYWebImageOptionIgnorePlaceHolder completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                                cell.imageView.image = [image qmui_imageWithClippedCornerRadius:20.f];
+                            }];
+    [cell.imageView wl_setCornerRadius:20.f];
     cell.textLabel.text = model.fnickname;// @"小尹子";
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
@@ -145,10 +148,10 @@
     }
     
     // reset
-    cell.imageEdgeInsets = UIEdgeInsetsZero;
-    cell.textLabelEdgeInsets = UIEdgeInsetsZero;
-    cell.accessoryEdgeInsets = UIEdgeInsetsZero;
-    cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
+//    cell.imageEdgeInsets = UIEdgeInsetsZero;
+//    cell.textLabelEdgeInsets = UIEdgeInsetsZero;
+//    cell.accessoryEdgeInsets = UIEdgeInsetsZero;
+//    cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
     
     cell.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
     cell.accessoryEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -5);
@@ -188,6 +191,7 @@
         model.status = @"1";
         model.status_title = @"已同意";
         [dataArray replaceObjectAtIndex:sender.tag withObject:model];
+        [kNSNotification postNotificationName:@"kRefreshFriendList" object:nil];
         weakSelf.datasource = dataArray;
         [weakSelf.tableView reloadData];
     } Failed:^(NSError *error) {

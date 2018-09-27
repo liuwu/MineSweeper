@@ -38,7 +38,7 @@
     [super layoutSubviews];
     _lineView.hidden = !_showBottomLine;
     _lineView.frame = CGRectMake(0.f, self.contentView.size.height - .6f, DEVICE_WIDTH, .6f);
-    
+//    self.imageView.size = CGSizeMake(40.f, 40.f);
 //    self.imageView.left = 10.f;
 //    self.textLabel.left = self.imageView.right + 10.f;
 }

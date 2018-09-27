@@ -81,11 +81,11 @@ static NSString *paylistCellid = @"paylistCellid";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.chatSessionInputBarControl.pluginBoardView removeItemWithTag:104];
+//    [self.chatSessionInputBarControl.pluginBoardView removeItemWithTag:104];
     
     //* 注册消息类型，如果使用IMKit，使用此方法，不再使用RongIMLib的同名方法。如果对消息类型进行扩展，可以忽略此方法。
-    [self registerClass:[ChatRedPacketCell class] forMessageClass:[RCRedPacketMessage class]];
-//    [self registerClass:[ChatRedPacketCell class] forCellWithReuseIdentifier:redPacketCellid];
+//    [self registerClass:[ChatRedPacketCell class] forMessageClass:[RCRedPacketMessage class]];
+    [self registerClass:[ChatRedPacketCell class] forCellWithReuseIdentifier:redPacketCellid];
     
 //    [self registerClass:[WLChatCustomCardCell class] forCellWithReuseIdentifier:customCardCellid];
 //    [self registerClass:[WLChatNewCardCell class] forCellWithReuseIdentifier:newcardCellid];
@@ -106,10 +106,14 @@ static NSString *paylistCellid = @"paylistCellid";
  */
 //- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
 //    NSString *viewClass = [NSString stringWithFormat:@"%@",touch.view.class];
+//    DLog(@"shouldReceiveTouch : %@", viewClass);
+//    if ([viewClass isEqualToString:@"UIView"]) {
+//        return NO;
+//    }
 ////    if ([viewClass isEqualToString:@"UITableViewCellContentView"]||[viewClass isEqualToString:@"MLEmojiLabel"]) {
 ////        return NO;
 ////    }
-//    return NO;
+//    return YES;
 //}
 
 /*!
@@ -125,17 +129,17 @@ static NSString *paylistCellid = @"paylistCellid";
  其中，extraHeight是Cell根据界面上下文，需要额外显示的高度（比如时间、用户名的高度等）。
  一般而言，Cell的高度应该是内容显示的高度再加上extraHeight的高度。
  */
-//+ (CGSize)sizeForMessageModel:(RCMessageModel *)model
-//      withCollectionViewWidth:(CGFloat)collectionViewWidth
-//         referenceExtraHeight:(CGFloat)extraHeight {
++ (CGSize)sizeForMessageModel:(RCMessageModel *)model
+      withCollectionViewWidth:(CGFloat)collectionViewWidth
+         referenceExtraHeight:(CGFloat)extraHeight {
 //    RCMessageModel *model = self.conversationDataRepository[indexPath.row];
-//    RCMessageContent *msgContent = model.content;
-//    if ([msgContent isMemberOfClass:[RCRedPacketMessage class]]) {
-//        // 红包cell
-//        return [ChatRedPacketCell cellHigetWithModel:model];// CGSizeMake(200.f, 65.f);
-//    }
-//    return CGSizeZero;
-//}
+    RCMessageContent *msgContent = model.content;
+    if ([msgContent isMemberOfClass:[RCRedPacketMessage class]]) {
+        // 红包cell
+        return [ChatRedPacketCell cellHigetWithModel:model];// CGSizeMake(200.f, 65.f);
+    }
+    return CGSizeZero;
+}
 
 /**
  *  重写方法实现自定义消息的显示的高度
@@ -168,7 +172,8 @@ static NSString *paylistCellid = @"paylistCellid";
 //    }
     if ([msgContent isMemberOfClass:[RCRedPacketMessage class]]) {
         // 红包cell
-        return [ChatRedPacketCell cellHigetWithModel:model];// CGSizeMake(200.f, 65.f);
+        return [ChatRedPacketCell sizeForMessageModel:model withCollectionViewWidth:65.f referenceExtraHeight:20.f];
+//        return [ChatRedPacketCell cellHigetWithModel:model];// CGSizeMake(200.f, 65.f);
     }
     return CGSizeZero;
 }
@@ -191,11 +196,13 @@ static NSString *paylistCellid = @"paylistCellid";
         cell.cellDelegate = self;
 //        cell.isDisplayMessageTime = YES;
 //        cell.isDisplayMessageTime = YES;
-        if (msgContent.senderUserInfo.userId.intValue == configTool.loginUser.uid.integerValue) {
+        if ([(RCRedPacketMessage *)msgContent uid].integerValue == configTool.loginUser.uid.integerValue) {
             cell.messageDirection = MessageDirection_SEND;
         } else {
             cell.messageDirection = MessageDirection_RECEIVE;
         }
+        [cell setDataModel:model];
+        [cell wl_setDebug:YES];
         return cell;
     }
 //    if ([msgContent isMemberOfClass:[CustomCardMessage class]]) {
@@ -242,6 +249,10 @@ static NSString *paylistCellid = @"paylistCellid";
     DLog(@"红包 chatRedPacketCell");
 }
 
+- (void)chatRedPacketCell:(ChatRedPacketCell *)redPacketCell didLogoImageTap:(RCRedPacketMessage *)model {
+    DLog(@"红包 头像 chatRedPacketCell");
+}
+
 /**
  *  点击头像事件
  *
@@ -264,16 +275,16 @@ static NSString *paylistCellid = @"paylistCellid";
  
  @param model 消息Cell的数据模型
  */
-//- (void)didTapMessageCell:(RCMessageModel *)model {
-//    if ([model isMemberOfClass:[RCRedPacketMessage class]]) {
-//         DLog(@"红包 didTapMessageCell");
-//    }
-//    if ([model isMemberOfClass:[RCLocationMessage class]]) {
-//        DLog(@"位置 RCLocationMessage");
+- (void)didTapMessageCell:(RCMessageModel *)model {
+    if ([model isMemberOfClass:[RCRedPacketMessage class]]) {
+         DLog(@"红包 didTapMessageCell");
+    }
+    if ([model isMemberOfClass:[RCLocationMessage class]]) {
+        DLog(@"位置 RCLocationMessage");
 //        [self presentLocationViewController:model];
-//    }
-//    DLog(@"didTapMessageCell");
-//}
+    }
+    DLog(@"didTapMessageCell");
+}
 
 - (void)onBeginRecordEvent {
     [super onBeginRecordEvent];

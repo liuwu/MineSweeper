@@ -18,11 +18,15 @@
 #import "ChatRedPacketCell.h"
 
 #import "RCRedPacketMessage.h"
+#import "ImGroupModelClient.h"
+#import "IGroupDetailInfo.h"
 
 @interface ChatViewController ()
 
 @property (nonatomic , strong) QMUIModalPresentationViewController *payModalViewController;
 @property (nonatomic , strong) QMUIModalPresentationViewController *packetModalViewController;
+
+@property (nonatomic, strong) IGroupDetailInfo *groupDetailInfo;
 
 @end
 
@@ -71,6 +75,25 @@
         [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateHighlighted];
         [self.chatSessionInputBarControl.additionalButton addTarget:self action:@selector(redPacketClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
+    [self loadData];
+}
+
+- (void)loadData {
+    [self loadGroupInfo];
+}
+
+- (void)loadGroupInfo {
+    if (self.conversationType == ConversationType_GROUP) {
+//        [WLHUDView showHUDWithStr:@"" dim:YES];
+        WEAKSELF
+        [ImGroupModelClient getImGroupInfoWithParams:@{@"id" : [NSNumber numberWithInteger:self.targetId.integerValue]}
+                                             Success:^(id resultInfo) {
+//                                                 [WLHUDView hiddenHud];
+                                                 weakSelf.groupDetailInfo = [IGroupDetailInfo modelWithDictionary:resultInfo];
+                                             } Failed:^(NSError *error) {
+//                                                 [WLHUDView hiddenHud];
+                                             }];
+    }
 }
 
 //- (void)inputTextView:(UITextView *)inputTextView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
@@ -93,10 +116,10 @@
  @param url   点击的URL
  @param model 消息Cell的数据模型
  */
-- (void)didTapUrlInMessageCell:(NSString *)url
-                         model:(RCMessageModel *)model {
-    DLog(@"didTapUrlInMessageCell-----------");
-}
+//- (void)didTapUrlInMessageCell:(NSString *)url
+//                         model:(RCMessageModel *)model {
+//    DLog(@"didTapUrlInMessageCell-----------");
+//}
 
 /*!
  点击Cell中电话号码的回调
@@ -104,10 +127,10 @@
  @param phoneNumber 点击的电话号码
  @param model       消息Cell的数据模型
  */
-- (void)didTapPhoneNumberInMessageCell:(NSString *)phoneNumber
-                                 model:(RCMessageModel *)model {
-    DLog(@"didTapPhoneNumberInMessageCell-----------");
-}
+//- (void)didTapPhoneNumberInMessageCell:(NSString *)phoneNumber
+//                                 model:(RCMessageModel *)model {
+//    DLog(@"didTapPhoneNumberInMessageCell-----------");
+//}
 
 #pragma mark 点击头像
 - (void)didTapCellPortrait:(NSString *)userId {
@@ -117,17 +140,35 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 #pragma mark 点击头像
-- (void)didLongPressCellPortrait:(NSString *)userId {
-    DLog(@"didLongPressCellPortrait-----------");
-}
+//- (void)didLongPressCellPortrait:(NSString *)userId {
+//    DLog(@"didLongPressCellPortrait-----------");
+//}
 
 #pragma mark - private
+- (void)toGroupDetailInfo {
+    ChatGroupDetailViewController *vc = [[ChatGroupDetailViewController alloc] init];
+    vc.groupId = self.targetId;
+    vc.groupDetailInfo = self.groupDetailInfo;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 // 右侧按钮点击
 - (void)rightBtnItemClicked {
     if (self.conversationType == ConversationType_GROUP) {
-        ChatGroupDetailViewController *vc = [[ChatGroupDetailViewController alloc] init];
-        vc.groupId = self.targetId;
-        [self.navigationController pushViewController:vc animated:YES];
+        if (_groupDetailInfo) {
+            [self toGroupDetailInfo];
+        } else {
+            WEAKSELF
+            [WLHUDView showHUDWithStr:@"" dim:YES];
+            [ImGroupModelClient getImGroupInfoWithParams:@{@"id" : [NSNumber numberWithInteger:self.targetId.integerValue]}
+                                                 Success:^(id resultInfo) {
+                                                    [WLHUDView hiddenHud];
+                                                     weakSelf.groupDetailInfo = [IGroupDetailInfo modelWithDictionary:resultInfo];
+                                                     [weakSelf toGroupDetailInfo];
+                                                 } Failed:^(NSError *error) {
+                                                      [WLHUDView hiddenHud];
+                                                 }];
+        }
     }
     if (self.conversationType == ConversationType_PRIVATE) {
         ChatInfoViewController *vc = [[ChatInfoViewController alloc] init];
@@ -139,7 +180,7 @@
 // 发红包
 - (void)redPacketClicked:(UIButton *)sender {
     DLog(@"redPacketClicked-----------");
-    [self.chatSessionInputBarControl resetToDefaultStatus];
+//    [self.chatSessionInputBarControl resetToDefaultStatus];
     
     RCRedPacketMessage *msg = [[RCRedPacketMessage alloc] init];
     RCUserInfo *senderUserInfo = [[RCUserInfo alloc] initWithUserId:@"152"// configTool.loginUser.uid

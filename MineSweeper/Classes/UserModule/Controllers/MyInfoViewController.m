@@ -44,6 +44,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nickNameChanged) name:@"kNickNameChanged" object:nil];
      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(realNameChanged) name:@"kRealNameChanged" object:nil];
+    
+    [self loadCityData];
 }
 
 - (void)viewDidLoad {
@@ -147,48 +149,77 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-// 选中城市信息
-- (void)selectAddress:(RETableViewItem *)item {
-    [UserModelClient getSystemCityListWithParams:nil Success:^(id resultInfo) {
-        NSArray *allCitys = [NSArray modelArrayWithClass:[ICityModel class] json:resultInfo];
-        [self printAllCity:allCitys];
-    } Failed:^(NSError *error) {
-        
-    }];
-    
-    //初始化mainPickView
-    //直接调用
-    [[[YJLocationPicker alloc] initWithSlectedLocation:^(NSArray *locationArray) {
-        
-        //array里面放的是省市区三级
-        NSLog(@"------%@", locationArray);
-        //拼接后给button赋值
-//        [sender setTitle:[locationArray componentsJoinedByString:@""] forState:UIControlStateNormal];
-        
-    }] show];
+// 获取城市数据
+- (void)loadCityData {
+    if (!configTool.allCityDic || !configTool.provinceArray) {
+        [UserModelClient getSystemCityListWithParams:nil Success:^(id resultInfo) {
+            NSArray *allCitys = [NSArray modelArrayWithClass:[ICityModel class] json:resultInfo];
+            NSMutableArray *provinceArray = [NSMutableArray array];
+            for (ICityModel *cityModel in allCitys) {
+                if (cityModel.pid.integerValue == 0) {
+                    [provinceArray addObject:cityModel];
+                }
+            }
+            NSMutableDictionary *allCityDic = [NSMutableDictionary dictionary];
+            for (ICityModel *cityModel in provinceArray) {
+                NSArray *citys = [allCitys bk_select:^BOOL(id obj) {
+                    return ([[(ICityModel *)obj pid] integerValue] == cityModel.cid.integerValue);
+                }];
+                if (citys.count > 0) {
+                    [citys sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+                        return [obj1 cid] < [obj2 cid];
+                    }];
+                    [allCityDic setValue:citys forKey:cityModel.cid];
+                }
+            }
+            // 对省进行排序
+            [provinceArray sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+                return [obj1 cid] < [obj2 cid];
+            }];
+            configTool.provinceArray = provinceArray;
+            configTool.allCityDic = allCityDic;
+        } Failed:^(NSError *error) {
+            
+        }];
+    }
 }
 
-- (void)printAllCity:(NSArray *)allCitys {
-    
-//    NSMutableDictionary
-//    for (ICityModel *cityModel in allCitys) {
-//
-//    }
-    
+// 选中城市信息
+- (void)selectAddress:(RETableViewItem *)item {
+    //初始化mainPickView
+    //直接调用
+    if (configTool.allCityDic && configTool.provinceArray) {
+        WEAKSELF
+        [[[YJLocationPicker alloc] initWithProvince:configTool.provinceArray
+                                           cityDict:configTool.allCityDic
+                                    SlectedLocation:^(ICityModel *province, ICityModel *city) {
+                                        DLog(@" %@------%@", province.title, city.title);
+                                        [weakSelf changeAddress:item province:province city:city];
+                                    }]show];
+    }
 }
 
 // 修改地址
-- (void)changeAddress:(RETableViewItem *)item {
-    NSDictionary *params = @{@"province" : @1,
-                             @"city" : @3
+- (void)changeAddress:(RETableViewItem *)item province:(ICityModel *)province city:(ICityModel *)city {
+    if (!province || !city) {
+        return;
+    }
+    NSDictionary *params = @{
+                             @"nickname" : configTool.userInfoModel.nickname,
+                             @"realname" : configTool.userInfoModel.realname ? : @"",
+                             @"gender" : configTool.userInfoModel.gender ? : @"",
+                             @"province" : @(province.cid.integerValue),
+                             @"city" : @(city.cid.integerValue)
                              };
     [WLHUDView showHUDWithStr:@"" dim:YES];
     [UserModelClient changeUserInfoWithParams:params
                                       Success:^(id resultInfo) {
                                           [WLHUDView hiddenHud];
+                                          configTool.userInfoModel.address = [NSString stringWithFormat:@"%@%@", province.title, city.title];
 //                                          configTool.userInfoModel.gender = sex;
 //                                          item.detailLabelText = [configTool getLoginUserSexStr];
                                           // 重新加载数据
+                                          item.detailLabelText = configTool.userInfoModel.address;
                                           [item reloadRowWithAnimation:UITableViewRowAnimationNone];
                                       } Failed:^(NSError *error) {
                                           [WLHUDView hiddenHud];

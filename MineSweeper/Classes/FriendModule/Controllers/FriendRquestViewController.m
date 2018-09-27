@@ -92,8 +92,12 @@
 
 // 布局控制
 - (void)addConstrainsForSubviews {
+    CGFloat height = self.qmui_navigationBarMaxYInViewCoordinator;
+    if (height < 10) {
+        height = NavigationContentTop;
+    }
     [_textView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.view).mas_offset(self.qmui_navigationBarMaxYInViewCoordinator);
+        make.top.mas_equalTo(self.view.mas_top).mas_offset(height);
         make.centerX.mas_equalTo(self.view);
         make.width.mas_equalTo(DEVICE_WIDTH);
         make.height.mas_equalTo(206.f);
@@ -150,7 +154,7 @@
     [WLHUDView showHUDWithStr:@"发送中..." dim:YES];
     WEAKSELF
     [FriendModelClient sendImFriendRequestWithParams:params Success:^(id resultInfo) {
-        [WLHUDView showErrorHUD:@"已发送"];
+        [WLHUDView showSuccessHUD:@"已发送"];
         [weakSelf.navigationController popViewControllerAnimated:YES];
     } Failed:^(NSError *error) {
         [WLHUDView hiddenHud];

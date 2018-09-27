@@ -46,6 +46,7 @@
 }
 
 - (void)loadData {
+    [self hideEmptyView];
     WEAKSELF
     [UserModelClient getRecommoneListWithParams:nil Success:^(id resultInfo) {
         [weakSelf.tableView.mj_header endRefreshing];
@@ -62,6 +63,9 @@
     self.momeyLabel.text = model.total_money;
     self.todayMomeyLabel.text = model.today_total_money;
     self.datasource = model.list;
+    if (self.datasource.count == 0) {
+        [self showEmptyViewWithText:@"暂无数据" detailText:@"" buttonTitle:nil buttonAction:NULL];
+    }
     [self.tableView reloadData];
 }
 

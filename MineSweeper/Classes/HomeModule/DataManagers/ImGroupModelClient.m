@@ -59,7 +59,7 @@
 }
 
 // IM - 群组 - 群名称
-+ (WLRequest *)getImGroupTitleWithParams:(NSDictionary *)params
++ (WLRequest *)setImGroupTitleWithParams:(NSDictionary *)params
                                  Success:(SuccessBlock)success
                                   Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_title"
@@ -139,7 +139,7 @@
 }
 
 // IM - 群组 - 公告
-+ (WLRequest *)getImGroupNoticeWithParams:(NSDictionary *)params
++ (WLRequest *)setImGroupNoticeWithParams:(NSDictionary *)params
                                   Success:(SuccessBlock)success
                                    Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_notice"

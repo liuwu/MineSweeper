@@ -42,10 +42,14 @@ static CGFloat const PickerViewHeight = 240;
 @implementation YJLocationPicker
 
 
-- (instancetype)initWithSlectedLocation:(SelectedLocation)selectedLocation
+- (instancetype)initWithProvince:(NSArray *)provinceArray
+                        cityDict:(NSDictionary *)cityDict
+                 SlectedLocation:(SelectedLocation)selectedLocation
 {
-    self = [self init];
+    self.provinceArray = provinceArray;
+    self.pickerDic = cityDict;
     self.selectedLocation = selectedLocation;
+    self = [self init];
     return self;
     
 }
@@ -75,13 +79,20 @@ static CGFloat const PickerViewHeight = 240;
 
 - (void)loadData
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"Address" ofType:@"plist"];
-    self.pickerDic = [[NSDictionary alloc] initWithContentsOfFile:path];
-    self.provinceArray = [self.pickerDic allKeys];
-    self.selectedArray = [self.pickerDic objectForKey:[[self.pickerDic allKeys] objectAtIndex:0]];
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"Address" ofType:@"plist"];
+//    self.pickerDic = [[NSDictionary alloc] initWithContentsOfFile:path];
+    
+//    id provinceArrayObject = [NSUserDefaults objectForKey:@"kProvinceArray"];
+//    NSArray *provinceArray = [NSArray modelArrayWithClass:[ICityModel class] json:provinceArrayObject];
+//    NSDictionary *selectedCityDict = [NSUserDefaults objectForKey:@"kCityDict"];
+//    self.pickerDic = selectedCityDict;
+//    self.provinceArray = provinceArray;//[self.pickerDic allKeys];
+    NSArray *selectCityArray = [self.pickerDic objectForKey:[self.provinceArray[0] cid]];
+    self.selectedArray = selectCityArray;// [selectedCityDict objectForKey:[(ICityModel *)[provinceArray objectAtIndex:0] cid]];
+    //self.selectedArray = [self.selectedCityDict objectForKey:[[self.pickerDic allKeys] objectAtIndex:0]];
     
     if (self.selectedArray.count > 0) {
-        self.cityArray = [[self.selectedArray objectAtIndex:0] allKeys];
+        self.cityArray = self.selectedArray;//[[self.selectedArray objectAtIndex:0] allKeys];
     }
     
     if (self.cityArray.count > 0) {
@@ -123,9 +134,10 @@ static CGFloat const PickerViewHeight = 240;
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     if (component == 0) {
-        self.selectedArray = [self.pickerDic objectForKey:[self.provinceArray objectAtIndex:row]];
+        self.selectedArray = [self.pickerDic objectForKey:[self.provinceArray[row] cid]];
+        //self.selectedArray = [self.pickerDic objectForKey:[self.provinceArray objectAtIndex:row]];
         if (self.selectedArray.count > 0) {
-            self.cityArray = [[self.selectedArray objectAtIndex:0] allKeys];
+            self.cityArray = self.selectedArray;// [[self.selectedArray objectAtIndex:0] allKeys];
         } else {
             self.cityArray = nil;
         }
@@ -139,7 +151,6 @@ static CGFloat const PickerViewHeight = 240;
     if (component == 1) {
         self.selectRow2 = row;
     }
-    
     
     [pickerView reloadAllComponents];
 //    [pickerView selectedRowInComponent:1];
@@ -168,7 +179,7 @@ static CGFloat const PickerViewHeight = 240;
     UILabel *label = [[UILabel alloc]init];
     [label setTextAlignment:NSTextAlignmentCenter];
     if (component == 0) {
-        text =  self.provinceArray[row];
+        text =  [(ICityModel *)self.provinceArray[row] title];
         if (_selectRow1 == row) {
             label.textColor = UIColorMake(254,72,30);
         }else {
@@ -176,7 +187,7 @@ static CGFloat const PickerViewHeight = 240;
         }
     }
     if (component == 1) {
-        text =  self.cityArray[row];
+        text =  [(ICityModel *)self.cityArray[row] title];
         if (_selectRow2 == row) {
             label.textColor = UIColorMake(254,72,30);
         } else {
@@ -197,8 +208,8 @@ static CGFloat const PickerViewHeight = 240;
 - (void)confirmAction
 {
     
-    NSString *province = [self.provinceArray objectAtIndex:[self.pickerView selectedRowInComponent:0]];
-    NSString *city = [self.cityArray objectAtIndex:[self.pickerView selectedRowInComponent:1]];
+//    NSString *province = [self.provinceArray objectAtIndex:[self.pickerView selectedRowInComponent:0]];
+//    NSString *city = [self.cityArray objectAtIndex:[self.pickerView selectedRowInComponent:1]];
 //    NSString *town;
 //    if (self.townArray.count != 0) {
 //
@@ -208,8 +219,10 @@ static CGFloat const PickerViewHeight = 240;
 //
 //        town = @"";
 //    }
+    ICityModel *province = [self.provinceArray objectAtIndex:[self.pickerView selectedRowInComponent:0]];
+    ICityModel *city = [self.cityArray objectAtIndex:[self.pickerView selectedRowInComponent:1]];
     if(province && city ){
-        self.selectedLocation(@[province, city]);
+        self.selectedLocation(province, city);
     }
     [self remove];
 }
@@ -217,8 +230,10 @@ static CGFloat const PickerViewHeight = 240;
 //选择的数组
 - (void)reloadata;
 {
-    NSString *province = [self.provinceArray objectAtIndex:[self.pickerView selectedRowInComponent:0]];
-    NSString *city = [self.cityArray objectAtIndex:[self.pickerView selectedRowInComponent:1]];
+    ICityModel *province = [self.provinceArray objectAtIndex:[self.pickerView selectedRowInComponent:0]];
+    ICityModel *city = [self.cityArray objectAtIndex:[self.pickerView selectedRowInComponent:1]];
+//    NSString *province = [self.provinceArray objectAtIndex:[self.pickerView selectedRowInComponent:0]];
+//    NSString *city = [self.cityArray objectAtIndex:[self.pickerView selectedRowInComponent:1]];
 //    NSString *town;
 //    if (self.townArray.count != 0) {
 //

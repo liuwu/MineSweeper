@@ -27,7 +27,7 @@
                                  Failed:(FailedBlock)failed;
 
 // IM - 群组 - 群名称
-+ (WLRequest *)getImGroupTitleWithParams:(NSDictionary *)params
++ (WLRequest *)setImGroupTitleWithParams:(NSDictionary *)params
                                  Success:(SuccessBlock)success
                                   Failed:(FailedBlock)failed;
 
@@ -52,7 +52,7 @@
                                  Failed:(FailedBlock)failed;
 
 // IM - 群组 - 公告
-+ (WLRequest *)getImGroupNoticeWithParams:(NSDictionary *)params
++ (WLRequest *)setImGroupNoticeWithParams:(NSDictionary *)params
                                   Success:(SuccessBlock)success
                                    Failed:(FailedBlock)failed;
 

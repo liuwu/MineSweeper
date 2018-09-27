@@ -27,6 +27,11 @@
 // 是否设置支付密码
 @property (nonatomic, strong) ISafeIndexModel *safeIdexModel;
 
+// 获取省
+@property (nonatomic, strong) NSMutableArray *provinceArray;
+// 获取的城市
+@property (nonatomic, strong) NSMutableDictionary *allCityDic;
+
 + (instancetype)shareInstance;
 
 // 登录成功

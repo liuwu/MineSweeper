@@ -20,6 +20,7 @@
 
 - (BOOL)modelCustomTransformFromDictionary:(NSDictionary *)dic {
     self.uid = dic[@"id"];
+    self.firstPinyin = dic[@"nickname"] ? [dic[@"nickname"] wl_hanziFirstPinyin]: @"";
     return YES;
 }
 

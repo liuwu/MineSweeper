@@ -8,15 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+#import "ICityModel.h"
 
-typedef void(^SelectedLocation)(NSArray *locationArray);
+typedef void(^SelectedLocation)(ICityModel *province, ICityModel *city);
 
 @interface YJLocationPicker : UIButton
 
 @property (copy, nonatomic)SelectedLocation selectedLocation;
 
 //初始化回传
-- (instancetype)initWithSlectedLocation:(SelectedLocation)selectedLocation;
+- (instancetype)initWithProvince:(NSArray *)provinceArray
+                        cityDict:(NSDictionary *)cityDict
+                 SlectedLocation:(SelectedLocation)selectedLocation;
 //显示
 - (void)show;
 

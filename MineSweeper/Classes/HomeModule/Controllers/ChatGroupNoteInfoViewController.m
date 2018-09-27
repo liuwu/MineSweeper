@@ -7,7 +7,8 @@
 //
 
 #import "ChatGroupNoteInfoViewController.h"
-#import "ChatGourpNameViewController.h"
+
+#import "ImGroupModelClient.h"
 
 @interface ChatGroupNoteInfoViewController ()<QMUITextViewDelegate>
 
@@ -53,9 +54,9 @@
     
     QMUITextView *textView = [[QMUITextView alloc] init];
     textView.delegate = self;
-    textView.placeholder = @"支持 placeholder、支持自适应高度、支持限制文本输入长度";
+    textView.placeholder = @"群公告";
     textView.placeholderColor = UIColorPlaceholder; // 自定义 placeholder 的颜色
-    textView.text = @"adfasdfasdfasdfcd的发送到发沙发大是的发送到发送到发送到发送到发送到发送到";
+    textView.text = _groupDetailInfo.notice;// @"adfasdfasdfasdfcd的发送到发沙发大是的发送到发送到发送到发送到发送到发送到";
     textView.textContainerInset = UIEdgeInsetsMake(10, 7, 10, 7);
     textView.returnKeyType = UIReturnKeyDone;
     textView.enablesReturnKeyAutomatically = YES;
@@ -113,17 +114,31 @@
 - (BOOL)textViewShouldReturn:(QMUITextView *)textView {
     [QMUITips showSucceed:[NSString stringWithFormat:@"成功发送文字：%@", textView.text] inView:self.view hideAfterDelay:3.0];
     textView.text = nil;
-    
+    [self rightBarButtonItemClicked];
     // return YES 表示这次 return 按钮的点击是为了触发“发送”，而不是为了输入一个换行符
     return YES;
 }
 
 #pragma mark - Private
 - (void)rightBarButtonItemClicked {
+    if (_textView.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入群公告"];
+    }
     [[self.view wl_findFirstResponder] resignFirstResponder];
     
-    ChatGourpNameViewController *vc = [[ChatGourpNameViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    NSDictionary *params = @{@"id": @(_groupDetailInfo.groupId.integerValue),
+                             @"notice" : _textView.text.wl_trimWhitespaceAndNewlines
+                             };
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    WEAKSELF
+    [ImGroupModelClient setImGroupNoticeWithParams:params Success:^(id resultInfo) {
+        [WLHUDView showSuccessHUD:@"保存成功"];
+        [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
+    }];
+    
 }
 
 @end

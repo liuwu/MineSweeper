@@ -127,7 +127,8 @@
         DLog(@"退出登录");
         // 设置登录用户信息
         [NSUserDefaults setObject:nil forKey:kWLLoginUserIdKey];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kUserLogout" object:nil];
+        [kNSNotification postNotificationName:@"kRefreshFriendList" object:nil];
+        [kNSNotification postNotificationName:@"kUserLogout" object:nil];
         [self.navigationController popToRootViewControllerAnimated:YES];
         [[AppDelegate sharedAppDelegate] checkLoginStatus];
     }];

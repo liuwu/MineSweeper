@@ -265,6 +265,7 @@
     [WLHUDView showHUDWithStr:@"删除中..." dim:YES];
     WEAKSELF
     [FriendModelClient deleteImFriendWithParams:@{@"fuid" : [NSNumber numberWithInteger:_userModel.uid.integerValue]} Success:^(id resultInfo) {
+        [kNSNotification postNotificationName:@"kRefreshFriendList" object:nil];
         [weakSelf.navigationController popViewControllerAnimated:YES];
     } Failed:^(NSError *error) {
         [WLHUDView hiddenHud];

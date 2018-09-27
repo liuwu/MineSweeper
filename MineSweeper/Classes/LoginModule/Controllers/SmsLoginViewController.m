@@ -450,6 +450,7 @@
                                       Success:^(id resultInfo) {
                                           // 设置登录用户信息
                                           [configTool initLoginUser:resultInfo];
+                                          [kNSNotification postNotificationName:@"kRefreshFriendList" object:nil];
                                       } Failed:^(NSError *error) {
                                           
                                       }];

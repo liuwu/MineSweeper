@@ -12,7 +12,8 @@
 typedef NS_ENUM(NSInteger, FriendListType)
 {
     FriendListTypeNormal,       //普通好友列表
-    FriendListTypeForTransfer   //转账
+    FriendListTypeForTransfer,   //转账
+    FriendListTypeForGroupChat   //群聊
 };
 
 @interface FriendListViewController : SLCommonGroupListViewController

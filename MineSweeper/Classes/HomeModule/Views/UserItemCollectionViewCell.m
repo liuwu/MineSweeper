@@ -36,10 +36,10 @@
     }];
     
     QMUILabel *titleLabel = [[QMUILabel alloc] init];
-    titleLabel.font = UIFontMake(13);
+    titleLabel.font = UIFontMake(12);
     titleLabel.textColor = WLColoerRGB(51.f);
     titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.minimumScaleFactor = .8f;
+    titleLabel.minimumScaleFactor = .6f;
     [self.contentView addSubview:titleLabel];
 //    [titleLabel wl_setDebug:YES];
     self.titleLabel = titleLabel;

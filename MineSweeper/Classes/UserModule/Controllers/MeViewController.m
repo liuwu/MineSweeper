@@ -29,6 +29,7 @@
 #import "UserModelClient.h"
 #import "IUserInfoModel.h"
 #import "IUserQrCodeModel.h"
+#import "ICityModel.h"
 
 @interface MeViewController ()
 
@@ -73,6 +74,7 @@
     
     [kNSNotification addObserver:self selector:@selector(userLoginSuccess) name:@"kUserLoginSuccess" object:nil];
     [kNSNotification addObserver:self selector:@selector(userLoginSuccess) name:@"kNickNameChanged" object:nil];
+    [self loadCityData];
 }
 
 // 用户登录成功
@@ -397,6 +399,34 @@
 }
 
 #pragma mark - private
+// 获取城市数据
+- (void)loadCityData {
+    if (!configTool.allCityDic || !configTool.provinceArray) {
+        [UserModelClient getSystemCityListWithParams:nil Success:^(id resultInfo) {
+            NSArray *allCitys = [NSArray modelArrayWithClass:[ICityModel class] json:resultInfo];
+            NSMutableArray *provinceArray = [NSMutableArray array];
+            for (ICityModel *cityModel in allCitys) {
+                if (cityModel.pid.integerValue == 0) {
+                    [provinceArray addObject:cityModel];
+                }
+            }
+            NSMutableDictionary *allCityDic = [NSMutableDictionary dictionary];
+            for (ICityModel *cityModel in provinceArray) {
+                NSArray *citys = [allCitys bk_select:^BOOL(id obj) {
+                    return ([[(ICityModel *)obj pid] integerValue] == cityModel.cid.integerValue);
+                }];
+                if (citys.count > 0) {
+                    [allCityDic setValue:citys forKey:cityModel.cid];
+                }
+            }
+            configTool.provinceArray = provinceArray;
+            configTool.allCityDic = allCityDic;
+        } Failed:^(NSError *error) {
+            
+        }];
+    }
+}
+
 // 消息按钮点击
 - (void)leftBarButtonItemClicked {
     

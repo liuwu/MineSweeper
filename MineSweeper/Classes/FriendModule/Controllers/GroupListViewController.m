@@ -12,6 +12,7 @@
 
 #import "ImGroupModelClient.h"
 #import "IGameGroupModel.h"
+#import "FriendListViewController.h"
 
 @interface GroupListViewController ()
 
@@ -35,6 +36,9 @@
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
     
     [self loadData];
+    
+    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithTitle:@"发起群聊" target:self action:@selector(rightBarButtonItemClicked)];
+    self.navigationItem.rightBarButtonItem = rightBtnItem;
 }
 
 - (void)loadData {
@@ -62,6 +66,11 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)rightBarButtonItemClicked {
+    FriendListViewController *vc = [[FriendListViewController alloc] initWithFriendListType:FriendListTypeForGroupChat];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 // 下拉刷新

@@ -77,6 +77,7 @@
 
 #pragma mark - Private
 - (void)intData {
+    [self hideEmptyView];
     WEAKSELF
     [WLHUDView showHUDWithStr:@"加载中..." dim:YES];
     NSDictionary *params = @{@"id": self.noticeModel.titleId};
@@ -92,6 +93,9 @@
 - (void)updateInfo:(INoticeModel *)data {
     self.textView.text = data.content;
     self.datasource = [NSArray arrayWithObject:data];
+    if (self.datasource.count == 0) {
+        [self showEmptyViewWithText:@"暂无数据" detailText:@"" buttonTitle:nil buttonAction:NULL];
+    }
     [self.tableView reloadData];
 }
 

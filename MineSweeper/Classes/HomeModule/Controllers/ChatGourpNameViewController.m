@@ -10,6 +10,8 @@
 
 #import "LWLoginTextFieldView.h"
 
+#import "ImGroupModelClient.h"
+
 @interface ChatGourpNameViewController ()
 
 @property (nonatomic, strong) LWLoginTextFieldView *nameTxtView;
@@ -51,7 +53,7 @@
     
     LWLoginTextFieldView *nameTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeDefault];
     nameTxtView.backgroundColor = [UIColor whiteColor];
-    nameTxtView.textField.text = @"群名称";
+    nameTxtView.textField.text = _groupDetailInfo.title;// @"群名称";
     nameTxtView.selectBorderColor = [UIColor whiteColor];
     [nameTxtView wl_setCornerRadius:0.f];
     [self.view addSubview:nameTxtView];
@@ -90,7 +92,23 @@
 
 #pragma mark - Private
 - (void)rightBarButtonItemClicked {
+    if (_nameTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入群公告"];
+    }
     [[self.view wl_findFirstResponder] resignFirstResponder];
+    
+    NSDictionary *params = @{@"id": @(_groupDetailInfo.groupId.integerValue),
+                             @"title" : _nameTxtView.textField.text.wl_trimWhitespaceAndNewlines
+                             };
+    WEAKSELF
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    [ImGroupModelClient setImGroupTitleWithParams:params Success:^(id resultInfo) {
+        [WLHUDView showSuccessHUD:@"保存成功"];
+        [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
+    }];
 }
 
 @end

@@ -340,6 +340,7 @@
 		104CBF43215B4932000D4D44 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 104CBF42215B4932000D4D44 /* MobileCoreServices.framework */; };
 		104CBF45215B495D000D4D44 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 104CBF44215B495D000D4D44 /* Security.framework */; };
 		104CBF47215B4964000D4D44 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 104CBF46215B4964000D4D44 /* libsqlite3.0.tbd */; };
+		104CBF4A215BB225000D4D44 /* IGroupDetailInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 104CBF49215BB225000D4D44 /* IGroupDetailInfo.m */; };
 		1064DDDD214C96A9002A9DD6 /* MessageNotifiListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDDC214C96A9002A9DD6 /* MessageNotifiListViewController.m */; };
 		1064DDE0214C9791002A9DD6 /* GameDetailListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDDF214C9791002A9DD6 /* GameDetailListViewController.m */; };
 		1064DDE3214C9908002A9DD6 /* MessageNotifiDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DDE2214C9908002A9DD6 /* MessageNotifiDetailViewController.m */; };
@@ -1093,6 +1094,8 @@
 		104CBF42215B4932000D4D44 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		104CBF44215B495D000D4D44 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		104CBF46215B4964000D4D44 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		104CBF48215BB225000D4D44 /* IGroupDetailInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IGroupDetailInfo.h; sourceTree = "<group>"; };
+		104CBF49215BB225000D4D44 /* IGroupDetailInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IGroupDetailInfo.m; sourceTree = "<group>"; };
 		1064DDDB214C96A9002A9DD6 /* MessageNotifiListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageNotifiListViewController.h; sourceTree = "<group>"; };
 		1064DDDC214C96A9002A9DD6 /* MessageNotifiListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessageNotifiListViewController.m; sourceTree = "<group>"; };
 		1064DDDE214C9791002A9DD6 /* GameDetailListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameDetailListViewController.h; sourceTree = "<group>"; };
@@ -2961,6 +2964,8 @@
 				1018BCDF2156585E004BC57B /* INoticeModel.m */,
 				1018BCE121565EA4004BC57B /* IGameGroupModel.h */,
 				1018BCE221565EA4004BC57B /* IGameGroupModel.m */,
+				104CBF48215BB225000D4D44 /* IGroupDetailInfo.h */,
+				104CBF49215BB225000D4D44 /* IGroupDetailInfo.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3523,6 +3528,7 @@
 				103519272147A34000EDC7AD /* CMPopTipView.m in Sources */,
 				103519592147A34000EDC7AD /* WLServiceInfo.m in Sources */,
 				103518EE2147A34000EDC7AD /* REPresenceValidator.m in Sources */,
+				104CBF4A215BB225000D4D44 /* IGroupDetailInfo.m in Sources */,
 				1035191F2147A34000EDC7AD /* WLPhotoBottomView.m in Sources */,
 				103518E52147A34000EDC7AD /* RENumberItem.m in Sources */,
 				103519302147A34000EDC7AD /* DaiDodgeKeyboard.m in Sources */,

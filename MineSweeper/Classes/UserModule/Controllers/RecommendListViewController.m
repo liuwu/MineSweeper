@@ -37,6 +37,7 @@
 }
 
 - (void)loadData {
+    [self hideEmptyView];
     NSDictionary *params = @{
                              @"member_pid": @713,
                              @"distance" : @1
@@ -55,6 +56,9 @@
 
 - (void)loadUI:(IRecommendModel *)model {
     self.datasource = model.list;
+    if (self.datasource.count == 0) {
+        [self showEmptyViewWithText:@"暂无数据" detailText:@"" buttonTitle:nil buttonAction:NULL];
+    }
     [self.tableView reloadData];
 }
 

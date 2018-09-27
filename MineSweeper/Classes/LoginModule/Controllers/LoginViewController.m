@@ -183,6 +183,7 @@
                                     [configTool initLoginUser:resultInfo];
                                     [NSUserDefaults setString:weakSelf.pwdTxtView.textField.text.wl_trimWhitespaceAndNewlines forKey:[NSString stringWithFormat:@"%@%@", configTool.loginUser.uid, configTool.loginUser.mobile]];
                                     weakSelf.pwdTxtView.textField.text = @"";
+                                    [kNSNotification postNotificationName:@"kRefreshFriendList" object:nil];
                                 } Failed:^(NSError *error) {
                                     
                                 }];

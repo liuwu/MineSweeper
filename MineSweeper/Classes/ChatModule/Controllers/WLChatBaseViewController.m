@@ -85,8 +85,8 @@ static NSString *paylistCellid = @"paylistCellid";
     
     //* 注册消息类型，如果使用IMKit，使用此方法，不再使用RongIMLib的同名方法。如果对消息类型进行扩展，可以忽略此方法。
 //    [self registerClass:[ChatRedPacketCell class] forMessageClass:[RCRedPacketMessage class]];
-    [self registerClass:[ChatRedPacketCell class] forCellWithReuseIdentifier:redPacketCellid];
-    
+//    [self registerClass:[ChatRedPacketCell class] forCellWithReuseIdentifier:redPacketCellid];
+    [self registerClass:ChatRedPacketCell.class forMessageClass:RCRedPacketMessage.class];
 //    [self registerClass:[WLChatCustomCardCell class] forCellWithReuseIdentifier:customCardCellid];
 //    [self registerClass:[WLChatNewCardCell class] forCellWithReuseIdentifier:newcardCellid];
 //    [self registerClass:[WLChatCardListCell class] forCellWithReuseIdentifier:cardlistCellid];

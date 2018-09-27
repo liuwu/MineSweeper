@@ -108,7 +108,7 @@
 
 - (void)setDataModel:(RCMessageModel *)model
 {
-    self.model = model;
+    [super setDataModel:model];
     RCRedPacketMessage *redPacketModel = (RCRedPacketMessage *)model.content;
 //    self.cardList = [NSArray modelArrayWithClass:[CardStatuModel class] json:cardListM.cardlist];
     _nameLabel.text = @"15-9";

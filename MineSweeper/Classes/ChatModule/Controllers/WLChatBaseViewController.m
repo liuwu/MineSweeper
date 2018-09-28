@@ -31,6 +31,7 @@
 //#import "IGroupChatInfo.h"
 
 #import "ChatRedPacketCell.h"
+#import "ChatGetRedPacketCell.h"
 
 #import "IGameGroupModel.h"
 
@@ -39,6 +40,7 @@
 #import "WLRongCloudDataSource.h"
 
 #import "RCRedPacketMessage.h"
+#import "RCRedPacketGetMessage.h"
 
 
 #define kImageMsgMaxCount 5000
@@ -87,6 +89,7 @@ static NSString *paylistCellid = @"paylistCellid";
     //* 注册消息类型，如果使用IMKit，使用此方法，不再使用RongIMLib的同名方法。如果对消息类型进行扩展，可以忽略此方法。
 //    [self registerClass:[ChatRedPacketCell class] forCellWithReuseIdentifier:redPacketCellid];
     [self registerClass:ChatRedPacketCell.class forMessageClass:RCRedPacketMessage.class];
+    [self registerClass:ChatGetRedPacketCell.class forMessageClass:RCRedPacketGetMessage.class];
 //    [self registerClass:[WLChatCustomCardCell class] forCellWithReuseIdentifier:customCardCellid];
 //    [self registerClass:[WLChatNewCardCell class] forCellWithReuseIdentifier:newcardCellid];
 //    [self registerClass:[WLChatCardListCell class] forCellWithReuseIdentifier:cardlistCellid];
@@ -172,6 +175,11 @@ static NSString *paylistCellid = @"paylistCellid";
         return [ChatRedPacketCell sizeForMessageModel:model withCollectionViewWidth:65.f referenceExtraHeight:20.f];
 //        return [ChatRedPacketCell cellHigetWithModel:model];// CGSizeMake(200.f, 65.f);
     }
+    if ([msgContent isMemberOfClass:[RCRedPacketGetMessage class]]) {
+        // 红包cell
+        return [ChatGetRedPacketCell sizeForMessageModel:model withCollectionViewWidth:DEVICE_WIDTH referenceExtraHeight:120.f];
+        //        return [ChatRedPacketCell cellHigetWithModel:model];// CGSizeMake(200.f, 65.f);
+    }
     return CGSizeZero;
 }
 
@@ -202,32 +210,6 @@ static NSString *paylistCellid = @"paylistCellid";
 //        [cell wl_setDebug:YES];
         return cell;
     }
-//    if ([msgContent isMemberOfClass:[CustomCardMessage class]]) {
-//        CustomCardMessage *customCardM = (CustomCardMessage *)model.content;
-//        CardStatuModel *cardM = [CardStatuModel modelWithDictionary:customCardM.card];
-//        if (cardM.viewType.integerValue) {
-//            WLChatNewCardCell *newCell = [collectionView dequeueReusableCellWithReuseIdentifier:newcardCellid forIndexPath:indexPath];
-//            newCell.cardCellDelegate = self;
-//            [newCell setDataModel:model];
-//            return newCell;
-//        }else{
-//            WLChatCustomCardCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:customCardCellid forIndexPath:indexPath];
-//            [cell setDataModel:model];
-//            cell.customCardCellDelegate = self;
-//            return cell;
-//        }
-//    }else if ([msgContent isMemberOfClass:[WLCardListMessage class]]){
-//        WLChatCardListCell *cardlistCell = [collectionView dequeueReusableCellWithReuseIdentifier:cardlistCellid forIndexPath:indexPath];
-//        cardlistCell.cardListDelegate = self;
-//        [cardlistCell setDataModel:model];
-//        return cardlistCell;
-//    }
-//    else if ([msgContent isMemberOfClass:[WLPayRemindMessage class]]){
-//        WLPayHelperCell *paylistCell = [collectionView dequeueReusableCellWithReuseIdentifier:paylistCellid forIndexPath:indexPath];
-//        paylistCell.delegate = self;
-//        [paylistCell setDataModel:model];
-//        return paylistCell;
-//    }
     return nil;
 }
 

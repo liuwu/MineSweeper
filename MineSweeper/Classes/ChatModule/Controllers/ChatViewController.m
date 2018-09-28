@@ -18,6 +18,8 @@
 #import "ChatRedPacketCell.h"
 
 #import "RCRedPacketMessage.h"
+#import "RCRedPacketGetMessage.h"
+
 #import "ImGroupModelClient.h"
 #import "IGroupDetailInfo.h"
 #import "ImModelClient.h"
@@ -165,15 +167,46 @@
     [super didTapMessageCell:model];
     if ([model.content isMemberOfClass:[RCRedPacketMessage class]]) {
         DLog(@"红包 didTapMessageCell");
-        RCRedPacketMessage *message = (RCRedPacketMessage *) model.content;
-        if (message.isGet.integerValue == 1) {
-            DLog(@"红包 已领过");
-        }
+        [self openRedPacketClicked:model];
+    }
+    if ([model.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
+        // 查看红包历史
+        RCRedPacketGetMessage *message = (RCRedPacketGetMessage *) model.content;
+        [self lookRedPacketHistory:message.pack_id];
+    }
+    if ([model.content isMemberOfClass:[RCLocationMessage class]]) {
+        DLog(@"位置 RCLocationMessage");
+        [self presentLocationViewController:(RCLocationMessage *)model.content];
+    }
+    DLog(@"didTapMessageCell");
+}
+
+// 打开红包点击
+- (void)openRedPacketClicked:(RCMessageModel *)model {
+    RCRedPacketMessage *message = (RCRedPacketMessage *) model.content;
+    if (message.drawed.integerValue == 1) {
+        DLog(@"红包 已领过");
+        IRedPacketModel * redmodel = [IRedPacketModel new];
+        redmodel.redpack_id = message.pack_id;
+        redmodel.money = message.money;
+        // 领到红包
+        [self showOpenPacket:redmodel];
+    } else {
         [ImModelClient imGrabRedpackWithParams:@{@"id" : @(message.pack_id.integerValue)} Success:^(id resultInfo) {
-            IRedPacketModel * model = [IRedPacketModel modelWithDictionary:resultInfo];
+            IRedPacketModel * redmodel = [IRedPacketModel modelWithDictionary:resultInfo];
+            // 更新聊天消息数据
+            [message setDrawed:@"1"];
+            [message setDrawUid:configTool.loginUser.uid];
+            [message setDrawName:configTool.userInfoModel.nickname];
+            [message setPack_id:redmodel.redpack_id];
+            [message setMoney:redmodel.money];
+            //                [model setContent:message];
             // 领到红包
-            [self showOpenPacket:model];
+            [self showOpenPacket:redmodel];
+            [self sendGetRedPacketImMessage:message];
         } Failed:^(NSError *error) {
+            // 红包已被抢完
+            [self showPacketGrabEnd];
             if (error.localizedDescription.length > 0) {
                 if ([error.localizedDescription isEqualToString:@"红包已抢"]) {
                     
@@ -182,16 +215,43 @@
                 }
             }
         }];
-        
-        // 领红包
-//        [self showPacketGrabEnd];
-        
     }
-    if ([model.content isMemberOfClass:[RCLocationMessage class]]) {
-        DLog(@"位置 RCLocationMessage");
-        [self presentLocationViewController:(RCLocationMessage *)model.content];
-    }
-    DLog(@"didTapMessageCell");
+}
+
+- (void)sendGetRedPacketImMessage:(RCRedPacketMessage *)redPacketMsg {
+    // 构建消息的内容，这里以文本消息为例。
+    RCRedPacketGetMessage *msg = [[RCRedPacketGetMessage alloc] init];
+    RCUserInfo *senderUserInfo = [[RCUserInfo alloc] initWithUserId:configTool.userInfoModel.userId
+                                                               name:configTool.userInfoModel.nickname
+                                                           portrait:configTool.userInfoModel.avatar];
+    msg.senderUserInfo = senderUserInfo;
+    msg.pack_id = redPacketMsg.pack_id;
+    msg.title = redPacketMsg.title;
+    msg.total_money = redPacketMsg.total_money;
+    msg.num = redPacketMsg.num;
+    msg.drawed = @"1";
+    msg.drawUid = configTool.loginUser.uid;
+    msg.drawName = configTool.userInfoModel.nickname;
+    msg.money = redPacketMsg.money;
+    msg.thunder = redPacketMsg.thunder;
+    msg.uid = @(configTool.loginUser.uid.integerValue);
+    msg.avatar = configTool.userInfoModel.avatar;
+    msg.name = configTool.userInfoModel.nickname;
+    //    [self sendMessage:msg pushContent:@"hahha"];
+    //    RCTextMessage *testMessage = [RCTextMessage messageWithContent:@"test"];
+    // 调用RCIMClient的sendMessage方法进行发送，结果会通过回调进行反馈。
+    WEAKSELF
+    [[RCIMClient sharedRCIMClient] sendMessage:ConversationType_GROUP
+                                      targetId:_groupDetailInfo.groupId
+                                       content:msg
+                                   pushContent:nil
+                                      pushData:nil
+                                       success:^(long messageId) {
+                                           DLog(@"发送成功。当前消息ID：%ld", messageId);
+                                           [[RCIMClient sharedRCIMClient] insertOutgoingMessage:ConversationType_GROUP targetId: weakSelf.groupDetailInfo.groupId sentStatus:SentStatus_SENT content:msg];
+                                       } error:^(RCErrorCode nErrorCode, long messageId) {
+                                           DLog(@"发送失败。消息ID：%ld， 错误码：%ld", messageId, nErrorCode);
+                                       }];
 }
 
 #pragma mark 点击头像
@@ -481,9 +541,13 @@
 - (void)lookMoreBtnClickedBtn:(UIButton *)sender {
     DLog(@"lookMoreBtnClickedBtn --------");
     [_packetModalViewController hideWithAnimated:YES completion:nil];
-    
+    // 查看红包历史
+    [self lookRedPacketHistory:_openPacketModel.redpack_id];
+}
+
+- (void)lookRedPacketHistory:(NSString *)packId {
     RedPacketViewController *vc = [[RedPacketViewController alloc] init];
-    vc.packetId = _openPacketModel.redpack_id;
+    vc.packetId = packId;
     [self.navigationController pushViewController:vc animated:YES];
 }
 

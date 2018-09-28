@@ -262,7 +262,11 @@
         [weakSelf.navigationController pushViewController:webVC animated:YES];
         // https://qr.alipay.com/bax070319pqypzwglyvq40b0
     } Failed:^(NSError *error) {
-         [WLHUDView hiddenHud];
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
     }];
     
 }

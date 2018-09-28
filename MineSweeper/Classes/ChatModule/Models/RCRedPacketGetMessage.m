@@ -1,15 +1,14 @@
 //
-//  RCRedPacketMessage.m
+//  RCRedPacketGetMessage.m
 //  MineSweeper
 //
-//  Created by liuwu on 2018/9/25.
+//  Created by liuwu on 2018/9/28.
 //  Copyright © 2018年 liuwu. All rights reserved.
 //
 
-#import "RCRedPacketMessage.h"
+#import "RCRedPacketGetMessage.h"
 
-@implementation RCRedPacketMessage
-
+@implementation RCRedPacketGetMessage
 
 /*!
  返回消息的存储策略
@@ -18,7 +17,7 @@
  @discussion 指明此消息类型在本地是否存储、是否计入未读消息数。
  */
 +(RCMessagePersistent)persistentFlag {
-    return MessagePersistent_ISCOUNTED;
+    return MessagePersistent_ISPERSISTED;
 }
 
 #pragma mark - RCMessageCoding delegate methods
@@ -70,7 +69,7 @@
 
 
 +(NSString *)getObjectName {
-    return RCRedPacketMessageTypeIdentifier;
+    return RCRedPacketGetMessageTypeIdentifier;
 }
 
 /*!
@@ -81,12 +80,12 @@
  当App在后台收到消息时，需要通过此方法获取在本地通知中展现的内容摘要。
  */
 - (NSString *)conversationDigest {
-//    if (self.type.integerValue == 4) {
-//        return [NSString stringWithFormat:@"%@赞了动态",self.name];
-//    }else if (self.type.integerValue == 3){
-//        return [NSString stringWithFormat:@"%@评论了动态", self.name];
-//    }
-    return @"红包消息";
+    //    if (self.type.integerValue == 4) {
+    //        return [NSString stringWithFormat:@"%@赞了动态",self.name];
+    //    }else if (self.type.integerValue == 3){
+    //        return [NSString stringWithFormat:@"%@评论了动态", self.name];
+    //    }
+    return @"红包领取";
 }
 
 @end

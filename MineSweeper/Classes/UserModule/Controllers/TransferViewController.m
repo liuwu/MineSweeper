@@ -104,7 +104,7 @@
     QMUILabel *idLabel = [[QMUILabel alloc] init];
     idLabel.font = UIFontMake(12);
     idLabel.textColor = WLColoerRGB(153.f);
-    idLabel.text = @"ID:16854587";
+    idLabel.text = [NSString stringWithFormat:@"ID:%@", _friendModel.id_num];
     [userView addSubview:idLabel];
     self.idLabel = idLabel;
     
@@ -115,7 +115,7 @@
     [moenyTxtView.textField becomeFirstResponder];
     
     QMUILabel *momeyLabel = [[QMUILabel alloc] init];
-    momeyLabel.text = @"我的余额：￥200.00";
+    momeyLabel.text = [NSString stringWithFormat:@"我的余额:￥%@", configTool.userInfoModel.balance];
     momeyLabel.font = UIFontMake(12);
     momeyLabel.textColor = WLColoerRGB(153.f);
     [self.view addSubview:momeyLabel];
@@ -149,7 +149,7 @@
     [_nameBtn sizeToFit];
     [_nameBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.logoImageView.mas_right).offset(7.f);
-        make.top.mas_equalTo(self.logoImageView.mas_top).offset(2.f);
+        make.top.mas_equalTo(self.logoImageView.mas_top).offset(1.f);
     }];
     
     [_idLabel sizeToFit];
@@ -204,6 +204,11 @@
         return;
     }
     
+    if ([_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines floatValue] > [configTool.userInfoModel.balance floatValue]) {
+        [WLHUDView showOnlyTextHUD:@"转账金额超过余额"];
+        return;
+    }
+    
     NSDictionary *params = @{
                              @"uid" : [NSNumber numberWithInteger:_friendModel.uid.integerValue],
                              @"money" : [NSNumber numberWithFloat:[_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines floatValue]]
@@ -211,9 +216,14 @@
     [WLHUDView showHUDWithStr:@"转账中..." dim:YES];
     [UserModelClient transferWallentWithParams:params Success:^(id resultInfo) {
         [WLHUDView showSuccessHUD:resultInfo];
-        [self.navigationController popViewControllerAnimated:YES];
+        [kNSNotification postNotificationName:@"kUserInfoChanged" object:nil];
+        [self.navigationController popToRootViewControllerAnimated:YES];
     } Failed:^(NSError *error) {
-        [WLHUDView hiddenHud];
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
     }];
 }
 

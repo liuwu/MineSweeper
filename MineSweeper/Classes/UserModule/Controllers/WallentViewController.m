@@ -285,7 +285,7 @@
 // 分隔栏切换
 - (void)segmentedControlChangedValue:(HMSegmentedControl *)segmentedControl {
     DLog(@"Selected index %ld (via UIControlEventValueChanged)", (long)segmentedControl.selectedSegmentIndex);
-    self.selectType = segmentedControl.selectedSegmentIndex;
+    self.selectType = segmentedControl.selectedSegmentIndex + 1;
 //    self.page = 1;
     [self.tableView.mj_header beginRefreshing];
 

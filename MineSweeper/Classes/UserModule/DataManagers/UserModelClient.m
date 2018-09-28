@@ -123,6 +123,22 @@
     return api;
 }
 
+// 提现 - 提现信息
++ (WLRequest *)withdrawInfoWithParams:(NSDictionary *)params
+                              Success:(SuccessBlock)success
+                               Failed:(FailedBlock)failed {
+    WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Wallet/withdraw_info"
+                                  Success:^(id resultInfo) {
+                                      DLog(@"提现 - 提现信息 ---- %@",describe(resultInfo));
+                                      SAFE_BLOCK_CALL(success,resultInfo);
+                                  } Failed:^(NSError *error) {
+                                      // 统一错误处理
+                                      //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                      SAFE_BLOCK_CALL(failed, error);
+                                  }];
+    return api;
+}
+
 // 钱包 - 提现
 + (WLRequest *)withdrawWallentWithParams:(NSDictionary *)params
                                  Success:(SuccessBlock)success
@@ -322,6 +338,22 @@
     WLRequest *api = [self getWithParams:params apiMethodName:@"App/User/Safe/index"
                                  Success:^(id resultInfo) {
                                      DLog(@"我的 - 设置 - 账户与安全 ---- %@",describe(resultInfo));
+                                     SAFE_BLOCK_CALL(success,resultInfo);
+                                 } Failed:^(NSError *error) {
+                                     // 统一错误处理
+                                     //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                     SAFE_BLOCK_CALL(failed, error);
+                                 }];
+    return api;
+}
+
+// 我的 - 设置 - 免密下注
++ (WLRequest *)setSecretFreeWithParams:(NSDictionary *)params
+                               Success:(SuccessBlock)success
+                                Failed:(FailedBlock)failed {
+    WLRequest *api = [self getWithParams:params apiMethodName:@"App/User/Safe/secret_free"
+                                 Success:^(id resultInfo) {
+                                     DLog(@"我的 - 设置 - 免密下注 ---- %@",describe(resultInfo));
                                      SAFE_BLOCK_CALL(success,resultInfo);
                                  } Failed:^(NSError *error) {
                                      // 统一错误处理

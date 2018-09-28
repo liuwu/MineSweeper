@@ -397,6 +397,10 @@
 		10F2D74D215A4E3000937D39 /* RCRedPacketMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 10F2D74C215A4E3000937D39 /* RCRedPacketMessage.m */; };
 		10F2D750215A893900937D39 /* ICityModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 10F2D74F215A893900937D39 /* ICityModel.m */; };
 		10F2D753215A96BA00937D39 /* WLChatLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10F2D751215A96B900937D39 /* WLChatLocationViewController.m */; };
+		10F820A9215DC50500B555E3 /* ChatGetRedPacketCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 10F820A8215DC50500B555E3 /* ChatGetRedPacketCell.m */; };
+		10F820AC215DCAB100B555E3 /* RCRedPacketGetMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 10F820AB215DCAB100B555E3 /* RCRedPacketGetMessage.m */; };
+		10F820AF215DEDF300B555E3 /* IWallentInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 10F820AE215DEDF300B555E3 /* IWallentInfoModel.m */; };
+		10F820B1215E024500B555E3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10F820B0215E024500B555E3 /* Foundation.framework */; };
 		C4DB55F6C9DBF48EA5AD7F59 /* Pods_MineSweeper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8AFE025042466EB1193918F /* Pods_MineSweeper.framework */; };
 		F543C3C8214A46A400F863CC /* SLCommonTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F543C3C7214A46A400F863CC /* SLCommonTableViewController.m */; };
 		F543C3CB214A4B1D00F863CC /* SLCommonGroupListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F543C3CA214A4B1D00F863CC /* SLCommonGroupListViewController.m */; };
@@ -1209,6 +1213,13 @@
 		10F2D74F215A893900937D39 /* ICityModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ICityModel.m; sourceTree = "<group>"; };
 		10F2D751215A96B900937D39 /* WLChatLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLChatLocationViewController.m; sourceTree = "<group>"; };
 		10F2D752215A96BA00937D39 /* WLChatLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLChatLocationViewController.h; sourceTree = "<group>"; };
+		10F820A7215DC50500B555E3 /* ChatGetRedPacketCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatGetRedPacketCell.h; sourceTree = "<group>"; };
+		10F820A8215DC50500B555E3 /* ChatGetRedPacketCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatGetRedPacketCell.m; sourceTree = "<group>"; };
+		10F820AA215DCAB100B555E3 /* RCRedPacketGetMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCRedPacketGetMessage.h; sourceTree = "<group>"; };
+		10F820AB215DCAB100B555E3 /* RCRedPacketGetMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCRedPacketGetMessage.m; sourceTree = "<group>"; };
+		10F820AD215DEDF300B555E3 /* IWallentInfoModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IWallentInfoModel.h; sourceTree = "<group>"; };
+		10F820AE215DEDF300B555E3 /* IWallentInfoModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IWallentInfoModel.m; sourceTree = "<group>"; };
+		10F820B0215E024500B555E3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A8AFE025042466EB1193918F /* Pods_MineSweeper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MineSweeper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E37D4B5778204A574CF96A28 /* Pods-MineSweeper.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MineSweeper.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MineSweeper/Pods-MineSweeper.debug.xcconfig"; sourceTree = "<group>"; };
 		F37BFC99A878510AF9E2CC19 /* Pods-MineSweeper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MineSweeper.release.xcconfig"; path = "Pods/Target Support Files/Pods-MineSweeper/Pods-MineSweeper.release.xcconfig"; sourceTree = "<group>"; };
@@ -1223,21 +1234,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				10351AB02147CE2700EDC7AD /* libc++.tbd in Frameworks */,
+				10351ACA2147CECF00EDC7AD /* CoreMotion.framework in Frameworks */,
+				10351AA02147CDEB00EDC7AD /* CFNetwork.framework in Frameworks */,
+				10F820B1215E024500B555E3 /* Foundation.framework in Frameworks */,
+				10351AC42147CE7200EDC7AD /* UIKit.framework in Frameworks */,
+				10351AA42147CDFB00EDC7AD /* CoreGraphics.framework in Frameworks */,
+				10351ACC2147CED900EDC7AD /* CoreText.framework in Frameworks */,
+				10351AC02147CE6400EDC7AD /* QuartzCore.framework in Frameworks */,
 				10351AAA2147CE1100EDC7AD /* CoreTelephony.framework in Frameworks */,
+				10351AC22147CE6A00EDC7AD /* SystemConfiguration.framework in Frameworks */,
+				10351ABA2147CE4F00EDC7AD /* libz.tbd in Frameworks */,
+				10351AB02147CE2700EDC7AD /* libc++.tbd in Frameworks */,
 				104CBF47215B4964000D4D44 /* libsqlite3.0.tbd in Frameworks */,
 				104CBF45215B495D000D4D44 /* Security.framework in Frameworks */,
-				10351AA42147CDFB00EDC7AD /* CoreGraphics.framework in Frameworks */,
-				10351AC22147CE6A00EDC7AD /* SystemConfiguration.framework in Frameworks */,
 				10351ABE2147CE5D00EDC7AD /* OpenGLES.framework in Frameworks */,
-				10351AC02147CE6400EDC7AD /* QuartzCore.framework in Frameworks */,
 				10351AA62147CE0200EDC7AD /* CoreLocation.framework in Frameworks */,
 				104CBF43215B4932000D4D44 /* MobileCoreServices.framework in Frameworks */,
 				10351AC82147CE8200EDC7AD /* SafariServices.framework in Frameworks */,
 				10351AC62147CE7900EDC7AD /* Photos.framework in Frameworks */,
-				10351AC42147CE7200EDC7AD /* UIKit.framework in Frameworks */,
 				10351ABC2147CE5600EDC7AD /* MapKit.framework in Frameworks */,
-				10351ABA2147CE4F00EDC7AD /* libz.tbd in Frameworks */,
 				10351AB82147CE4900EDC7AD /* libxml2.tbd in Frameworks */,
 				10351AB62147CE4000EDC7AD /* libstdc++.tbd in Frameworks */,
 				10351AB42147CE3800EDC7AD /* libsqlite3.tbd in Frameworks */,
@@ -1246,12 +1261,9 @@
 				10351AAC2147CE1800EDC7AD /* CoreVideo.framework in Frameworks */,
 				10351AA82147CE0A00EDC7AD /* CoreMedia.framework in Frameworks */,
 				10351AA22147CDF400EDC7AD /* CoreAudio.framework in Frameworks */,
-				10351AA02147CDEB00EDC7AD /* CFNetwork.framework in Frameworks */,
 				10351A9E2147CDE300EDC7AD /* AVFoundation.framework in Frameworks */,
 				10351A9C2147CDDB00EDC7AD /* AudioToolbox.framework in Frameworks */,
 				10351A9A2147CDD500EDC7AD /* AssetsLibrary.framework in Frameworks */,
-				10351ACC2147CED900EDC7AD /* CoreText.framework in Frameworks */,
-				10351ACA2147CECF00EDC7AD /* CoreMotion.framework in Frameworks */,
 				101134302148A7FB0082F74B /* MOBFoundation.framework in Frameworks */,
 				10082DEC2153B34C00EC3FCE /* RongIMKit.framework in Frameworks */,
 				10082DE72153B34C00EC3FCE /* libopencore-amrnb.a in Frameworks */,
@@ -2257,6 +2269,8 @@
 				102415602158F639008A365A /* IMyRedPacketModel.m */,
 				10F2D74B215A4E3000937D39 /* RCRedPacketMessage.h */,
 				10F2D74C215A4E3000937D39 /* RCRedPacketMessage.m */,
+				10F820AA215DCAB100B555E3 /* RCRedPacketGetMessage.h */,
+				10F820AB215DCAB100B555E3 /* RCRedPacketGetMessage.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2306,6 +2320,8 @@
 			children = (
 				10F2D748215A3D6F00937D39 /* ChatRedPacketCell.h */,
 				10F2D749215A3D6F00937D39 /* ChatRedPacketCell.m */,
+				10F820A7215DC50500B555E3 /* ChatGetRedPacketCell.h */,
+				10F820A8215DC50500B555E3 /* ChatGetRedPacketCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2383,6 +2399,8 @@
 				1018BCE821569F09004BC57B /* IRecommendModel.m */,
 				1018BCEA21569F7D004BC57B /* IRecommendInfoModel.h */,
 				1018BCEB21569F7D004BC57B /* IRecommendInfoModel.m */,
+				10F820AD215DEDF300B555E3 /* IWallentInfoModel.h */,
+				10F820AE215DEDF300B555E3 /* IWallentInfoModel.m */,
 				1018BCFB21577856004BC57B /* IWallentModel.h */,
 				1018BCFC21577856004BC57B /* IWallentModel.m */,
 				1018BCF82157780B004BC57B /* IWallentHistoryModel.h */,
@@ -3210,6 +3228,7 @@
 		CE8E78900BEF8078654F08D7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				10F820B0215E024500B555E3 /* Foundation.framework */,
 				104CBF46215B4964000D4D44 /* libsqlite3.0.tbd */,
 				104CBF44215B495D000D4D44 /* Security.framework */,
 				104CBF42215B4932000D4D44 /* MobileCoreServices.framework */,
@@ -3465,6 +3484,7 @@
 				1024156B21591E26008A365A /* YJLocationPicker.m in Sources */,
 				103519222147A34000EDC7AD /* WLAsset.m in Sources */,
 				103518E72147A34000EDC7AD /* REPickerItem.m in Sources */,
+				10F820A9215DC50500B555E3 /* ChatGetRedPacketCell.m in Sources */,
 				10351A022147B73200EDC7AD /* NSDate+WLAdd.m in Sources */,
 				10454668214B77A500DA7F9F /* QDThemeManager.m in Sources */,
 				1064DE0A214CA695002A9DD6 /* ChatUserInfoViewController.m in Sources */,
@@ -3699,6 +3719,7 @@
 				1018BCFD21577856004BC57B /* IWallentModel.m in Sources */,
 				103518CE2147A34000EDC7AD /* RETableViewOptionCell.m in Sources */,
 				102415612158F639008A365A /* IMyRedPacketModel.m in Sources */,
+				10F820AF215DEDF300B555E3 /* IWallentInfoModel.m in Sources */,
 				1089C5492146AD9700363537 /* AppDelegate.mm in Sources */,
 				102146B82152474700BB7FEB /* SendRedPacketViewController.m in Sources */,
 				103519F72147B73200EDC7AD /* UIView+WLRoundedCorner.m in Sources */,
@@ -3734,6 +3755,7 @@
 				1018BD062157CF6F004BC57B /* IFriendDetailInfoModel.m in Sources */,
 				109AF9AB2151F6E600D50F3C /* ChangePhoneViewController.m in Sources */,
 				1064DDE9214C9B92002A9DD6 /* RecommendListViewController.m in Sources */,
+				10F820AC215DCAB100B555E3 /* RCRedPacketGetMessage.m in Sources */,
 				103518CD2147A34000EDC7AD /* RETableViewInlinePickerCell.m in Sources */,
 				10351A932147CB0300EDC7AD /* LGAlertViewController.m in Sources */,
 				103519392147A34000EDC7AD /* KSPhotoBrowser.m in Sources */,

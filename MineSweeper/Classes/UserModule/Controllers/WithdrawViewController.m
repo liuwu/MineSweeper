@@ -13,6 +13,9 @@
 #import "LWLoginTextFieldView.h"
 
 #import "UserModelClient.h"
+#import "IWallentInfoModel.h"
+
+#import <AlipaySDK/AlipaySDK.h>
 
 @interface WithdrawViewController ()
 
@@ -22,6 +25,11 @@
 @property (nonatomic, strong) LWLoginTextFieldView *typeTxtView;
 @property (nonatomic, strong) QMUILabel *aboutLabel;
 @property (nonatomic, strong) QMUIFillButton *withdrawBtn;
+
+@property (nonatomic, strong) QMUITextField *pwdTextField;
+@property (nonatomic, strong) QMUIModalPresentationViewController *payModalViewController;
+
+@property (nonatomic, strong) IWallentInfoModel *wallentInfoModel;
 
 @end
 
@@ -36,11 +44,30 @@
     [self addViews];
     [self addViewConstraints];
     
+    [self loadData];
+    
     //添加单击手势
 //    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
 //        [[self.view wl_findFirstResponder] resignFirstResponder];
 //    }];
 //    [self.view addGestureRecognizer:tap];
+}
+
+- (void)loadData {
+    WEAKSELF
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    [UserModelClient withdrawInfoWithParams:nil Success:^(id resultInfo) {
+        [WLHUDView hiddenHud];
+        weakSelf.wallentInfoModel = [IWallentInfoModel modelWithDictionary:resultInfo];
+        [weakSelf updateUi];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
+    }];
+}
+
+- (void)updateUi {
+    _momeyLabel.text = [NSString stringWithFormat:@"我的余额：￥%@　可提现：￥%@", _wallentInfoModel.balance, _wallentInfoModel.enbale_balance.stringValue];
+    _aboutLabel.text = [NSString stringWithFormat:@"提现说明：%@", _wallentInfoModel.info];
 }
 
 - (BOOL)shouldHideKeyboardWhenTouchInView:(UIView *)view {
@@ -81,7 +108,7 @@
     [moenyTxtView.textField becomeFirstResponder];
     
     QMUILabel *momeyLabel = [[QMUILabel alloc] init];
-    momeyLabel.text = @"我的余额：￥200.00　可提现：￥180.00";
+    momeyLabel.text = @"我的余额：￥0.00　可提现：￥0.00";
     momeyLabel.font = UIFontMake(12);
     momeyLabel.textColor = WLColoerRGB(153.f);
     [self.view addSubview:momeyLabel];
@@ -102,7 +129,7 @@
     self.typeTxtView = typeTxtView;
     
     QMUILabel *aboutLabel = [[QMUILabel alloc] init];
-    aboutLabel.text = @"提现说明：xxxxxxxx";
+    aboutLabel.text = @"提现说明：";
     aboutLabel.font = UIFontMake(12);
     aboutLabel.textColor = WLColoerRGB(153.f);
     [self.view addSubview:aboutLabel];
@@ -164,24 +191,139 @@
         [WLHUDView showOnlyTextHUD:@"提现金额大于0元"];
         return;
     }
-    NSDictionary *params = @{@"user_id" : configTool.loginUser.uid,
-                             @"money" : [NSNumber numberWithFloat:_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue]};
-    [WLHUDView showHUDWithStr:@"提现中..." dim:YES];
-    [UserModelClient withdrawWallentWithParams:params Success:^(id resultInfo) {
-        [WLHUDView showSuccessHUD:resultInfo];
-    } Failed:^(NSError *error) {
-        [WLHUDView hiddenHud];
+    if (_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue > _wallentInfoModel.enbale_balance.floatValue) {
+        [WLHUDView showOnlyTextHUD:[NSString stringWithFormat:@"提现金额不能大于%@",_wallentInfoModel.enbale_balance.stringValue]];
+        return;
+    }
+    
+    [self inputPayPwd:_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines];
+}
+
+// 输入支付密码
+- (void)inputPayPwd:(NSString *)money {
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 189.f)];
+    contentView.backgroundColor = [UIColor whiteColor];
+    [contentView wl_setCornerRadius:5.f];
+    
+    QMUILabel *titleLabel = [[QMUILabel alloc] init];
+    titleLabel.font = UIFontMake(17);
+    titleLabel.textColor = WLColoerRGB(51.f);
+    titleLabel.text = @"支付";
+    [contentView addSubview:titleLabel];
+    [titleLabel sizeToFit];
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(contentView);
+        make.top.mas_equalTo(contentView).mas_offset(16.f);
     }];
     
-//    // 钱包 - 提现 - 支付宝授权登录
-//    + (WLRequest *)aliPayLoginWithParams:(NSDictionary *)params
-//Success:(SuccessBlock)success
-//Failed:(FailedBlock)failed;
+    QMUILabel *moneyLabel = [[QMUILabel alloc] init];
+    moneyLabel.font = UIFontMake(17);
+    moneyLabel.textColor = WLColoerRGB(51.f);
+    moneyLabel.text = [NSString stringWithFormat:@"%@元", money];
+    [contentView addSubview:moneyLabel];
+    //    self.idLabel = nameLabel;
+    [moneyLabel sizeToFit];
+    [moneyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(contentView);
+        make.top.mas_equalTo(titleLabel.mas_bottom).mas_offset(15.f);
+    }];
+    
+    QMUITextField *pwdTextField = [[QMUITextField alloc] init];
+    pwdTextField.placeholder = @"输入支付密码";
+    pwdTextField.placeholderColor = WLColoerRGB(153.f);
+    pwdTextField.font = UIFontMake(14.f);
+    pwdTextField.textColor = WLColoerRGB(51.f);
+    pwdTextField.secureTextEntry = YES;
+    pwdTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    [contentView addSubview:pwdTextField];
+    self.pwdTextField = pwdTextField;
+    [pwdTextField wl_setCornerRadius:5.f];
+    [pwdTextField wl_setBorderWidth:1.f color:WLColoerRGB(242.f)];
+    [pwdTextField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(240.f, 36.f));
+        make.centerX.mas_equalTo(contentView);
+        make.top.mas_equalTo(moneyLabel.mas_bottom).mas_offset(15.f);
+    }];
+    
+    QMUIFillButton *payBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
+    [payBtn setTitle:@"确认提现" forState:UIControlStateNormal];
+    payBtn.titleLabel.font = WLFONT(14);
+    [payBtn addTarget:self action:@selector(payBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [payBtn setCornerRadius:5.f];
+    [contentView addSubview:payBtn];
+    [payBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(115.f, 36.f));
+        make.left.mas_equalTo(pwdTextField);
+        make.top.mas_equalTo(pwdTextField.mas_bottom).mas_offset(15.f);
+    }];
+    
+    QMUIFillButton *cancelBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorGray];
+    [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+    cancelBtn.titleLabel.font = WLFONT(14);
+    [cancelBtn addTarget:self action:@selector(cancelBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [cancelBtn setCornerRadius:5.f];
+    [contentView addSubview:cancelBtn];
+    [cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(payBtn);
+        make.right.mas_equalTo(pwdTextField);
+        make.top.mas_equalTo(pwdTextField.mas_bottom).mas_offset(15.f);
+    }];
+    
+    QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
+    modalViewController.animationStyle = QMUIModalPresentationAnimationStylePopup;
+    modalViewController.contentView = contentView;
+    modalViewController.modal = YES;
+    //    modalViewController.delegate = self;
+    [modalViewController showWithAnimated:YES completion:nil];
+    self.payModalViewController =  modalViewController;
+}
+
+// 确认支付
+- (void)payBtnClicked:(UIButton *)sender {
+    // 钱包 - 提现 - 支付宝授权登录
+    [WLHUDView showHUDWithStr:@"提现中..." dim:YES];
+    NSDictionary *params = @{@"password" : _pwdTextField.text.wl_trimWhitespaceAndNewlines,
+                             @"money" : [NSNumber numberWithFloat:_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue]};
+    WEAKSELF
+    [UserModelClient aliPayLoginWithParams:params Success:^(id resultInfo) {
+        [[AlipaySDK defaultService] auth_V2WithInfo:resultInfo fromScheme:@"AlipayMineSweeper" callback:^(NSDictionary *resultDic) {
+            DLog(@"auth_V2WithInfo");
+        }];
+//        [[AlipaySDK defaultService] processAuth_V2Result:nil standbyCallback:^(NSDictionary *resultDic) {
 //
-//    // 钱包 - 提现
-//    + (WLRequest *)withdrawWallentWithParams:(NSDictionary *)params
-//Success:(SuccessBlock)success
-//Failed:(FailedBlock)failed;
+//        }];
+                
+//        [weakSelf withdrawData];
+    } Failed:^(NSError *error) {
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
+    }];
+}
+
+// 提现
+- (void)withdrawData {
+    NSDictionary *params = @{@"user_id" : configTool.loginUser.uid,
+                             @"money" : [NSNumber numberWithFloat:_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue]};
+    [UserModelClient withdrawWallentWithParams:params Success:^(id resultInfo) {
+        [WLHUDView showSuccessHUD:@"操作成功"];
+        [kNSNotification postNotificationName:@"kUserInfoChanged" object:nil];
+        [self.navigationController popViewControllerAnimated:YES];
+    } Failed:^(NSError *error) {
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
+    }];
+}
+
+// 取消支付
+- (void)cancelBtnClicked:(UIButton *)sender {
+    [_payModalViewController hideWithAnimated:YES completion:nil];
+    
 }
 
 @end

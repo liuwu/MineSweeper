@@ -46,6 +46,11 @@
                              Success:(SuccessBlock)success
                               Failed:(FailedBlock)failed;
 
+// 提现 - 提现信息
++ (WLRequest *)withdrawInfoWithParams:(NSDictionary *)params
+                              Success:(SuccessBlock)success
+                               Failed:(FailedBlock)failed;
+
 // 钱包 - 提现
 + (WLRequest *)withdrawWallentWithParams:(NSDictionary *)params
                                  Success:(SuccessBlock)success
@@ -110,6 +115,11 @@
 + (WLRequest *)getUserSafeIndexWithParams:(NSDictionary *)params
                                    Success:(SuccessBlock)success
                                     Failed:(FailedBlock)failed;
+
+// 我的 - 设置 - 免密下注
++ (WLRequest *)setSecretFreeWithParams:(NSDictionary *)params
+                               Success:(SuccessBlock)success
+                                Failed:(FailedBlock)failed;
 
 // 修改手机验证码
 + (WLRequest *)getChangeMobileVcodeWithParams:(NSDictionary *)params

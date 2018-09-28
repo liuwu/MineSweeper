@@ -77,6 +77,7 @@
     
     [kNSNotification addObserver:self selector:@selector(userLoginSuccess) name:@"kUserLoginSuccess" object:nil];
     [kNSNotification addObserver:self selector:@selector(userLoginSuccess) name:@"kNickNameChanged" object:nil];
+    [kNSNotification addObserver:self selector:@selector(userLoginSuccess) name:@"kUserInfoChanged" object:nil];
     [self loadCityData];
 }
 

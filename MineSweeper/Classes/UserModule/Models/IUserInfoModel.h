@@ -34,5 +34,7 @@
 @property (nonatomic, copy) NSString *balance;
 // 1已设置支付密码  0 没有
 @property (nonatomic, copy) NSNumber *is_default_password;
+// 免密下注 1：免密下注  0：不是
+@property (nonatomic, copy) NSString * is_secret_free;
 
 @end

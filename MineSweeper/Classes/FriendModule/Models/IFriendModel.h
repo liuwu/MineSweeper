@@ -14,6 +14,8 @@
 @property (nonatomic, copy) NSString *firstPinyin;
 // 用户ID
 @property (nonatomic, copy) NSString *uid;
+// 用户ID
+@property (nonatomic, copy) NSString *id_num;
 // 手机
 @property (nonatomic, copy) NSString *mobile;
 // 昵称

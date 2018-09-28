@@ -23,6 +23,7 @@
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>alipays</string>
+		<string>safepay</string>
 		<string>alipayshare</string>
 		<string>alipay</string>
 		<string>weixin</string>
@@ -32,8 +33,7 @@
 		<string>itms-apps</string>
 		<string>baidumap</string>
 		<string>wx5e4e9a58776baed3</string>
-		<string>welian</string>
-		<string>AlipayWeLian</string>
+		<string>AlipayMineSweeper</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

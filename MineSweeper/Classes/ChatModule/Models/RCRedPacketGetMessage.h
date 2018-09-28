@@ -1,17 +1,16 @@
 //
-//  RCRedPacketMessage.h
+//  RCRedPacketGetMessage.h
 //  MineSweeper
 //
-//  Created by liuwu on 2018/9/25.
+//  Created by liuwu on 2018/9/28.
 //  Copyright © 2018年 liuwu. All rights reserved.
 //
 
 #import <RongIMLib/RongIMLib.h>
 
-#define RCRedPacketMessageTypeIdentifier @"RC:RedPacketMsg"
+#define RCRedPacketGetMessageTypeIdentifier @"RC:RedPacketMsgGet"
 
-@interface RCRedPacketMessage : RCMessageContent<RCMessageContentView>
-
+@interface RCRedPacketGetMessage : RCMessageContent<RCMessageContentView>
 
 // 红包ID
 @property (nonatomic, strong) NSString *pack_id;

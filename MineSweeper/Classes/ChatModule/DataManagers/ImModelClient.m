@@ -219,6 +219,22 @@
     return api;
 }
 
+// IM - 聊天信息 - 聊天置顶
++ (WLRequest *)setImChatIsTopWithParams:(NSDictionary *)params
+                                Success:(SuccessBlock)success
+                                 Failed:(FailedBlock)failed {
+    WLRequest *api = [self getWithParams:params apiMethodName:@"App/IM/IM/is_top"
+                                  Success:^(id resultInfo) {
+                                      DLog(@"IM - 聊天信息 - 聊天置顶 ---- %@",describe(resultInfo));
+                                      SAFE_BLOCK_CALL(success,resultInfo);
+                                  } Failed:^(NSError *error) {
+                                      // 统一错误处理
+                                      //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                      SAFE_BLOCK_CALL(failed, error);
+                                  }];
+    return api;
+}
+
 // IM - 聊天信息 - 取消聊天置顶
 + (WLRequest *)setImChatCancelIsTopWithParams:(NSDictionary *)params
                                       Success:(SuccessBlock)success

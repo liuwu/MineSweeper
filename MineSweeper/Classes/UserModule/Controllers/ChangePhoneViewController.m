@@ -10,6 +10,8 @@
 #import "LWLoginTextField.h"
 #import "LWLoginTextFieldView.h"
 
+#import "UserModelClient.h"
+
 @interface ChangePhoneViewController ()
 
 @property (nonatomic, strong) LWLoginTextFieldView *phoneTxtView;
@@ -58,6 +60,7 @@
     [self.view addSubview:imageVcodeTxtView];
     
     LWLoginTextFieldView *vcodeTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeVcode];
+    [vcodeTxtView.rightButton addTarget:self action:@selector(getVcode) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:vcodeTxtView];
     self.vcodeTxtView = vcodeTxtView;
     
@@ -119,9 +122,43 @@
 }
 
 #pragma mark - Private
+- (void)getVcode {
+    if (self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines.length != 11) {
+        [WLHUDView showOnlyTextHUD:@"请输入正确的手机号"];
+        return;
+    }
+
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    [UserModelClient getChangeMobileVcodeWithParams:nil Success:^(id resultInfo) {
+        [WLHUDView showSuccessHUD:@"已发送"];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
+    }];
+}
+
 // 登录按钮点击
 - (void)didClickLoginBtn:(UIButton *)sender {
-    
+    if (self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines.length != 11) {
+        [WLHUDView showOnlyTextHUD:@"请输入正确的手机号"];
+        return;
+    }
+    if (self.vcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入验证码"];
+        return;
+    }
+    NSDictionary *params = @{
+                             @"mobile" : self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines,
+                             @"code" : self.vcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines
+                             };
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    WEAKSELF
+    [UserModelClient changeMobileWithParams:params Success:^(id resultInfo) {
+        [WLHUDView showSuccessHUD:@"修改成功"];
+        weakSelf.vcodeTxtView.textField.text = @"";
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
+    }];
 }
 
 @end

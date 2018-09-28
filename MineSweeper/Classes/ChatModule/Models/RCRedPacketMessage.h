@@ -13,9 +13,18 @@
 @interface RCRedPacketMessage : RCMessageContent<RCMessageContentView>
 
 
-/**  该条消息的id   */
-@property (nonatomic, strong) NSNumber *commentid;
-
+// 红包ID
+@property (nonatomic, strong) NSString *pack_id;
+// 红包title
+@property (nonatomic, strong) NSString *title;
+// 红包总金额
+@property (nonatomic, copy) NSString *total_money;
+// 红包个数
+@property (nonatomic, copy) NSString *num;
+// 雷数
+@property (nonatomic, copy) NSString *thunder;
+// 是否领过
+@property (nonatomic, copy) NSString *isGet;
 /**  是否看过   */
 @property (nonatomic, strong) NSNumber *isLook;
 

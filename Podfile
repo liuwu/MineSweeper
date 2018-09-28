@@ -12,6 +12,8 @@ def shared_pods
     pod 'Masonry'
     pod 'BaiduMapKit','4.1.1' #百度地图SDK
     pod 'BMKLocationKit','1.2.0' #百度定位SDK
+    # 极光推送
+    pod 'JPush'
     # 二维码扫描
     pod 'ZBarSDK', '~> 1.3.1'
     pod 'UITableView+FDTemplateLayoutCell'

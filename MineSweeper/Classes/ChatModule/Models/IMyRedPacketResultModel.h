@@ -13,6 +13,8 @@
 
 //  抢红人的昵称
 @property (nonatomic, copy) NSString *nickname;
+// 头像
+@property (nonatomic, copy) NSString *avatar;
 // 用id
 @property (nonatomic, copy) NSString *member_id;
 // 红包总数

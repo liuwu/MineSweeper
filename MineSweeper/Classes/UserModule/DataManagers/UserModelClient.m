@@ -331,4 +331,68 @@
     return api;
 }
 
+// 修改手机验证码
++ (WLRequest *)getChangeMobileVcodeWithParams:(NSDictionary *)params
+                                      Success:(SuccessBlock)success
+                                       Failed:(FailedBlock)failed {
+    WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Info/change_mobile_sms"
+                                  Success:^(id resultInfo) {
+                                      DLog(@"修改手机验证码 ---- %@",describe(resultInfo));
+                                      SAFE_BLOCK_CALL(success,resultInfo);
+                                  } Failed:^(NSError *error) {
+                                      // 统一错误处理
+                                      //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                      SAFE_BLOCK_CALL(failed, error);
+                                  }];
+    return api;
+}
+
+// 修改手机号
++ (WLRequest *)changeMobileWithParams:(NSDictionary *)params
+                              Success:(SuccessBlock)success
+                               Failed:(FailedBlock)failed {
+    WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Info/change_mobile"
+                                 Success:^(id resultInfo) {
+                                     DLog(@"修改手机号 ---- %@",describe(resultInfo));
+                                     SAFE_BLOCK_CALL(success,resultInfo);
+                                 } Failed:^(NSError *error) {
+                                     // 统一错误处理
+                                     //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                     SAFE_BLOCK_CALL(failed, error);
+                                 }];
+    return api;
+}
+
+// 推广海报
++ (WLRequest *)getPosterWithParams:(NSDictionary *)params
+                           Success:(SuccessBlock)success
+                            Failed:(FailedBlock)failed {
+    WLRequest *api = [self getWithParams:params apiMethodName:@"App/User/Info/pop_posters"
+                                 Success:^(id resultInfo) {
+                                     DLog(@"推广海报 ---- %@",describe(resultInfo));
+                                     SAFE_BLOCK_CALL(success,resultInfo);
+                                 } Failed:^(NSError *error) {
+                                     // 统一错误处理
+                                     //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                     SAFE_BLOCK_CALL(failed, error);
+                                 }];
+    return api;
+}
+
+// 抽奖
++ (WLRequest *)getLuckDrawWithParams:(NSDictionary *)params
+                             Success:(SuccessBlock)success
+                              Failed:(FailedBlock)failed {
+    WLRequest *api = [self getWithParams:params apiMethodName:@"App/User/LuckDraw/index"
+                                 Success:^(id resultInfo) {
+                                     DLog(@"抽奖 ---- %@",describe(resultInfo));
+                                     SAFE_BLOCK_CALL(success,resultInfo);
+                                 } Failed:^(NSError *error) {
+                                     // 统一错误处理
+                                     //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                     SAFE_BLOCK_CALL(failed, error);
+                                 }];
+    return api;
+}
+
 @end

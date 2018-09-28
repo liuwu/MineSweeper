@@ -16,6 +16,7 @@
 
 @interface RedPacketHistoryViewController ()
 
+@property (nonatomic, strong) UIImageView *logoImgView;
 @property (nonatomic, strong) QMUILabel *momeyTitleLabel;
 @property (nonatomic, strong) QMUILabel *momeyLabel;
 @property (nonatomic, assign) NSInteger page;
@@ -35,10 +36,10 @@
     [super initSubviews];
     self.page = 1;
     self.datasource = [NSMutableArray array];
-    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithTitle:@"红包记录"
-                                                                 target:self
-                                                                 action:@selector(rightBarButtonItemClicked)];
-    self.navigationItem.rightBarButtonItem = rightBtnItem;
+//    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithTitle:@"红包记录"
+//                                                                 target:self
+//                                                                 action:@selector(rightBarButtonItemClicked)];
+//    self.navigationItem.rightBarButtonItem = rightBtnItem;
     
     [self addHeaderView];
 //    [self loadData];
@@ -48,7 +49,7 @@
 
 - (void)loadData {
     WEAKSELF
-    [ImModelClient getImRedpackHistoryWithParams:@{@"p" : [NSNumber numberWithInteger:_page]} Success:^(id resultInfo) {
+    [ImModelClient getMyImRedpackHistoryWithParams:@{@"p" : [NSNumber numberWithInteger:_page]} Success:^(id resultInfo) {
         [weakSelf.tableView.mj_header endRefreshing];
         [weakSelf.tableView.mj_footer endRefreshing];
         weakSelf.model = [IMyRedPacketResultModel modelWithDictionary:resultInfo];
@@ -63,6 +64,18 @@
     [self.datasource addObjectsFromArray:_model.list];
     _momeyTitleLabel.text = [NSString stringWithFormat:@"%@共收到%@个红包,共计", _model.nickname,_model.total_num];
     _momeyLabel.text = _model.total_money;
+    
+    WEAKSELF
+    [_logoImgView setImageWithURL:[NSURL URLWithString:_model.avatar ? : configTool.userInfoModel.avatar]
+                      placeholder:[UIImage imageNamed:@"game_friend_icon"]
+                          options:YYWebImageOptionProgressive | YYWebImageOptionProgressiveBlur | YYWebImageOptionAvoidSetImage
+                       completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                           if (image) {
+                               weakSelf.logoImgView.image = [image qmui_imageWithClippedCornerRadius:22.f];
+                           }else {
+                               weakSelf.logoImgView.image = [UIImage imageNamed:@"game_friend_icon"];
+                           }
+                       }];
     [self.tableView reloadData];
 }
 
@@ -101,6 +114,7 @@
     UIImageView *logoImgView = [[UIImageView alloc] initWithImage:[UIImage imageWithColor:[UIColor whiteColor]]];
     [logoImgView wl_setCornerRadius:22.f];
     [headerView addSubview:logoImgView];
+    self.logoImgView = logoImgView;
     [logoImgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(44.f, 44.f));
         make.top.mas_equalTo(headerView).mas_offset(10.f);
@@ -109,11 +123,12 @@
     
     // 总收益标题
     QMUILabel *momeyTitleLabel = [[QMUILabel alloc] init];
-    momeyTitleLabel.text = @"张三共收到26个红包,共计";
+    momeyTitleLabel.text = @"";
     momeyTitleLabel.font = UIFontMake(12);
     momeyTitleLabel.textColor = [UIColor whiteColor];
     //    momeyTitleLabel.canPerformCopyAction = YES;
     [headerView addSubview:momeyTitleLabel];
+    self.momeyTitleLabel = momeyTitleLabel;
     [momeyTitleLabel sizeToFit];
     [momeyTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(logoImgView);

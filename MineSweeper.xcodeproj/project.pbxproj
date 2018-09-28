@@ -361,6 +361,8 @@
 		1069EE74214A9D3A0006FFCA /* HomeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE73214A9D3A0006FFCA /* HomeTableViewCell.m */; };
 		106D4AED215C77B60047E8BA /* BaseImageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 106D4AEC215C77B60047E8BA /* BaseImageTableViewCell.m */; };
 		106D4AF0215C7DE00047E8BA /* ChatGroupRemarkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 106D4AEF215C7DE00047E8BA /* ChatGroupRemarkViewController.m */; };
+		106D4AF6215CCBD10047E8BA /* IRedPacketModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 106D4AF5215CCBD10047E8BA /* IRedPacketModel.m */; };
+		106D4AF9215CE6C40047E8BA /* IPosterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 106D4AF8215CE6C40047E8BA /* IPosterModel.m */; };
 		1073BC4221508BE0001EF550 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1073BC4121508BE0001EF550 /* WebViewController.m */; };
 		1073BC4D21509324001EF550 /* AXSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1073BC4521509324001EF550 /* AXSecurityPolicy.m */; };
 		1073BC4E21509324001EF550 /* AXWebViewControllerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1073BC4921509324001EF550 /* AXWebViewControllerActivity.m */; };
@@ -1138,6 +1140,10 @@
 		106D4AEC215C77B60047E8BA /* BaseImageTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseImageTableViewCell.m; sourceTree = "<group>"; };
 		106D4AEE215C7DE00047E8BA /* ChatGroupRemarkViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatGroupRemarkViewController.h; sourceTree = "<group>"; };
 		106D4AEF215C7DE00047E8BA /* ChatGroupRemarkViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatGroupRemarkViewController.m; sourceTree = "<group>"; };
+		106D4AF4215CCBD10047E8BA /* IRedPacketModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRedPacketModel.h; sourceTree = "<group>"; };
+		106D4AF5215CCBD10047E8BA /* IRedPacketModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IRedPacketModel.m; sourceTree = "<group>"; };
+		106D4AF7215CE6C40047E8BA /* IPosterModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPosterModel.h; sourceTree = "<group>"; };
+		106D4AF8215CE6C40047E8BA /* IPosterModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPosterModel.m; sourceTree = "<group>"; };
 		1073BC4021508BE0001EF550 /* WebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		1073BC4121508BE0001EF550 /* WebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		1073BC4521509324001EF550 /* AXSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXSecurityPolicy.m; sourceTree = "<group>"; };
@@ -2243,6 +2249,8 @@
 				102415572158F40E008A365A /* IRedPacketResultModel.m */,
 				102415592158F4D4008A365A /* IRedPacektMemberModel.h */,
 				1024155A2158F4D4008A365A /* IRedPacektMemberModel.m */,
+				106D4AF4215CCBD10047E8BA /* IRedPacketModel.h */,
+				106D4AF5215CCBD10047E8BA /* IRedPacketModel.m */,
 				1024155C2158F59A008A365A /* IMyRedPacketResultModel.h */,
 				1024155D2158F59A008A365A /* IMyRedPacketResultModel.m */,
 				1024155F2158F639008A365A /* IMyRedPacketModel.h */,
@@ -2385,6 +2393,8 @@
 				10F2D74F215A893900937D39 /* ICityModel.m */,
 				104CBF3F215B2EC8000D4D44 /* ISafeIndexModel.h */,
 				104CBF40215B2EC8000D4D44 /* ISafeIndexModel.m */,
+				106D4AF7215CE6C40047E8BA /* IPosterModel.h */,
+				106D4AF8215CE6C40047E8BA /* IPosterModel.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3572,6 +3582,7 @@
 				10351A092147B73200EDC7AD /* NSBundle+WLAdd.m in Sources */,
 				1018BCCC2155EAAB004BC57B /* IUserInfoModel.m in Sources */,
 				103518C82147A34000EDC7AD /* RETableViewBoolCell.m in Sources */,
+				106D4AF9215CE6C40047E8BA /* IPosterModel.m in Sources */,
 				103519102147A34000EDC7AD /* UIView+AXBadgeView.m in Sources */,
 				103518F42147A34000EDC7AD /* WLEmptyAssistantConfiger.m in Sources */,
 				103518C72147A34000EDC7AD /* RETableViewTextCell.m in Sources */,
@@ -3652,6 +3663,7 @@
 				103519ED2147B73200EDC7AD /* UIButton+WLAdd.m in Sources */,
 				103519342147A34000EDC7AD /* KSPhotoView.m in Sources */,
 				10454671214B77A500DA7F9F /* QDCommonViewController.m in Sources */,
+				106D4AF6215CCBD10047E8BA /* IRedPacketModel.m in Sources */,
 				103519402147A34000EDC7AD /* WLPersistanceTable+WLUpdate.m in Sources */,
 				10351A122147B73200EDC7AD /* CALayer+WLBorderConfig.m in Sources */,
 				1089C5572146AD9900363537 /* main.m in Sources */,

@@ -25,16 +25,16 @@
 -(NSData *)encode {
     
     NSMutableDictionary *dataDict=[NSMutableDictionary dictionary];
-    [dataDict setValue:self.avatar forKey:@"avatar"];
-    [dataDict setValue:self.commentid forKey:@"commentid"];
-//    [dataDict setValue:self.created forKey:@"created"];
-//    [dataDict setValue:self.feedcontent forKey:@"feedcontent"];
-//    [dataDict setValue:self.feedid forKey:@"feedid"];
-//    [dataDict setValue:self.feedpic forKey:@"feedpic"];
-//    [dataDict setValue:self.msg forKey:@"msg"];
-    [dataDict setValue:self.name forKey:@"name"];
-//    [dataDict setValue:self.type forKey:@"type"];
+    [dataDict setValue:self.pack_id forKey:@"pack_id"];
+    [dataDict setValue:self.title forKey:@"title"];
+    [dataDict setValue:self.total_money forKey:@"total_money"];
+    [dataDict setValue:self.num forKey:@"num"];
+    [dataDict setValue:self.thunder forKey:@"thunder"];
+    [dataDict setValue:self.isGet forKey:@"isGet"];
+    [dataDict setValue:self.isLook forKey:@"isLook"];
     [dataDict setValue:self.uid forKey:@"uid"];
+    [dataDict setValue:self.name forKey:@"name"];
+    [dataDict setValue:self.avatar forKey:@"avatar"];
     NSData *data = [NSJSONSerialization dataWithJSONObject:dataDict options:kNilOptions error:nil];
     return data;
 }
@@ -48,8 +48,15 @@
                                                          options:kNilOptions
                                                            error:&error];
     if (json) {
+        self.pack_id = json[@"pack_id"];
+        self.title = json[@"title"];
+        self.total_money = json[@"total_money"];
+        self.num = json[@"num"];
+        self.thunder = json[@"thunder"];
+        self.isGet = json[@"isGet"];
+        self.isLook = json[@"isLook"];
+        
         self.avatar = json[@"avatar"];
-        self.commentid = json[@"commentid"];
         self.name = json[@"name"];
         self.uid = json[@"uid"];
     }

@@ -73,6 +73,7 @@
     if (!cell) {
         cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"message_notifi_list_cell"];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.showBottomLine = YES;
     INoticeModel *model = _datasource[indexPath.row];
 //    cell.imageView.image = [UIImage imageNamed:@"home_newNotice_icon"];

@@ -19,6 +19,8 @@
 @property (nonatomic, copy) NSString *from_member_id;
 // 发红包人的昵称
 @property (nonatomic, copy) NSString *from_nickname;
+// 头像
+@property (nonatomic, copy) NSString *avatar;
 
 // 1踩雷 0 没有踩雷
 @property (nonatomic, copy) NSString *is_thunder;

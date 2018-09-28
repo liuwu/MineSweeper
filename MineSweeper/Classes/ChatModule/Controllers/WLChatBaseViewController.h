@@ -21,4 +21,6 @@
  */
 //- (BOOL)judgeInvestorAuth;
 
+- (void)presentLocationViewController:(RCLocationMessage *)locationMessageContent;
+
 @end

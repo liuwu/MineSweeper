@@ -103,6 +103,7 @@
     if (!cell) {
         cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleDefault reuseIdentifier:@"game_group_list_cell"];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.showBottomLine = YES;
     IGameGroupModel *model = _datasource[indexPath.row];
     [cell.imageView setImageWithURL:[NSURL URLWithString:model.image]
@@ -122,9 +123,38 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     DLog(@"didSelectRowAtIndexPath------");
     IGameGroupModel *model = _datasource[indexPath.row];
-    ChatViewController *chatVc = [[ChatViewController alloc] initWithConversationType:ConversationType_GROUP targetId:@"53"];//model.groupId];
+    if (!model) {
+        return;
+    }
+    [self join:model];
+//    WEAKSELF
+//    QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:NULL];
+//    QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"发送" style:QMUIAlertActionStyleDestructive handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+//        [weakSelf join:model];
+//    }];
+//    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:@"确定发送？" message:nil preferredStyle:QMUIAlertControllerStyleAlert];
+//    [alertController addAction:action1];
+//    [alertController addAction:action2];
+//    [alertController showWithAnimated:YES];
+}
+
+- (void)join:(IGameGroupModel *)model {
+    ChatViewController *chatVc = [[ChatViewController alloc] initWithConversationType:ConversationType_GROUP targetId:model.groupId];
     chatVc.title = model.title;// @"5-10 赔率1.5倍  群组";
     [self.navigationController pushViewController:chatVc animated:YES];
+//    [WLHUDView showHUDWithStr:@"" dim:YES];
+//    WEAKSELF
+//    NSDictionary *params = @{@"id" : @(model.groupId.integerValue),
+//                             @"fuid" : @[configTool.loginUser.uid]
+//                             };
+//    [ImGroupModelClient setImGroupJoinWithParams:params Success:^(id resultInfo) {
+//        [WLHUDView hiddenHud];
+//        ChatViewController *chatVc = [[ChatViewController alloc] initWithConversationType:ConversationType_GROUP targetId:model.groupId];
+//        chatVc.title = model.title;// @"5-10 赔率1.5倍  群组";
+//        [weakSelf.navigationController pushViewController:chatVc animated:YES];
+//    } Failed:^(NSError *error) {
+//        [WLHUDView hiddenHud];
+//    }];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

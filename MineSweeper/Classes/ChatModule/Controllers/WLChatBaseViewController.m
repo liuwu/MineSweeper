@@ -15,6 +15,7 @@
 //#import "InvestCerVC.h"
 //#import "WLTransactionDetailsController.h"
 #import "WLPhotoViewController.h"
+
 //
 #import "KSPhotoBrowser.h"
 //
@@ -43,7 +44,7 @@
 #define kImageMsgMaxCount 5000
 
 
-@interface WLChatBaseViewController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate,RCMessageCellDelegate, ChatRedPacketCellDelegate, WLPhotoViewControllerDelegate>
+@interface WLChatBaseViewController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate,RCMessageCellDelegate, WLPhotoViewControllerDelegate>
 
 @end
 
@@ -84,7 +85,6 @@ static NSString *paylistCellid = @"paylistCellid";
 //    [self.chatSessionInputBarControl.pluginBoardView removeItemWithTag:104];
     
     //* 注册消息类型，如果使用IMKit，使用此方法，不再使用RongIMLib的同名方法。如果对消息类型进行扩展，可以忽略此方法。
-//    [self registerClass:[ChatRedPacketCell class] forMessageClass:[RCRedPacketMessage class]];
 //    [self registerClass:[ChatRedPacketCell class] forCellWithReuseIdentifier:redPacketCellid];
     [self registerClass:ChatRedPacketCell.class forMessageClass:RCRedPacketMessage.class];
 //    [self registerClass:[WLChatCustomCardCell class] forCellWithReuseIdentifier:customCardCellid];
@@ -107,9 +107,6 @@ static NSString *paylistCellid = @"paylistCellid";
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
     NSString *viewClass = [NSString stringWithFormat:@"%@",touch.view.class];
     DLog(@"shouldReceiveTouch : %@", viewClass);
-//    if ([viewClass isEqualToString:@"UIView"]) {
-//        return NO;
-//    }
 //    if ([viewClass isEqualToString:@"UITableViewCellContentView"]||[viewClass isEqualToString:@"MLEmojiLabel"]) {
 //        return NO;
 //    }
@@ -193,7 +190,7 @@ static NSString *paylistCellid = @"paylistCellid";
         // 红包cell
         ChatRedPacketCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:redPacketCellid forIndexPath:indexPath];
         cell.delegate = self;
-        cell.cellDelegate = self;
+//        cell.cellDelegate = self;
 //        cell.isDisplayMessageTime = YES;
 //        cell.isDisplayMessageTime = YES;
         if ([(RCRedPacketMessage *)msgContent uid].integerValue == configTool.loginUser.uid.integerValue) {
@@ -202,7 +199,7 @@ static NSString *paylistCellid = @"paylistCellid";
             cell.messageDirection = MessageDirection_RECEIVE;
         }
         [cell setDataModel:model];
-        [cell wl_setDebug:YES];
+//        [cell wl_setDebug:YES];
         return cell;
     }
 //    if ([msgContent isMemberOfClass:[CustomCardMessage class]]) {
@@ -235,7 +232,9 @@ static NSString *paylistCellid = @"paylistCellid";
 }
 
 #pragma mark override
-//- (void)didTapUrlInMessageCell:(NSString *)url model:(RCMessageModel *)model {
+
+- (void)didTapUrlInMessageCell:(NSString *)url model:(RCMessageModel *)model {
+    DLog(@"didTapUrlInMessageCell");
 //    if ([model.content isKindOfClass:[WLPayRemindMessage class]]) {
 //        WLTransactionDetailsController *transactionDetailsVC = [[WLTransactionDetailsController alloc] init];
 //        transactionDetailsVC.urlString=url;
@@ -243,14 +242,6 @@ static NSString *paylistCellid = @"paylistCellid";
 //    }else{
 //        [[AppDelegate sharedAppDelegate] wlopenURLString:url sourceViewControl:self];
 //    }
-//}
-
-- (void)chatRedPacketCell:(ChatRedPacketCell *)redPacketCell didTapCard:(RCRedPacketMessage *)model {
-    DLog(@"红包 chatRedPacketCell");
-}
-
-- (void)chatRedPacketCell:(ChatRedPacketCell *)redPacketCell didLogoImageTap:(RCRedPacketMessage *)model {
-    DLog(@"红包 头像 chatRedPacketCell");
 }
 
 /**
@@ -270,22 +261,6 @@ static NSString *paylistCellid = @"paylistCellid";
 //        [self.navigationController pushViewController:userInfoVC animated:YES];
 //    }
 //}
-
-/*!
- 点击Cell内容的回调
- 
- @param model 消息Cell的数据模型
- */
-- (void)didTapMessageCell:(RCMessageModel *)model {
-    if ([model isMemberOfClass:[RCRedPacketMessage class]]) {
-         DLog(@"红包 didTapMessageCell");
-    }
-    if ([model isMemberOfClass:[RCLocationMessage class]]) {
-        DLog(@"位置 RCLocationMessage");
-//        [self presentLocationViewController:model];
-    }
-    DLog(@"didTapMessageCell");
-}
 
 - (void)onBeginRecordEvent {
     [super onBeginRecordEvent];
@@ -543,6 +518,15 @@ static NSString *paylistCellid = @"paylistCellid";
     }
 }
 
+- (void)showLocationMapVC {
+    WEAKSELF
+    WLChatLocationViewController *chatlocationVC = [[WLChatLocationViewController alloc] initWithSendLocationMsgeBlock:^(RCLocationMessage *locMessage) {
+        [weakSelf sendMessage:locMessage pushContent:[NSString stringWithFormat:@"%@:[位置]",configTool.userInfoModel.nickname]];
+    }];
+    QMUINavigationController *navLocation = [[QMUINavigationController alloc] initWithRootViewController:chatlocationVC];
+    [self presentViewController:navLocation animated:YES completion:nil];
+}
+
 - (void)showPicVC {
     WLPhotoViewController *imagePickerVC = [[WLPhotoViewController alloc] init];
     imagePickerVC.delegate = self;
@@ -602,15 +586,6 @@ static NSString *paylistCellid = @"paylistCellid";
     imagePickerVC.delegate = self;
     imagePickerVC.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     [self presentViewController:imagePickerVC animated:YES completion:nil];
-}
-
-- (void)showLocationMapVC {
-    WEAKSELF
-    WLChatLocationViewController *chatlocationVC = [[WLChatLocationViewController alloc] initWithSendLocationMsgeBlock:^(RCLocationMessage *locMessage) {
-        [weakSelf sendMessage:locMessage pushContent:[NSString stringWithFormat:@"%@:[位置]",configTool.userInfoModel.nickname]];
-    }];
-    QMUINavigationController *navLocation = [[QMUINavigationController alloc] initWithRootViewController:chatlocationVC];
-    [self presentViewController:navLocation animated:YES completion:nil];
 }
 
 @end

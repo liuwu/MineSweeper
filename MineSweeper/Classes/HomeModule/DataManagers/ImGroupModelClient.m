@@ -170,6 +170,38 @@
     return api;
 }
 
+// IM - 群组 - 置顶
++ (WLRequest *)setImGroupIsTopWithParams:(NSDictionary *)params
+                                 Success:(SuccessBlock)success
+                                  Failed:(FailedBlock)failed {
+    WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_is_top"
+                                  Success:^(id resultInfo) {
+                                      DLog(@"IM - 群组 - 置顶---- %@",describe(resultInfo));
+                                      SAFE_BLOCK_CALL(success,resultInfo);
+                                  } Failed:^(NSError *error) {
+                                      // 统一错误处理
+                                      //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                      SAFE_BLOCK_CALL(failed, error);
+                                  }];
+    return api;
+}
+
+// IM - 群组 - 置顶 - 取消
++ (WLRequest *)setImGroupCancelIsTopWithParams:(NSDictionary *)params
+                                       Success:(SuccessBlock)success
+                                        Failed:(FailedBlock)failed {
+    WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_is_top_cancel"
+                                  Success:^(id resultInfo) {
+                                      DLog(@"IM - 群组 - 置顶 - 取消 ---- %@",describe(resultInfo));
+                                      SAFE_BLOCK_CALL(success,resultInfo);
+                                  } Failed:^(NSError *error) {
+                                      // 统一错误处理
+                                      //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                      SAFE_BLOCK_CALL(failed, error);
+                                  }];
+    return api;
+}
+
 // IM - 群组 - 免打扰
 + (WLRequest *)setImGroupNotDisturbWithParams:(NSDictionary *)params
                                       Success:(SuccessBlock)success

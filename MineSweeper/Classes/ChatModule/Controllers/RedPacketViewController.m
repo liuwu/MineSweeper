@@ -10,6 +10,8 @@
 #import "RedPacketHistoryViewController.h"
 
 #import "BaseTableViewCell.h"
+#import "BaseImageTableViewCell.h"
+
 #import "NSString+WLAdd.h"
 
 #import "ImModelClient.h"
@@ -19,6 +21,7 @@
 
 @property (nonatomic, strong) IRedPacketResultModel *model;
 
+@property (nonatomic, strong) UIImageView *logoImgView;
 @property (nonatomic, strong) QMUILabel *titleLabel;
 @property (nonatomic, strong) QMUILabel *timeLabel;
 @property (nonatomic, strong) QMUILabel *momeyLabel;
@@ -65,9 +68,21 @@
 }
 
 - (void)updateUI {
-    _titleLabel.text = _model.title;
+    _titleLabel.text = [NSString stringWithFormat:@"来自 %@ 的红包", _model.title];
     _timeLabel.text = _model.title;
     _momeyLabel.text = _model.grab_money;
+    
+    WEAKSELF
+    [_logoImgView setImageWithURL:[NSURL URLWithString:_model.avatar]
+                        placeholder:[UIImage imageNamed:@"game_friend_icon"]
+                            options:YYWebImageOptionProgressive | YYWebImageOptionProgressiveBlur | YYWebImageOptionAvoidSetImage
+                         completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                             if (image) {
+                                 weakSelf.logoImgView.image = [image qmui_imageWithClippedCornerRadius:22.f];
+                             }else {
+                                 weakSelf.logoImgView.image = [UIImage imageNamed:@"game_friend_icon"];
+                             }
+                         }];
     
     [self.tableView reloadData];
 }
@@ -93,9 +108,11 @@
         make.centerX.mas_equalTo(headerView);
     }];
     
-    UIImageView *logoImgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"redP_head_img"]];
+    UIImageView *logoImgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"game_friend_icon"]];
     bgView.backgroundColor = [UIColor clearColor];
     [headerView addSubview:logoImgView];
+    [logoImgView wl_setCornerRadius:22.f];
+    self.logoImgView = logoImgView;
     [logoImgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(44.f, 44.f));
         make.centerX.mas_equalTo(headerView);
@@ -104,10 +121,11 @@
 
     // 总收益标题
     QMUILabel *titleLabel = [[QMUILabel alloc] init];
-    titleLabel.text = @"来自 张三 的红包";
+//    titleLabel.text = @"来自 张三 的红包";
     titleLabel.font = UIFontMake(14);
     titleLabel.textColor = WLColoerRGB(51.f);
     [headerView addSubview:titleLabel];
+    self.titleLabel = titleLabel;
     [titleLabel sizeToFit];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(logoImgView.mas_bottom).mas_offset(11.f);
@@ -116,10 +134,11 @@
     
     // 时间
     QMUILabel *timeLabel = [[QMUILabel alloc] init];
-    timeLabel.text = @"15-9";
+//    timeLabel.text = @"15-9";
     timeLabel.font = UIFontMake(12);
     timeLabel.textColor = WLColoerRGB(51.f);
     [headerView addSubview:timeLabel];
+    self.timeLabel = timeLabel;
     [timeLabel sizeToFit];
     [timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(titleLabel.mas_bottom).mas_offset(10.f);
@@ -132,7 +151,7 @@
     momeyLabel.font = UIFontMake(40);
     momeyLabel.textColor = WLColoerRGB(51.f);
     [headerView addSubview:momeyLabel];
-//    self.momeyLabel = momeyLabel;
+    self.momeyLabel = momeyLabel;
     [momeyLabel sizeToFit];
     [momeyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(headerView);
@@ -210,15 +229,12 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    BaseTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"red_packet_list_cell"];
-    if (!cell) {
-        if (indexPath.section == 0) {
-            cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleDefault reuseIdentifier:@"red_packet_list_cell"];
-        } else {
-             cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"red_packet_list_cell"];
-        }
-    }
+    
     if (indexPath.section == 0) {
+        BaseTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"red_packet_list_cell"];
+        if (!cell) {
+            cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleDefault reuseIdentifier:@"red_packet_list_cell"];
+        }
         NSString *titleStr = [NSString stringWithFormat:@"%@个红包共%@元",_model.num,_model.total_money];
         cell.textLabel.attributedText = [NSString wl_getAttributedInfoString:titleStr
                                                                    searchStr:_model.total_money
@@ -227,16 +243,16 @@
         cell.textLabel.textColor = WLColoerRGB(153.f);
         cell.textLabel.font = UIFontMake(14.f);
         cell.imageEdgeInsets = UIEdgeInsetsZero;
+        cell.showBottomLine = YES;
+        return cell;
     } else {
+        BaseImageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"red_packet_list_cell"];
+        if (!cell) {
+            cell = [[BaseImageTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"red_packet_list_cell"];
+        }
+        cell.showBottomLine = YES;
         IRedPacektMemberModel *model = _model.list[indexPath.row];
-        cell.imageView.image = [UIImage imageNamed:@"game_group_icon"];
-        cell.textLabel.text = model.nickname;// @"小尹子";
-        cell.textLabel.textColor = WLColoerRGB(51.f);
-        cell.textLabel.font = UIFontMake(15.f);
-        cell.detailTextLabel.text = model.update_time;// @"10-12 12:12";
-        cell.detailTextLabel.textColor = WLColoerRGB(102.f);
-        cell.detailTextLabel.font = UIFontMake(14.f);
-        
+        cell.redPacketMemberModel = model;
         QMUILabel *moenyLabel = [[QMUILabel alloc] initWithFrame:CGRectMake(0., 0., 60.f, cell.height)];
         moenyLabel.font = UIFontMake(15);
         moenyLabel.textColor = UIColorMake(203,52,36);
@@ -244,18 +260,17 @@
         cell.accessoryView = moenyLabel;
         
         // reset
-//        cell.imageEdgeInsets = UIEdgeInsetsZero;
-//        cell.textLabelEdgeInsets = UIEdgeInsetsZero;
-//        cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
-//        cell.accessoryEdgeInsets = UIEdgeInsetsZero;
-        cell.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
-        cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
-        cell.detailTextLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+        //        cell.imageEdgeInsets = UIEdgeInsetsZero;
+        //        cell.textLabelEdgeInsets = UIEdgeInsetsZero;
+        //        cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
+        //        cell.accessoryEdgeInsets = UIEdgeInsetsZero;
+        //        cell.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+        //        cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+        //        cell.detailTextLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
         cell.accessoryEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -25);
         [cell updateCellAppearanceWithIndexPath:indexPath];
+        return cell;
     }
-    cell.showBottomLine = YES;
-    return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

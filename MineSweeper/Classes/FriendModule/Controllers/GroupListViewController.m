@@ -7,8 +7,10 @@
 //
 
 #import "GroupListViewController.h"
+#import "ChatViewController.h"
 
 #import "BaseTableViewCell.h"
+#import "BaseImageTableViewCell.h"
 
 #import "ImGroupModelClient.h"
 #import "IGameGroupModel.h"
@@ -84,23 +86,25 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    BaseTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"group_list_cell"];
+    BaseImageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"group_list_cell"];
     if (!cell) {
-        cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleDefault reuseIdentifier:@"group_list_cell"];
+        cell = [[BaseImageTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleDefault reuseIdentifier:@"group_list_cell"];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.showBottomLine = YES;
     IGameGroupModel *model = _datasource[indexPath.row];
 //    cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
-    [cell.imageView setImageWithURL:[NSURL URLWithString:model.image]
-                        placeholder:[UIImage imageNamed:@"game_group_icon"]
-                            options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur|YYWebImageOptionIgnorePlaceHolder completion:nil];
-    
-    cell.textLabel.text = model.title;// @"群组";
+//    [cell.imageView setImageWithURL:[NSURL URLWithString:model.image]
+//                        placeholder:[UIImage imageNamed:@"game_group_icon"]
+//                            options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur|YYWebImageOptionIgnorePlaceHolder completion:nil];
+//
+//    cell.textLabel.text = model.title;// @"群组";
+    cell.groupModel = model;
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
     
     // reset
-    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+//    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
     [cell updateCellAppearanceWithIndexPath:indexPath];
     return cell;
 }
@@ -108,7 +112,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     DLog(@"didSelectRowAtIndexPath------");
-    
+    IGameGroupModel *model = _datasource[indexPath.row];
+    ChatViewController *chatVc = [[ChatViewController alloc] initWithConversationType:ConversationType_GROUP targetId:model.groupId];
+    chatVc.title = model.title;// @"5-10 赔率1.5倍  群组";
+    [self.navigationController pushViewController:chatVc animated:YES];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

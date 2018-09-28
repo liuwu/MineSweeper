@@ -9,6 +9,7 @@
 #import "NewFriendListViewController.h"
 
 #import "BaseTableViewCell.h"
+#import "BaseImageTableViewCell.h"
 
 #import "FriendModelClient.h"
 #import "IFriendRequestModel.h"
@@ -71,24 +72,26 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    BaseTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"new_friend_list_cell"];
+    BaseImageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"new_friend_list_cell"];
     if (!cell) {
-        cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"new_friend_list_cell"];
+        cell = [[BaseImageTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"new_friend_list_cell"];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.showBottomLine = YES;
     IFriendRequestModel *model = _datasource[indexPath.row];
+    cell.friendRequestModel = model;
 //    cell.imageView.image = [UIImage imageNamed:@"game_friend_icon"];
-    cell.imageView.size = CGSizeMake(40.f, 40.f);
-    [cell.imageView setImageWithURL:[NSURL URLWithString:model.avatar]
-                        placeholder:[UIImage imageNamed:@"game_friend_icon"]
-                            options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur|YYWebImageOptionIgnorePlaceHolder completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-                                cell.imageView.image = [image qmui_imageWithClippedCornerRadius:20.f];
-                            }];
-    [cell.imageView wl_setCornerRadius:20.f];
-    cell.textLabel.text = model.fnickname;// @"小尹子";
+//    cell.imageView.size = CGSizeMake(40.f, 40.f);
+//    [cell.imageView setImageWithURL:[NSURL URLWithString:model.avatar]
+//                        placeholder:[UIImage imageNamed:@"game_friend_icon"]
+//                            options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur|YYWebImageOptionIgnorePlaceHolder completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+//                                cell.imageView.image = [image qmui_imageWithClippedCornerRadius:20.f];
+//                            }];
+//    [cell.imageView wl_setCornerRadius:20.f];
+//    cell.textLabel.text = model.fnickname;// @"小尹子";
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
-    cell.detailTextLabel.text = model.message;// @"我是尹子";
+//    cell.detailTextLabel.text = model.message;// @"我是尹子";
     cell.detailTextLabel.textColor = WLColoerRGB(102.f);
     cell.detailTextLabel.font = UIFontMake(14.f);
     
@@ -153,10 +156,10 @@
 //    cell.accessoryEdgeInsets = UIEdgeInsetsZero;
 //    cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
     
-    cell.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+//    cell.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
     cell.accessoryEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -5);
-    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
-    cell.detailTextLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+//    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+//    cell.detailTextLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
     [cell updateCellAppearanceWithIndexPath:indexPath];
     return cell;
 }

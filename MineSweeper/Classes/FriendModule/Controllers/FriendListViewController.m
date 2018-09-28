@@ -11,12 +11,14 @@
 #import "GroupListViewController.h"
 #import "SearchFriendViewController.h"
 #import "TransferViewController.h"
+#import "ChatViewController.h"
 
 #import "UserInfoViewController.h"
 #import "ChatInfoViewController.h"
 
 #import "QMUISearchBar.h"
 #import "BaseTableViewCell.h"
+#import "BaseImageTableViewCell.h"
 
 #import "DSectionIndexItemView.h"
 #import "DSectionIndexView.h"
@@ -33,6 +35,8 @@
 @property (nonatomic, strong) NSArray<NSString *> *iconArray;
 @property (nonatomic, strong) NSArray<NSString *> *iconTitleArray;
 
+@property (nonatomic, strong) UIBarButtonItem *rightBtnItem;
+
 @property (nonatomic, strong) NSArray *datasouce;
 @property (nonatomic, strong) NSArray *allKeys;
 @property (nonatomic, strong) NSMutableDictionary *friendDict;
@@ -40,6 +44,9 @@
 @property (nonatomic, strong) NSMutableArray *filterArray;//搜索出来的数据数组
 @property (nonatomic, strong) NSArray *filterAllKeys;
 @property (nonatomic, strong) NSMutableDictionary *filterFriendDict;
+
+@property (nonatomic, copy) NSString *groupName;
+@property (nonatomic, strong) NSMutableArray *selectChatArray;
 
 
 @end
@@ -50,6 +57,10 @@
     switch (_frindListType) {
         case FriendListTypeForTransfer:
             return @"转账";
+            break;
+        case FriendListTypeForGroupChatAddFriend:
+        case FriendListTypeForGroupChat:
+            return @"选择联系人";
             break;
         default:
             return @"通讯录";
@@ -105,6 +116,15 @@
         
         UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"common_addFriend_icon_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
         self.navigationItem.rightBarButtonItem = rightBtnItem;
+    }
+    if (_frindListType == FriendListTypeForGroupChat||_frindListType == FriendListTypeForGroupChatAddFriend) {
+        [self.tableView setEditing:YES animated:YES];
+        self.tableView.allowsMultipleSelection = YES;
+        self.selectChatArray = [NSMutableArray array];
+        UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithTitle:@"确定" target:self action:@selector(rightBtnItemClicked)];
+        self.rightBtnItem = rightBtnItem;
+        self.navigationItem.rightBarButtonItem = rightBtnItem;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
     }
     
     QMUISearchBar *searchBar = [[QMUISearchBar alloc] qmui_initWithSize:CGSizeMake(DEVICE_WIDTH, 44.f)];
@@ -205,6 +225,7 @@
 #pragma mark DSectionIndexViewDataSource && delegate method
 - (NSInteger)numberOfItemViewForSectionIndexView:(DSectionIndexView *)sectionIndexView {
     switch (_frindListType) {
+        case FriendListTypeForGroupChatAddFriend:
         case FriendListTypeForGroupChat:
         case FriendListTypeForTransfer:
             if (self.searchBar.text.length) {
@@ -226,6 +247,7 @@
 - (DSectionIndexItemView *)sectionIndexView:(DSectionIndexView *)sectionIndexView itemViewForSection:(NSInteger)section {
     DSectionIndexItemView *itemView = [[DSectionIndexItemView alloc] init];
     switch (_frindListType) {
+        case FriendListTypeForGroupChatAddFriend:
         case FriendListTypeForGroupChat:
         case FriendListTypeForTransfer:
             if (self.searchBar.text.length) {
@@ -276,6 +298,7 @@
 - (NSString *)sectionIndexView:(DSectionIndexView *)sectionIndexView
                titleForSection:(NSInteger)section {
     switch (_frindListType) {
+        case FriendListTypeForGroupChatAddFriend:
         case FriendListTypeForGroupChat:
         case FriendListTypeForTransfer:
             if (self.searchBar.text.length) {
@@ -320,6 +343,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     switch (_frindListType) {
+        case FriendListTypeForGroupChatAddFriend:
         case FriendListTypeForGroupChat:
         case FriendListTypeForTransfer:
             if (self.searchBar.text.length) {
@@ -348,6 +372,7 @@
     titleLabel.textColor = UIColorMake(133,144,166);
     [headerView addSubview:titleLabel];
     switch (_frindListType) {
+        case FriendListTypeForGroupChatAddFriend:
         case FriendListTypeForGroupChat:
         case FriendListTypeForTransfer:
             if (self.searchBar.text.length) {
@@ -378,6 +403,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     switch (_frindListType) {
+        case FriendListTypeForGroupChatAddFriend:
         case FriendListTypeForGroupChat:
         case FriendListTypeForTransfer:
             if (self.searchBar.text.length) {
@@ -405,23 +431,41 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    BaseTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"friend_list_cell"];
+    BaseImageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"friend_list_cell"];
     if (!cell) {
-        cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleDefault reuseIdentifier:@"friend_list_cell"];
+        cell = [[BaseImageTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleDefault reuseIdentifier:@"friend_list_cell"];
     }
     cell.showBottomLine = YES;
-    
+//    if (!(_frindListType == FriendListTypeForGroupChat && _frindListType == FriendListTypeForGroupChatAddFriend)) {
+//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    }
     switch (_frindListType) {
+        case FriendListTypeForGroupChatAddFriend:
         case FriendListTypeForGroupChat:
         case FriendListTypeForTransfer:
             {
-                cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
+//                cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
+                IFriendModel *model = nil;
                 if (self.searchBar.text.length) {
-                    IFriendModel *model = [[_filterFriendDict objectForKey:_filterAllKeys[indexPath.section]] objectAtIndex:indexPath.row];
-                    cell.textLabel.text = model.nickname;// @"小尹子";
+                    model = [[_filterFriendDict objectForKey:_filterAllKeys[indexPath.section]] objectAtIndex:indexPath.row];
+//                    cell.textLabel.text = model.nickname;// @"小尹子";
+                    cell.friendModel = model;
+                    
                 } else {
-                    IFriendModel *model = [[_friendDict objectForKey:_allKeys[indexPath.section]] objectAtIndex:indexPath.row];
-                    cell.textLabel.text = model.nickname;// @"小尹子";
+                    model = [[_friendDict objectForKey:_allKeys[indexPath.section]] objectAtIndex:indexPath.row];
+                    cell.friendModel = model;
+//                    cell.textLabel.text = model.nickname;// @"小尹子";
+                }
+                if (_frindListType == FriendListTypeForGroupChatAddFriend) {
+                    BOOL selected = [_groupDetailInfo.member_list bk_any:^BOOL(id obj) {
+                        return [[obj uid] integerValue] == model.uid.integerValue;
+                    }];
+                    if (selected) {
+                        [cell setSelected:YES animated:YES];
+                        cell.enabled = NO;
+                    }else {
+                        [cell setSelected:NO animated:YES];
+                    }
                 }
             }
             break;
@@ -432,13 +476,24 @@
                 cell.textLabel.text = _iconTitleArray[indexPath.row];
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             } else {
-                cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
+                
+//                cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
                 if (self.searchBar.text.length) {
                     IFriendModel *model = [[_filterFriendDict objectForKey:_filterAllKeys[indexPath.section - 1]] objectAtIndex:indexPath.row];
-                    cell.textLabel.text = model.nickname;// @"小尹子";
+                    cell.friendModel = model;
+//                    cell.textLabel.text = model.nickname;// @"小尹子";
+//                    [cell.imageView setImageWithURL:[NSURL URLWithString:@"https://test.cnsunrun.com/saoleiapp/Uploads/Avatar/000/00/07/34_avatar_big.jpg?time=1538019638"]
+//                                        placeholder:[UIImage imageNamed:@"game_friend_icon"]
+//                                            options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur|YYWebImageOptionIgnorePlaceHolder
+//                                         completion:nil];
                 } else {
                     IFriendModel *model = [[_friendDict objectForKey:_allKeys[indexPath.section - 1]] objectAtIndex:indexPath.row];
-                    cell.textLabel.text = model.nickname;// @"小尹子";
+                    cell.friendModel = model;
+//                    cell.textLabel.text = model.nickname;// @"小尹子";
+//                    [cell.imageView setImageWithURL:[NSURL URLWithString:@"https://test.cnsunrun.com/saoleiapp/Uploads/Avatar/000/00/07/34_avatar_big.jpg?time=1538019638"]
+//                                        placeholder:[UIImage imageNamed:@"game_friend_icon"]
+//                                            options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur|YYWebImageOptionIgnorePlaceHolder
+//                                         completion:nil];
                 }
             }
         }
@@ -450,41 +505,23 @@
     cell.textLabel.font = UIFontMake(15.f);
     
     // reset
-    cell.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+//    cell.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
     //    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+//    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
     [cell updateCellAppearanceWithIndexPath:indexPath];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.searchBar resignFirstResponder];
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     DLog(@"didSelectRowAtIndexPath------");
     [[self.view wl_findFirstResponder] resignFirstResponder];
-    
     switch (_frindListType) {
+        case FriendListTypeForGroupChatAddFriend:
         case FriendListTypeForGroupChat:
         {
-            //转账
-            IFriendModel *model = nil;
-            if (self.searchBar.text.length) {
-                model = [[_filterFriendDict objectForKey:_filterAllKeys[indexPath.section]] objectAtIndex:indexPath.row];
-            } else {
-                model = [[_friendDict objectForKey:_allKeys[indexPath.section]] objectAtIndex:indexPath.row];
-            }
-            if (!model) {
-                return;
-            }
-            NSDictionary *params = @{
-                                     @"title" : @"聊天交流群",
-                                     @"fuid" : @[model.uid, configTool.loginUser.uid]
-                                     };
-            [ImGroupModelClient setImGroupAddWithParams:params Success:^(id resultInfo) {
-                
-            } Failed:^(NSError *error) {
-                
-            }];
+            [self updateDataWithTableview:tableView];
         }
             break;
         case FriendListTypeForTransfer:
@@ -529,12 +566,82 @@
         }
             break;
     }
-    
+}
+
+//- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+//    switch (_frindListType) {
+//        case FriendListTypeForGroupChatAddFriend:
+//        case FriendListTypeForGroupChat:
+//        {
+//            IFriendModel *model = nil;
+//            if (self.searchBar.text.length) {
+//                model = [[_filterFriendDict objectForKey:_filterAllKeys[indexPath.section]] objectAtIndex:indexPath.row];
+//            } else {
+//                model = [[_friendDict objectForKey:_allKeys[indexPath.section]] objectAtIndex:indexPath.row];
+//            }
+//            if (_frindListType != FriendListTypeForTransfer) {
+//                BOOL selected = [_groupDetailInfo.member_list bk_any:^BOOL(id obj) {
+//                    return [[obj uid] integerValue] == model.uid.integerValue;
+//                }];
+//                return !selected;
+//            } else {
+//                return YES;
+//            }
+//        }
+//            break;
+//        default:
+//        {
+//            return NO;
+//        }
+//            break;
+//    }
+//}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return UITableViewCellEditingStyleDelete | UITableViewCellEditingStyleInsert;
+}
+
+-(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [self updateDataWithTableview:tableView];
+}
+
+- (void)updateDataWithTableview:(UITableView *)tableView {
+    NSArray *indexpaths = [tableView indexPathsForSelectedRows];
+    NSMutableArray *selectedItems = [NSMutableArray new];
+    self.selectChatArray = [NSMutableArray array];
+    for (NSIndexPath *indexpath in indexpaths) {
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexpath];
+        [selectedItems addObject:cell.textLabel.text];
+        
+        IFriendModel *model = nil;
+        if (self.searchBar.text.length) {
+            model = [[_filterFriendDict objectForKey:_filterAllKeys[indexpath.section]] objectAtIndex:indexpath.row];
+        } else {
+            model = [[_friendDict objectForKey:_allKeys[indexpath.section]] objectAtIndex:indexpath.row];
+        }
+        if (model) {
+            [self.selectChatArray addObject:model];
+        }
+    }
+    if (_selectChatArray.count > 0) {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+        self.rightBtnItem = [UIBarButtonItem qmui_itemWithTitle:[NSString stringWithFormat:@"(%lu)确定", _selectChatArray.count] target:self action:@selector(rightBtnItemClicked)];
+        self.navigationItem.rightBarButtonItem = _rightBtnItem;
+    } else {
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        self.rightBtnItem = [UIBarButtonItem qmui_itemWithTitle:@"确定" target:self action:@selector(rightBtnItemClicked)];
+        self.navigationItem.rightBarButtonItem = _rightBtnItem;
+    }
+    NSString *title = [selectedItems componentsJoinedByString:@"、"];
+    self.groupName = title.length < 10 ? title : [title substringToIndex:10];
+    DLog(@"选中的内日： %@", [selectedItems componentsJoinedByString:@";"]);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     //    return kNoteHeight + kBannerHeight;
     switch (_frindListType) {
+        case FriendListTypeForGroupChatAddFriend:
+        case FriendListTypeForGroupChat:
         case FriendListTypeForTransfer:
             return 28.f;
             break;
@@ -625,9 +732,67 @@
 // 右侧按钮点击
 - (void)rightBtnItemClicked {
     [[self.view wl_findFirstResponder] resignFirstResponder];
+    
+    switch (_frindListType) {
+        case FriendListTypeForGroupChatAddFriend:
+        {
+            if (_selectChatArray.count == 0) {
+                return;
+            }
+            NSMutableArray *uids = [NSMutableArray array];
+            for (IFriendModel *model in _selectChatArray) {
+                [uids addObject:model.uid];
+            }
+            NSDictionary *params = @{
+                                     @"id" : _groupDetailInfo.groupId,
+                                     @"fuid" : uids
+                                     };
+            [WLHUDView showHUDWithStr:@"" dim:YES];
+            WEAKSELF
+            [ImGroupModelClient setImGroupJoinWithParams:params Success:^(id resultInfo) {
+                [WLHUDView showSuccessHUD:@"添加成功"];
+                [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
+                [weakSelf.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:self.navigationController.viewControllers.count - 2] animated:YES];
+            } Failed:^(NSError *error) {
+                [WLHUDView hiddenHud];
+            }];
+        }
+            break;
+        case FriendListTypeForGroupChat:
+        {
+            if (_selectChatArray.count == 0) {
+                return;
+            }
+            NSMutableArray *uids = [NSMutableArray array];
+            for (IFriendModel *model in _selectChatArray) {
+                [uids addObject:model.uid];
+            }
+            NSDictionary *params = @{
+                                     @"title" : _groupName,
+                                     @"fuid" : uids
+                                     };
+            [WLHUDView showHUDWithStr:@"" dim:YES];
+            WEAKSELF
+            [ImGroupModelClient setImGroupAddWithParams:params Success:^(id resultInfo) {
+                [WLHUDView showSuccessHUD:@"群聊创建成功"];
+                NSString *groupId = resultInfo[@"id"];
+                ChatViewController *chatVc = [[ChatViewController alloc] initWithConversationType:ConversationType_GROUP targetId:groupId];
+                chatVc.title = weakSelf.groupName;// @"5-10 赔率1.5倍  群组";
+                [weakSelf.navigationController pushViewController:chatVc animated:YES];
+            } Failed:^(NSError *error) {
+                [WLHUDView hiddenHud];
+            }];
+        }
+            break;
+            
+        default:
+        {
+            SearchFriendViewController *vc = [[SearchFriendViewController alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+    }
 //    ChatInfoViewController *vc = [[ChatInfoViewController alloc] init];
-    SearchFriendViewController *vc = [[SearchFriendViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
 }
 
 // 下拉刷新

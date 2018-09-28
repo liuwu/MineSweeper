@@ -11,6 +11,7 @@
 #import "ChatGroupNoteInfoViewController.h"
 #import "UserInfoViewController.h"
 #import "ChatGroupRemarkViewController.h"
+#import "FriendListViewController.h"
 
 #import "RETableViewManager.h"
 #import "RETableViewItem.h"
@@ -158,7 +159,11 @@
     self.tableView.tableFooterView = footerView;
     
     QMUIFillButton *quitBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
-    [quitBtn setTitle:@"退出群聊" forState:UIControlStateNormal];
+    if (_groupDetailInfo.is_exist.integerValue == 1) {
+        [quitBtn setTitle:@"加入群聊" forState:UIControlStateNormal];
+    } else {
+        [quitBtn setTitle:@"退出群聊" forState:UIControlStateNormal];
+    }
     quitBtn.titleLabel.font = WLFONT(18);
     [quitBtn addTarget:self action:@selector(quitBtn:) forControlEvents:UIControlEventTouchUpInside];
     [quitBtn setCornerRadius:5.f];
@@ -231,7 +236,7 @@
     [section3 addItem:notDisturbItem];
     self.notDisturbItem = notDisturbItem;
     
-    REBoolItem *topItem = [REBoolItem itemWithTitle:@"回话置顶" value:_groupDetailInfo.is_top.boolValue switchValueChangeHandler:^(REBoolItem *item) {
+    REBoolItem *topItem = [REBoolItem itemWithTitle:@"会话置顶" value:_groupDetailInfo.is_top.boolValue switchValueChangeHandler:^(REBoolItem *item) {
         [weakSelf changeChatTop:item];
     }];
     [section3 addItem:topItem];
@@ -262,28 +267,69 @@
     if (item.value) {
         // 关闭打扰
         [ImGroupModelClient cancelImGroupNotDisturbWithParams:@{@"id":@(_groupDetailInfo.groupId.integerValue)} Success:^(id resultInfo) {
+            [weakSelf changeNotDisurbInfo:item];
             [WLHUDView hiddenHud];
-            weakSelf.groupDetailInfo.not_disturb = @(!item.value).stringValue;
-            item.value = !item.value;
         } Failed:^(NSError *error) {
             [WLHUDView hiddenHud];
         }];
     } else {
         // 开启免打扰
         [ImGroupModelClient setImGroupNotDisturbWithParams:@{@"id":@(_groupDetailInfo.groupId.integerValue)} Success:^(id resultInfo) {
+            [weakSelf changeNotDisurbInfo:item];
             [WLHUDView hiddenHud];
-            weakSelf.groupDetailInfo.not_disturb = @(!item.value).stringValue;
-            item.value = !item.value;
         } Failed:^(NSError *error) {
             [WLHUDView hiddenHud];
         }];
     }
-    [item reloadRowWithAnimation:UITableViewRowAnimationNone];
+}
+
+// 免打扰设置
+- (void)changeNotDisurbInfo:(REBoolItem *)item {
+    //    [WLHUDView showHUDWithStr:@"" dim:YES];
+    WEAKSELF
+    [[RCIMClient sharedRCIMClient] setConversationNotificationStatus:ConversationType_GROUP
+                                                            targetId:_groupDetailInfo.groupId
+                                                           isBlocked:!item.value
+                                                             success:^(RCConversationNotificationStatus nStatus) {
+                                                                 //                                                                 [WLHUDView hiddenHud];
+                                                                 weakSelf.groupDetailInfo.not_disturb = [@(!item.value) stringValue];
+                                                                 item.value = !item.value;
+                                                                 [item reloadRowWithAnimation:UITableViewRowAnimationNone];
+                                                             } error:^(RCErrorCode status) {
+                                                                 //                                                                 [WLHUDView hiddenHud];
+                                                                 [item reloadRowWithAnimation:UITableViewRowAnimationNone];
+                                                             }];
 }
 
 // 修改聊天置顶状态
 - (void)changeChatTop:(REBoolItem *)item {
-    
+    WEAKSELF
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    if (item.value) {
+        // 取消置顶
+        [ImGroupModelClient setImGroupCancelIsTopWithParams:@{@"id":@(_groupDetailInfo.groupId.integerValue)} Success:^(id resultInfo) {
+            [weakSelf changeChatTopInfo:item];
+            [WLHUDView hiddenHud];
+        } Failed:^(NSError *error) {
+            [WLHUDView hiddenHud];
+        }];
+    } else {
+        // 置顶
+        [ImGroupModelClient setImGroupIsTopWithParams:@{@"id":@(_groupDetailInfo.groupId.integerValue)} Success:^(id resultInfo) {
+            [weakSelf changeChatTopInfo:item];
+            [WLHUDView hiddenHud];
+        } Failed:^(NSError *error) {
+            [WLHUDView hiddenHud];
+        }];
+    }
+}
+
+// 置顶修改
+- (void)changeChatTopInfo:(REBoolItem *)item {
+    [[RCIMClient sharedRCIMClient] setConversationToTop:ConversationType_GROUP targetId:_groupDetailInfo.groupId isTop:!item.value];
+    self.groupDetailInfo.not_disturb = @(!item.value).stringValue;
+    item.value = !item.value;
+    [item reloadRowWithAnimation:UITableViewRowAnimationNone];
 }
 
 // 修改群名称
@@ -335,7 +381,7 @@
         cell.titleLabel.text = model.nickname;// _userArray[indexPath.row];
         [cell.logoImageView setImageWithURL:[NSURL URLWithString:model.avatar]
                                 placeholder:nil
-                                    options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur|YYWebImageOptionUseNSURLCache
+                                    options:YYWebImageOptionProgressive | YYWebImageOptionProgressiveBlur | YYWebImageOptionAvoidSetImage
                                  completion:nil];
     }
     
@@ -394,6 +440,12 @@
 //    NSString *msg = cell.botlabel.text;
 //    NSLog(@"%@",msg);
     DLog(@"didSelectItemAtIndexPath：");
+    if (indexPath.row == _groupDetailInfo.member_list.count) {
+        FriendListViewController *vc = [[FriendListViewController alloc] initWithFriendListType:FriendListTypeForGroupChat];
+        vc.groupDetailInfo = _groupDetailInfo;
+        [self.navigationController pushViewController:vc animated:YES];
+        return;
+    }
     IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
     UserInfoViewController *vc = [[UserInfoViewController alloc] init];
     vc.userId = model.uid;
@@ -403,34 +455,63 @@
 #pragma mark - Private
 // 提醒退出登录
 - (void)quitBtn:(UIButton *)sender {
-    WEAKSELF
-    QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
-        DLog(@"取消");
-    }];
-    QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"退出群聊" style:QMUIAlertActionStyleDestructive handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
-        DLog(@"退出群聊");
-        [weakSelf quit];
-    }];
-    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:nil message:@"确认退出群聊？" preferredStyle:QMUIAlertControllerStyleActionSheet];
-    [alertController addAction:action1];
-    [alertController addAction:action2];
-    //    QMUIVisualEffectView *visualEffectView = [[QMUIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
-    //    visualEffectView.foregroundColor = UIColorMakeWithRGBA(255, 255, 255, .6);// 一般用默认值就行，不用主动去改，这里只是为了展示用法
-    //    alertController.mainVisualEffectView = visualEffectView;// 这个负责上半部分的磨砂
-    //
-    //    visualEffectView = [[QMUIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
-    //    visualEffectView.foregroundColor = UIColorMakeWithRGBA(255, 255, 255, .6);// 一般用默认值就行，不用主动去改，这里只是为了展示用法
-    //    alertController.cancelButtonVisualEffectView = visualEffectView;// 这个负责取消按钮的磨砂
-    //    alertController.sheetHeaderBackgroundColor = nil;
-    //    alertController.sheetButtonBackgroundColor = nil;
-    [alertController showWithAnimated:YES];
+    if (_groupDetailInfo.is_exist.integerValue == 1) {
+        // 加入
+        WEAKSELF
+        QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+            DLog(@"取消");
+        }];
+        QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"加入群聊" style:QMUIAlertActionStyleDestructive handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+            DLog(@"加入群聊");
+            [weakSelf join];
+        }];
+        QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:nil message:@"确认加入当前群组？" preferredStyle:QMUIAlertControllerStyleActionSheet];
+        [alertController addAction:action1];
+        [alertController addAction:action2];
+        [alertController showWithAnimated:YES];
+    } else {
+        // 退出
+        WEAKSELF
+        QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+            DLog(@"取消");
+        }];
+        QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"退出群聊" style:QMUIAlertActionStyleDestructive handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+            DLog(@"退出群聊");
+            [weakSelf quit];
+        }];
+        QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:nil message:@"确认退出群聊？" preferredStyle:QMUIAlertControllerStyleActionSheet];
+        [alertController addAction:action1];
+        [alertController addAction:action2];
+        [alertController showWithAnimated:YES];
+    }
+    
+   
 }
 
 - (void)quit {
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    WEAKSELF
     [ImGroupModelClient setImGroupQuitWithParams:@{@"id" : @(_groupDetailInfo.groupId.integerValue)} Success:^(id resultInfo) {
-        
+        [WLHUDView showSuccessHUD:@"退出成功"];
+        [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
+        [weakSelf.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:self.navigationController.viewControllers.count - 2] animated:YES];
     } Failed:^(NSError *error) {
-        
+        [WLHUDView hiddenHud];
+    }];
+}
+
+- (void)join {
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    WEAKSELF
+    NSDictionary *params = @{@"id" : @(_groupDetailInfo.groupId.integerValue),
+                             @"fuid" : @[configTool.loginUser.uid]
+                             };
+    [ImGroupModelClient setImGroupJoinWithParams:params Success:^(id resultInfo) {
+        [WLHUDView showSuccessHUD:@"加入成功"];
+        [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
     }];
 }
 

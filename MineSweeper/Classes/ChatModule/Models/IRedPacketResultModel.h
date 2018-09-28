@@ -11,6 +11,8 @@
 
 @interface IRedPacketResultModel : NSObject
 
+//  红包id
+@property (nonatomic, copy) NSString *packet_id;
 // 包红标题
 @property (nonatomic, copy) NSString *title;
 // 红包总金额
@@ -23,6 +25,8 @@
 @property (nonatomic, copy) NSNumber *member_id;
 // 抢的红包金额
 @property (nonatomic, copy) NSString *grab_money;
+// 头像
+@property (nonatomic, copy) NSString *avatar;
 // 抢红包人列表
 @property (nonatomic, strong) NSArray *list;
 

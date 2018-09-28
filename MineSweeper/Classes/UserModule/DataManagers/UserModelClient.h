@@ -111,4 +111,24 @@
                                    Success:(SuccessBlock)success
                                     Failed:(FailedBlock)failed;
 
+// 修改手机验证码
++ (WLRequest *)getChangeMobileVcodeWithParams:(NSDictionary *)params
+                                      Success:(SuccessBlock)success
+                                       Failed:(FailedBlock)failed;
+
+// 修改手机号
++ (WLRequest *)changeMobileWithParams:(NSDictionary *)params
+                              Success:(SuccessBlock)success
+                               Failed:(FailedBlock)failed;
+
+// 推广海报
++ (WLRequest *)getPosterWithParams:(NSDictionary *)params
+                           Success:(SuccessBlock)success
+                            Failed:(FailedBlock)failed;
+
+// 抽奖
++ (WLRequest *)getLuckDrawWithParams:(NSDictionary *)params
+                             Success:(SuccessBlock)success
+                              Failed:(FailedBlock)failed;
+
 @end

@@ -15,4 +15,9 @@
     return @{@"list" : [IRedPacektMemberModel class]};
 }
 
+- (BOOL)modelCustomTransformFromDictionary:(NSDictionary *)dic {
+    self.packet_id = dic[@"id"];
+    return YES;
+}
+
 @end

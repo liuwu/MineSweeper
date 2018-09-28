@@ -61,6 +61,16 @@
                                          Success:(SuccessBlock)success
                                           Failed:(FailedBlock)failed;
 
+// IM - 群组 - 置顶
++ (WLRequest *)setImGroupIsTopWithParams:(NSDictionary *)params
+                                 Success:(SuccessBlock)success
+                                  Failed:(FailedBlock)failed;
+
+// IM - 群组 - 置顶 - 取消
++ (WLRequest *)setImGroupCancelIsTopWithParams:(NSDictionary *)params
+                                       Success:(SuccessBlock)success
+                                        Failed:(FailedBlock)failed;
+
 // IM - 群组 - 免打扰
 + (WLRequest *)setImGroupNotDisturbWithParams:(NSDictionary *)params
                                       Success:(SuccessBlock)success

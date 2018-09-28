@@ -7,7 +7,10 @@
 //
 
 #import "QDCommonViewController.h"
+#import "IPosterModel.h"
 
 @interface PosterViewController : QDCommonViewController
+
+@property (nonatomic, strong) IPosterModel *posterModel;
 
 @end

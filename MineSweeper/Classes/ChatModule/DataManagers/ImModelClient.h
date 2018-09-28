@@ -77,6 +77,11 @@
                                            Success:(SuccessBlock)success
                                             Failed:(FailedBlock)failed;
 
+// IM - 聊天信息 - 聊天置顶
++ (WLRequest *)setImChatIsTopWithParams:(NSDictionary *)params
+                                Success:(SuccessBlock)success
+                                 Failed:(FailedBlock)failed;
+
 // IM - 聊天信息 - 取消聊天置顶
 + (WLRequest *)setImChatCancelIsTopWithParams:(NSDictionary *)params
                                       Success:(SuccessBlock)success

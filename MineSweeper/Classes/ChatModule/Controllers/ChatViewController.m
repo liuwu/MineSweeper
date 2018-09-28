@@ -20,13 +20,18 @@
 #import "RCRedPacketMessage.h"
 #import "ImGroupModelClient.h"
 #import "IGroupDetailInfo.h"
+#import "ImModelClient.h"
+#import "IRedPacketModel.h"
 
 @interface ChatViewController ()
 
-@property (nonatomic , strong) QMUIModalPresentationViewController *payModalViewController;
 @property (nonatomic , strong) QMUIModalPresentationViewController *packetModalViewController;
+@property (nonatomic , strong) QMUIModalPresentationViewController *payModalViewController;
 
 @property (nonatomic, strong) IGroupDetailInfo *groupDetailInfo;
+@property (nonatomic, strong) IFriendModel *friendModel;
+
+@property (nonatomic, strong) IRedPacketModel *openPacketModel;
 
 @end
 
@@ -68,20 +73,28 @@
     UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"chats_more_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
     self.navigationItem.rightBarButtonItem = rightBtnItem;
     
-    // 群组，没有扩展功能，只有发红包 设置扩展功能按钮图片
-    if (self.conversationType == ConversationType_GROUP) {
-        [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateNormal];
-        [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateSelected];
-        [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateHighlighted];
-        [self.chatSessionInputBarControl.additionalButton addTarget:self action:@selector(redPacketClicked:) forControlEvents:UIControlEventTouchUpInside];
-    }
     [self loadData];
 }
 
+
 - (void)loadData {
     [self loadGroupInfo];
+    [self loadFriendData];
 }
 
+// 获取个人聊天详情
+- (void)loadFriendData {
+    if (self.conversationType == ConversationType_PRIVATE) {
+        WEAKSELF
+        [ImModelClient getImChatInfoWithParams:@{@"fuid": @(self.targetId.integerValue)} Success:^(id resultInfo) {
+            weakSelf.friendModel = [IFriendModel modelWithDictionary:resultInfo];
+        } Failed:^(NSError *error) {
+        
+        }];
+    }
+}
+
+// 后去群聊详情数据
 - (void)loadGroupInfo {
     if (self.conversationType == ConversationType_GROUP) {
 //        [WLHUDView showHUDWithStr:@"" dim:YES];
@@ -90,9 +103,20 @@
                                              Success:^(id resultInfo) {
 //                                                 [WLHUDView hiddenHud];
                                                  weakSelf.groupDetailInfo = [IGroupDetailInfo modelWithDictionary:resultInfo];
+                                                 [weakSelf loadUI];
                                              } Failed:^(NSError *error) {
 //                                                 [WLHUDView hiddenHud];
                                              }];
+    }
+}
+
+- (void)loadUI {
+    // 群组，没有扩展功能，只有发红包 设置扩展功能按钮图片
+    if (self.conversationType == ConversationType_GROUP && _groupDetailInfo.type.integerValue == 1) {
+        [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateNormal];
+        [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateSelected];
+        [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateHighlighted];
+        [self.chatSessionInputBarControl.additionalButton addTarget:self action:@selector(redPacketClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
 }
 
@@ -132,6 +156,44 @@
 //    DLog(@"didTapPhoneNumberInMessageCell-----------");
 //}
 
+/*!
+ 点击Cell内容的回调
+ 
+ @param model 消息Cell的数据模型
+ */
+- (void)didTapMessageCell:(RCMessageModel *)model {
+    [super didTapMessageCell:model];
+    if ([model.content isMemberOfClass:[RCRedPacketMessage class]]) {
+        DLog(@"红包 didTapMessageCell");
+        RCRedPacketMessage *message = (RCRedPacketMessage *) model.content;
+        if (message.isGet.integerValue == 1) {
+            DLog(@"红包 已领过");
+        }
+        [ImModelClient imGrabRedpackWithParams:@{@"id" : @(message.pack_id.integerValue)} Success:^(id resultInfo) {
+            IRedPacketModel * model = [IRedPacketModel modelWithDictionary:resultInfo];
+            // 领到红包
+            [self showOpenPacket:model];
+        } Failed:^(NSError *error) {
+            if (error.localizedDescription.length > 0) {
+                if ([error.localizedDescription isEqualToString:@"红包已抢"]) {
+                    
+                } else {
+                    [WLHUDView showErrorHUD:error.localizedDescription];
+                }
+            }
+        }];
+        
+        // 领红包
+//        [self showPacketGrabEnd];
+        
+    }
+    if ([model.content isMemberOfClass:[RCLocationMessage class]]) {
+        DLog(@"位置 RCLocationMessage");
+        [self presentLocationViewController:(RCLocationMessage *)model.content];
+    }
+    DLog(@"didTapMessageCell");
+}
+
 #pragma mark 点击头像
 - (void)didTapCellPortrait:(NSString *)userId {
     DLog(@"didTapCellPortrait-----------: %@", userId);
@@ -139,6 +201,7 @@
     vc.userId = userId;
     [self.navigationController pushViewController:vc animated:YES];
 }
+
 #pragma mark 点击头像
 //- (void)didLongPressCellPortrait:(NSString *)userId {
 //    DLog(@"didLongPressCellPortrait-----------");
@@ -149,6 +212,13 @@
     ChatGroupDetailViewController *vc = [[ChatGroupDetailViewController alloc] init];
     vc.groupId = self.targetId;
     vc.groupDetailInfo = self.groupDetailInfo;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)toUserChatDetailInfo {
+    ChatInfoViewController *vc = [[ChatInfoViewController alloc] init];
+    vc.uid = self.targetId;
+    vc.friendModel = self.friendModel;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -171,41 +241,30 @@
         }
     }
     if (self.conversationType == ConversationType_PRIVATE) {
-        ChatInfoViewController *vc = [[ChatInfoViewController alloc] init];
-        vc.uid = self.targetId;
-        [self.navigationController pushViewController:vc animated:YES];
+        if (_friendModel) {
+            [self toUserChatDetailInfo];
+        } else {
+            WEAKSELF
+            [WLHUDView showHUDWithStr:@"" dim:YES];
+            [ImModelClient getImChatInfoWithParams:@{@"fuid": @(self.targetId.integerValue)} Success:^(id resultInfo) {
+                [WLHUDView hiddenHud];
+                weakSelf.friendModel = [IFriendModel modelWithDictionary:resultInfo];
+                [weakSelf toUserChatDetailInfo];
+            } Failed:^(NSError *error) {
+                [WLHUDView hiddenHud];
+            }];
+        }
     }
 }
 
 // 发红包
 - (void)redPacketClicked:(UIButton *)sender {
     DLog(@"redPacketClicked-----------");
-//    [self.chatSessionInputBarControl resetToDefaultStatus];
-    
-    RCRedPacketMessage *msg = [[RCRedPacketMessage alloc] init];
-    RCUserInfo *senderUserInfo = [[RCUserInfo alloc] initWithUserId:configTool.userInfoModel.userId
-                                                               name:configTool.userInfoModel.nickname
-                                                           portrait:configTool.userInfoModel.avatar];
-    msg.senderUserInfo = senderUserInfo;
-    
-    msg.commentid = @101;
-    msg.uid = @(configTool.loginUser.uid.integerValue);
-    msg.avatar = configTool.userInfoModel.avatar;
-    msg.name = configTool.userInfoModel.nickname;
-    [self sendMessage:msg pushContent:@"hahha"];
-    
-    // 输入支付密码
-//    [self inputPayPwd];
-    
-    // 打开红包
-//    [self showOpenPacket];
-    //红包已经被抢完
-//    [self showPacketGrabEnd];
-    
+    [self.chatSessionInputBarControl resetToDefaultStatus];
 //     进入发红包页面
-//    SendRedPacketViewController *vc = [[SendRedPacketViewController alloc] init];
-//    vc.groupId = self.targetId;
-//    [self.navigationController pushViewController:vc animated:YES];
+    SendRedPacketViewController *vc = [[SendRedPacketViewController alloc] init];
+    vc.groupId = self.targetId;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 // 输入支付密码
@@ -356,7 +415,8 @@
 }
 
 // 打开红包页面
-- (void)showOpenPacket {
+- (void)showOpenPacket:(IRedPacketModel *)model {
+    self.openPacketModel = model;
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 250, 300)];
     
     UIImageView *bgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"openRedP_redP_img"]];
@@ -383,7 +443,8 @@
     QMUILabel *moneyLabel = [[QMUILabel alloc] init];
     moneyLabel.font = UIFontMake(30);
     moneyLabel.textColor = [UIColor whiteColor];
-    moneyLabel.attributedText = [NSString wl_getAttributedInfoString:@"2.00元"
+    NSString *moneyStr = [NSString stringWithFormat:@"%@元",model.money];
+    moneyLabel.attributedText = [NSString wl_getAttributedInfoString:moneyStr
                                                            searchStr:@"元"
                                                                color:[UIColor whiteColor]
                                                                 font:UIFontMake(10.f)] ;
@@ -413,7 +474,7 @@
     //    modalViewController.delegate = self;
     [modalViewController showWithAnimated:YES completion:nil];
     self.packetModalViewController = modalViewController;
-//    QMUIModalPresentationViewControllerDelegate
+    //    QMUIModalPresentationViewControllerDelegate
 }
 
 // 查看更多红包
@@ -422,7 +483,7 @@
     [_packetModalViewController hideWithAnimated:YES completion:nil];
     
     RedPacketViewController *vc = [[RedPacketViewController alloc] init];
-//    vc.packetId = @"";
+    vc.packetId = _openPacketModel.redpack_id;
     [self.navigationController pushViewController:vc animated:YES];
 }
 

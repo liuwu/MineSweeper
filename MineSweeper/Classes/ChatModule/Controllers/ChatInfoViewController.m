@@ -7,15 +7,31 @@
 //
 
 #import "ChatInfoViewController.h"
+#import "UserInfoViewController.h"
 
 #import "RETableViewManager.h"
 #import "RETableViewItem.h"
 
 #import "UserItemCollectionViewCell.h"
 
+#import "ImModelClient.h"
+
+#define kHeaderHeight 110.f
+
 @interface ChatInfoViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) RETableViewManager *manager;
+
+@property (nonatomic, strong) UIView *headerView;
+@property (nonatomic, strong) UICollectionView *mainCollectionView;
+//@property (nonatomic, strong) UIButton *lookMoreUserBtn;
+
+@property (nonatomic, strong) REBoolItem *notDisturbItem;
+@property (nonatomic, strong) REBoolItem *topItem;
+//@property (nonatomic, strong) REBoolItem *rejectItem;
+
+@property (nonatomic, strong) RETableViewItem *chatHistoryItem;
+@property (nonatomic, strong) RETableViewItem *clearChatHistoryItem;
 
 @end
 
@@ -29,6 +45,8 @@
     [super initSubviews];
     [self addTableHeaderInfo];
     [self addTableViewCell];
+    
+    [kNSNotification addObserver:self selector:@selector(loadData) name:@"kUserChatInfoChanged" object:nil];
 }
 
 - (void)viewDidLoad {
@@ -36,29 +54,32 @@
     // Do any additional setup after loading the view.
 }
 
+- (void)loadData {
+    WEAKSELF
+    [ImModelClient getImChatInfoWithParams:@{@"fuid": @(_uid.integerValue)} Success:^(id resultInfo) {
+        weakSelf.friendModel = [IFriendModel modelWithDictionary:resultInfo];
+        [weakSelf updateUI];
+    } Failed:^(NSError *error) {
+        
+    }];
+}
+
+- (void)updateUI {
+    _notDisturbItem.value = _friendModel.not_disturb.boolValue;
+    _topItem.value = _friendModel.is_top.boolValue;
+//    _rejectItem.value = _friendModel.is_top.boolValue;
+    
+    [_mainCollectionView reloadData];
+}
+
 - (void)addTableHeaderInfo {
     // 隐藏分割线
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = WLColoerRGB(248.f);
-    
-//    CGFloat moreHeight = 55.f;
-//    CGFloat headerHeight = _userArray.count > 4 ? 180.f : 90.f;
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0., DEVICE_WIDTH, 110.f)];
+
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0., DEVICE_WIDTH, kHeaderHeight)];
     headerView.backgroundColor = [UIColor whiteColor];
     self.tableView.tableHeaderView = headerView;
-    
-//    UIButton *lookMoreUserBtn = [[UIButton alloc] init];
-//    [lookMoreUserBtn setTitle:@"查看更多群成员>" forState:UIControlStateNormal];
-//    [lookMoreUserBtn setTitleColor:WLColoerRGB(102.f) forState:UIControlStateNormal];
-//    lookMoreUserBtn.titleLabel.font = WLFONT(15);
-//    [lookMoreUserBtn addTarget:self action:@selector(lookMoreUserBtn:) forControlEvents:UIControlEventTouchUpInside];
-//    [headerView addSubview:lookMoreUserBtn];
-//    //    [lookMoreUserBtn wl_setDebug:YES];
-//    [lookMoreUserBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, moreHeight));
-//        make.top.mas_equalTo(headerHeight);
-//        make.centerX.mas_equalTo(headerView);
-//    }];
     
     //1.初始化layout
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -78,7 +99,7 @@
     // 移动方向的设置
     
     //2.初始化collectionView
-    UICollectionView *mainCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(itemSpaceWith, 0., DEVICE_WIDTH - itemSpaceWith * 2.f, 110) collectionViewLayout:layout];
+    UICollectionView *mainCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(itemSpaceWith, 0., DEVICE_WIDTH - itemSpaceWith * 2.f, kHeaderHeight) collectionViewLayout:layout];
     mainCollectionView.scrollEnabled = NO;
     [headerView addSubview:mainCollectionView];
     mainCollectionView.backgroundColor = [UIColor clearColor];
@@ -90,23 +111,7 @@
     //4.设置代理
     mainCollectionView.delegate = self;
     mainCollectionView.dataSource = self;
-    
-    
-//    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0., DEVICE_WIDTH, 74.f)];
-//    footerView.backgroundColor = [UIColor clearColor];
-//    self.tableView.tableFooterView = footerView;
-//
-//    QMUIFillButton *quitBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
-//    [quitBtn setTitle:@"退出群聊" forState:UIControlStateNormal];
-//    quitBtn.titleLabel.font = WLFONT(18);
-//    [quitBtn addTarget:self action:@selector(quitBtn:) forControlEvents:UIControlEventTouchUpInside];
-//    [quitBtn setCornerRadius:5.f];
-//    [footerView addSubview:quitBtn];
-//    [quitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(13.f);
-//        make.left.mas_equalTo(10.f);
-//        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH - 20.f, 44.f));
-//    }];
+    self.mainCollectionView = mainCollectionView;
 }
 
 // 添加表格内容
@@ -121,18 +126,24 @@
     [self.manager addSection:section];
     
     WEAKSELF
-    REBoolItem *notDisturbItem = [REBoolItem itemWithTitle:@"消息免打扰" value:YES switchValueChangeHandler:^(REBoolItem *item) {
-        
+    REBoolItem *notDisturbItem = [REBoolItem itemWithTitle:@"消息免打扰" value:_friendModel.not_disturb.boolValue switchValueChangeHandler:^(REBoolItem *item) {
+        [weakSelf changeNotDisturb:item];
     }];
     [section addItem:notDisturbItem];
-    REBoolItem *topItem = [REBoolItem itemWithTitle:@"回话置顶" value:YES switchValueChangeHandler:^(REBoolItem *item) {
-        
+    self.notDisturbItem = notDisturbItem;
+    
+    REBoolItem *topItem = [REBoolItem itemWithTitle:@"会话置顶" value:_friendModel.is_top.boolValue switchValueChangeHandler:^(REBoolItem *item) {
+        [weakSelf changeChatTop:item];
     }];
     [section addItem:topItem];
-    REBoolItem *rejectItem = [REBoolItem itemWithTitle:@"屏蔽好友" value:YES switchValueChangeHandler:^(REBoolItem *item) {
-        
-    }];
-    [section addItem:rejectItem];
+    self.topItem = topItem;
+    
+//    REBoolItem *rejectItem = [REBoolItem itemWithTitle:@"屏蔽好友" value:YES switchValueChangeHandler:^(REBoolItem *item) {
+//        // 加黑名单
+//        [weakSelf changeChatReject:item];
+//    }];
+//    [section addItem:rejectItem];
+//    self.rejectItem = rejectItem;
     
     RETableViewSection *section2 = [RETableViewSection section];
     section2.headerHeight = 5.f;
@@ -151,6 +162,95 @@
     clearChatHistoryItem.selectionStyle = UITableViewCellSelectionStyleNone;
     [section2 addItem:clearChatHistoryItem];
 }
+- (void)changeChatReject:(REBoolItem *)item {
+    if (item.value) {
+        // 移除黑名单
+        [[RCIMClient sharedRCIMClient] removeFromBlacklist:_uid success:^{
+            
+        } error:^(RCErrorCode status) {
+            
+        }];
+        
+    } else {
+        // 加入黑名单
+        [[RCIMClient sharedRCIMClient] addToBlacklist:_uid
+                                              success:^{
+                                                  
+                                              } error:^(RCErrorCode status) {
+                                                  
+                                              }];
+    }
+}
+
+// 设置置顶
+- (void)changeChatTop:(REBoolItem *)item {
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    WEAKSELF
+    if (item.value) {
+        // 取消置顶
+        [ImModelClient setImChatIsTopWithParams:@{@"fuid" : _uid} Success:^(id resultInfo) {
+            [weakSelf changeChatTopInfo:item];
+            [WLHUDView hiddenHud];
+        } Failed:^(NSError *error) {
+            [WLHUDView hiddenHud];
+        }];
+    } else {
+        // 开启置顶
+        [ImModelClient setImChatCancelIsTopWithParams:@{@"fuid" : _uid} Success:^(id resultInfo) {
+            [weakSelf changeChatTopInfo:item];
+            [WLHUDView hiddenHud];
+        } Failed:^(NSError *error) {
+            [WLHUDView hiddenHud];
+        }];
+    }
+}
+
+- (void)changeChatTopInfo:(REBoolItem *)item {
+    [[RCIMClient sharedRCIMClient] setConversationToTop:ConversationType_PRIVATE targetId:_uid isTop:!item.value];
+    _friendModel.not_disturb = [@(!item.value) stringValue];
+    item.value = !item.value;
+    [item reloadRowWithAnimation:UITableViewRowAnimationNone];
+}
+
+// 设置免打扰
+- (void)changeNotDisturb:(REBoolItem *)item {
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    WEAKSELF
+    if (item.value) {
+        // 取消免打扰
+        [ImModelClient setImChatCancelNotDisturbWithParams:@{@"fuid" : _uid} Success:^(id resultInfo) {
+            [weakSelf changeNotDisurbInfo:item];
+            [WLHUDView hiddenHud];
+        } Failed:^(NSError *error) {
+            [WLHUDView hiddenHud];
+        }];
+    } else {
+        // 开启免打扰
+        [ImModelClient setImChatNotDisturbWithParams:@{@"fuid" : _uid} Success:^(id resultInfo) {
+            [weakSelf changeNotDisurbInfo:item];
+            [WLHUDView hiddenHud];
+        } Failed:^(NSError *error) {
+            [WLHUDView hiddenHud];
+        }];
+    }
+}
+
+- (void)changeNotDisurbInfo:(REBoolItem *)item {
+//    [WLHUDView showHUDWithStr:@"" dim:YES];
+    WEAKSELF
+    [[RCIMClient sharedRCIMClient] setConversationNotificationStatus:ConversationType_PRIVATE
+                                                            targetId:_uid
+                                                           isBlocked:!item.value
+                                                             success:^(RCConversationNotificationStatus nStatus) {
+//                                                                 [WLHUDView hiddenHud];
+                                                                 weakSelf.friendModel.not_disturb = [@(!item.value) stringValue];
+                                                                 item.value = !item.value;
+                                                                 [item reloadRowWithAnimation:UITableViewRowAnimationNone];
+                                                             } error:^(RCErrorCode status) {
+//                                                                 [WLHUDView hiddenHud];
+                                                                 [item reloadRowWithAnimation:UITableViewRowAnimationNone];
+                                                             }];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -165,19 +265,22 @@
 
 //每个section的item个数
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 1 + 1;
+    return 1;// + 1;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     UserItemCollectionViewCell *cell = (UserItemCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"user_item_cell" forIndexPath:indexPath];
     
-    if (indexPath.row == 2) {
-        cell.logoImageView.image = [UIImage imageNamed:@"chatDetail_icon_add"];
-    } else {
-        cell.logoImageView.image = [UIImage imageNamed:@"redP_head_img"];
-        cell.titleLabel.text = @"dd";
-    }
+//    if (indexPath.row == 1) {
+//        cell.logoImageView.image = [UIImage imageNamed:@"chatDetail_icon_add"];
+//    } else {
+        cell.titleLabel.text = _friendModel.nickname;// _userArray[indexPath.row];
+        [cell.logoImageView setImageWithURL:[NSURL URLWithString:_friendModel.avatar]
+                                placeholder:[UIImage imageNamed:@"game_friend_icon"]
+                                    options:YYWebImageOptionProgressive | YYWebImageOptionProgressiveBlur | YYWebImageOptionAvoidSetImage
+                                 completion:nil];
+//    }
     return cell;
 }
 
@@ -186,53 +289,15 @@
     return CGSizeMake(50.f, 90.f);
 }
 
-//footer的size
-//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
-//{
-//    return CGSizeMake(10, 10);
-//}
-
-//header的size
-//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
-//{
-//    return CGSizeMake(10, 10);
-//}
-
-//设置每个item的UIEdgeInsets
-//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
-//    return UIEdgeInsetsMake(0, 0, 0, 0);
-//}
-//
-////设置每个item水平间距
-//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
-//    return 0;
-//}
-//
-//
-////设置每个item垂直间距
-//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
-//    return 0;
-//}
-
-
-//通过设置SupplementaryViewOfKind 来设置头部或者底部的view，其中 ReuseIdentifier 的值必须和 注册是填写的一致，本例都为 “reusableView”
-//- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
-//{
-//    UICollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"reusableView" forIndexPath:indexPath];
-//    headerView.backgroundColor =[UIColor grayColor];
-//    UILabel *label = [[UILabel alloc] initWithFrame:headerView.bounds];
-//    label.text = @"这是collectionView的头部";
-//    label.font = [UIFont systemFontOfSize:20];
-//    [headerView addSubview:label];
-//    return headerView;
-//}
-
 //点击item方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     //    MyCollectionViewCell *cell = (MyCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
     //    NSString *msg = cell.botlabel.text;
     //    NSLog(@"%@",msg);
     DLog(@"didSelectItemAtIndexPath：");
+    UserInfoViewController *vc = [[UserInfoViewController alloc] init];
+    vc.userId = _friendModel.uid;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - Private

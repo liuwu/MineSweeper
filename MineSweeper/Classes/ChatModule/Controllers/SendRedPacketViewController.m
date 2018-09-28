@@ -13,6 +13,8 @@
 #import "LWLoginTextFieldView.h"
 
 #import "ImModelClient.h"
+#import "RCRedPacketMessage.h"
+#import "IRedPacketResultModel.h"
 
 @interface SendRedPacketViewController ()<QMUIModalPresentationViewControllerDelegate>
 
@@ -83,7 +85,10 @@
     LWLoginTextFieldView *packetNountTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeMoney];
     packetNountTxtView.titleLabel.text = @"红包个数";
     packetNountTxtView.subTitleLabel.text = @"个";
+    packetNountTxtView.textField.text = @"7";
+    packetNountTxtView.textField.enabled = NO;
     packetNountTxtView.textField.placeholder = @"填写个数";
+    packetNountTxtView.textField.keyboardType = UIKeyboardTypeNumberPad;
     [self.view addSubview:packetNountTxtView];
     self.packetNountTxtView = packetNountTxtView;
     
@@ -99,6 +104,7 @@
     mineCountTxtView.titleLabel.text = @"雷数";
     mineCountTxtView.subTitleLabel.text = @"个";
     mineCountTxtView.textField.placeholder = @"填写个数";
+    mineCountTxtView.textField.keyboardType = UIKeyboardTypeNumberPad;
     [self.view addSubview:mineCountTxtView];
     self.mineCountTxtView = mineCountTxtView;
     
@@ -163,10 +169,10 @@
         return;
     }
     
-    if (_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue == 0) {
-        [WLHUDView showOnlyTextHUD:@"红包金额大于0元"];
-        return;
-    }
+//    if (_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue == 0) {
+//        [WLHUDView showOnlyTextHUD:@"红包金额大于0元"];
+//        return;
+//    }
     if (_packetNountTxtView.textField.text.wl_trimWhitespaceAndNewlines.integerValue == 0) {
         [WLHUDView showOnlyTextHUD:@"红包个数大于0个"];
         return;
@@ -193,13 +199,45 @@
     [WLHUDView showHUDWithStr:@"" dim:YES];
     WEAKSELF
     [ImModelClient imSendRedpackWithParams:params Success:^(id resultInfo) {
-        if (!resultInfo) {
-            [WLHUDView showSuccessHUD:resultInfo];
-            [weakSelf.navigationController popViewControllerAnimated:YES];
-        }
+        [WLHUDView showSuccessHUD:@"发送成功"];
+        IRedPacketResultModel *packModel = [IRedPacketResultModel modelWithDictionary:resultInfo];
+        [weakSelf sendImMessage:packModel];
+        [weakSelf.navigationController popViewControllerAnimated:YES];
     } Failed:^(NSError *error) {
         [WLHUDView hiddenHud];
     }];
+}
+
+- (void)sendImMessage:(IRedPacketResultModel *)packModel {
+    // 构建消息的内容，这里以文本消息为例。
+    RCRedPacketMessage *msg = [[RCRedPacketMessage alloc] init];
+    RCUserInfo *senderUserInfo = [[RCUserInfo alloc] initWithUserId:configTool.userInfoModel.userId
+                                                               name:configTool.userInfoModel.nickname
+                                                           portrait:configTool.userInfoModel.avatar];
+    msg.senderUserInfo = senderUserInfo;
+    msg.pack_id = packModel.packet_id;
+    msg.title = packModel.title;
+    msg.total_money = _moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines;
+    msg.num = _packetNountTxtView.textField.text.wl_trimWhitespaceAndNewlines;
+    msg.thunder = _mineCountTxtView.textField.text.wl_trimWhitespaceAndNewlines;
+    msg.uid = @(configTool.loginUser.uid.integerValue);
+    msg.avatar = configTool.userInfoModel.avatar;
+    msg.name = configTool.userInfoModel.nickname;
+//    [self sendMessage:msg pushContent:@"hahha"];
+//    RCTextMessage *testMessage = [RCTextMessage messageWithContent:@"test"];
+    // 调用RCIMClient的sendMessage方法进行发送，结果会通过回调进行反馈。
+    WEAKSELF
+    [[RCIMClient sharedRCIMClient] sendMessage:ConversationType_GROUP
+                                      targetId:_groupId
+                                       content:msg
+                                   pushContent:nil
+                                      pushData:nil
+                                       success:^(long messageId) {
+                                           DLog(@"发送成功。当前消息ID：%ld", messageId);
+                                           [[RCIMClient sharedRCIMClient] insertOutgoingMessage:ConversationType_GROUP targetId: weakSelf.groupId sentStatus:SentStatus_SENT content:msg];
+                                       } error:^(RCErrorCode nErrorCode, long messageId) {
+                                           DLog(@"发送失败。消息ID：%ld， 错误码：%ld", messageId, nErrorCode);
+                                       }];
 }
 
 @end

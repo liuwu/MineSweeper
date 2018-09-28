@@ -30,6 +30,7 @@
 #import "IUserInfoModel.h"
 #import "IUserQrCodeModel.h"
 #import "ICityModel.h"
+#import "IPosterModel.h"
 
 @interface MeViewController ()
 
@@ -49,6 +50,8 @@
 @property (nonatomic, strong) QMUILabel *nickNameLabel;
 @property (nonatomic, strong) QMUILabel *qrIdLabel;
 @property (nonatomic, strong) IUserQrCodeModel *userQrCodeModel;
+
+@property (nonatomic, strong) IPosterModel *posterModel;
 
 @end
 
@@ -336,20 +339,12 @@
     commendItem.image = [UIImage imageNamed:@"mine_recommend_icon"];
     [section addItem:commendItem];
     RETableViewItem *promotionPosterItem = [RETableViewItem itemWithTitle:@"推广海报" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        PosterViewController *posterVc = [[PosterViewController alloc] init];
-        [weakSelf.navigationController pushViewController:posterVc animated:YES];
+        [weakSelf poster:item];
     }];
     promotionPosterItem.image = [UIImage imageNamed:@"mine_share_icon"];
     [section addItem:promotionPosterItem];
     RETableViewItem *lotteryItem = [RETableViewItem itemWithTitle:@"抽奖" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:@"https://www.apple.com"];
-        webVC.showsToolBar = NO;
-        webVC.title = @"抽奖";
-        // webVC.showsNavigationCloseBarButtonItem = NO;
-        if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
-            webVC.webView.allowsLinkPreview = YES;
-        }
-        [weakSelf.navigationController pushViewController:webVC animated:YES];
+        [weakSelf lottery:item];
         
         // 加载显示pdf文件
 //        AXWebViewController *webVC = [[AXWebViewController alloc] initWithURL:[NSURL URLWithString:@"http://restest.welian.com/onmy1492081266459.pdf"]];
@@ -370,6 +365,53 @@
     customerServiceItem.image = [UIImage imageNamed:@"mine_service_icon"];
     [section addItem:customerServiceItem];
     [self.manager addSection:section];
+}
+
+// 推广海报
+- (void)poster:(RETableViewItem *)item {
+    if (_posterModel) {
+        [self toPosterView];
+    } else {
+        [WLHUDView showHUDWithStr:@"" dim:YES];
+        WEAKSELF
+        [UserModelClient getPosterWithParams:nil Success:^(id resultInfo) {
+            [WLHUDView hiddenHud];
+            weakSelf.posterModel = [IPosterModel modelWithDictionary:resultInfo];
+            [self toPosterView];
+        } Failed:^(NSError *error) {
+            [WLHUDView hiddenHud];
+        }];
+    }
+}
+
+- (void)toPosterView {
+    PosterViewController *posterVc = [[PosterViewController alloc] init];
+    posterVc.posterModel = _posterModel;
+    [self.navigationController pushViewController:posterVc animated:YES];
+}
+
+// 抽奖
+- (void)lottery:(RETableViewItem *)item {
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    WEAKSELF
+    [UserModelClient getLuckDrawWithParams:@{@"member_id" : @(configTool.loginUser.uid.integerValue)}
+                                   Success:^(id resultInfo) {
+                                       [WLHUDView hiddenHud];
+                                       NSString *url = @"https://www.apple.com";
+                                       if (resultInfo) {
+                                           url = resultInfo;
+                                       }
+                                       AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:url];
+                                       webVC.showsToolBar = NO;
+                                       webVC.title = @"抽奖";
+                                       // webVC.showsNavigationCloseBarButtonItem = NO;
+                                       if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
+                                           webVC.webView.allowsLinkPreview = YES;
+                                       }
+                                       [weakSelf.navigationController pushViewController:webVC animated:YES];
+                                   } Failed:^(NSError *error) {
+                                       [WLHUDView hiddenHud];
+                                   }];
 }
 
 #pragma mark - QMUINavigationControllerDelegate

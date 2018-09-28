@@ -12,18 +12,8 @@
 
 @class ChatRedPacketCell,RCRedPacketMessage;
 
-@protocol ChatRedPacketCellDelegate <NSObject,RCMessageCellDelegate>
 
-- (void)chatRedPacketCell:(ChatRedPacketCell *)redPacketCell didTapCard:(RCRedPacketMessage *)model;
-
-- (void)chatRedPacketCell:(ChatRedPacketCell *)redPacketCell didLogoImageTap:(RCRedPacketMessage *)model;
-
-@end
-
-
-@interface ChatRedPacketCell : RCMessageCell //RCMessageBaseCell
-
-@property (nonatomic, weak) id <ChatRedPacketCellDelegate> cellDelegate;
+@interface ChatRedPacketCell : RCMessageCell 
 
 + (CGSize)cellHigetWithModel:(RCMessageModel *)model;
 

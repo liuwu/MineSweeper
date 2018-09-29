@@ -13,6 +13,7 @@
 #import "IFriendDetailInfoModel.h"
 
 #import "IGameGroupModel.h"
+#import "IGroupDetailInfo.h"
 
 #import "FriendModelClient.h"
 #import "ImGroupModelClient.h"
@@ -123,7 +124,12 @@
     
     [ImGroupModelClient getImGroupInfoWithParams:@{@"id" : @(groupId.integerValue)}
                                          Success:^(id resultInfo) {
-                                             
+                                             IGameGroupModel *group = [IGameGroupModel new];
+                                             group.groupId = groupId;
+                                             IGroupDetailInfo *groupDetailInfo = [IGroupDetailInfo modelWithDictionary:resultInfo];
+                                             group.title = groupDetailInfo.title;
+                                             //                                             group.portraitUri = [groupInfo.logo wl_imageUrlDownloadImageSceneAvatar];
+                                             return completion(group);
                                          } Failed:^(NSError *error) {
                                              [WLHUDView hiddenHud];
                                              return completion(nil);
@@ -169,7 +175,8 @@
                                          Success:^(id resultInfo) {
                                              RCGroup *group = [RCGroup new];
                                              group.groupId = groupId;
-//                                             group.groupName = groupInfo.name;
+                                             IGroupDetailInfo *groupDetailInfo = [IGroupDetailInfo modelWithDictionary:resultInfo];
+                                             group.groupName = groupDetailInfo.title;
 //                                             group.portraitUri = [groupInfo.logo wl_imageUrlDownloadImageSceneAvatar];
                                              return completion(group);
                                          } Failed:^(NSError *error) {
@@ -177,39 +184,6 @@
                                              return completion(nil);
                                              DLog(@"getGroup error:%@",error.localizedDescription);
                                          }];
-    
-    //从数据库查询
-//    IGroupChatInfo *iGroupChatInfo = [[WLChatInfoDataCenter sharedInstance] getGroupChatInfoWithChatID:@(groupId.longLongValue)];
-//    if (iGroupChatInfo) {
-//        group = [RCGroup new];
-//        group.groupId = groupId;
-//        group.groupName = iGroupChatInfo.name;
-//        group.portraitUri = [iGroupChatInfo.logo wl_imageUrlDownloadImageSceneAvatar];
-//        //获取当前群组信息
-//        [WLChatModuleClient getGroupInfoWithId:@(groupId.longLongValue) Ismemberlogos:@(2) Success:^(id resultInfo) {
-//            IGroupChatInfo *groupInfo = resultInfo;
-//            // 保存数据
-//            [[WLChatInfoDataCenter sharedInstance] saveGroupChatInfoWithInfo:groupInfo];
-//        } Failed:^(NSError *error) {
-//            DLog(@"融云回调获取群聊信息失败");
-//        }];
-//        return completion(group);
-//    }else{
-//        //如果本地没有数据，调用接口获取
-//        [WLChatModuleClient getGroupInfoWithId:@(groupId.longLongValue) Ismemberlogos:@(2) Success:^(id resultInfo) {
-//            IGroupChatInfo *groupInfo = resultInfo;
-//            // 保存数据
-//            [[WLChatInfoDataCenter sharedInstance] saveGroupChatInfoWithInfo:groupInfo];
-//
-//            RCGroup *group = [RCGroup new];
-//            group.groupId = groupId;
-//            group.groupName = groupInfo.name;
-//            group.portraitUri = [groupInfo.logo wl_imageUrlDownloadImageSceneAvatar];
-//            return completion(group);
-//        } Failed:^(NSError *error) {
-//            return completion(nil);
-//        }];
-//    }
 }
 
 #pragma mark - RCIMUserInfoDataSource
@@ -251,44 +225,6 @@
         return completion(nil);
         DLog(@"getMember error:%@",error.localizedDescription);
     }];
-    
-//        //判断好友里面是否有用户信息
-//    WLUserModel *userModel = [[WLUserDataCenter sharedInstance] getUserModelWithUid:@(userId.longLongValue)];
-//    if (userModel) {
-//        user = [RCUserInfo new];
-//        user.userId = [NSString stringWithFormat:@"%@",userModel.uid];
-//        user.name = userModel.name;
-//        user.portraitUri = [userModel.avatar wl_imageUrlDownloadImageSceneAvatar];
-//        //调用接口刷新数据
-//        [WLUserModuleClient getMemberWithUid:@(userId.longLongValue) Success:^(id resultInfo) {
-//            //保存用户信息
-//            WLUserModel *userModel = [WLUserModel modelWithDictionary:resultInfo];
-//
-//            RCUserInfo *user = [[RCUserInfo alloc]init];
-//            user.userId = userModel.uid.stringValue;
-//            user.name = userModel.name;
-//            user.portraitUri = [userModel.avatar wl_imageUrlDownloadImageSceneAvatar];
-//
-//            [[WLUserDataCenter sharedInstance] saveUserWithInfo:userModel isAsync:YES];
-//            [[RCIM sharedRCIM] refreshUserInfoCache:user withUserId:user.userId];
-//        } Failed:^(NSError *error) {}];
-//
-//        return completion(user);
-//    }else{
-//        //调用接口刷新数据
-//        [WLUserModuleClient getMemberWithUid:@(userId.longLongValue) Success:^(id resultInfo) {
-//            //保存用户信息
-//            WLUserModel *userModel = [WLUserModel modelWithDictionary:resultInfo];
-//
-//            RCUserInfo *user = [[RCUserInfo alloc]init];
-//            user.userId = userModel.uid.stringValue;
-//            user.name = userModel.name;
-//            user.portraitUri = [userModel.avatar wl_imageUrlDownloadImageSceneAvatar];
-//
-//            [[WLUserDataCenter sharedInstance] saveUserWithInfo:userModel isAsync:YES];
-//            return completion(user);
-//        } Failed:^(NSError *error) {}];
-//    }
 }
 
 - (void)getAllMembersOfGroup:(NSString *)groupId result:(void (^)(NSArray<NSString *> *))resultBlock {

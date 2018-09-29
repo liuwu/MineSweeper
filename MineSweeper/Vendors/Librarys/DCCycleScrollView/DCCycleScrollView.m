@@ -98,7 +98,9 @@ static NSString *const cellID = @"cellID";
     NSMutableArray *imageArray = [[NSMutableArray alloc] init];
     for (int i = 0; i < _imageDataArray.count; i++) {
         BannerImgModel *model = _imageDataArray[i];
-        [imageArray addObject:model.save_path];
+//        [imageArray addObject:model.save_path];
+        [imageArray addObject:@"http://img.zcool.cn/community/0117e2571b8b246ac72538120dd8a4.jpg@1280w_1l_2o_100sh.jpg"];
+        
     }
     self.imgArr = imageArray;
     [self.collectionView reloadData];
@@ -188,14 +190,14 @@ static NSString *const cellID = @"cellID";
     long itemIndex = (int) indexPath.item % self.imgArr.count;
     NSString *imagePath = self.imgArr[itemIndex];
         if ([imagePath hasPrefix:@"http"]) {
-            cell.imagePath = imagePath;
+//            cell.imagePath = imagePath;
 //            WEAKSELF
-//            [cell.imageView setImageWithURL:[NSURL URLWithString:imagePath]
-//                                placeholder:[UIImage imageNamed:@"game_friend_icon"]
-//                                    options:YYWebImageOptionProgressive | YYWebImageOptionProgressiveBlur | YYWebImageOptionAvoidSetImage
-//                                 completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-//                                     cell.imageView.image = [image qmui_imageWithClippedCornerRadius:10.f];
-//                                 }];
+            [cell.imageView setImageWithURL:[NSURL URLWithString:imagePath]
+                                placeholder:nil//[UIImage imageNamed:@"game_friend_icon"]
+                                    options:YYWebImageOptionProgressive | YYWebImageOptionProgressiveBlur | YYWebImageOptionAvoidSetImage
+                                 completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                                     cell.imageView.image = image;// [image qmui_imageWithClippedCornerRadius:10.f];
+                                 }];
 //            [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imagePath] placeholderImage:self.cellPlaceholderImage];
         } else {
             UIImage *image = [UIImage imageNamed:imagePath];

@@ -93,9 +93,12 @@
     if (_userModel.is_friend.intValue == 1) {
         [_sendBtn setTitle:@"发消息" forState:UIControlStateNormal];
         _deleteBtn.hidden = NO;
+//        [self addTableViewCell];
+//        _nameItem.cellHeight = 0.f;/
+//        _nameItem.cellHeight
+        _nameItem.detailLabelText = _userModel.remark;
+        [_nameItem reloadRowWithAnimation:UITableViewRowAnimationNone];
     }
-    _nameItem.detailLabelText = _userModel.remark;
-    [_nameItem reloadRowWithAnimation:UITableViewRowAnimationNone];
 }
 
 
@@ -213,11 +216,14 @@
     
     WEAKSELF
     RETableViewItem *nameItem = [RETableViewItem itemWithTitle:@"设置备注" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        UserInfoChangeViewController *vc = [[UserInfoChangeViewController alloc] initWithUserInfoChangeType:UserInfoChangeTypeSetFriendRemark];
-        vc.uid = weakSelf.userId;
-        [weakSelf.navigationController pushViewController:vc animated:YES];
+        if (weakSelf.userModel.is_friend.intValue == 1) {
+            UserInfoChangeViewController *vc = [[UserInfoChangeViewController alloc] initWithUserInfoChangeType:UserInfoChangeTypeSetFriendRemark];
+            vc.uid = weakSelf.userId;
+            [weakSelf.navigationController pushViewController:vc animated:YES];
+        }
     }];
     nameItem.selectionStyle = UITableViewCellSelectionStyleNone;
+//    nameItem.detailLabelText = _userModel.remark;
     [section addItem:nameItem];
     self.nameItem = nameItem;
 }

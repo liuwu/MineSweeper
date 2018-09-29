@@ -12,6 +12,7 @@
 #import "UserInfoViewController.h"
 #import "ChatGroupRemarkViewController.h"
 #import "FriendListViewController.h"
+#import "ChatGroupMoreUserViewController.h"
 
 #import "RETableViewManager.h"
 #import "RETableViewItem.h"
@@ -604,7 +605,9 @@
 
 // 查看更多用户
 - (void)lookMoreUserBtn:(UIButton *)sender {
-    
+    ChatGroupMoreUserViewController *vc = [[ChatGroupMoreUserViewController alloc] init];
+    vc.groupDetailInfo = _groupDetailInfo;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end

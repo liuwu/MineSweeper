@@ -382,6 +382,7 @@
 		109AF9B12151FE9B00D50F3C /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 109AF9B02151FE9B00D50F3C /* ChatViewController.m */; };
 		109AF9B4215207E100D50F3C /* RedPacketViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 109AF9B3215207E100D50F3C /* RedPacketViewController.m */; };
 		109AF9B7215207FE00D50F3C /* RedPacketHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 109AF9B6215207FE00D50F3C /* RedPacketHistoryViewController.m */; };
+		10AE957E215F08A5008C19B7 /* ChatGroupMoreUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10AE957D215F08A5008C19B7 /* ChatGroupMoreUserViewController.m */; };
 		10C575822151D93400FBFE1E /* BaseModelClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 10C575812151D93400FBFE1E /* BaseModelClient.m */; };
 		10C575852151D99B00FBFE1E /* UserModelClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 10C575842151D99B00FBFE1E /* UserModelClient.m */; };
 		10C575882151D9B100FBFE1E /* ImModelClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 10C575872151D9B100FBFE1E /* ImModelClient.m */; };
@@ -1184,6 +1185,8 @@
 		109AF9B3215207E100D50F3C /* RedPacketViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RedPacketViewController.m; sourceTree = "<group>"; };
 		109AF9B5215207FE00D50F3C /* RedPacketHistoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RedPacketHistoryViewController.h; sourceTree = "<group>"; };
 		109AF9B6215207FE00D50F3C /* RedPacketHistoryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RedPacketHistoryViewController.m; sourceTree = "<group>"; };
+		10AE957C215F08A5008C19B7 /* ChatGroupMoreUserViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatGroupMoreUserViewController.h; sourceTree = "<group>"; };
+		10AE957D215F08A5008C19B7 /* ChatGroupMoreUserViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatGroupMoreUserViewController.m; sourceTree = "<group>"; };
 		10C575802151D93400FBFE1E /* BaseModelClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseModelClient.h; sourceTree = "<group>"; };
 		10C575812151D93400FBFE1E /* BaseModelClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseModelClient.m; sourceTree = "<group>"; };
 		10C575832151D99B00FBFE1E /* UserModelClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserModelClient.h; sourceTree = "<group>"; };
@@ -3039,6 +3042,8 @@
 				10082DF62153C81300EC3FCE /* ChatGourpNameViewController.m */,
 				106D4AEE215C7DE00047E8BA /* ChatGroupRemarkViewController.h */,
 				106D4AEF215C7DE00047E8BA /* ChatGroupRemarkViewController.m */,
+				10AE957C215F08A5008C19B7 /* ChatGroupMoreUserViewController.h */,
+				10AE957D215F08A5008C19B7 /* ChatGroupMoreUserViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -3475,6 +3480,7 @@
 				103519F92147B73200EDC7AD /* UIColor+WLAdd.m in Sources */,
 				104CBF3E215B2D93000D4D44 /* ActivityMapViewController.m in Sources */,
 				10351A032147B73200EDC7AD /* NSString+WLAddForPinyin.m in Sources */,
+				10AE957E215F08A5008C19B7 /* ChatGroupMoreUserViewController.m in Sources */,
 				103519232147A34000EDC7AD /* WLPhotoPreviewController.m in Sources */,
 				1089C55F2146AF4700363537 /* LoginViewController.m in Sources */,
 				101134332148B5CC0082F74B /* BaseViewController.m in Sources */,

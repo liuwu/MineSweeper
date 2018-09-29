@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <RongIMKit/RongIMKit.h>
 
-@class IFriendModel,IGameGroupModel,IUserInfoModel;
+@class IFriendModel,IGameGroupModel,IUserInfoModel, IGroupDetailInfo;
 
 #define RCDDataSource [WLRongCloudDataSource shareInstance]
 

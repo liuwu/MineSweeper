@@ -59,6 +59,12 @@
     [super initSubviews];
     
     [self addViews];
+    
+    [kNSNotification addObserver:self selector:@selector(reloadData) name:@"kLoginUserTokenRefresh" object:nil];
+    [self reloadData];
+}
+
+- (void)reloadData {
     [self loadBannerData];
     [self loadNotice];
     
@@ -138,8 +144,8 @@
     DCCycleScrollView *banner = [DCCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 30, ScreenWidth, kBannerHeight - 36.f) shouldInfiniteLoop:YES imageGroups:imageArr];
     //    banner.placeholderImage = [UIImage imageNamed:@"placeholderImage"];
     //        banner.cellPlaceholderImage = [UIImage imageNamed:@"placeholderImage"];
-    banner.autoScrollTimeInterval = 5.f;
-    banner.autoScroll = NO;
+    banner.autoScrollTimeInterval = 8.f;
+    banner.autoScroll = YES;
     banner.isZoom = YES;
     banner.itemSpace = -30.f;
     banner.imgCornerRadius = 10.f;

@@ -492,6 +492,7 @@ single_implementation(AppDelegate);
         WEAKSELF
         [LoginModuleClient getUserTokenWithParams:params Success:^(id resultInfo) {
             [configTool refreshLoginUserToken:resultInfo];
+             [kNSNotification postNotificationName:@"kLoginUserTokenRefresh" object:nil];
             [weakSelf connectRCIM];
         } Failed:^(NSError *error) {
 //            [WLHUDView hiddenHud];

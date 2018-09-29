@@ -35,6 +35,9 @@ def shared_pods
     pod 'NJKWebViewProgress'
     pod 'Aspects'
     pod 'AXPracticalHUD'
+    
+    # 
+    pod 'FSPagerView'
 end
 
 target 'MineSweeper' do

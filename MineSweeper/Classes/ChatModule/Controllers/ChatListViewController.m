@@ -34,6 +34,24 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+//    [[RCIM sharedRCIM] searchConversation]
+    /*!
+     根据关键字搜索会话
+     
+     @param conversationTypeList 需要搜索的会话类型列表
+     @param objectNameList       需要搜索的消息类型名列表(即每个消息类方法getObjectName的返回值)
+     @param keyword              关键字
+     
+     @return 匹配的会话搜索结果列表
+     
+     @discussion 目前，SDK内置的文本消息、文件消息、图文消息支持搜索。
+     自定义的消息必须要实现RCMessageContent的getSearchableWords接口才能进行搜索。
+     */
+    NSArray<RCSearchConversationResult *> *result = [[RCIMClient sharedRCIMClient] searchConversations:@[@(ConversationType_PRIVATE),@(ConversationType_GROUP)]
+                                           messageType:@[RCTextMessage.getObjectName]
+                                               keyword:@""];
+    
 //    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:WLColoerRGB(255.f)] forBarMetrics:UIBarMetricsDefault];
 //    [self.navigationController.navigationBar setShadowImage:[UIImage imageWithColor:WLColoerRGB(255.f)]];
 }

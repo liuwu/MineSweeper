@@ -23,16 +23,22 @@
 
 #import "WLRongCloudDataSource.h"
 
+#import <FSPagerView/FSPagerView-Swift.h>
+
 #define kNoteHeight 30.f
 #define kBannerHeight 186.f
 
-@interface HomeViewController ()<DCCycleScrollViewDelegate>
+@interface HomeViewController ()<DCCycleScrollViewDelegate, FSPagerViewDataSource, FSPagerViewDelegate>
 
 @property (nonatomic, strong) RETableViewManager *manager;
 @property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) DCCycleScrollView *banner;
 @property (nonatomic, strong) QMUIMarqueeLabel *noteLabel;
 @property (nonatomic, strong) NSArray *noticeArray;
+
+@property (nonatomic, strong) NSArray *bannerImageArray;
+@property (nonatomic, strong) FSPagerView *pagerView;
+@property (nonatomic, strong) FSPageControl *pageControl;
 
 @end
 
@@ -87,6 +93,10 @@
     [ImGroupModelClient getImBannerWithParams:nil Success:^(id resultInfo) {
         //        weakSelf.datasource = [NSArray modelArrayWithClass:[BannerImgModel class] json:resultInfo];
         weakSelf.banner.imageDataArray = [NSArray modelArrayWithClass:[BannerImgModel class] json:resultInfo];
+        weakSelf.bannerImageArray = [NSArray modelArrayWithClass:[BannerImgModel class] json:resultInfo];
+        weakSelf.pageControl.numberOfPages = weakSelf.bannerImageArray.count;
+        
+        [weakSelf.pagerView reloadData];
     } Failed:^(NSError *error) {
         
     }];
@@ -141,21 +151,53 @@
         make.width.mas_equalTo(headerView.width - imageView.right - kWL_NormalMarginWidth_11 * 3.f);
     }];
     
-    DCCycleScrollView *banner = [DCCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 30, ScreenWidth, kBannerHeight - 36.f) shouldInfiniteLoop:YES imageGroups:imageArr];
-    //    banner.placeholderImage = [UIImage imageNamed:@"placeholderImage"];
-    //        banner.cellPlaceholderImage = [UIImage imageNamed:@"placeholderImage"];
-    banner.autoScrollTimeInterval = 8.f;
-    banner.autoScroll = YES;
-    banner.isZoom = YES;
-    banner.itemSpace = -30.f;
-    banner.imgCornerRadius = 10.f;
-    banner.itemWidth = ScreenWidth - kWL_NormalMarginWidth_23 * 2.f;
-    banner.delegate = self;
-    //    banner.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
-    banner.backgroundColor = WLColoerRGB(248.f);
-    [headerView addSubview:banner];
-    self.banner = banner;
+//    DCCycleScrollView *banner = [DCCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 30, ScreenWidth, kBannerHeight - 36.f) shouldInfiniteLoop:YES imageGroups:imageArr];
+//    //    banner.placeholderImage = [UIImage imageNamed:@"placeholderImage"];
+//    //        banner.cellPlaceholderImage = [UIImage imageNamed:@"placeholderImage"];
+//    banner.autoScrollTimeInterval = 8.f;
+//    banner.autoScroll = YES;
+//    banner.isZoom = YES;
+//    banner.itemSpace = -30.f;
+//    banner.imgCornerRadius = 10.f;
+//    banner.itemWidth = ScreenWidth - kWL_NormalMarginWidth_23 * 2.f;
+//    banner.delegate = self;
+//    //    banner.bannerImageViewContentMode = UIViewContentModeScaleAspectFill;
+//    banner.backgroundColor = WLColoerRGB(248.f);
+//    [headerView addSubview:banner];
+//    self.banner = banner;
     //    [banner wl_setDebug:YES];
+    
+    // Create a pager view
+    FSPagerView *pagerView = [[FSPagerView alloc] initWithFrame:CGRectMake(0, 30, DEVICE_WIDTH, kBannerHeight - 36.f)];
+    pagerView.dataSource = self;
+    pagerView.delegate = self;
+    pagerView.interitemSpacing = 10;//设置图片间隔
+    pagerView.automaticSlidingInterval = 10;//设置自动变动的时间
+    pagerView.isInfinite = YES; // 设置无限循环
+//    pagerView.decelerationDistance = 2;
+    pagerView.itemSize = CGSizeMake(ScreenWidth - 60.f, kBannerHeight - 36.f);
+    pagerView.transformer = [[FSPagerViewTransformer alloc] initWithType:FSPagerViewTransformerTypeLinear];
+    [pagerView registerClass:FSPagerViewCell.class forCellWithReuseIdentifier:@"fspagercell"];
+    [headerView addSubview:pagerView];
+    self.pagerView = pagerView;
+   
+    FSPageControl *pageControl = [[FSPageControl alloc] initWithFrame:CGRectMake(0.f, pagerView.bottom, DEVICE_WIDTH, 36.f)];
+    pageControl.numberOfPages = imageArr.count;
+    // 边框颜色
+    [pageControl setStrokeColor:WLColoerRGB(51.f) forState:UIControlStateNormal];
+    [pageControl setStrokeColor:UIColorMake(254,72,30) forState:UIControlStateSelected];
+    // 中心点颜色
+    [pageControl setFillColor:WLColoerRGB(51.f) forState:UIControlStateNormal];
+    [pageControl setFillColor:UIColorMake(254,72,30) forState:UIControlStateSelected];
+//    _pageControl.currentPageIndicatorTintColor = UIColorMake(254,72,30);
+//    _pageControl.pageIndicatorTintColor = WLColoerRGB(51.f)
+    [headerView addSubview:pageControl];
+    self.pageControl = pageControl;
+//    pagerView.register(FSPagerViewCell.self, forCellWithReuseIdentifier: "cell")
+//    headerView.addSubview(page
+    // Create a page control
+//    let pageControl = FSPageControl(frame: frame2)
+//    self.view.addSubview(pageControl)
     
     //下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
@@ -171,6 +213,36 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//去除默认分割线
     self.tableView.tableHeaderView = headerView;
 }
+
+- (NSInteger)numberOfItemsInPagerView:(FSPagerView *)pagerView {
+    return _bannerImageArray.count;
+}
+
+- (FSPagerViewCell *)pagerView:(FSPagerView *)pagerView cellForItemAtIndex:(NSInteger)index {
+    FSPagerViewCell * cell = [pagerView dequeueReusableCellWithReuseIdentifier:@"fspagercell" atIndex:index];
+    BannerImgModel *model = _bannerImageArray[index];
+//    cell.contentView.layer.shadowColor = [UIColor whiteColor].CGColor;
+//    cell.contentView.layer.shadowRadius = 5;
+//    cell.contentView.layer.shadowOpacity = 0.75;
+//    cell.contentView.layer.shadowOffset = .zero
+//    cell.selectedForegroundView.backgroundColor = [UIColor clearColor];
+//    cell.selectedBackgroundView.backgroundColor = [UIColor clearColor];
+//    cell.backgroundColor = [UIColor clearColor];
+//    cell.backgroundView.backgroundColor = [UIColor clearColor];
+    NSURL *imageUrl = [NSURL URLWithString:@"http://img.zcool.cn/community/0117e2571b8b246ac72538120dd8a4.jpg@1280w_1l_2o_100sh.jpg"];
+    [cell.imageView setImageWithURL:imageUrl//[NSURL URLWithString:model.save_path]
+                        placeholder:nil//[UIImage imageNamed:@"game_friend_icon"]
+                            options:YYWebImageOptionProgressive | YYWebImageOptionProgressiveBlur | YYWebImageOptionAvoidSetImage
+                         completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                             cell.imageView.image = image;// [image qmui_imageWithClippedCornerRadius:10.f];
+                         }];
+    [cell.imageView wl_setDebug:YES];
+    [cell.imageView wl_setCornerRadius:15.f];
+    return cell;
+}
+
+
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return 1.f;
@@ -229,6 +301,7 @@
 }
 
 - (void)beginPullDownRefreshingNew {
+    [self reloadData];
      [self.tableView.mj_header endRefreshing];
      [self.tableView.mj_footer endRefreshing];
 }

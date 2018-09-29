@@ -15,9 +15,20 @@
 @property (nonatomic, strong) SWScannerView *scannerView;
 @property (nonatomic, strong) AVCaptureSession *session;
 
+/** block回调 */
+@property (copy, nonatomic) SWQRCodeScanBlock scanBlock;
+
 @end
 
 @implementation SWQRCodeViewController
+
+- (instancetype)initWithScanBlock:(SWQRCodeScanBlock)scanBlock {
+    self = [super self];
+    if (self) {
+        self.scanBlock = scanBlock;
+    }
+    return self;
+}
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -237,6 +248,9 @@
  */
 - (void)sw_handleWithValue:(NSString *)value {
     NSLog(@"sw_handleWithValue === %@", value);
+    if (_scanBlock) {
+        _scanBlock(value);
+    }
 }
 
 /**

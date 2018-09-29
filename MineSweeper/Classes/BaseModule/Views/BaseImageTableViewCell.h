@@ -13,6 +13,7 @@
 #import "IFriendRequestModel.h"
 #import "IRedPacektMemberModel.h"
 
+
 @interface BaseImageTableViewCell : BaseTableViewCell
 
 

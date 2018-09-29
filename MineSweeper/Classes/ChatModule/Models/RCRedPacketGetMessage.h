@@ -8,7 +8,7 @@
 
 #import <RongIMLib/RongIMLib.h>
 
-#define RCRedPacketGetMessageTypeIdentifier @"RC:RedPacketMsgGet"
+#define RCRedPacketGetMessageTypeIdentifier @"app:RedpackReceivedTipMsg"
 
 @interface RCRedPacketGetMessage : RCMessageContent<RCMessageContentView>
 

@@ -37,7 +37,7 @@
         
         QMUILabel *titleLabel = [[QMUILabel alloc] init];
         titleLabel.font = UIFontBoldMake(11);
-        titleLabel.textColor = [UIColor grayColor];
+        titleLabel.textColor = [UIColor lightGrayColor];
         [backView addSubview:titleLabel];
         self.titleLabel = titleLabel;
         

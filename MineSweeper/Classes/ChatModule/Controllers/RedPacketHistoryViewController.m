@@ -260,7 +260,9 @@
 
 // 上拉加载更多
 - (void)beginPullUpRefreshingNew {
-    self.page++;
+    if (_page != _model.pages) {
+        self.page++;
+    }
     [self loadData];
 }
 

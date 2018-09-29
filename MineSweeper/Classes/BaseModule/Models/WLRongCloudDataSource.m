@@ -64,11 +64,10 @@
         if (userId.longLongValue == loginUser.uid.longLongValue) {
             user = [IFriendModel new];
             user.uid = loginUser.uid;
-//            user.avatar = loginUser.a;
             user.nickname = loginUser.username.length > 0 ? loginUser.username : loginUser.mobile;
             if (configTool.userInfoModel) {
                 user.avatar = configTool.userInfoModel.avatar;
-                user.nickname = configTool.userInfoModel.nickname;
+                user.nickname = configTool.userInfoModel.nickname.length > 0 ? configTool.userInfoModel.nickname : configTool.userInfoModel.mobile;
             }
             return completion(user);
         }
@@ -229,7 +228,7 @@
         user.name = loginUser.username.length > 0 ? loginUser.username : loginUser.mobile;
         if (configTool.userInfoModel) {
             user.portraitUri = configTool.userInfoModel.avatar;
-            user.name = configTool.userInfoModel.nickname;
+            user.name = configTool.userInfoModel.nickname.length > 0 ? configTool.userInfoModel.nickname : configTool.userInfoModel.mobile;
         }
         return completion(user);
     }
@@ -307,10 +306,10 @@
 }
 
 
-- (void)refreshLogUserInfoCache:(IFriendModel *)profileM {
+- (void)refreshLogUserInfoCache:(IUserInfoModel *)profileM {
     RCUserInfo *user = [[RCUserInfo alloc]init];
-    user.userId = profileM.uid;
-    user.name = profileM.nickname;
+    user.userId = profileM.userId;
+    user.name = profileM.nickname.length > 0 ? profileM.nickname : profileM.mobile;
     user.portraitUri = profileM.avatar;
     [[RCIM sharedRCIM] refreshUserInfoCache:user withUserId:user.userId];
 }

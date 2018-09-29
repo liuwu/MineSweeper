@@ -18,6 +18,10 @@
 
 #import "BannerImgModel.h"
 #import "ImGroupModelClient.h"
+#import "UserModelClient.h"
+#import "INoticeModel.h"
+
+#import "WLRongCloudDataSource.h"
 
 #define kNoteHeight 30.f
 #define kBannerHeight 186.f
@@ -27,6 +31,8 @@
 @property (nonatomic, strong) RETableViewManager *manager;
 @property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) DCCycleScrollView *banner;
+@property (nonatomic, strong) QMUIMarqueeLabel *noteLabel;
+@property (nonatomic, strong) NSArray *noticeArray;
 
 @end
 
@@ -55,6 +61,18 @@
     [self addViews];
     [self loadBannerData];
     [self loadNotice];
+    
+    [self getLoginUserInfo];
+}
+
+- (void)getLoginUserInfo {
+    [UserModelClient getUserInfoWithParams:nil
+                                   Success:^(id resultInfo) {
+                                       IUserInfoModel *userInfoModel = [IUserInfoModel modelWithDictionary:resultInfo];
+                                       configTool.userInfoModel = userInfoModel;
+                                       [RCDDataSource refreshLogUserInfoCache:userInfoModel];
+                                   } Failed:^(NSError *error) {
+                                   }];
 }
 
 // 加载轮播图
@@ -67,10 +85,21 @@
         
     }];
 }
-
 // 加载系统公告
 - (void)loadNotice {
-    
+    WEAKSELF
+    [ImGroupModelClient getImSystemNoticeWithParams:nil Success:^(id resultInfo) {
+        weakSelf.noticeArray = [NSArray modelArrayWithClass:[INoticeModel class] json:resultInfo];
+        [weakSelf updateNoticeUI];
+    } Failed:^(NSError *error) {
+    }];
+}
+
+- (void)updateNoticeUI {
+    if (_noticeArray.count > 0) {
+        INoticeModel *model = _noticeArray[0];
+        _noteLabel.text = model.title;
+    }
 }
 
 - (void)addViews {
@@ -95,10 +124,11 @@
         make.top.mas_equalTo(kWL_NormalMarginWidth_10);
     }];
     
-    QMUIMarqueeLabel *noteLabel = [self generateLabelWithText:@"通过 shouldFadeAtEdge = NO 可隐藏文字滚动时边缘的渐隐遮罩，通过 speed 属性可以调节滚动的速度"];
+    QMUIMarqueeLabel *noteLabel = [self generateLabelWithText:@"公告!"];
     noteLabel.shouldFadeAtEdge = NO;// 关闭渐隐遮罩
     noteLabel.speed = 1.5;// 调节滚动速度
     [headerView addSubview:noteLabel];
+    self.noteLabel = noteLabel;
     [noteLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(imageView.right + kWL_NormalMarginWidth_11 * 2.f);
         make.centerY.mas_equalTo(imageView);
@@ -109,7 +139,7 @@
     //    banner.placeholderImage = [UIImage imageNamed:@"placeholderImage"];
     //        banner.cellPlaceholderImage = [UIImage imageNamed:@"placeholderImage"];
     banner.autoScrollTimeInterval = 5.f;
-    banner.autoScroll = YES;
+    banner.autoScroll = NO;
     banner.isZoom = YES;
     banner.itemSpace = -30.f;
     banner.imgCornerRadius = 10.f;

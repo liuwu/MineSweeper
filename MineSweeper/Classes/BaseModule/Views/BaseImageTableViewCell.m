@@ -89,6 +89,8 @@
                          }];
 }
 
+
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     [self.imageView wl_setCornerRadius:36.f/2];

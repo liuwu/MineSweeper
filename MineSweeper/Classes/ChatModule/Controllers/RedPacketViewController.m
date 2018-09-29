@@ -303,8 +303,7 @@
 
 // 下拉刷新
 - (void)beginPullDownRefreshingNew {
-    [self.tableView.mj_header endRefreshing];
-    [self.tableView.mj_footer endRefreshing];
+    [self loadData];
 }
 
 @end

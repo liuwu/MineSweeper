@@ -174,10 +174,10 @@
 //            [_topView wl_setWLRadius:WLRadiusMake(18, 0, 18, 18) withImage:[[UIImage qmui_imageWithView:_topView]];
 //            [_topView wl_setWLRadius:WLRadiusMake(18, 0, 18, 18) withBorderColor:[UIColor greenColor] borderWidth:1.f];
 //            [_backView wl_setWLRadius:WLRadiusMake(18, 0, 18, 18) withBorderColor:UIColorMake(255,164,143) borderWidth:1 backgroundColor:UIColorMake(255,164,143) backgroundImage:[UIImage imageWithColor:UIColorMake(255,164,143)] contentMode:UIViewContentModeScaleAspectFill];
-            [_topView wl_setWLRadius:WLRadiusMake(18, 0, 18, 18) withBorderColor:[UIColor whiteColor] borderWidth:1 backgroundColor:[UIColor whiteColor] backgroundImage:[UIImage imageWithColor:[UIColor whiteColor]] contentMode:UIViewContentModeScaleAspectFill];
+            [_topView wl_setWLRadius:WLRadiusMake(0, 18, 18, 18) withBorderColor:[UIColor whiteColor] borderWidth:1 backgroundColor:[UIColor whiteColor] backgroundImage:[UIImage imageWithColor:[UIColor whiteColor]] contentMode:UIViewContentModeScaleAspectFill];
         } else {
             _topView.hidden = YES;
-            [_backView wl_setWLRadius:WLRadiusMake(18, 0, 18, 18) withBorderColor:UIColorMake(254,72,30) borderWidth:1 backgroundColor:UIColorMake(254,72,30) backgroundImage:[UIImage imageWithColor:UIColorMake(254,72,30)] contentMode:UIViewContentModeScaleAspectFill];
+            [_backView wl_setWLRadius:WLRadiusMake(0, 18, 18, 18) withBorderColor:UIColorMake(254,72,30) borderWidth:1 backgroundColor:UIColorMake(254,72,30) backgroundImage:[UIImage imageWithColor:UIColorMake(254,72,30)] contentMode:UIViewContentModeScaleAspectFill];
         }
         
         // 设置红包背景图

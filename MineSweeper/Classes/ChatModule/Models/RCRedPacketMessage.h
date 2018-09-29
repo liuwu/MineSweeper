@@ -8,10 +8,9 @@
 
 #import <RongIMLib/RongIMLib.h>
 
-#define RCRedPacketMessageTypeIdentifier @"RC:RedPacketMsg"
+#define RCRedPacketMessageTypeIdentifier @"app:RedpackMsg"
 
 @interface RCRedPacketMessage : RCMessageContent<RCMessageContentView>
-
 
 // 红包ID
 @property (nonatomic, strong) NSString *pack_id;

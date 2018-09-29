@@ -47,16 +47,18 @@
     section.footerHeight = 0.f;
     [self.manager addSection:section];
     
-    REBoolItem *messageNotifyItem = [REBoolItem itemWithTitle:@"接受新消息通知" value:YES switchValueChangeHandler:^(REBoolItem *item) {
-        
+    REBoolItem *messageNotifyItem = [REBoolItem itemWithTitle:@"接受新消息通知" value:[RCIM sharedRCIM].disableMessageNotificaiton switchValueChangeHandler:^(REBoolItem *item) {
+        [RCIM sharedRCIM].disableMessageNotificaiton = item.value;
+        item.value = !item.value;
     }];
     [section addItem:messageNotifyItem];
     REBoolItem *showDetailItem = [REBoolItem itemWithTitle:@"通知显示消息详情" value:YES switchValueChangeHandler:^(REBoolItem *item) {
         
     }];
     [section addItem:showDetailItem];
-    REBoolItem *soundItem = [REBoolItem itemWithTitle:@"声音" value:YES switchValueChangeHandler:^(REBoolItem *item) {
-        
+    REBoolItem *soundItem = [REBoolItem itemWithTitle:@"声音" value:[RCIM sharedRCIM].disableMessageAlertSound switchValueChangeHandler:^(REBoolItem *item) {
+        [RCIM sharedRCIM].disableMessageAlertSound = item.value;
+        item.value = !item.value;
     }];
     [section addItem:soundItem];
     REBoolItem *shakeItem = [REBoolItem itemWithTitle:@"震动" value:YES switchValueChangeHandler:^(REBoolItem *item) {

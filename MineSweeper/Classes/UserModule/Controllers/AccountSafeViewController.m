@@ -92,12 +92,12 @@
 
 - (void)setFreeChip:(REBoolItem *)item {
     [WLHUDView showHUDWithStr:@"" dim:YES];
-    NSDictionary *params = @{@"is_secret_free" : @(!item.value)};
+    NSDictionary *params = @{@"is_secret_free" : [NSNumber numberWithBool:item.value]};
     [UserModelClient setSecretFreeWithParams:params Success:^(id resultInfo) {
         [WLHUDView showSuccessHUD:@"已设置"];
-        configTool.userInfoModel.is_secret_free = @(!item.value).stringValue;
+        configTool.userInfoModel.is_secret_free = @(item.value).stringValue;
         item.value = !item.value;
-        [item reloadRowWithAnimation:UITableViewRowAnimationNone];
+//        [item reloadRowWithAnimation:UITableViewRowAnimationNone];
     } Failed:^(NSError *error) {
         if (error.localizedDescription.length > 0) {
             [WLHUDView showErrorHUD:error.localizedDescription];

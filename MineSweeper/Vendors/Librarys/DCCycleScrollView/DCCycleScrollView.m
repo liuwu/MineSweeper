@@ -189,12 +189,14 @@ static NSString *const cellID = @"cellID";
     NSString *imagePath = self.imgArr[itemIndex];
    
         if ([imagePath hasPrefix:@"http"]) {
-            [cell.imageView setImageWithURL:[NSURL URLWithString:imagePath]
-                                placeholder:self.cellPlaceholderImage
-                                    options:YYWebImageOptionShowNetworkActivity|YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur
-                                 completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
-                                     cell.imageView.image = [image qmui_imageWithClippedCornerRadius:10.f];
-                                 }];
+            cell.imagePath = imagePath;
+//            WEAKSELF
+//            [cell.imageView setImageWithURL:[NSURL URLWithString:imagePath]
+//                                placeholder:[UIImage imageNamed:@"game_friend_icon"]
+//                                    options:YYWebImageOptionProgressive | YYWebImageOptionProgressiveBlur | YYWebImageOptionAvoidSetImage
+//                                 completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+//                                     cell.imageView.image = [image qmui_imageWithClippedCornerRadius:10.f];
+//                                 }];
 //            [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imagePath] placeholderImage:self.cellPlaceholderImage];
         } else {
             UIImage *image = [UIImage imageNamed:imagePath];

@@ -33,6 +33,8 @@
 
 @property (nonatomic, strong) IFriendDetailInfoModel *userModel;
 
+@property (nonatomic, strong) RETableViewItem *nameItem;
+
 @end
 
 @implementation UserInfoViewController
@@ -56,7 +58,7 @@
 //    NSDictionary *params = @{@"uid" : _friendModel.uid};
     NSDictionary *params = @{@"uid" : _userId};
     WEAKSELF
-    [WLHUDView showHUDWithStr:@"加载中..." dim:YES];
+    [WLHUDView showHUDWithStr:@"" dim:YES];
     [FriendModelClient getImMemberInfoWithParams:params Success:^(id resultInfo) {
         [WLHUDView hiddenHud];
         [weakSelf.tableView.mj_header endRefreshing];
@@ -79,7 +81,7 @@
     _iconImageView.image = [_userModel getLoginUserSex];
     _nameLabel.text = _userModel.nickname;
     _nickNameLabel.text = [NSString stringWithFormat:@"昵称：%@", _userModel.nickname];
-    _idLabel.text = @"ID：";
+    _idLabel.text = [NSString stringWithFormat:@"ID：%@", _userModel.id_num.stringValue] ;
     if (_userModel.uid.integerValue == configTool.loginUser.uid.integerValue) {
         _sendBtn.hidden = YES;
         _deleteBtn.hidden = YES;
@@ -92,6 +94,8 @@
         [_sendBtn setTitle:@"发消息" forState:UIControlStateNormal];
         _deleteBtn.hidden = NO;
     }
+    _nameItem.detailLabelText = _userModel.remark;
+    [_nameItem reloadRowWithAnimation:UITableViewRowAnimationNone];
 }
 
 
@@ -119,7 +123,7 @@
     QMUILabel *nameLabel = [[QMUILabel alloc] init];
     nameLabel.font = UIFontMake(15);
     nameLabel.textColor = WLColoerRGB(51.f);
-    nameLabel.text = @"小银子";
+    nameLabel.text = @"";
     [headerView addSubview:nameLabel];
     self.nameLabel = nameLabel;
     [nameLabel sizeToFit];
@@ -140,7 +144,7 @@
     QMUILabel *nickNameLabel = [[QMUILabel alloc] init];
     nickNameLabel.font = UIFontMake(11);
     nickNameLabel.textColor = WLColoerRGB(153.f);
-    nickNameLabel.text = @"昵称：尹。。";
+    nickNameLabel.text = @"昵称：";
     [headerView addSubview:nickNameLabel];
     self.nickNameLabel = nickNameLabel;
     [nickNameLabel sizeToFit];
@@ -152,7 +156,7 @@
     QMUILabel *idLabel = [[QMUILabel alloc] init];
     idLabel.font = UIFontMake(11);
     idLabel.textColor = WLColoerRGB(153.f);
-    idLabel.text = @"ID:16854587";
+    idLabel.text = @"ID:";
     [headerView addSubview:idLabel];
     self.idLabel = idLabel;
     [idLabel sizeToFit];
@@ -215,6 +219,7 @@
     }];
     nameItem.selectionStyle = UITableViewCellSelectionStyleNone;
     [section addItem:nameItem];
+    self.nameItem = nameItem;
 }
 
 - (void)didReceiveMemoryWarning {

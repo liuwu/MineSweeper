@@ -401,6 +401,7 @@
 		10F820AC215DCAB100B555E3 /* RCRedPacketGetMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 10F820AB215DCAB100B555E3 /* RCRedPacketGetMessage.m */; };
 		10F820AF215DEDF300B555E3 /* IWallentInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 10F820AE215DEDF300B555E3 /* IWallentInfoModel.m */; };
 		10F820B1215E024500B555E3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10F820B0215E024500B555E3 /* Foundation.framework */; };
+		10F820B4215E3B5200B555E3 /* BaseImageSubTitleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 10F820B3215E3B5200B555E3 /* BaseImageSubTitleTableViewCell.m */; };
 		C4DB55F6C9DBF48EA5AD7F59 /* Pods_MineSweeper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8AFE025042466EB1193918F /* Pods_MineSweeper.framework */; };
 		F543C3C8214A46A400F863CC /* SLCommonTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F543C3C7214A46A400F863CC /* SLCommonTableViewController.m */; };
 		F543C3CB214A4B1D00F863CC /* SLCommonGroupListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F543C3CA214A4B1D00F863CC /* SLCommonGroupListViewController.m */; };
@@ -1220,6 +1221,8 @@
 		10F820AD215DEDF300B555E3 /* IWallentInfoModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IWallentInfoModel.h; sourceTree = "<group>"; };
 		10F820AE215DEDF300B555E3 /* IWallentInfoModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IWallentInfoModel.m; sourceTree = "<group>"; };
 		10F820B0215E024500B555E3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		10F820B2215E3B5200B555E3 /* BaseImageSubTitleTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseImageSubTitleTableViewCell.h; sourceTree = "<group>"; };
+		10F820B3215E3B5200B555E3 /* BaseImageSubTitleTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseImageSubTitleTableViewCell.m; sourceTree = "<group>"; };
 		A8AFE025042466EB1193918F /* Pods_MineSweeper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MineSweeper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E37D4B5778204A574CF96A28 /* Pods-MineSweeper.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MineSweeper.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MineSweeper/Pods-MineSweeper.debug.xcconfig"; sourceTree = "<group>"; };
 		F37BFC99A878510AF9E2CC19 /* Pods-MineSweeper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MineSweeper.release.xcconfig"; path = "Pods/Target Support Files/Pods-MineSweeper/Pods-MineSweeper.release.xcconfig"; sourceTree = "<group>"; };
@@ -2524,6 +2527,8 @@
 				10886BAD214FC1A9003DC40A /* BaseTableViewCell.m */,
 				106D4AEB215C77B60047E8BA /* BaseImageTableViewCell.h */,
 				106D4AEC215C77B60047E8BA /* BaseImageTableViewCell.m */,
+				10F820B2215E3B5200B555E3 /* BaseImageSubTitleTableViewCell.h */,
+				10F820B3215E3B5200B555E3 /* BaseImageSubTitleTableViewCell.m */,
 				101134342148CDC40082F74B /* UITextField */,
 				10351A962147CB5000EDC7AD /* WLActionSheet.h */,
 				10351A972147CB5000EDC7AD /* WLActionSheet.m */,
@@ -3707,6 +3712,7 @@
 				10F2D74D215A4E3000937D39 /* RCRedPacketMessage.m in Sources */,
 				1035190E2147A34000EDC7AD /* AXBadgeView.m in Sources */,
 				10351A0D2147B73200EDC7AD /* NSNumber+WLAdd.m in Sources */,
+				10F820B4215E3B5200B555E3 /* BaseImageSubTitleTableViewCell.m in Sources */,
 				103519262147A34000EDC7AD /* WLAssetsGroup.m in Sources */,
 				1018BCC3215520D1004BC57B /* ITokenModel.m in Sources */,
 				103519032147A34000EDC7AD /* RSADataVerifier.m in Sources */,

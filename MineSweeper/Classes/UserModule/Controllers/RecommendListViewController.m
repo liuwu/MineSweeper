@@ -8,6 +8,7 @@
 
 #import "RecommendListViewController.h"
 #import "BaseTableViewCell.h"
+#import "BaseImageSubTitleTableViewCell.h"
 
 #import "UserModelClient.h"
 #import "IRecommendModel.h"
@@ -17,12 +18,48 @@
 
 @property (nonatomic, strong) NSArray *datasource;
 
+@property (nonatomic, assign) NSInteger distance;
+
 @end
 
 @implementation RecommendListViewController
 
+- (instancetype)initWithDistance:(NSInteger)distance {
+    self.distance = distance;
+    self = [super self];
+    if (self) {
+        
+    }
+    return self;
+}
+
 - (NSString *)title {
-    return @"一级推荐";
+    switch (_distance) {
+        case 1:
+            return @"一级推荐";
+            break;
+        case 2:
+            return @"二级推荐";
+            break;
+        case 3:
+            return @"三级推荐";
+            break;
+        case 4:
+            return @"四级推荐";
+            break;
+        case 5:
+            return @"五级推荐";
+            break;
+        case 6:
+            return @"六级推荐";
+            break;
+        case 7:
+            return @"七级推荐";
+            break;
+        default:
+            return @"";
+            break;
+    }
 }
 
 - (void)initSubviews {
@@ -33,14 +70,19 @@
     //下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
     
+    //上提加载更多
+    MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(beginPullUpRefreshingNew)];
+    self.tableView.mj_footer = footer;
+    self.tableView.mj_footer.hidden = YES;
+    
     [self loadData];
 }
 
 - (void)loadData {
     [self hideEmptyView];
     NSDictionary *params = @{
-                             @"member_pid": @713,
-                             @"distance" : @1
+//                             @"member_pid": @713,
+                             @"distance" : @(_distance)
                              };
     WEAKSELF
     [UserModelClient getRecommoneNextListWithParams:params Success:^(id resultInfo) {
@@ -78,29 +120,27 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    BaseTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"recommend_list_cell"];
+    BaseImageSubTitleTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"recommend_list_cell"];
     if (!cell) {
-        cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleValue1 reuseIdentifier:@"recommend_list_cell"];
+        cell = [[BaseImageSubTitleTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleValue1 reuseIdentifier:@"recommend_list_cell"];
     }
     cell.showBottomLine = YES;
     IRecommendInfoModel *mode = _datasource[indexPath.row];
-    cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
+    cell.recommendModel = mode;
+    
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
     cell.detailTextLabel.textColor = WLColoerRGB(153.f);
     cell.detailTextLabel.font = UIFontMake(15.f);
-    cell.textLabel.text = mode.from_nickname;
-    cell.detailTextLabel.text = mode.add_time;// @"2018-8-12";
     
     // reset
-    cell.imageEdgeInsets = UIEdgeInsetsZero;
-    cell.textLabelEdgeInsets = UIEdgeInsetsZero;
-    cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
-    cell.accessoryEdgeInsets = UIEdgeInsetsZero;
-
-//    cell.imageEdgeInsets = UIEdgeInsetsMake(0, 40, 0, 0);
-    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, 40, 0, 0);
+//    cell.imageEdgeInsets = UIEdgeInsetsZero;
+//    cell.textLabelEdgeInsets = UIEdgeInsetsZero;
+//    cell.detailTextLabelEdgeInsets = UIEdgeInsetsZero;
+//    cell.accessoryEdgeInsets = UIEdgeInsetsZero;
+//
+////    cell.imageEdgeInsets = UIEdgeInsetsMake(0, 40, 0, 0);
+//    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, 40, 0, 0);
 //    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     [cell updateCellAppearanceWithIndexPath:indexPath];
@@ -110,7 +150,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     DLog(@"didSelectRowAtIndexPath------");
-    
+    RecommendListViewController *recommendListVc = [[RecommendListViewController alloc] initWithDistance:_distance + 1];
+    [self.navigationController pushViewController:recommendListVc animated:YES];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -132,6 +173,10 @@
     [self loadData];
 }
 
+// 上拉刷新
+//- (void)beginPullUpRefreshingNew {
+//    [self loadData];
+//}
 
 
 @end

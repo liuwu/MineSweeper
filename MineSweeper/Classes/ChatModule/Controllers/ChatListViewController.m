@@ -9,6 +9,7 @@
 #import "ChatListViewController.h"
 #import "ChatViewController.h"
 #import "RedPacketViewController.h"
+#import "MessageNotifiListViewController.h"
 
 @interface ChatListViewController ()
 
@@ -47,6 +48,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"home_notice_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(leftBtnItemClicked)];
+    self.navigationItem.leftBarButtonItem = leftBtnItem;
     // Do any additional setup after loading the view.
     
     //重写显示相关的接口，必须先调用super，否则会屏蔽SDK默认的处理
@@ -85,12 +89,12 @@
  @discussion 您可以在回调中修改、添加、删除数据源的元素来定制显示的内容，会话列表会根据您返回的修改后的数据源进行显示。
  数据源中存放的元素为会话Cell的数据模型，即RCConversationModel对象。
  */
-- (NSMutableArray *)willReloadTableData:(NSMutableArray *)dataSource {
+//- (NSMutableArray *)willReloadTableData:(NSMutableArray *)dataSource {
 //    if (configTool.loginUser.investorauth.integerValue == 1) {
 //        [dataSource insertObjects:[WLChatProjectManager sharedInstance].dataSource atIndex:0];
 //    }
-    return dataSource;
-}
+//    return dataSource;
+//}
 
 /*!
  即将显示Cell的回调
@@ -233,5 +237,14 @@
 //- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 //    return 70.f;
 //}
+
+
+- (void)leftBtnItemClicked{
+    // 有使用配置表的时候，最简单的代码就只是控制显隐即可，没使用配置表的话，还需要设置其他的属性才能使红点样式正确，具体请看 UIBarButton+QMUIBadge.h 注释
+    self.navigationItem.leftBarButtonItem.qmui_shouldShowUpdatesIndicator = YES;
+    
+    MessageNotifiListViewController *messageNotifiVc = [[MessageNotifiListViewController alloc] initWithStyle:UITableViewStylePlain];
+    [self.navigationController pushViewController:messageNotifiVc animated:YES];
+}
 
 @end

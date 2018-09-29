@@ -19,6 +19,8 @@
 @property (nonatomic, strong) LWLoginTextFieldView *infoTxtView;
 @property (nonatomic, strong) UIButton *loginBtn;
 
+@property (nonatomic, strong) IFriendDetailInfoModel *userModel;
+
 @end
 
 @implementation UserInfoChangeViewController
@@ -69,6 +71,40 @@
     [super initSubviews];
     [self addSubviews];
     [self addConstrainsForSubviews];
+    
+    if (_changeType == UserInfoChangeTypeSetFriendRemark) {
+        [self loadData];
+    }
+}
+
+- (void)loadData {
+    NSDictionary *params = @{@"uid" : _uid};
+    WEAKSELF
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    [FriendModelClient getImMemberInfoWithParams:params Success:^(id resultInfo) {
+        [WLHUDView hiddenHud];
+        weakSelf.userModel = [IFriendDetailInfoModel modelWithDictionary:resultInfo];
+        [weakSelf updateUI];
+        //        [weakSelf.tableView reloadData];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
+    }];
+}
+- (void)updateUI {
+    switch (_changeType) {
+        case UserInfoChangeTypeNickName:
+            _infoTxtView.textField.placeholder = @"昵称";
+            _infoTxtView.textField.text = configTool.userInfoModel.nickname;
+            break;
+        case UserInfoChangeTypeRealName:
+            _infoTxtView.textField.text = configTool.userInfoModel.realname;
+            break;
+        case UserInfoChangeTypeSetFriendRemark:
+            _infoTxtView.textField.text = _userModel.remark;
+            break;
+        default:
+            break;
+    }
 }
 
 #pragma mark setup
@@ -92,6 +128,7 @@
             break;
         case UserInfoChangeTypeSetFriendRemark:
             infoTxtView.textField.placeholder = @"备注";
+            infoTxtView.textField.text = _userModel.remark;
             break;
         default:
             break;

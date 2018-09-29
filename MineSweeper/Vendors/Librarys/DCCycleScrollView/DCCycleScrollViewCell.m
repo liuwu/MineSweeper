@@ -35,6 +35,17 @@
     _imageView.layer.mask = maskLayer;
 }
 
+- (void)setImagePath:(NSString *)imagePath {
+    _imagePath = imagePath;
+    WEAKSELF
+    [self.imageView setImageWithURL:[NSURL URLWithString:_imagePath]
+                        placeholder:[UIImage imageNamed:@"h1.jpg"]
+                            options:YYWebImageOptionProgressive | YYWebImageOptionProgressiveBlur | YYWebImageOptionAvoidSetImage
+                         completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                             weakSelf.imageView.image = [image qmui_imageWithClippedCornerRadius:10.f];
+                         }];
+}
+
 -(UIImageView *)imageView
 {
     if(_imageView == nil)

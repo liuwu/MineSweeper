@@ -9,7 +9,8 @@
 #import "GameDetailListViewController.h"
 #import "ChatViewController.h"
 
-#import "BaseTableViewCell.h"
+//#import "BaseTableViewCell.h"
+#import "BaseImageTableViewCell.h"
 
 #import "ImGroupModelClient.h"
 #import "IGameGroupModel.h"
@@ -29,8 +30,8 @@
 - (void)initSubviews {
     [super initSubviews];
     
-    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithTitle:@"保存" target:self action:@selector(rightBarButtonItemClicked)];
-    self.navigationItem.rightBarButtonItem = rightBtnItem;
+//    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithTitle:@"保存" target:self action:@selector(rightBarButtonItemClicked)];
+//    self.navigationItem.rightBarButtonItem = rightBtnItem;
     
     
     // 隐藏分割线
@@ -99,22 +100,24 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    BaseTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"game_group_list_cell"];
+    BaseImageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"game_group_list_cell"];
     if (!cell) {
-        cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleDefault reuseIdentifier:@"game_group_list_cell"];
+        cell = [[BaseImageTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleDefault reuseIdentifier:@"game_group_list_cell"];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.showBottomLine = YES;
     IGameGroupModel *model = _datasource[indexPath.row];
-    [cell.imageView setImageWithURL:[NSURL URLWithString:model.image]
-                        placeholder:[UIImage imageNamed:@"game_group_icon"]
-                            options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur|YYWebImageOptionIgnorePlaceHolder completion:nil];
-    cell.textLabel.text = model.title;// @"5-10 赔率1.5倍  群组";
+    cell.groupModel = model;
+    
+//    [cell.imageView setImageWithURL:[NSURL URLWithString:model.image]
+//                        placeholder:[UIImage imageNamed:@"game_group_icon"]
+//                            options:YYWebImageOptionProgressive|YYWebImageOptionProgressiveBlur|YYWebImageOptionIgnorePlaceHolder completion:nil];
+//    cell.textLabel.text = model.title;// @"5-10 赔率1.5倍  群组";
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
     
     // reset
-    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+//    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
     [cell updateCellAppearanceWithIndexPath:indexPath];
     return cell;
 }

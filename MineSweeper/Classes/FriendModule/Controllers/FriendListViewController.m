@@ -12,6 +12,7 @@
 #import "SearchFriendViewController.h"
 #import "TransferViewController.h"
 #import "ChatViewController.h"
+#import "MessageNotifiListViewController.h"
 
 #import "UserInfoViewController.h"
 #import "ChatInfoViewController.h"
@@ -725,8 +726,11 @@
 #pragma mark - Private
 - (void)leftBtnItemClicked {
     [[self.view wl_findFirstResponder] resignFirstResponder];
-    NewFriendListViewController *newFriendVc = [[NewFriendListViewController alloc] initWithStyle:UITableViewStylePlain];
-    [self.navigationController pushViewController:newFriendVc animated:YES];
+    // 有使用配置表的时候，最简单的代码就只是控制显隐即可，没使用配置表的话，还需要设置其他的属性才能使红点样式正确，具体请看 UIBarButton+QMUIBadge.h 注释
+    self.navigationItem.leftBarButtonItem.qmui_shouldShowUpdatesIndicator = YES;
+    
+    MessageNotifiListViewController *messageNotifiVc = [[MessageNotifiListViewController alloc] initWithStyle:UITableViewStylePlain];
+    [self.navigationController pushViewController:messageNotifiVc animated:YES];
 }
 
 // 右侧按钮点击
@@ -751,6 +755,8 @@
             WEAKSELF
             [ImGroupModelClient setImGroupJoinWithParams:params Success:^(id resultInfo) {
                 [WLHUDView showSuccessHUD:@"添加成功"];
+                // 聊天信息发送改变
+                [kNSNotification postNotificationName:@"kChatUserInfoChanged" object:nil];
                 [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
                 [weakSelf.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:self.navigationController.viewControllers.count - 2] animated:YES];
             } Failed:^(NSError *error) {
@@ -800,6 +806,7 @@
     [[self.view wl_findFirstResponder] resignFirstResponder];
     [self loadData];
 }
+
 
 
 

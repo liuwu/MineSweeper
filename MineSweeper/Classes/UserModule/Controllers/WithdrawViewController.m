@@ -30,6 +30,7 @@
 @property (nonatomic, strong) QMUIModalPresentationViewController *payModalViewController;
 
 @property (nonatomic, strong) IWallentInfoModel *wallentInfoModel;
+@property (nonatomic, strong) NSString *payPwd;
 
 @end
 
@@ -46,6 +47,7 @@
     
     [self loadData];
     
+    [kNSNotification addObserver:self selector:@selector(alipayUserId:) name:@"kAliPayUserId" object:nil];
     //添加单击手势
 //    UITapGestureRecognizer *tap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
 //        [[self.view wl_findFirstResponder] resignFirstResponder];
@@ -280,6 +282,7 @@
 
 // 确认支付
 - (void)payBtnClicked:(UIButton *)sender {
+    [_payModalViewController hideWithAnimated:YES completion:nil];
     // 钱包 - 提现 - 支付宝授权登录
     [WLHUDView showHUDWithStr:@"提现中..." dim:YES];
     NSDictionary *params = @{@"password" : _pwdTextField.text.wl_trimWhitespaceAndNewlines,
@@ -287,13 +290,8 @@
     WEAKSELF
     [UserModelClient aliPayLoginWithParams:params Success:^(id resultInfo) {
         [[AlipaySDK defaultService] auth_V2WithInfo:resultInfo fromScheme:@"AlipayMineSweeper" callback:^(NSDictionary *resultDic) {
-            DLog(@"auth_V2WithInfo");
+            DLog(@"auth_V2WithInfo:%@", resultDic);
         }];
-//        [[AlipaySDK defaultService] processAuth_V2Result:nil standbyCallback:^(NSDictionary *resultDic) {
-//
-//        }];
-                
-//        [weakSelf withdrawData];
     } Failed:^(NSError *error) {
         if (error.localizedDescription.length > 0) {
             [WLHUDView showErrorHUD:error.localizedDescription];
@@ -303,12 +301,19 @@
     }];
 }
 
+// 获取到支付宝支付信息
+- (void)alipayUserId:(NSNotification *)notification {
+    NSString *user_id = [notification object];//通过这个获取到传递的对象
+    [self withdrawData:user_id];
+}
+
 // 提现
-- (void)withdrawData {
-    NSDictionary *params = @{@"user_id" : configTool.loginUser.uid,
+- (void)withdrawData:(NSString *)userId {
+    NSDictionary *params = @{@"user_id" : userId,
+                             @"password" : _pwdTextField.text.wl_trimWhitespaceAndNewlines,
                              @"money" : [NSNumber numberWithFloat:_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue]};
     [UserModelClient withdrawWallentWithParams:params Success:^(id resultInfo) {
-        [WLHUDView showSuccessHUD:@"操作成功"];
+        [WLHUDView showSuccessHUD:@"提现成功"];
         [kNSNotification postNotificationName:@"kUserInfoChanged" object:nil];
         [self.navigationController popViewControllerAnimated:YES];
     } Failed:^(NSError *error) {

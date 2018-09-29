@@ -75,6 +75,10 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     //下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
+    //上提加载更多
+    MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(beginPullUpRefreshingNew)];
+    self.tableView.mj_footer = footer;
+    self.tableView.mj_footer.hidden = YES;
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, SCREEN_WIDTH, 64.f)];
     headerView.backgroundColor = UIColorMake(254.f, 72.f, 30.f);
@@ -234,12 +238,18 @@
 #pragma mark - Private
 // 右侧导航按钮点击
 - (void)rightBarButtonItemClicked {
-    RecommendListViewController *recommendListVc = [[RecommendListViewController alloc] init];
+    RecommendListViewController *recommendListVc = [[RecommendListViewController alloc] initWithDistance:1];
     [self.navigationController pushViewController:recommendListVc animated:YES];
 }
 
 // 下拉刷新
 - (void)beginPullDownRefreshingNew {
+    
+    [self loadData];
+}
+
+// 上拉刷新
+- (void)beginPullUpRefreshingNew {
     [self loadData];
 }
 

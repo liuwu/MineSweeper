@@ -8,6 +8,8 @@
 
 #import "QDCommonViewController.h"
 
+#import "IFriendDetailInfoModel.h"
+
 typedef NS_ENUM(NSInteger, UserInfoChangeType)
 {
     UserInfoChangeTypeNickName,

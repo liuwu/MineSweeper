@@ -20,7 +20,7 @@
 @property (nonatomic, copy) NSString *_uid;
 // 群组类型 0 普通群组 1游戏群组
 @property (nonatomic, copy) NSNumber *type;
-// 是否加入群组 0 否 1是
+// 是否加入群组 0：否，1：是
 @property (nonatomic, copy) NSNumber *is_exist;
 // 备注
 @property (nonatomic, copy) NSString *remark;

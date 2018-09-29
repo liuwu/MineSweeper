@@ -8,6 +8,7 @@
 
 #import "SearchFriendViewController.h"
 #import "FriendRquestViewController.h"
+#import "UserInfoViewController.h"
 
 #import "RETableViewManager.h"
 #import "RETableViewSection.h"
@@ -65,10 +66,21 @@
 - (void)scanQrCode {
     SWQRCodeConfig *config = [[SWQRCodeConfig alloc] init];
     config.scannerType = SWScannerTypeBoth;
-    
-    SWQRCodeViewController *qrcodeVC = [[SWQRCodeViewController alloc] init];
+    WEAKSELF
+    SWQRCodeViewController *qrcodeVC = [[SWQRCodeViewController alloc] initWithScanBlock:^(NSString *scanValue) {
+        [weakSelf toUserInfoView:scanValue];
+    }];
     qrcodeVC.codeConfig = config;
     [self.navigationController pushViewController:qrcodeVC animated:YES];
+}
+
+- (void)toUserInfoView:(NSString *)uid {
+    if (uid.length > 0) {
+        UserInfoViewController *vc = [[UserInfoViewController alloc] init];
+        vc.userId = uid;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 - (void)viewDidLoad {

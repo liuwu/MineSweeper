@@ -11,4 +11,7 @@
 @interface DCCycleScrollViewCell : UICollectionViewCell
 @property (nonatomic,strong) UIImageView *imageView;
 @property (nonatomic,assign) CGFloat imgCornerRadius;
+
+@property (nonatomic, strong) NSString *imagePath;
+
 @end

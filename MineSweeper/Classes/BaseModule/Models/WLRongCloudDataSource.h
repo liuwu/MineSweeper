@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <RongIMKit/RongIMKit.h>
 
-@class IFriendModel,IGameGroupModel;
+@class IFriendModel,IGameGroupModel,IUserInfoModel;
 
 #define RCDDataSource [WLRongCloudDataSource shareInstance]
 
@@ -26,5 +26,5 @@
 //获取本地群组信息
 - (void)getLocalGroupInfoWithGroupId:(NSString*)groupId completion:(void (^)(IGameGroupModel*))completion;
 // 刷新融云用户基本信息
-- (void)refreshLogUserInfoCache:(IFriendModel *)profileM;
+- (void)refreshLogUserInfoCache:(IUserInfoModel *)profileM;
 @end

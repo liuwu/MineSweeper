@@ -17,6 +17,8 @@
 #import "TransferViewController.h"
 #import "FriendListViewController.h"
 #import "InviteRecommendViewController.h"
+#import "UserInfoViewController.h"
+#import "MessageNotifiListViewController.h"
 
 #import "SWQRCode.h"
 
@@ -31,6 +33,8 @@
 #import "IUserQrCodeModel.h"
 #import "ICityModel.h"
 #import "IPosterModel.h"
+
+#import "WLRongCloudDataSource.h"
 
 @interface MeViewController ()
 
@@ -96,6 +100,7 @@
                                        [weakSelf.tableView.mj_footer endRefreshing];
                                        IUserInfoModel *userInfoModel = [IUserInfoModel modelWithDictionary:resultInfo];
                                        configTool.userInfoModel = userInfoModel;
+                                       [RCDDataSource refreshLogUserInfoCache:userInfoModel];
                                        [weakSelf reloadUI];
                                    } Failed:^(NSError *error) {
                                        [WLHUDView hiddenHud];
@@ -472,7 +477,11 @@
 
 // 消息按钮点击
 - (void)leftBarButtonItemClicked {
+    // 有使用配置表的时候，最简单的代码就只是控制显隐即可，没使用配置表的话，还需要设置其他的属性才能使红点样式正确，具体请看 UIBarButton+QMUIBadge.h 注释
+    self.navigationItem.leftBarButtonItem.qmui_shouldShowUpdatesIndicator = YES;
     
+    MessageNotifiListViewController *messageNotifiVc = [[MessageNotifiListViewController alloc] initWithStyle:UITableViewStylePlain];
+    [self.navigationController pushViewController:messageNotifiVc animated:YES];
 }
 
 // 设置按钮点击
@@ -674,10 +683,21 @@
     [self.modalViewController hideWithAnimated:YES completion:nil];
     SWQRCodeConfig *config = [[SWQRCodeConfig alloc] init];
     config.scannerType = SWScannerTypeBoth;
-    
-    SWQRCodeViewController *qrcodeVC = [[SWQRCodeViewController alloc] init];
+    WEAKSELF
+    SWQRCodeViewController *qrcodeVC = [[SWQRCodeViewController alloc] initWithScanBlock:^(NSString *scanValue) {
+        [weakSelf toUserInfoView:scanValue];
+    }];
     qrcodeVC.codeConfig = config;
     [self.navigationController pushViewController:qrcodeVC animated:YES];
+}
+
+- (void)toUserInfoView:(NSString *)uid {
+    if (uid.length > 0) {
+        UserInfoViewController *vc = [[UserInfoViewController alloc] init];
+        vc.userId = uid;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 // 相册操作权限校验

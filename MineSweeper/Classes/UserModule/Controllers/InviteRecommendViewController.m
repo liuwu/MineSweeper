@@ -96,6 +96,7 @@
     [WLHUDView showHUDWithStr:@"" dim:YES];
     WEAKSELF
     [UserModelClient setInviteCodeWithParams:params Success:^(id resultInfo) {
+        [kNSNotification postNotificationName:@"kUserInfoChanged" object:nil];
         if (!resultInfo) {
             [WLHUDView showSuccessHUD:resultInfo];
         }

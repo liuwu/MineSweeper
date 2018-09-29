@@ -36,6 +36,7 @@
 @property (nonatomic, strong) RETableViewItem *cartItem;
 @property (nonatomic, strong) REBoolItem *notDisturbItem;
 @property (nonatomic, strong) REBoolItem *topItem;
+@property (nonatomic, strong) QMUIFillButton *quitBtn;
 
 @end
 
@@ -51,6 +52,26 @@
     [self addTableHeaderInfo];
     [self addTableViewCell];
 //    [self loadData];
+    
+    if (_groupDetailInfo.type.integerValue == 1) {
+        // 游戏群组，无法修改
+        _nameItem.accessoryType = UITableViewCellAccessoryNone;
+        _nameItem.enabled = NO;
+        
+        _noteItem.accessoryType = UITableViewCellAccessoryNone;
+        _noteItem.enabled = NO;
+        
+        _quitBtn.hidden = YES;
+    } else {
+        if (_groupDetailInfo._uid.integerValue != configTool.userInfoModel.userId.integerValue) {
+            // 游戏群组，无法修改
+            _nameItem.accessoryType = UITableViewCellAccessoryNone;
+            _nameItem.enabled = NO;
+            
+            _noteItem.accessoryType = UITableViewCellAccessoryNone;
+            _noteItem.enabled = NO;
+        }
+    }
     
     [kNSNotification addObserver:self selector:@selector(loadData) name:@"kGroupInfoChanged" object:nil];
 }
@@ -76,10 +97,13 @@
 
 - (void)updateUI {
     _nameItem.detailLabelText = _groupDetailInfo.title;
-    _noteItem.detailLabelText = _groupDetailInfo.remark;
+    _noteItem.detailLabelText = _groupDetailInfo.notice;
     _cartItem.detailLabelText = _groupDetailInfo.remark;
     _notDisturbItem.value = _groupDetailInfo.not_disturb.boolValue;
     _topItem.value = _groupDetailInfo.is_top.boolValue;
+    
+    [self.tableView reloadData];
+    
 
 //    CGFloat headerHeight = _groupDetailInfo.member_list.count > 4 ? 180.f : 90.f;
 //    _mainCollectionView.height = headerHeight + kMoreHeight;
@@ -100,7 +124,17 @@
     self.tableView.backgroundColor = WLColoerRGB(248.f);
     
 //    CGFloat headerHeight = _userArray.count > 4 ? 180.f : 90.f;
-    CGFloat headerHeight = _groupDetailInfo.member_list.count > 4 ? 180.f : 90.f;
+    CGFloat headerHeight = 90;
+    if (_groupDetailInfo.type.integerValue == 1) {
+        // 游戏群组，无法修改
+        headerHeight = _groupDetailInfo.member_list.count > 5 ? 180.f : 90.f;
+    } else {
+        if (_groupDetailInfo._uid.integerValue != configTool.userInfoModel.userId.integerValue) {
+            headerHeight = _groupDetailInfo.member_list.count > 5 ? 180.f : 90.f;
+        } else {
+            headerHeight = _groupDetailInfo.member_list.count > 4 ? 180.f : 90.f;
+        }
+    }
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0., DEVICE_WIDTH, headerHeight + kMoreHeight)];
     //    headerView.backgroundColor = [UIColor redColor];
 //    [headerView wl_setDebug:YES];
@@ -160,14 +194,15 @@
     
     QMUIFillButton *quitBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
     if (_groupDetailInfo.is_exist.integerValue == 1) {
-        [quitBtn setTitle:@"加入群聊" forState:UIControlStateNormal];
-    } else {
         [quitBtn setTitle:@"退出群聊" forState:UIControlStateNormal];
+    } else {
+        [quitBtn setTitle:@"加入群聊" forState:UIControlStateNormal];
     }
     quitBtn.titleLabel.font = WLFONT(18);
-    [quitBtn addTarget:self action:@selector(quitBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [quitBtn addTarget:self action:@selector(quitBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [quitBtn setCornerRadius:5.f];
     [footerView addSubview:quitBtn];
+    self.quitBtn = quitBtn;
     [quitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(13.f);
         make.left.mas_equalTo(10.f);
@@ -188,7 +223,13 @@
     
     WEAKSELF
     RETableViewItem *nameItem = [RETableViewItem itemWithTitle:@"群名称" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        [weakSelf changeGroupName:item];
+        if (weakSelf.groupDetailInfo.type.integerValue == 1) {
+            
+        } else {
+            if (weakSelf.groupDetailInfo._uid.integerValue == configTool.userInfoModel.userId.integerValue) {
+                [weakSelf changeGroupName:item];
+            }
+        }
     }];
     nameItem.style = UITableViewCellStyleValue1;
     nameItem.detailLabelText = _groupDetailInfo.title;// @"5-10 赔率1.5倍  群组";
@@ -198,7 +239,13 @@
     self.nameItem = nameItem;
     
     RETableViewItem *noteItem = [RETableViewItem itemWithTitle:@"群公告" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        [weakSelf changeGroupNotice:item];
+        if (weakSelf.groupDetailInfo.type.integerValue == 1) {
+            
+        } else {
+            if (weakSelf.groupDetailInfo._uid.integerValue == configTool.userInfoModel.userId.integerValue) {
+                [weakSelf changeGroupNotice:item];
+            }
+        }
     }];
     noteItem.style = UITableViewCellStyleSubtitle;
     noteItem.detailLabelText = _groupDetailInfo.notice ? : @"暂无";// @"温馨和谐文明真诚不欢迎广告！！的朋友你见或者不见我?我就在那这里的朋友你见或者不见我?我就在那里不悲不喜真诚我.见或者不见我?我就在那里不悲不喜真诚";
@@ -264,13 +311,17 @@
 - (void)changeMsgDisturb:(REBoolItem *)item {
     WEAKSELF
     [WLHUDView showHUDWithStr:@"" dim:YES];
-    if (item.value) {
+    if (!item.value) {
         // 关闭打扰
         [ImGroupModelClient cancelImGroupNotDisturbWithParams:@{@"id":@(_groupDetailInfo.groupId.integerValue)} Success:^(id resultInfo) {
             [weakSelf changeNotDisurbInfo:item];
             [WLHUDView hiddenHud];
         } Failed:^(NSError *error) {
-            [WLHUDView hiddenHud];
+            if (error.localizedDescription.length > 0) {
+                [WLHUDView showErrorHUD:error.localizedDescription];
+            } else {
+                [WLHUDView hiddenHud];
+            }
         }];
     } else {
         // 开启免打扰
@@ -278,7 +329,11 @@
             [weakSelf changeNotDisurbInfo:item];
             [WLHUDView hiddenHud];
         } Failed:^(NSError *error) {
-            [WLHUDView hiddenHud];
+            if (error.localizedDescription.length > 0) {
+                [WLHUDView showErrorHUD:error.localizedDescription];
+            } else {
+                [WLHUDView hiddenHud];
+            }
         }];
     }
 }
@@ -287,14 +342,15 @@
 - (void)changeNotDisurbInfo:(REBoolItem *)item {
     //    [WLHUDView showHUDWithStr:@"" dim:YES];
     WEAKSELF
+//    [[RCIM sharedRCIM] setConversationNotificationStatus]
     [[RCIMClient sharedRCIMClient] setConversationNotificationStatus:ConversationType_GROUP
                                                             targetId:_groupDetailInfo.groupId
-                                                           isBlocked:!item.value
+                                                           isBlocked:item.value
                                                              success:^(RCConversationNotificationStatus nStatus) {
                                                                  //                                                                 [WLHUDView hiddenHud];
-                                                                 weakSelf.groupDetailInfo.not_disturb = [@(!item.value) stringValue];
+                                                                 weakSelf.groupDetailInfo.not_disturb = [@(item.value) stringValue];
                                                                  item.value = !item.value;
-                                                                 [item reloadRowWithAnimation:UITableViewRowAnimationNone];
+//                                                                 [item reloadRowWithAnimation:UITableViewRowAnimationNone];
                                                              } error:^(RCErrorCode status) {
                                                                  //                                                                 [WLHUDView hiddenHud];
                                                                  [item reloadRowWithAnimation:UITableViewRowAnimationNone];
@@ -305,13 +361,17 @@
 - (void)changeChatTop:(REBoolItem *)item {
     WEAKSELF
     [WLHUDView showHUDWithStr:@"" dim:YES];
-    if (item.value) {
+    if (!item.value) {
         // 取消置顶
         [ImGroupModelClient setImGroupCancelIsTopWithParams:@{@"id":@(_groupDetailInfo.groupId.integerValue)} Success:^(id resultInfo) {
             [weakSelf changeChatTopInfo:item];
             [WLHUDView hiddenHud];
         } Failed:^(NSError *error) {
-            [WLHUDView hiddenHud];
+            if (error.localizedDescription.length > 0) {
+                [WLHUDView showErrorHUD:error.localizedDescription];
+            } else {
+                [WLHUDView hiddenHud];
+            }
         }];
     } else {
         // 置顶
@@ -319,17 +379,21 @@
             [weakSelf changeChatTopInfo:item];
             [WLHUDView hiddenHud];
         } Failed:^(NSError *error) {
-            [WLHUDView hiddenHud];
+            if (error.localizedDescription.length > 0) {
+                [WLHUDView showErrorHUD:error.localizedDescription];
+            } else {
+                [WLHUDView hiddenHud];
+            }
         }];
     }
 }
 
 // 置顶修改
 - (void)changeChatTopInfo:(REBoolItem *)item {
-    [[RCIMClient sharedRCIMClient] setConversationToTop:ConversationType_GROUP targetId:_groupDetailInfo.groupId isTop:!item.value];
-    self.groupDetailInfo.not_disturb = @(!item.value).stringValue;
+    [[RCIMClient sharedRCIMClient] setConversationToTop:ConversationType_GROUP targetId:_groupDetailInfo.groupId isTop:item.value];
+    self.groupDetailInfo.not_disturb = @(item.value).stringValue;
     item.value = !item.value;
-    [item reloadRowWithAnimation:UITableViewRowAnimationNone];
+//    [item reloadRowWithAnimation:UITableViewRowAnimationNone];
 }
 
 // 修改群名称
@@ -366,25 +430,40 @@
 
 //每个section的item个数
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return _groupDetailInfo.member_list.count + 1;
+    if (_groupDetailInfo.type.integerValue == 1) {
+        // 游戏群组，无法修改
+        return _groupDetailInfo.member_list.count;
+    } else {
+        if (_groupDetailInfo._uid.integerValue == configTool.userInfoModel.userId.integerValue) {
+            return _groupDetailInfo.member_list.count + 1;
+        } else {
+            return _groupDetailInfo.member_list.count ;
+        }
+        
+    }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     UserItemCollectionViewCell *cell = (UserItemCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"user_item_cell" forIndexPath:indexPath];
     
-    if (indexPath.row == _groupDetailInfo.member_list.count) {
-        cell.logoImageView.image = [UIImage imageNamed:@"chatDetail_icon_add"];
-    } else {
+    if (_groupDetailInfo.type.integerValue == 1) {
+        // 游戏群组，无法修改
         IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
-        cell.logoImageView.image = [UIImage imageNamed:@"redP_head_img"];
-        cell.titleLabel.text = model.nickname;// _userArray[indexPath.row];
-        [cell.logoImageView setImageWithURL:[NSURL URLWithString:model.avatar]
-                                placeholder:nil
-                                    options:YYWebImageOptionProgressive | YYWebImageOptionProgressiveBlur | YYWebImageOptionAvoidSetImage
-                                 completion:nil];
+        cell.friendModel = model;
+    } else {
+        if (_groupDetailInfo._uid.integerValue == configTool.userInfoModel.userId.integerValue) {
+            if (indexPath.row == _groupDetailInfo.member_list.count) {
+                cell.logoImageView.image = [UIImage imageNamed:@"chatDetail_icon_add"];
+            } else {
+                IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
+                cell.friendModel = model;
+            }
+        } else {
+            IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
+            cell.friendModel = model;
+        }
     }
-    
     return cell;
 }
 
@@ -440,11 +519,13 @@
 //    NSString *msg = cell.botlabel.text;
 //    NSLog(@"%@",msg);
     DLog(@"didSelectItemAtIndexPath：");
-    if (indexPath.row == _groupDetailInfo.member_list.count) {
-        FriendListViewController *vc = [[FriendListViewController alloc] initWithFriendListType:FriendListTypeForGroupChat];
-        vc.groupDetailInfo = _groupDetailInfo;
-        [self.navigationController pushViewController:vc animated:YES];
-        return;
+    if (_groupDetailInfo.type.integerValue == 0 || _groupDetailInfo._uid.integerValue == configTool.userInfoModel.userId.integerValue) {
+        if (indexPath.row == _groupDetailInfo.member_list.count) {
+            FriendListViewController *vc = [[FriendListViewController alloc] initWithFriendListType:FriendListTypeForGroupChatAddFriend];
+            vc.groupDetailInfo = _groupDetailInfo;
+            [self.navigationController pushViewController:vc animated:YES];
+            return;
+        }
     }
     IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
     UserInfoViewController *vc = [[UserInfoViewController alloc] init];
@@ -454,22 +535,8 @@
 
 #pragma mark - Private
 // 提醒退出登录
-- (void)quitBtn:(UIButton *)sender {
+- (void)quitBtnClicked:(UIButton *)sender {
     if (_groupDetailInfo.is_exist.integerValue == 1) {
-        // 加入
-        WEAKSELF
-        QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
-            DLog(@"取消");
-        }];
-        QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"加入群聊" style:QMUIAlertActionStyleDestructive handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
-            DLog(@"加入群聊");
-            [weakSelf join];
-        }];
-        QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:nil message:@"确认加入当前群组？" preferredStyle:QMUIAlertControllerStyleActionSheet];
-        [alertController addAction:action1];
-        [alertController addAction:action2];
-        [alertController showWithAnimated:YES];
-    } else {
         // 退出
         WEAKSELF
         QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
@@ -483,9 +550,21 @@
         [alertController addAction:action1];
         [alertController addAction:action2];
         [alertController showWithAnimated:YES];
+    } else {
+        // 加入
+        WEAKSELF
+        QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+            DLog(@"取消");
+        }];
+        QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"加入群聊" style:QMUIAlertActionStyleDestructive handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+            DLog(@"加入群聊");
+            [weakSelf join];
+        }];
+        QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:nil message:@"确认加入当前群组？" preferredStyle:QMUIAlertControllerStyleActionSheet];
+        [alertController addAction:action1];
+        [alertController addAction:action2];
+        [alertController showWithAnimated:YES];
     }
-    
-   
 }
 
 - (void)quit {
@@ -496,7 +575,11 @@
         [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
         [weakSelf.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:self.navigationController.viewControllers.count - 2] animated:YES];
     } Failed:^(NSError *error) {
-        [WLHUDView hiddenHud];
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
     }];
 }
 
@@ -511,7 +594,11 @@
         [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
         [weakSelf.navigationController popViewControllerAnimated:YES];
     } Failed:^(NSError *error) {
-        [WLHUDView hiddenHud];
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
     }];
 }
 

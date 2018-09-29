@@ -200,12 +200,13 @@ single_implementation(AppDelegate);
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
-    
-    if ([url.host isEqualToString:@"safepay"]) {
-        //跳转支付宝钱包进行支付，处理支付结果
-        [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
-            NSLog(@"result = %@",resultDic);
-        }];
+    NSLog(@"sourceApplication:%@", url);
+    if ([url.scheme isEqualToString:@"AlipayMineSweeper"]) {
+        NSString *user_id = [self getAliPayUserId:url.absoluteString];
+        NSLog(@"AliPay user_id:%@",url.query);
+        if (user_id) {
+            [kNSNotification postNotificationName:@"kAliPayUserId" object:user_id];
+        }
     }
     return YES;
 }
@@ -213,13 +214,35 @@ single_implementation(AppDelegate);
 // NOTE: 9.0以后使用新API接口
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options
 {
-    if ([url.host isEqualToString:@"safepay"]) {
+    NSLog(@"openURL:%@",url);
+//    [[AlipaySDK defaultService] processAuth_V2Result:url standbyCallback:^(NSDictionary *resultDic) {
+//         NSLog(@"result = %@",resultDic);
+//    }];
+    if ([url.scheme isEqualToString:@"AlipayMineSweeper"]) {
+        // AlipayMineSweeper://safepay/?%7B%22memo%22:%7B%22result%22:%22success=true&result_code=200&app_id=2018063060556036&auth_code=5429bdde54b444ad9a78235a80edUX43&scope=kuaijie&alipay_open_id=20880084727651257014501641111643&user_id=2088802664730435&target_id=725%22,%22ResultStatus%22:%229000%22,%22memo%22:%22%22%7D,%22requestType%22:%22safepay%22%7D
+        NSString *user_id = [self getAliPayUserId:url.absoluteString];
+        if (user_id) {
+            [kNSNotification postNotificationName:@"kAliPayUserId" object:user_id];
+        }
+        NSLog(@"AliPay user_id:%@",url.query);
+//        NSRange range = [str1 rangeOfString:str2];
         //跳转支付宝钱包进行支付，处理支付结果
-        [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
-            NSLog(@"result = %@",resultDic);
-        }];
+//        [[AlipaySDK defaultService] processOrderWithPaymentResult:[NSURL URLWithString:url.absoluteString] standbyCallback:^(NSDictionary *resultDic) {
+//            NSLog(@"result = %@",resultDic);
+//        }];
     }
     return YES;
+}
+
+- (NSString *)getAliPayUserId:(NSString *)url {
+    NSArray *resultArr = [url componentsSeparatedByString:@"&"];
+    if (resultArr.count <6) {
+        return nil;
+    }
+    NSString *userIdStr = resultArr[6];
+    NSArray *userIdArrays = [userIdStr componentsSeparatedByString:@"="];
+    NSString *user_id = userIdArrays[1];
+    return user_id;
 }
 
 #pragma mark - RCIMConnectionStatusDelegate
@@ -466,10 +489,12 @@ single_implementation(AppDelegate);
                                  @"password" : [NSUserDefaults stringForKey:[NSString stringWithFormat:@"%@%@", configTool.loginUser.uid, configTool.loginUser.mobile]],
                                  @"_password" : configTool.loginUser.password
                                  };
+        WEAKSELF
         [LoginModuleClient getUserTokenWithParams:params Success:^(id resultInfo) {
             [configTool refreshLoginUserToken:resultInfo];
+            [weakSelf connectRCIM];
         } Failed:^(NSError *error) {
-            [WLHUDView hiddenHud];
+//            [WLHUDView hiddenHud];
         }];
     }
 }
@@ -521,6 +546,11 @@ single_implementation(AppDelegate);
 
 #pragma mark - 退出登录
 - (void)logoutWithErrormsg:(NSString *)errormsg {
+    // 关闭融云连接
+    [[RCIM sharedRCIM] disconnect:NO];
+    [[RCIM sharedRCIM] clearUserInfoCache];
+    [[RCIM sharedRCIM] clearGroupInfoCache];
+    
     [LGAlertView removeAlertViews];
     [self.window endEditing:YES];
     if (!_loginNav) {
@@ -590,6 +620,14 @@ single_implementation(AppDelegate);
         
     }];
     
+//    if (!configTool.rcToken.token) return;
+//    if (configTool.loginUser.uid.integerValue == 0) return;
+//    if (configTool.rcToken.token){
+//        [self connectRCIMWithToken:configTool.rcToken.token];
+//    } else {
+//
+//    }
+    
 //    if (_rcConnectCount > krcConnectCount) return;
 //    _rcConnectCount++;
 //    if (!configTool.loginUser) return;
@@ -633,7 +671,15 @@ single_implementation(AppDelegate);
             DLog(@"融云token错误或者过期。需要重新换取token");
             [[RCIM sharedRCIM] disconnect:NO];
 //            configTool.loginUser.rongToken = @"";
-            [self connectRCIM];
+            WEAKSELF
+            [ImModelClient getImTokenWithParams:nil Success:^(id resultInfo) {
+                IRcToken *token = [IRcToken modelWithDictionary:resultInfo];
+                configTool.rcToken = token;
+                [weakSelf connectRCIMWithToken:configTool.rcToken.token];
+//                 [weakSelf connectRCIM];
+            } Failed:^(NSError *error) {
+                
+            }];
         });
     }];
 }

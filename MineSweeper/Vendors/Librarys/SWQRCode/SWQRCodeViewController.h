@@ -9,8 +9,12 @@
 #import "SWQRCode.h"
 #import "QDCommonViewController.h"
 
+typedef void(^SWQRCodeScanBlock)(NSString *scanValue);
+
 @interface SWQRCodeViewController : QDCommonViewController// UIViewController
 
 @property (nonatomic, strong) SWQRCodeConfig *codeConfig;
+
+- (instancetype)initWithScanBlock:(SWQRCodeScanBlock)scanBlock;
 
 @end

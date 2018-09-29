@@ -94,7 +94,7 @@
 #pragma mark - Private
 - (void)rightBarButtonItemClicked {
     if (_nameTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
-        [WLHUDView showOnlyTextHUD:@"请输入群公告"];
+        [WLHUDView showOnlyTextHUD:@"请输入群名称"];
     }
     [[self.view wl_findFirstResponder] resignFirstResponder];
     
@@ -105,10 +105,16 @@
     [WLHUDView showHUDWithStr:@"" dim:YES];
     [ImGroupModelClient setImGroupTitleWithParams:params Success:^(id resultInfo) {
         [WLHUDView showSuccessHUD:@"保存成功"];
+        // 聊天信息发送改变
+        [kNSNotification postNotificationName:@"kChatUserInfoChanged" object:nil];
         [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
         [weakSelf.navigationController popViewControllerAnimated:YES];
     } Failed:^(NSError *error) {
-        [WLHUDView hiddenHud];
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
     }];
 }
 

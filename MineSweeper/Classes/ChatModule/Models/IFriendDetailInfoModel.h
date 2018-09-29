@@ -11,6 +11,8 @@
 @interface IFriendDetailInfoModel : NSObject
 
 @property (nonatomic, copy) NSString *uid;
+// 用户ID
+@property (nonatomic, copy) NSNumber *id_num;
 // 昵称
 @property (nonatomic, copy) NSString *nickname;
 // 头像

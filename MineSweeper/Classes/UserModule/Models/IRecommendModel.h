@@ -18,9 +18,9 @@
 @property (nonatomic, copy) NSString *today_total_money;
 // 数量
 @property (nonatomic, copy) NSString *count;
-// 余额
-@property (nonatomic, copy) NSString *page;
 // 页数
+@property (nonatomic, copy) NSString *page;
+// 总页数
 @property (nonatomic, copy) NSNumber *pages;
 // 详细
 @property (nonatomic, copy) NSArray *list;

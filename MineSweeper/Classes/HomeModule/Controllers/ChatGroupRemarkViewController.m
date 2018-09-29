@@ -99,7 +99,7 @@
     [[self.view wl_findFirstResponder] resignFirstResponder];
     
     NSDictionary *params = @{@"id": @(_groupDetailInfo.groupId.integerValue),
-                             @"title" : _nameTxtView.textField.text.wl_trimWhitespaceAndNewlines
+                             @"remark" : _nameTxtView.textField.text.wl_trimWhitespaceAndNewlines
                              };
     WEAKSELF
     [WLHUDView showHUDWithStr:@"" dim:YES];
@@ -108,7 +108,11 @@
         [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
         [weakSelf.navigationController popViewControllerAnimated:YES];
     } Failed:^(NSError *error) {
-        [WLHUDView hiddenHud];
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
     }];
 }
 

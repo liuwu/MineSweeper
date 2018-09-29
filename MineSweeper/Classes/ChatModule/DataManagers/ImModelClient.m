@@ -223,7 +223,7 @@
 + (WLRequest *)setImChatIsTopWithParams:(NSDictionary *)params
                                 Success:(SuccessBlock)success
                                  Failed:(FailedBlock)failed {
-    WLRequest *api = [self getWithParams:params apiMethodName:@"App/IM/IM/is_top"
+    WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/is_top"
                                   Success:^(id resultInfo) {
                                       DLog(@"IM - 聊天信息 - 聊天置顶 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);

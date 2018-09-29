@@ -68,6 +68,7 @@
     _notDisturbItem.value = _friendModel.not_disturb.boolValue;
     _topItem.value = _friendModel.is_top.boolValue;
 //    _rejectItem.value = _friendModel.is_top.boolValue;
+    [self.tableView reloadData];
     
     [_mainCollectionView reloadData];
 }
@@ -163,7 +164,7 @@
     [section2 addItem:clearChatHistoryItem];
 }
 - (void)changeChatReject:(REBoolItem *)item {
-    if (item.value) {
+    if (!item.value) {
         // 移除黑名单
         [[RCIMClient sharedRCIMClient] removeFromBlacklist:_uid success:^{
             
@@ -186,9 +187,9 @@
 - (void)changeChatTop:(REBoolItem *)item {
     [WLHUDView showHUDWithStr:@"" dim:YES];
     WEAKSELF
-    if (item.value) {
+    if (!item.value) {
         // 取消置顶
-        [ImModelClient setImChatIsTopWithParams:@{@"fuid" : _uid} Success:^(id resultInfo) {
+        [ImModelClient setImChatCancelIsTopWithParams:@{@"fuid" : _uid} Success:^(id resultInfo) {
             [weakSelf changeChatTopInfo:item];
             [WLHUDView hiddenHud];
         } Failed:^(NSError *error) {
@@ -196,7 +197,7 @@
         }];
     } else {
         // 开启置顶
-        [ImModelClient setImChatCancelIsTopWithParams:@{@"fuid" : _uid} Success:^(id resultInfo) {
+        [ImModelClient setImChatIsTopWithParams:@{@"fuid" : _uid} Success:^(id resultInfo) {
             [weakSelf changeChatTopInfo:item];
             [WLHUDView hiddenHud];
         } Failed:^(NSError *error) {
@@ -206,17 +207,17 @@
 }
 
 - (void)changeChatTopInfo:(REBoolItem *)item {
-    [[RCIMClient sharedRCIMClient] setConversationToTop:ConversationType_PRIVATE targetId:_uid isTop:!item.value];
-    _friendModel.not_disturb = [@(!item.value) stringValue];
+    [[RCIMClient sharedRCIMClient] setConversationToTop:ConversationType_PRIVATE targetId:_uid isTop:item.value];
+    _friendModel.is_top = [@(item.value) stringValue];
     item.value = !item.value;
-    [item reloadRowWithAnimation:UITableViewRowAnimationNone];
+//    [item reloadRowWithAnimation:UITableViewRowAnimationNone];
 }
 
 // 设置免打扰
 - (void)changeNotDisturb:(REBoolItem *)item {
     [WLHUDView showHUDWithStr:@"" dim:YES];
     WEAKSELF
-    if (item.value) {
+    if (!item.value) {
         // 取消免打扰
         [ImModelClient setImChatCancelNotDisturbWithParams:@{@"fuid" : _uid} Success:^(id resultInfo) {
             [weakSelf changeNotDisurbInfo:item];
@@ -240,12 +241,12 @@
     WEAKSELF
     [[RCIMClient sharedRCIMClient] setConversationNotificationStatus:ConversationType_PRIVATE
                                                             targetId:_uid
-                                                           isBlocked:!item.value
+                                                           isBlocked:item.value
                                                              success:^(RCConversationNotificationStatus nStatus) {
 //                                                                 [WLHUDView hiddenHud];
-                                                                 weakSelf.friendModel.not_disturb = [@(!item.value) stringValue];
+                                                                 weakSelf.friendModel.not_disturb = [@(item.value) stringValue];
                                                                  item.value = !item.value;
-                                                                 [item reloadRowWithAnimation:UITableViewRowAnimationNone];
+//                                                                 [item reloadRowWithAnimation:UITableViewRowAnimationNone];
                                                              } error:^(RCErrorCode status) {
 //                                                                 [WLHUDView hiddenHud];
                                                                  [item reloadRowWithAnimation:UITableViewRowAnimationNone];

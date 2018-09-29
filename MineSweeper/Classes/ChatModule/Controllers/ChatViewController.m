@@ -76,6 +76,8 @@
     self.navigationItem.rightBarButtonItem = rightBtnItem;
     
     [self loadData];
+    
+    [kNSNotification addObserver:self selector:@selector(loadData) name:@"kChatUserInfoChanged" object:nil];
 }
 
 
@@ -90,6 +92,7 @@
         WEAKSELF
         [ImModelClient getImChatInfoWithParams:@{@"fuid": @(self.targetId.integerValue)} Success:^(id resultInfo) {
             weakSelf.friendModel = [IFriendModel modelWithDictionary:resultInfo];
+            weakSelf.title = weakSelf.friendModel.nickname;
         } Failed:^(NSError *error) {
         
         }];
@@ -113,6 +116,7 @@
 }
 
 - (void)loadUI {
+    self.title = _groupDetailInfo.title;
     // 群组，没有扩展功能，只有发红包 设置扩展功能按钮图片
     if (self.conversationType == ConversationType_GROUP && _groupDetailInfo.type.integerValue == 1) {
         [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateNormal];
@@ -240,18 +244,31 @@
     //    [self sendMessage:msg pushContent:@"hahha"];
     //    RCTextMessage *testMessage = [RCTextMessage messageWithContent:@"test"];
     // 调用RCIMClient的sendMessage方法进行发送，结果会通过回调进行反馈。
-    WEAKSELF
-    [[RCIMClient sharedRCIMClient] sendMessage:ConversationType_GROUP
-                                      targetId:_groupDetailInfo.groupId
-                                       content:msg
-                                   pushContent:nil
-                                      pushData:nil
-                                       success:^(long messageId) {
-                                           DLog(@"发送成功。当前消息ID：%ld", messageId);
-                                           [[RCIMClient sharedRCIMClient] insertOutgoingMessage:ConversationType_GROUP targetId: weakSelf.groupDetailInfo.groupId sentStatus:SentStatus_SENT content:msg];
-                                       } error:^(RCErrorCode nErrorCode, long messageId) {
-                                           DLog(@"发送失败。消息ID：%ld， 错误码：%ld", messageId, nErrorCode);
-                                       }];
+    
+//    WEAKSELF
+    [[RCIM sharedRCIM] sendMessage:ConversationType_GROUP
+                          targetId:_groupDetailInfo.groupId
+                           content:msg
+                       pushContent:nil
+                          pushData:nil
+                           success:^(long messageId) {
+                               DLog(@"发送成功。当前消息ID：%ld", messageId);
+                           } error:^(RCErrorCode nErrorCode, long messageId) {
+                               DLog(@"发送失败。消息ID：%ld， 错误码：%ld", messageId, nErrorCode);
+                           }];
+    
+//    WEAKSELF
+//    [[RCIMClient sharedRCIMClient] sendMessage:ConversationType_GROUP
+//                                      targetId:_groupDetailInfo.groupId
+//                                       content:msg
+//                                   pushContent:nil
+//                                      pushData:nil
+//                                       success:^(long messageId) {
+//                                           DLog(@"发送成功。当前消息ID：%ld", messageId);
+//                                           [[RCIMClient sharedRCIMClient] insertOutgoingMessage:ConversationType_GROUP targetId: weakSelf.groupDetailInfo.groupId sentStatus:SentStatus_SENT content:msg];
+//                                       } error:^(RCErrorCode nErrorCode, long messageId) {
+//                                           DLog(@"发送失败。消息ID：%ld， 错误码：%ld", messageId, nErrorCode);
+//                                       }];
 }
 
 #pragma mark 点击头像

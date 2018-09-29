@@ -351,7 +351,7 @@
 + (WLRequest *)setSecretFreeWithParams:(NSDictionary *)params
                                Success:(SuccessBlock)success
                                 Failed:(FailedBlock)failed {
-    WLRequest *api = [self getWithParams:params apiMethodName:@"App/User/Safe/secret_free"
+    WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Safe/secret_free"
                                  Success:^(id resultInfo) {
                                      DLog(@"我的 - 设置 - 免密下注 ---- %@",describe(resultInfo));
                                      SAFE_BLOCK_CALL(success,resultInfo);

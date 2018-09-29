@@ -6,10 +6,10 @@
 //  Copyright © 2018年 liuwu. All rights reserved.
 //
 
-#import "SLCommonTableViewController.h"
+#import "SLCommonGroupListViewController.h"
 #import "IGroupDetailInfo.h"
 
-@interface ChatGroupDetailViewController : SLCommonTableViewController
+@interface ChatGroupDetailViewController : SLCommonGroupListViewController
 
 
 @property (nonatomic, copy) NSString *groupId;

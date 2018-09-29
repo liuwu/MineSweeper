@@ -27,7 +27,7 @@
         //设置要显示的会话类型
         [self setDisplayConversationTypes:@[@(ConversationType_PRIVATE),@(ConversationType_GROUP),@(ConversationType_SYSTEM)]];
         //聚合会话类型
-        [self setCollectionConversationType:@[@(ConversationType_GROUP),@(ConversationType_SYSTEM)]];
+        [self setCollectionConversationType:@[@(ConversationType_SYSTEM)]];
     }
     return self;
 }
@@ -113,51 +113,6 @@
     rcCell.messageContentLabel.textColor = [UIColor wl_Hex999999];
     rcCell.messageCreatedTimeLabel.font = WLFONT(10);
     rcCell.messageCreatedTimeLabel.textColor = [UIColor wl_HexCCCCCC];
-    
-//    if(model.conversationModelType==RC_CONVERSATION_MODEL_TYPE_COLLECTION){
-//        NSInteger newBadge = configTool.systemCountModel.newfriendbcount.integerValue;
-//        //        [rcCell.conversationTitle setText:@"好友请求"];
-//        rcCell.conversationTitle.centery = rcCell.contentView.centery;
-//        rcCell.messageContentLabel.text = @"";
-//        if (newBadge) {
-//            UIView *butView = [cell.contentView viewWithTag:self.numBtn.tag];
-//            if (!butView) {
-//                [cell.contentView addSubview:self.numBtn];
-//            }
-//        }else{
-//            UIView *butView = [cell.contentView viewWithTag:self.numBtn.tag];
-//            if (butView) {
-//                [butView removeFromSuperview];
-//            }
-//        }
-//
-//        UIView *ifdasdad = [rcCell viewWithTag:10151016];
-//        if (ifdasdad) {
-//            [ifdasdad removeFromSuperview];
-//        }
-//    }else{
-//        if (model.targetId.integerValue == 7) {
-//            rcCell.messageContentLabel.text = nil;
-//        }
-//        if (model.conversationType == ConversationType_GROUP) {
-//            UIView *ifdasdad = [rcCell.contentView viewWithTag:10151016];
-//            if (!ifdasdad) {
-//                UIImageView *ivew = [[UIImageView alloc] initWithFrame:CGRectMake(45, 40, 15, 15)];
-//                ivew.tag = 10151016;
-//                [ivew setImage:[UIImage imageNamed:@"Rectangle_group1362"]];
-//                [rcCell.contentView addSubview:ivew];
-//            }
-//        }else{
-//            UIView *ifdasdad = [rcCell viewWithTag:10151016];
-//            if (ifdasdad) {
-//                [ifdasdad removeFromSuperview];
-//            }
-//        }
-//        UIView *butView = [cell.contentView viewWithTag:self.numBtn.tag];
-//        if (butView) {
-//            [butView removeFromSuperview];
-//        }
-//    }
 }
 
 #pragma mark - 自定义会话列表Cell

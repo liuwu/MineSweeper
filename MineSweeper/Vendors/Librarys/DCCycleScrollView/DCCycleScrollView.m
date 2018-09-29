@@ -187,7 +187,6 @@ static NSString *const cellID = @"cellID";
     DCCycleScrollViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
     long itemIndex = (int) indexPath.item % self.imgArr.count;
     NSString *imagePath = self.imgArr[itemIndex];
-   
         if ([imagePath hasPrefix:@"http"]) {
             cell.imagePath = imagePath;
 //            WEAKSELF

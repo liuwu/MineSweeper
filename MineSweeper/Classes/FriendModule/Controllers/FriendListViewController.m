@@ -96,7 +96,7 @@
     self.iconArray = @[@"game_friend_icon", @"game_group_icon"];
     self.iconTitleArray = @[@"新朋友", @"群聊"];
     
-    self.tableView.backgroundColor = WLColoerRGB(248.f);
+//    self.tableView.backgroundColor = WLColoerRGB(248.f);
     // 隐藏分割线
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     if ([self.tableView respondsToSelector:@selector(setSectionIndexColor:)]) {
@@ -365,7 +365,7 @@
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, DEVICE_WIDTH, 28.f)];
-    headerView.backgroundColor = [UIColor clearColor];
+    headerView.backgroundColor = WLColoerRGB(248.f);
     
     QMUILabel *titleLabel = [[QMUILabel alloc] init];
     

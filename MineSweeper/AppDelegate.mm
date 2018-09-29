@@ -472,8 +472,8 @@ single_implementation(AppDelegate);
 //    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(14), NSForegroundColorAttributeName: WLColoerRGB(51.f)} forState:UIControlStateNormal];
 //    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(14), NSForegroundColorAttributeName: WLColoerRGB(51.f)} forState:UIControlStateHighlighted];
 //    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSFontAttributeName:WLFONT(14), NSForegroundColorAttributeName: WLColoerRGB(51.f)} forState:UIControlStateSelected];
-    
-    [UITextField appearance].tintColor = WLColoerRGB(255.f);
+    [UITextField appearance].tintColor = WLRGB(254.f, 72.f, 30.f);
+//    [UITextField appearance].tintColor = WLColoerRGB(255.f);
 }
 
 // 检查登录Token已过期

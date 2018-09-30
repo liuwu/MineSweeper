@@ -229,6 +229,24 @@ static NSString *paylistCellid = @"paylistCellid";
 - (void)didTapPhoneNumberInMessageCell:(NSString *)phoneNumber
                                  model:(RCMessageModel *)model {
     DLog(@"didTapPhoneNumberInMessageCell-----------");
+    if (phoneNumber.length > 0) {
+        QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+            DLog(@"取消");
+        }];
+        QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"拨打电话" style:QMUIAlertActionStyleDefault handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+            DLog(@"拨打电话");
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@", phoneNumber]]];
+        }];
+        QMUIAlertAction *action3 = [QMUIAlertAction actionWithTitle:@"发短信" style:QMUIAlertActionStyleDefault handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+            DLog(@"发短信");
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"sms://%@", phoneNumber]]];
+        }];
+        QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:nil message:nil preferredStyle:QMUIAlertControllerStyleActionSheet];
+        [alertController addAction:action1];
+        [alertController addAction:action2];
+        [alertController addAction:action3];
+        [alertController showWithAnimated:YES];
+    }
 }
 
 - (void)onBeginRecordEvent {

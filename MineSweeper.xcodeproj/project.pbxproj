@@ -56,6 +56,7 @@
 		1018BD032157B9A4004BC57B /* UserInfoChangeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1018BD022157B9A4004BC57B /* UserInfoChangeViewController.m */; };
 		1018BD062157CF6F004BC57B /* IFriendDetailInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1018BD052157CF6F004BC57B /* IFriendDetailInfoModel.m */; };
 		1018BD092157DCB4004BC57B /* ChangePayPwdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1018BD082157DCB4004BC57B /* ChangePayPwdViewController.m */; };
+		101BC3A4216091C00048859F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 101BC3A3216091C00048859F /* README.md */; };
 		102146B82152474700BB7FEB /* SendRedPacketViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 102146B72152474700BB7FEB /* SendRedPacketViewController.m */; };
 		102146BB215279AA00BB7FEB /* ChatGroupDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 102146BA215279AA00BB7FEB /* ChatGroupDetailViewController.m */; };
 		102146BE2152887D00BB7FEB /* UserItemCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 102146BD2152887D00BB7FEB /* UserItemCollectionViewCell.m */; };
@@ -500,6 +501,7 @@
 		1018BD052157CF6F004BC57B /* IFriendDetailInfoModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IFriendDetailInfoModel.m; sourceTree = "<group>"; };
 		1018BD072157DCB4004BC57B /* ChangePayPwdViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChangePayPwdViewController.h; sourceTree = "<group>"; };
 		1018BD082157DCB4004BC57B /* ChangePayPwdViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChangePayPwdViewController.m; sourceTree = "<group>"; };
+		101BC3A3216091C00048859F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		102146B62152474700BB7FEB /* SendRedPacketViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SendRedPacketViewController.h; sourceTree = "<group>"; };
 		102146B72152474700BB7FEB /* SendRedPacketViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SendRedPacketViewController.m; sourceTree = "<group>"; };
 		102146B9215279AA00BB7FEB /* ChatGroupDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatGroupDetailViewController.h; sourceTree = "<group>"; };
@@ -3199,6 +3201,7 @@
 		1089C5462146AD9700363537 /* MineSweeper */ = {
 			isa = PBXGroup;
 			children = (
+				101BC3A3216091C00048859F /* README.md */,
 				1089C5472146AD9700363537 /* AppDelegate.h */,
 				1089C5482146AD9700363537 /* AppDelegate.mm */,
 				103519792147B3B900EDC7AD /* Configure */,
@@ -3360,6 +3363,7 @@
 				10351A532147BD2600EDC7AD /* ShareSDK.bundle in Resources */,
 				103519282147A34000EDC7AD /* hud_success@2x.png in Resources */,
 				10082DE92153B34C00EC3FCE /* release_notes_ios.txt in Resources */,
+				101BC3A4216091C00048859F /* README.md in Resources */,
 				103519192147A34000EDC7AD /* navigationbar_arrow_up@2x.png in Resources */,
 				10082DED2153B34C00EC3FCE /* Emoji.plist in Resources */,
 				1035191A2147A34000EDC7AD /* navigationbar_arrow_down@2x.png in Resources */,

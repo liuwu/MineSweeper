@@ -14,5 +14,6 @@
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *content;
 @property (nonatomic, copy) NSString *add_time;
+@property (nonatomic, copy) NSString *is_read;
 
 @end

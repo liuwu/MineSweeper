@@ -63,35 +63,9 @@
     }
     
     [self loadData];
+    
     [kNSNotification addObserver:self selector:@selector(loadData) name:@"kChatUserInfoChanged" object:nil];
 }
-
-//#pragma mark - QMUINavigationControllerDelegate
-//// 设置是否允许自定义
-//- (BOOL)shouldSetStatusBarStyleLight {
-//    return YES;
-//}
-//
-//// 设置导航栏的背景图
-//- (UIImage *)navigationBarBackgroundImage {
-//    return [UIImage qmui_imageWithColor:[UIColor whiteColor]];
-//}
-//
-//// 设置导航栏底部的分隔线图片
-//- (UIImage *)navigationBarShadowImage {
-//    return [UIImage qmui_imageWithColor:[UIColor whiteColor]];
-//}
-//
-//// nav中的baritem的颜色
-//- (UIColor *)navigationBarTintColor {
-//    return [UIColor whiteColor];//WLRGB(254.f, 72.f, 30.f);
-//}
-//
-//// nav标题颜色
-//- (UIColor *)titleViewTintColor {
-//    return [UIColor whiteColor];
-//}
-
 
 - (void)loadData {
     [self loadGroupInfo];
@@ -135,6 +109,25 @@
         [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateSelected];
         [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateHighlighted];
         [self.chatSessionInputBarControl.additionalButton addTarget:self action:@selector(redPacketClicked:) forControlEvents:UIControlEventTouchUpInside];
+        
+        // 游戏群组聊天禁言
+        QMUILabel *noteLabel = [[QMUILabel alloc] init];
+        noteLabel.font = UIFontMake(14);
+        noteLabel.textColor = WLColoerRGB(153.f);
+        noteLabel.text = @"禁言中";
+        [self.chatSessionInputBarControl.inputTextView addSubview:noteLabel];
+        [noteLabel sizeToFit];
+        [noteLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.chatSessionInputBarControl.inputTextView).mas_offset(6.f);
+            make.centerY.mas_equalTo(self.chatSessionInputBarControl.inputTextView);
+        }];
+        
+        self.chatSessionInputBarControl.inputTextView.text = @"";
+        self.chatSessionInputBarControl.inputTextView.textColor = WLColoerRGB(153);
+        self.chatSessionInputBarControl.inputTextView.backgroundColor = WLColoerRGB(248);
+        self.chatSessionInputBarControl.inputTextView.editable = NO;
+        self.chatSessionInputBarControl.switchButton.enabled = NO;
+        self.chatSessionInputBarControl.emojiButton.enabled = NO;
     }
 }
 
@@ -169,14 +162,15 @@
 // 打开红包点击
 - (void)openRedPacketClicked:(RCMessageModel *)model {
     RCRedPacketMessage *message = (RCRedPacketMessage *) model.content;
-    if (message.drawed.integerValue == 1) {
-        DLog(@"红包 已领过");
-        IRedPacketModel * redmodel = [IRedPacketModel new];
-        redmodel.redpack_id = message.pack_id;
-        redmodel.money = message.money;
-        // 领到红包
-        [self showOpenPacket:redmodel];
-    } else {
+//    if (message.drawed.integerValue == 1) {
+//        DLog(@"红包 已领过");
+//        IRedPacketModel * redmodel = [IRedPacketModel new];
+//        redmodel.redpack_id = message.pack_id;
+//        redmodel.money = message.money;
+//        // 领到红包
+//        [self showOpenPacket:redmodel];
+//    } else {
+        WEAKSELF
         [ImModelClient imGrabRedpackWithParams:@{@"id" : @(message.pack_id.integerValue)} Success:^(id resultInfo) {
             IRedPacketModel * redmodel = [IRedPacketModel modelWithDictionary:resultInfo];
             // 更新聊天消息数据
@@ -187,24 +181,29 @@
             [message setMoney:redmodel.money];
             //                [model setContent:message];
             // 领到红包
-            [self showOpenPacket:redmodel];
-            [self sendGetRedPacketImMessage:message];
+            [weakSelf showOpenPacket:redmodel];
+//            [weakSelf sendGetRedPacketImMessage:message];
         } Failed:^(NSError *error) {
             // 红包已被抢完
             if (error.localizedDescription.length > 0) {
+                if ([error.localizedDescription isEqualToString:@"红包已抢完"]) {
+                    [weakSelf showPacketGrabEnd:@"红包已经被抢完"];
+                    return ;
+                }
                 if ([error.localizedDescription isEqualToString:@"红包已抢"]) {
-                    [self showPacketGrabEnd:@"红包已经被抢完"];
+                    // 查看红包历史
+                    [self lookRedPacketHistory:message.pack_id];
                     return ;
                 }
                 if ([error.localizedDescription isEqualToString:@"红包过期"]) {
-                    [self showPacketGrabEnd:@"红包已过期"];
+                    [weakSelf showPacketGrabEnd:@"红包已过期"];
                     return ;
                 }
                 
                 [WLHUDView showErrorHUD:error.localizedDescription];
             }
         }];
-    }
+//    }
 }
 
 - (void)sendGetRedPacketImMessage:(RCRedPacketMessage *)redPacketMsg {

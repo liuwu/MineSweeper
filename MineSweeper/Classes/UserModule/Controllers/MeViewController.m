@@ -58,6 +58,8 @@
 
 @property (nonatomic, strong) IPosterModel *posterModel;
 
+@property (nonatomic, strong) RETableViewItem *commendItem;
+
 @end
 
 @implementation MeViewController
@@ -116,6 +118,8 @@
     [_nameBtn setTitle:configTool.userInfoModel.nickname forState:UIControlStateNormal];
     _idLabel.text = [NSString stringWithFormat:@"ID：%@", configTool.userInfoModel.uid.stringValue];
     _momeyLabel.text = configTool.userInfoModel.balance;
+    _commendItem.detailLabelText = configTool.userInfoModel.invite_code;
+    [_commendItem reloadRowWithAnimation:UITableViewRowAnimationNone];
 }
 
 - (void)addHeaderView {
@@ -217,6 +221,10 @@
     wallentView.backgroundColor = [UIColor whiteColor];
     wallentView.layer.cornerRadius = 10.f;
     [headerView addSubview:wallentView];
+    wallentView.layer.shadowColor = UIColorMake(254.f, 72.f, 30.f).CGColor;
+    wallentView.layer.shadowOffset = CGSizeMake(0, 3);
+    wallentView.layer.shadowRadius = 10.f;
+    wallentView.layer.shadowOpacity = .1f;
     [wallentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(kWL_NormalMarginWidth_15);
         make.right.mas_equalTo(headerView).mas_offset(-kWL_NormalMarginWidth_15);
@@ -255,6 +263,7 @@
     transferBtn.titleLabel.font = UIFontMake(12.f);
     transferBtn.layer.borderColor = UIColorMake(254,72,30).CGColor;
     transferBtn.backgroundColor = [UIColor whiteColor];
+    [transferBtn wl_setCornerRadius:15.f];
 //    transferBtn.highlightedBackgroundColor = [UIColorMake(254,72,30) qmui_transitionToColor:UIColorWhite progress:.75];// 高亮时的背景色
 //    transferBtn.highlightedBorderColor = [transferBtn.backgroundColor qmui_transitionToColor:UIColorMake(254,72,30) progress:.9];// 高亮时的边框颜色
     [transferBtn addTarget:self action:@selector(transferBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -280,6 +289,7 @@
     [rechargeBtn setTitle:@"充值" forState:UIControlStateNormal];
     rechargeBtn.titleLabel.font = UIFontMake(12.f);
     rechargeBtn.backgroundColor = UIColorMake(254,72,30);
+    [rechargeBtn wl_setCornerRadius:15.f];
     [rechargeBtn addTarget:self action:@selector(rechargeBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [wallentView addSubview:rechargeBtn];
     [rechargeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -289,9 +299,10 @@
     
     // 取现按钮
     QMUIButton *cashBtn = [QDUIHelper generateDarkFilledButton];
-    [cashBtn setTitle:@"取现" forState:UIControlStateNormal];
+    [cashBtn setTitle:@"提现" forState:UIControlStateNormal];
     cashBtn.titleLabel.font = UIFontMake(12.f);
     cashBtn.backgroundColor = [UIColor blackColor];
+    [cashBtn wl_setCornerRadius:15.f];
     [cashBtn addTarget:self action:@selector(cashBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [wallentView addSubview:cashBtn];
     [cashBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -341,8 +352,14 @@
             [weakSelf.navigationController pushViewController:myRecommedVc animated:YES];
         }
     }];
+    commendItem.style = UITableViewCellStyleValue1;
+    commendItem.detailLabelText = configTool.userInfoModel.invite_code;
+    commendItem.titleDetailTextColor = WLColoerRGB(153.f);
+    commendItem.titleDetailTextFont = UIFontMake(15.f);
     commendItem.image = [UIImage imageNamed:@"mine_recommend_icon"];
     [section addItem:commendItem];
+    self.commendItem = commendItem;
+    
     RETableViewItem *promotionPosterItem = [RETableViewItem itemWithTitle:@"推广海报" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
         [weakSelf poster:item];
     }];
@@ -403,26 +420,37 @@
 
 // 抽奖
 - (void)lottery:(RETableViewItem *)item {
-    [WLHUDView showHUDWithStr:@"" dim:YES];
-    WEAKSELF
-    [UserModelClient getLuckDrawWithParams:@{@"member_id" : @(configTool.loginUser.uid.integerValue)}
-                                   Success:^(id resultInfo) {
-                                       [WLHUDView hiddenHud];
-                                       NSString *url = @"https://www.apple.com";
-                                       if (resultInfo) {
-                                           url = resultInfo;
-                                       }
-                                       AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:url];
-                                       webVC.showsToolBar = NO;
-                                       webVC.title = @"抽奖";
-                                       // webVC.showsNavigationCloseBarButtonItem = NO;
-                                       if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
-                                           webVC.webView.allowsLinkPreview = YES;
-                                       }
-                                       [weakSelf.navigationController pushViewController:webVC animated:YES];
-                                   } Failed:^(NSError *error) {
-                                       [WLHUDView hiddenHud];
-                                   }];
+    
+    NSString *urlStr = [NSString stringWithFormat:@"https:/test.cnsunrun.com/saoleiapp/App/User/LuckDraw/index?member_id=%@", configTool.loginUser.uid];
+    AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:urlStr];
+    webVC.showsToolBar = NO;
+    webVC.title = @"抽奖";
+    // webVC.showsNavigationCloseBarButtonItem = NO;
+    if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
+        webVC.webView.allowsLinkPreview = YES;
+    }
+    [self.navigationController pushViewController:webVC animated:YES];
+    
+//    [WLHUDView showHUDWithStr:@"" dim:YES];
+//    WEAKSELF
+//    [UserModelClient getLuckDrawWithParams:@{@"member_id" : @(configTool.loginUser.uid.integerValue)}
+//                                   Success:^(id resultInfo) {
+//                                       [WLHUDView hiddenHud];
+//                                       NSString *url = @"https://www.apple.com";
+//                                       if (resultInfo) {
+//                                           url = resultInfo;
+//                                       }
+//                                       AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:url];
+//                                       webVC.showsToolBar = NO;
+//                                       webVC.title = @"抽奖";
+//                                       // webVC.showsNavigationCloseBarButtonItem = NO;
+//                                       if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
+//                                           webVC.webView.allowsLinkPreview = YES;
+//                                       }
+//                                       [weakSelf.navigationController pushViewController:webVC animated:YES];
+//                                   } Failed:^(NSError *error) {
+//                                       [WLHUDView hiddenHud];
+//                                   }];
 }
 
 #pragma mark - QMUINavigationControllerDelegate

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-static const CGFloat MBDuration = 1;
+static const CGFloat MBDuration = 1.2;
 
 @class MBProgressHUD;
 

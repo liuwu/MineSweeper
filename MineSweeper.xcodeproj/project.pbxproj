@@ -57,6 +57,8 @@
 		1018BD062157CF6F004BC57B /* IFriendDetailInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1018BD052157CF6F004BC57B /* IFriendDetailInfoModel.m */; };
 		1018BD092157DCB4004BC57B /* ChangePayPwdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1018BD082157DCB4004BC57B /* ChangePayPwdViewController.m */; };
 		101BC3A4216091C00048859F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 101BC3A3216091C00048859F /* README.md */; };
+		101BC3A72160C1A30048859F /* INoticeInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 101BC3A62160C1A30048859F /* INoticeInfoModel.m */; };
+		101BC3AB2160C8670048859F /* SGAdvertScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 101BC3A92160C8660048859F /* SGAdvertScrollView.m */; };
 		102146B82152474700BB7FEB /* SendRedPacketViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 102146B72152474700BB7FEB /* SendRedPacketViewController.m */; };
 		102146BB215279AA00BB7FEB /* ChatGroupDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 102146BA215279AA00BB7FEB /* ChatGroupDetailViewController.m */; };
 		102146BE2152887D00BB7FEB /* UserItemCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 102146BD2152887D00BB7FEB /* UserItemCollectionViewCell.m */; };
@@ -502,6 +504,10 @@
 		1018BD072157DCB4004BC57B /* ChangePayPwdViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChangePayPwdViewController.h; sourceTree = "<group>"; };
 		1018BD082157DCB4004BC57B /* ChangePayPwdViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChangePayPwdViewController.m; sourceTree = "<group>"; };
 		101BC3A3216091C00048859F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		101BC3A52160C1A30048859F /* INoticeInfoModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = INoticeInfoModel.h; sourceTree = "<group>"; };
+		101BC3A62160C1A30048859F /* INoticeInfoModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = INoticeInfoModel.m; sourceTree = "<group>"; };
+		101BC3A92160C8660048859F /* SGAdvertScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGAdvertScrollView.m; sourceTree = "<group>"; };
+		101BC3AA2160C8660048859F /* SGAdvertScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGAdvertScrollView.h; sourceTree = "<group>"; };
 		102146B62152474700BB7FEB /* SendRedPacketViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SendRedPacketViewController.h; sourceTree = "<group>"; };
 		102146B72152474700BB7FEB /* SendRedPacketViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SendRedPacketViewController.m; sourceTree = "<group>"; };
 		102146B9215279AA00BB7FEB /* ChatGroupDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatGroupDetailViewController.h; sourceTree = "<group>"; };
@@ -1408,6 +1414,15 @@
 			path = DCCycleScrollView;
 			sourceTree = "<group>";
 		};
+		101BC3A82160C8660048859F /* SGAdvertScrollView */ = {
+			isa = PBXGroup;
+			children = (
+				101BC3AA2160C8660048859F /* SGAdvertScrollView.h */,
+				101BC3A92160C8660048859F /* SGAdvertScrollView.m */,
+			);
+			path = SGAdvertScrollView;
+			sourceTree = "<group>";
+		};
 		1024156221591E26008A365A /* YJLocationPicker */ = {
 			isa = PBXGroup;
 			children = (
@@ -1742,6 +1757,7 @@
 		103517F82147A33F00EDC7AD /* Librarys */ = {
 			isa = PBXGroup;
 			children = (
+				101BC3A82160C8660048859F /* SGAdvertScrollView */,
 				10454644214B77A400DA7F9F /* QMUI */,
 				1024156221591E26008A365A /* YJLocationPicker */,
 				1018BCD421564FA1004BC57B /* DCCycleScrollView */,
@@ -3016,6 +3032,8 @@
 			children = (
 				1018BCD1215643DC004BC57B /* BannerImgModel.h */,
 				1018BCD2215643DC004BC57B /* BannerImgModel.m */,
+				101BC3A52160C1A30048859F /* INoticeInfoModel.h */,
+				101BC3A62160C1A30048859F /* INoticeInfoModel.m */,
 				1018BCDE2156585E004BC57B /* INoticeModel.h */,
 				1018BCDF2156585E004BC57B /* INoticeModel.m */,
 				1018BCE121565EA4004BC57B /* IGameGroupModel.h */,
@@ -3493,6 +3511,7 @@
 				10454670214B77A500DA7F9F /* QDCommonGroupListViewController.m in Sources */,
 				10351AEB2147EB2E00EDC7AD /* LWLoginTextField.m in Sources */,
 				10F2D74A215A3D6F00937D39 /* ChatRedPacketCell.m in Sources */,
+				101BC3A72160C1A30048859F /* INoticeInfoModel.m in Sources */,
 				103519F92147B73200EDC7AD /* UIColor+WLAdd.m in Sources */,
 				104CBF3E215B2D93000D4D44 /* ActivityMapViewController.m in Sources */,
 				10351A032147B73200EDC7AD /* NSString+WLAddForPinyin.m in Sources */,
@@ -3664,6 +3683,7 @@
 				103519F22147B73200EDC7AD /* UIApplication+WLAdd.m in Sources */,
 				103518E22147A34000EDC7AD /* REMultipleChoiceItem.m in Sources */,
 				103518F32147A34000EDC7AD /* UIScrollView+EmptyDataSet.m in Sources */,
+				101BC3AB2160C8670048859F /* SGAdvertScrollView.m in Sources */,
 				10351A132147B73200EDC7AD /* CALayer+WLAdd.m in Sources */,
 				F543C3C8214A46A400F863CC /* SLCommonTableViewController.m in Sources */,
 				102146BE2152887D00BB7FEB /* UserItemCollectionViewCell.m in Sources */,

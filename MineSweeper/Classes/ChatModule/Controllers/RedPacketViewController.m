@@ -68,7 +68,7 @@
 }
 
 - (void)updateUI {
-    _titleLabel.text = [NSString stringWithFormat:@"来自 %@ 的红包", _model.title];
+    _titleLabel.text = [NSString stringWithFormat:@"来自 %@ 的红包", _model.nickname];
     _timeLabel.text = _model.title;
     _momeyLabel.text = _model.grab_money;
     
@@ -257,6 +257,7 @@
         moenyLabel.font = UIFontMake(15);
         moenyLabel.textColor = UIColorMake(203,52,36);
         moenyLabel.text = [NSString stringWithFormat:@"%@元",model.money];// @"1.12元";
+        [moenyLabel sizeToFit];
         cell.accessoryView = moenyLabel;
         
         // reset
@@ -267,7 +268,7 @@
         //        cell.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
         //        cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
         //        cell.detailTextLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
-        cell.accessoryEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -25);
+        cell.accessoryEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -5);
         [cell updateCellAppearanceWithIndexPath:indexPath];
         return cell;
     }

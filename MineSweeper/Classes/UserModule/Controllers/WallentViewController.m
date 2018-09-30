@@ -167,10 +167,6 @@
         [weakSelf.tableView.mj_footer endRefreshing];
         IWallentModel *model = [IWallentModel modelWithDictionary:resultInfo];
         weakSelf.wallentModel = model;
-        [weakSelf.datasource addObjectsFromArray:model.list];
-        if (weakSelf.datasource.count == 0) {
-            [weakSelf showEmptyViewWithText:@"暂无数据" detailText:@"" buttonTitle:nil buttonAction:NULL];
-        }
         [weakSelf reloadUI];
     } Failed:^(NSError *error) {
         [weakSelf.tableView.mj_header endRefreshing];
@@ -179,6 +175,12 @@
 }
 
 - (void)reloadUI {
+    if (_wallentModel.list > 0) {
+        [self.datasource addObjectsFromArray:_wallentModel.list];
+    }
+    if (_datasource.count == 0) {
+        [self showEmptyViewWithText:@"暂无数据" detailText:@"" buttonTitle:nil buttonAction:NULL];
+    }
     _momeyLabel.text = _wallentModel.balance;
     _balanceMomeyLabel.text = _wallentModel.frozen;
     [self.tableView reloadData];
@@ -233,7 +235,7 @@
     } else {
         if (!cell) {
             IWallentHistoryModel *model = _datasource[indexPath.row];
-            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"wallent_cell" gridTitles:@[model.add_time, model.money, model.pay_title]];
+            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"wallent_cell" gridTitles:@[model.add_time ? : @"", model.money ? : @"", model.pay_title ? : @""]];
         }
         cell.titleColor = WLColoerRGB(51.f);
         cell.titleFont = UIFontMake(13.f);

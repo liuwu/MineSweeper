@@ -9,7 +9,7 @@
 #import "RedPacketHistoryViewController.h"
 #import "SendRedPacketViewController.h"
 
-#import "BaseTableViewCell.h"
+#import "BaseImageTableViewCell.h"
 
 #import "ImModelClient.h"
 #import "IMyRedPacketResultModel.h"
@@ -190,17 +190,18 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    BaseTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"red_packet_history_list_cell"];
+    BaseImageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"red_packet_history_list_cell"];
     if (!cell) {
-        cell = [[BaseTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"red_packet_history_list_cell"];
+        cell = [[BaseImageTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"red_packet_history_list_cell"];
     }
     cell.showBottomLine = YES;
     //    cell.imageView.image = [UIImage imageNamed:@"game_group_icon"];
     IMyRedPacketModel *model = _datasource[indexPath.row];
-    cell.textLabel.text = model.from_nickname;// @"小尹子";
+    cell.myRedPacketModel = model;
+//    cell.textLabel.text = model.from_nickname;// @"小尹子";
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
-    cell.detailTextLabel.text = @"10-12 12:12";
+//    cell.detailTextLabel.text = @"10-12 12:12";
     cell.detailTextLabel.textColor = WLColoerRGB(102.f);
     cell.detailTextLabel.font = UIFontMake(14.f);
     
@@ -208,6 +209,7 @@
     moenyLabel.font = UIFontMake(15);
     moenyLabel.textColor = WLColoerRGB(51.f);
     moenyLabel.text = [NSString stringWithFormat:@"%@元", model.money];// @"1.12元";
+    [moenyLabel sizeToFit];
     cell.accessoryView = moenyLabel;
     
     // resetc
@@ -219,9 +221,9 @@
 //    cell.accessoryEdgeInsets = UIEdgeInsetsZero;
 //    [cell.imageView wl_setDebug:YES];
 //    [cell.textLabel wl_setDebug:YES];
-    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
-    cell.detailTextLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
-    cell.accessoryEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -25);
+//    cell.textLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+//    cell.detailTextLabelEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+    cell.accessoryEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -5);
     [cell updateCellAppearanceWithIndexPath:indexPath];
     return cell;
 }

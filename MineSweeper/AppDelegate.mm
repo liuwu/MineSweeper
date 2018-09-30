@@ -571,11 +571,13 @@ single_implementation(AppDelegate);
 - (void)loginSucceed {
     
     [self connectRCIM];
+    // 启动前，清下一下群组的缓存
+    [[RCIM sharedRCIM] clearGroupInfoCache];
+    
     if (!_mainVc) {
         self.mainVc = [[MainViewController alloc] init];
     }
     self.window.rootViewController = _mainVc;
-    
     /// 上报定位
     [self getCityLocationInfo];
 }
@@ -599,22 +601,22 @@ single_implementation(AppDelegate);
 
 /// 连接融云
 - (void)connectRCIM {
-    WEAKSELF
-    [ImModelClient getImTokenWithParams:nil Success:^(id resultInfo) {
-        IRcToken *token = [IRcToken modelWithDictionary:resultInfo];
-        configTool.rcToken = token;
-        [weakSelf connectRCIMWithToken:configTool.rcToken.token];
-    } Failed:^(NSError *error) {
-        
-    }];
+    if (configTool.rcToken.token){
+        [self connectRCIMWithToken:configTool.rcToken.token];
+    } else {
+        WEAKSELF
+        [ImModelClient getImTokenWithParams:nil Success:^(id resultInfo) {
+            IRcToken *token = [IRcToken modelWithDictionary:resultInfo];
+            configTool.rcToken = token;
+            [weakSelf connectRCIMWithToken:configTool.rcToken.token];
+        } Failed:^(NSError *error) {
+            
+        }];
+    }
     
 //    if (!configTool.rcToken.token) return;
 //    if (configTool.loginUser.uid.integerValue == 0) return;
-//    if (configTool.rcToken.token){
-//        [self connectRCIMWithToken:configTool.rcToken.token];
-//    } else {
-//
-//    }
+    
     
 //    if (_rcConnectCount > krcConnectCount) return;
 //    _rcConnectCount++;
@@ -642,6 +644,7 @@ single_implementation(AppDelegate);
 }
 
 - (void)connectRCIMWithToken:(NSString *)token {
+    WEAKSELF
     [[RCIM sharedRCIM] connectWithToken:token success:^(NSString *userId) {
         //保存默认用户
 //        WLUserDetailInfoModel *loginUser = configTool.loginUser;
@@ -653,21 +656,26 @@ single_implementation(AppDelegate);
     } error:^(RCConnectErrorCode status) {
         dispatch_async(dispatch_get_main_queue(), ^{
             DLog(@"融云连接错误===%ld",(long)status);
+            [[RCIM sharedRCIM] disconnect:NO];
+            configTool.rcToken.token = nil;
+            [weakSelf checkTokenExpires];
         });
     } tokenIncorrect:^{
         dispatch_async(dispatch_get_main_queue(), ^{
             DLog(@"融云token错误或者过期。需要重新换取token");
             [[RCIM sharedRCIM] disconnect:NO];
+            configTool.rcToken.token = nil;
+            [weakSelf checkTokenExpires];
 //            configTool.loginUser.rongToken = @"";
-            WEAKSELF
-            [ImModelClient getImTokenWithParams:nil Success:^(id resultInfo) {
-                IRcToken *token = [IRcToken modelWithDictionary:resultInfo];
-                configTool.rcToken = token;
-                [weakSelf connectRCIMWithToken:configTool.rcToken.token];
-//                 [weakSelf connectRCIM];
-            } Failed:^(NSError *error) {
-                
-            }];
+//            WEAKSELF
+//            [ImModelClient getImTokenWithParams:nil Success:^(id resultInfo) {
+//                IRcToken *token = [IRcToken modelWithDictionary:resultInfo];
+//                configTool.rcToken = token;
+//                [weakSelf connectRCIMWithToken:configTool.rcToken.token];
+////                 [weakSelf connectRCIM];
+//            } Failed:^(NSError *error) {
+//
+//            }];
         });
     }];
 }

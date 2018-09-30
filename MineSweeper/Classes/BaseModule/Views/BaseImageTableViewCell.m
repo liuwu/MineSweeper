@@ -92,6 +92,25 @@
                          }];
 }
 
+- (void)setMyRedPacketModel:(IMyRedPacketModel *)myRedPacketModel {
+    _myRedPacketModel = myRedPacketModel;
+    
+    self.textLabel.text = _myRedPacketModel.from_nickname;// @"小尹子";
+    self.detailTextLabel.text = _myRedPacketModel.update_time;
+    WEAKSELF
+    [self.imageView setImageWithURL:[NSURL URLWithString:_myRedPacketModel.avatar]
+                        placeholder:[UIImage imageNamed:@"game_friend_icon"]
+                            options:YYWebImageOptionProgressive | YYWebImageOptionProgressiveBlur | YYWebImageOptionAvoidSetImage
+                         completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                             if (image) {
+                                 //                                 image = [UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:image.imageOrientation];
+                                 weakSelf.imageView.image = [image qmui_imageWithClippedCornerRadius:36.f/2];
+                             }else {
+                                 weakSelf.imageView.image = [UIImage imageNamed:@"game_friend_icon"];
+                             }
+                         }];
+}
+
 - (void)setConversationResult:(RCSearchConversationResult *)conversationResult {
     _conversationResult = conversationResult;
     

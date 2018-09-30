@@ -102,7 +102,7 @@
                                              group.groupId = groupId;
                                              IGroupDetailInfo *groupDetailInfo = [IGroupDetailInfo modelWithDictionary:resultInfo];
                                              group.title = groupDetailInfo.title;
-                                             //                                             group.portraitUri = [groupInfo.logo wl_imageUrlDownloadImageSceneAvatar];
+                                             group.image = groupDetailInfo.image;
                                              return completion(group);
                                          } Failed:^(NSError *error) {
                                              [WLHUDView hiddenHud];
@@ -125,6 +125,7 @@
                                              IGroupDetailInfo *groupDetailInfo = [IGroupDetailInfo modelWithDictionary:resultInfo];
                                              group.groupName = groupDetailInfo.title;
                                              [[RCIM sharedRCIM] refreshGroupInfoCache:group withGroupId:groupId];
+                                             group.portraitUri = groupDetailInfo.image;
 //                                             group.portraitUri = [groupInfo.logo wl_imageUrlDownloadImageSceneAvatar];
                                              return completion(group);
                                          } Failed:^(NSError *error) {

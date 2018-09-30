@@ -9,6 +9,10 @@
 #import "HomeViewController.h"
 #import "MessageNotifiListViewController.h"
 #import "GameDetailListViewController.h"
+#import "AXWebViewController.h"
+#import "MessageNotifiDetailViewController.h"
+
+#import "SGAdvertScrollView.h"
 
 //#import "DCCycleScrollView.h"
 #import "RETableViewManager.h"
@@ -20,6 +24,7 @@
 #import "ImGroupModelClient.h"
 #import "UserModelClient.h"
 #import "INoticeModel.h"
+#import "INoticeInfoModel.h"
 
 #import "WLRongCloudDataSource.h"
 
@@ -28,12 +33,13 @@
 #define kNoteHeight 30.f
 #define kBannerHeight 186.f
 
-@interface HomeViewController ()<FSPagerViewDataSource, FSPagerViewDelegate>
+@interface HomeViewController ()<FSPagerViewDataSource, FSPagerViewDelegate, SGAdvertScrollViewDelegate>
 
 @property (nonatomic, strong) RETableViewManager *manager;
 @property (nonatomic, strong) UIView *headerView;
 //@property (nonatomic, strong) DCCycleScrollView *banner;
-@property (nonatomic, strong) QMUIMarqueeLabel *noteLabel;
+@property (nonatomic, strong) SGAdvertScrollView *noteView;
+//@property (nonatomic, strong) QMUIMarqueeLabel *noteLabel;
 @property (nonatomic, strong) NSArray *noticeArray;
 
 @property (nonatomic, strong) NSArray *bannerImageArray;
@@ -77,6 +83,108 @@
     [self getLoginUserInfo];
 }
 
+- (void)addViews {
+    UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"home_notice_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(leftBtnItemClicked)];
+    self.navigationItem.leftBarButtonItem = leftBtnItem;
+    
+    //    NSArray *imageArr = @[@"h1.jpg",
+    //                          @"h2.jpg",
+    //                          @"h3.jpg",
+    //                          @"h4.jpg",
+    //                          ];
+    
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 100, ScreenWidth, kNoteHeight + kBannerHeight)];
+    headerView.backgroundColor = [UIColor whiteColor];
+    self.headerView = headerView;
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"home_scrollNotice_icon"]];
+    [headerView addSubview:imageView];
+    [imageView sizeToFit];
+    [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(kWL_NormalMarginWidth_11);
+        make.top.mas_equalTo(8);
+    }];
+    
+    SGAdvertScrollView *noteView = [[SGAdvertScrollView alloc] initWithFrame:CGRectMake(imageView.right + kWL_NormalMarginWidth_10 * 2.f, 0.f, headerView.width - imageView.right - kWL_NormalMarginWidth_10 * 3.f, 30.f)];
+    //    _advertScrollView.titles = @[@"常见电商类 app 滚动播放广告信息", @"采用代理模式封装, 可进行事件点击处理", @"建议去 github 上下载"];
+    noteView.delegate = self;
+    noteView.titleFont = UIFontMake(14.f);
+    noteView.titleColor = UIColorMake(254,72,30);
+    //    noteView.titles = @[@"常见电商类 app 滚动播放广告信息", @"采用代理模式封装, 可进行事件点击处理", @"建议去 github 上下载"];
+    [headerView addSubview:noteView];
+    self.noteView = noteView;
+    //    [noteView wl_setDebug:YES];
+    
+    //    [noteView mas_makeConstraints:^(MASConstraintMaker *make) {
+    //        make.left.mas_equalTo(imageView.right + kWL_NormalMarginWidth_11 * 2.f);
+    //        make.centerY.mas_equalTo(imageView);
+    //        make.width.mas_equalTo(headerView.width - imageView.right - kWL_NormalMarginWidth_11 * 3.f);
+    //    }];
+    
+    //    QMUIMarqueeLabel *noteLabel = [self generateLabelWithText:@"公告!"];
+    //    noteLabel.shouldFadeAtEdge = NO;// 关闭渐隐遮罩
+    //    noteLabel.speed = 1.5;// 调节滚动速度
+    //    noteLabel.textAlignment = NSTextAlignmentLeft;
+    //    [headerView addSubview:noteLabel];
+    //    self.noteLabel = noteLabel;
+    //    [noteLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    //        make.left.mas_equalTo(imageView.right + kWL_NormalMarginWidth_11 * 2.f);
+    //        make.centerY.mas_equalTo(imageView);
+    //        make.width.mas_equalTo(headerView.width - imageView.right - kWL_NormalMarginWidth_11 * 3.f);
+    //    }];
+    
+    // Create a pager view
+    FSPagerView *pagerView = [[FSPagerView alloc] initWithFrame:CGRectMake(0, 30, DEVICE_WIDTH, kBannerHeight - 36.f)];
+    pagerView.dataSource = self;
+    pagerView.delegate = self;
+    pagerView.interitemSpacing = 10;//设置图片间隔
+    pagerView.automaticSlidingInterval = 10;//设置自动变动的时间
+    pagerView.isInfinite = YES; // 设置无限循环
+    //    pagerView.decelerationDistance = 2;
+    //    CGAffineTransform transform = CGAffineTransformMakeScale(0.6, 0.75);
+    //    pagerView.itemSize = CGSizeApplyAffineTransform(CGSizeMake(ScreenWidth - 60.f, kBannerHeight - 36.f), transform);
+    //    pagerView.decelerationDistance = FSPagerViewAutomaticDistance;
+    pagerView.itemSize = CGSizeMake(ScreenWidth - 60.f, kBannerHeight - 36.f);
+    pagerView.transformer = [[FSPagerViewTransformer alloc] initWithType:FSPagerViewTransformerTypeLinear];
+    [pagerView registerClass:FSPagerViewCell.class forCellWithReuseIdentifier:@"fspagercell"];
+    pagerView.backgroundColor = WLColoerRGB(248.f);
+    [headerView addSubview:pagerView];
+    self.pagerView = pagerView;
+    
+    FSPageControl *pageControl = [[FSPageControl alloc] initWithFrame:CGRectMake(0.f, pagerView.bottom, DEVICE_WIDTH, 36.f)];
+    //    pageControl.numberOfPages = imageArr.count;
+    // 边框颜色
+    [pageControl setStrokeColor:WLColoerRGB(51.f) forState:UIControlStateNormal];
+    [pageControl setStrokeColor:UIColorMake(254,72,30) forState:UIControlStateSelected];
+    // 中心点颜色
+    [pageControl setFillColor:WLColoerRGB(51.f) forState:UIControlStateNormal];
+    [pageControl setFillColor:UIColorMake(254,72,30) forState:UIControlStateSelected];
+    //    _pageControl.currentPageIndicatorTintColor = UIColorMake(254,72,30);
+    //    _pageControl.pageIndicatorTintColor = WLColoerRGB(51.f)
+    pageControl.backgroundColor = WLColoerRGB(248.f);
+    [headerView addSubview:pageControl];
+    self.pageControl = pageControl;
+    //    pagerView.register(FSPagerViewCell.self, forCellWithReuseIdentifier: "cell")
+    //    headerView.addSubview(page
+    // Create a page control
+    //    let pageControl = FSPageControl(frame: frame2)
+    //    self.view.addSubview(pageControl)
+    
+    //下拉刷新
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
+    //上提加载更多
+    MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(beginPullUpRefreshingNew)];
+    self.tableView.mj_footer = footer;
+    self.tableView.mj_footer.hidden = YES;
+    
+    self.tableView.backgroundColor = [UIColor whiteColor];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    //    self.tableView.allowsSelection = NO;// 去除默认选中效果
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//去除默认分割线
+    self.tableView.tableHeaderView = headerView;
+}
+
 - (void)getLoginUserInfo {
     [UserModelClient getUserInfoWithParams:nil
                                    Success:^(id resultInfo) {
@@ -109,7 +217,8 @@
 - (void)loadNotice {
     WEAKSELF
     [ImGroupModelClient getImSystemNoticeWithParams:nil Success:^(id resultInfo) {
-        weakSelf.noticeArray = [NSArray modelArrayWithClass:[INoticeModel class] json:resultInfo];
+        INoticeInfoModel *model = [INoticeInfoModel modelWithDictionary:resultInfo];
+        weakSelf.noticeArray = model.list;
         [weakSelf updateNoticeUI];
     } Failed:^(NSError *error) {
     }];
@@ -117,94 +226,22 @@
 
 - (void)updateNoticeUI {
     if (_noticeArray.count > 0) {
-        INoticeModel *model = _noticeArray[0];
-        _noteLabel.text = [NSString stringWithFormat:@"%@                 ",model.title];
+        NSMutableArray *titleArrays = [NSMutableArray array];
+        for (INoticeModel *model in _noticeArray) {
+            [titleArrays addObject:model.title];
+        }
+        _noteView.titles = [NSArray arrayWithArray:titleArrays];
     }
 }
 
-- (void)addViews {
-    UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"home_notice_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(leftBtnItemClicked)];
-    self.navigationItem.leftBarButtonItem = leftBtnItem;
-    
-//    NSArray *imageArr = @[@"h1.jpg",
-//                          @"h2.jpg",
-//                          @"h3.jpg",
-//                          @"h4.jpg",
-//                          ];
-    
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 100, ScreenWidth, kNoteHeight + kBannerHeight)];
-    headerView.backgroundColor = [UIColor whiteColor];
-    self.headerView = headerView;
-    
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"home_scrollNotice_icon"]];
-    [headerView addSubview:imageView];
-    [imageView sizeToFit];
-    [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(kWL_NormalMarginWidth_11);
-        make.top.mas_equalTo(kWL_NormalMarginWidth_10);
-    }];
-    
-    QMUIMarqueeLabel *noteLabel = [self generateLabelWithText:@"公告!"];
-    noteLabel.shouldFadeAtEdge = NO;// 关闭渐隐遮罩
-    noteLabel.speed = 1.5;// 调节滚动速度
-    [headerView addSubview:noteLabel];
-    self.noteLabel = noteLabel;
-    [noteLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(imageView.right + kWL_NormalMarginWidth_11 * 2.f);
-        make.centerY.mas_equalTo(imageView);
-        make.width.mas_equalTo(headerView.width - imageView.right - kWL_NormalMarginWidth_11 * 3.f);
-    }];
-    
-    // Create a pager view
-    FSPagerView *pagerView = [[FSPagerView alloc] initWithFrame:CGRectMake(0, 30, DEVICE_WIDTH, kBannerHeight - 36.f)];
-    pagerView.dataSource = self;
-    pagerView.delegate = self;
-    pagerView.interitemSpacing = 10;//设置图片间隔
-    pagerView.automaticSlidingInterval = 10;//设置自动变动的时间
-    pagerView.isInfinite = YES; // 设置无限循环
-//    pagerView.decelerationDistance = 2;
-//    CGAffineTransform transform = CGAffineTransformMakeScale(0.6, 0.75);
-//    pagerView.itemSize = CGSizeApplyAffineTransform(CGSizeMake(ScreenWidth - 60.f, kBannerHeight - 36.f), transform);
-//    pagerView.decelerationDistance = FSPagerViewAutomaticDistance;
-    pagerView.itemSize = CGSizeMake(ScreenWidth - 60.f, kBannerHeight - 36.f);
-    pagerView.transformer = [[FSPagerViewTransformer alloc] initWithType:FSPagerViewTransformerTypeLinear];
-    [pagerView registerClass:FSPagerViewCell.class forCellWithReuseIdentifier:@"fspagercell"];
-    pagerView.backgroundColor = WLColoerRGB(248.f);
-    [headerView addSubview:pagerView];
-    self.pagerView = pagerView;
-   
-    FSPageControl *pageControl = [[FSPageControl alloc] initWithFrame:CGRectMake(0.f, pagerView.bottom, DEVICE_WIDTH, 36.f)];
-//    pageControl.numberOfPages = imageArr.count;
-    // 边框颜色
-    [pageControl setStrokeColor:WLColoerRGB(51.f) forState:UIControlStateNormal];
-    [pageControl setStrokeColor:UIColorMake(254,72,30) forState:UIControlStateSelected];
-    // 中心点颜色
-    [pageControl setFillColor:WLColoerRGB(51.f) forState:UIControlStateNormal];
-    [pageControl setFillColor:UIColorMake(254,72,30) forState:UIControlStateSelected];
-//    _pageControl.currentPageIndicatorTintColor = UIColorMake(254,72,30);
-//    _pageControl.pageIndicatorTintColor = WLColoerRGB(51.f)
-    pageControl.backgroundColor = WLColoerRGB(248.f);
-    [headerView addSubview:pageControl];
-    self.pageControl = pageControl;
-//    pagerView.register(FSPagerViewCell.self, forCellWithReuseIdentifier: "cell")
-//    headerView.addSubview(page
-    // Create a page control
-//    let pageControl = FSPageControl(frame: frame2)
-//    self.view.addSubview(pageControl)
-    
-    //下拉刷新
-    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
-    //上提加载更多
-    MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(beginPullUpRefreshingNew)];
-    self.tableView.mj_footer = footer;
-    self.tableView.mj_footer.hidden = YES;
-    
-    self.tableView.backgroundColor = [UIColor whiteColor];
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    //    self.tableView.allowsSelection = NO;// 去除默认选中效果
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//去除默认分割线
-    self.tableView.tableHeaderView = headerView;
+// 广告被点击
+- (void)advertScrollView:(SGAdvertScrollView *)advertScrollView didSelectedItemAtIndex:(NSInteger)index {
+    if (_noticeArray.count > 0) {
+        INoticeModel *model = _noticeArray[index];
+        MessageNotifiDetailViewController *vc = [[MessageNotifiDetailViewController alloc] init];
+        vc.noticeModel = model;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 #pragma mark - FSPagerView Datasource & Delegate
@@ -254,6 +291,7 @@
         cell = [[HomeTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"home_cell"];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    [cell.noteBtn addTarget:self action:@selector(noteBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     return cell;
 }
 
@@ -280,6 +318,19 @@
 }
 
 #pragma mark - Private
+- (void)noteBtnClicked:(UIButton *)sender {
+    DLog(@"noteBtnClicked-----");
+    NSString *urlStr = @"https:/test.cnsunrun.com/saoleiapp/App/User/Game/index";
+    AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:urlStr];
+    webVC.showsToolBar = NO;
+    webVC.title = @"游戏规则";
+    // webVC.showsNavigationCloseBarButtonItem = NO;
+    if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
+        webVC.webView.allowsLinkPreview = YES;
+    }
+    [self.navigationController pushViewController:webVC animated:YES];
+}
+
 - (QMUIMarqueeLabel *)generateLabelWithText:(NSString *)text {
     QMUIMarqueeLabel *label = [[QMUIMarqueeLabel alloc] qmui_initWithFont:UIFontMake(14) textColor:UIColorMake(254.f, 72.f, 30.f)];
     label.textAlignment = NSTextAlignmentCenter;// 跑马灯文字一般都是居中显示，所以 Demo 里默认使用 center

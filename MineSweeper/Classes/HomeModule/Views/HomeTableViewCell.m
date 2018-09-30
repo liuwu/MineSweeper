@@ -78,7 +78,6 @@
     noteBtn.titleLabel.font = UIFontMake(14.f);
     // 扩大点击区域
     [noteBtn wl_setEnlargeEdgeWithTop:20 right:0.f bottom:0.f left:0.f];
-    [noteBtn addTarget:self action:@selector(noteBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [contentView addSubview:noteBtn];
     self.noteBtn = noteBtn;
     
@@ -157,9 +156,6 @@
 //    _infoLabel.attributedText = [NSString wl_getAttributedInfoString:_infoLabel.text searchStr:_searchText color:[UIColor wl_hex0F6EF4] font:_infoLabel.font];
 //}
 
-- (void)noteBtnClicked:(UIButton *)sender {
-    DLog(@"noteBtnClicked-----");
-}
 
 - (void)beginBtnClicked:(UIButton *)sender {
     DLog(@"beginBtnClicked-----");

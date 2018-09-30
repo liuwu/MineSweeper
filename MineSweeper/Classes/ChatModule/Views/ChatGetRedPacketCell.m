@@ -77,11 +77,13 @@
     _titleLabel.text = infoStr;
     _redIconImageView.image = [UIImage imageNamed:@"chats_redPsmall_icon"];
     
+    CGSize size = [infoStr wl_sizeWithFont:UIFontBoldMake(11) constrainedToWidth:DEVICE_WIDTH - 20];
+    
     [_titleLabel sizeToFit];
     [_redIconImageView sizeToFit];
     [_redBtn sizeToFit];
     
-    CGFloat backWith = _titleLabel.width + _redBtn.width + _redIconImageView.width + 25.f;
+    CGFloat backWith = size.width + _redBtn.width + _redIconImageView.width + 30.f;
     [_backView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(backWith , 18));
         make.centerX.mas_equalTo(self.baseContentView);

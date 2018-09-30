@@ -313,9 +313,8 @@
                              @"password" : _pwdTextField.text.wl_trimWhitespaceAndNewlines,
                              @"money" : [NSNumber numberWithFloat:_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue]};
     [UserModelClient withdrawWallentWithParams:params Success:^(id resultInfo) {
-        [WLHUDView showSuccessHUD:@"提现成功"];
         [kNSNotification postNotificationName:@"kUserInfoChanged" object:nil];
-        [self.navigationController popViewControllerAnimated:YES];
+        [WLHUDView showSuccessHUD:@"提现成功"];
     } Failed:^(NSError *error) {
         if (error.localizedDescription.length > 0) {
             [WLHUDView showErrorHUD:error.localizedDescription];

@@ -21,7 +21,7 @@
 
 #import "ICityModel.h"
 
-@interface MyInfoViewController () <UIPickerViewDataSource, UIPickerViewDelegate>
+@interface MyInfoViewController ()
 
 @property (nonatomic, strong) RETableViewManager *manager;
 

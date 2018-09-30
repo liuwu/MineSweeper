@@ -138,6 +138,7 @@
     cell.textLabel.text = model.title;// @"这里是公告标题";
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
+    cell.textLabel.numberOfLines = 0.f;
     cell.detailTextLabel.text = model.add_time;// @"2017/09/12  12:30:23";
     cell.detailTextLabel.textColor = WLColoerRGB(153.f);
     cell.detailTextLabel.font = UIFontMake(11.f);
@@ -165,6 +166,13 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    INoticeModel *model = _datasource[indexPath.row];
+    CGFloat maxWidth = DEVICE_WIDTH - 20.f;
+    CGSize size2 = [model.title wl_sizeWithFont:WLFONT(15.f) constrainedToWidth:maxWidth];
+    CGFloat height = size2.height + 32 + 15;
+    if (height > 59.f) {
+        return height;
+    }
     return 59.f;
 }
 

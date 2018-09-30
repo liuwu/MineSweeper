@@ -13,9 +13,11 @@
 
 #import "ImGroupModelClient.h"
 #import "INoticeModel.h"
+#import "INoticeInfoModel.h"
 
 @interface MessageNotifiListViewController ()
 
+@property (nonatomic, strong) INoticeInfoModel *noticeInfoModel;
 @property (nonatomic, strong) NSArray *datasource;
 
 @end
@@ -53,7 +55,8 @@
     [WLHUDView showHUDWithStr:@"加载中..." dim:YES];
     [ImGroupModelClient getImSystemNoticeWithParams:nil Success:^(id resultInfo) {
         [WLHUDView hiddenHud];
-        weakSelf.datasource = [NSArray modelArrayWithClass:[INoticeModel class] json:resultInfo];
+        weakSelf.noticeInfoModel = [INoticeInfoModel modelWithDictionary:resultInfo];
+        weakSelf.datasource = weakSelf.noticeInfoModel.list;
         if (weakSelf.datasource.count == 0) {
             [weakSelf showEmptyViewWithText:@"暂无数据" detailText:@"" buttonTitle:nil buttonAction:NULL];
         }
@@ -76,13 +79,13 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.showBottomLine = YES;
     INoticeModel *model = _datasource[indexPath.row];
-//    cell.imageView.image = [UIImage imageNamed:@"home_newNotice_icon"];
+    cell.imageView.image = !model.is_read.boolValue ? [UIImage imageNamed:@"home_newNotice_icon"] : nil;
     cell.textLabel.text = model.title;// @"这是消息通知标题";
     cell.textLabel.textColor = WLColoerRGB(51.f);
     cell.textLabel.font = UIFontMake(15.f);
-    cell.detailTextLabel.text = @"2018-10-12 12:12:12";
-    cell.detailTextLabel.textColor = WLColoerRGB(102.f);
-    cell.detailTextLabel.font = UIFontMake(14.f);
+    cell.detailTextLabel.text = model.add_time;// @"2018-10-12 12:12:12";
+    cell.detailTextLabel.textColor = WLColoerRGB(153.f);
+    cell.detailTextLabel.font = UIFontMake(11.f);
     
     // reset
 //    cell.imageEdgeInsets = UIEdgeInsetsZero;

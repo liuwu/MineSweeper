@@ -12,6 +12,7 @@
 #import "IGameGroupModel.h"
 #import "IFriendRequestModel.h"
 #import "IRedPacektMemberModel.h"
+#import "IMyRedPacketModel.h"
 
 
 @interface BaseImageTableViewCell : BaseTableViewCell
@@ -24,6 +25,8 @@
 @property (nonatomic, strong) IFriendRequestModel *friendRequestModel;
 
 @property (nonatomic, strong) IRedPacektMemberModel *redPacketMemberModel;
+
+@property (nonatomic, strong) IMyRedPacketModel *myRedPacketModel;
 
 @property (nonatomic, strong) RCSearchConversationResult *conversationResult;
 

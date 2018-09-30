@@ -16,6 +16,8 @@
 @property (nonatomic, copy) NSString *groupId;
 // 群组标题
 @property (nonatomic, copy) NSString *title;
+// 头像
+@property (nonatomic, copy) NSString *image;
 // 创建者UID
 @property (nonatomic, copy) NSString *_uid;
 // 群组类型 0 普通群组 1游戏群组

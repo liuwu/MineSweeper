@@ -6,8 +6,8 @@
 //  Copyright © 2018年 liuwu. All rights reserved.
 //
 
-#import "SLCommonTableViewController.h"
+#import "SLCommonGroupListViewController.h"
 
-@interface AccountSafeViewController : SLCommonTableViewController
+@interface AccountSafeViewController : SLCommonGroupListViewController
 
 @end

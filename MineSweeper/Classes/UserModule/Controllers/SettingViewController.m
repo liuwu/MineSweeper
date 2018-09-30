@@ -123,14 +123,20 @@
     QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"确定" style:QMUIAlertActionStyleDestructive handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
         [weakSelf deleteAllChatList];
     }];
-    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:@"是否清理所有聊天记录？" message:nil preferredStyle:QMUIAlertControllerStyleAlert];
+    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:@"将删除所有个人和群的聊天记录" message:nil preferredStyle:QMUIAlertControllerStyleAlert];
     [alertController addAction:action1];
     [alertController addAction:action2];
     [alertController showWithAnimated:YES];
 }
 
 - (void)deleteAllChatList {
-    
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    BOOL success = [[RCIMClient sharedRCIMClient] clearConversations:@[@(ConversationType_PRIVATE), @(ConversationType_GROUP)]];
+    if (success) {
+        [WLHUDView showSuccessHUD:@"清理完成"];
+    } else{
+        [WLHUDView showErrorHUD:@"清理失败，请重试"];
+    }
 }
 
 - (void)clearCacheAlert {
@@ -148,6 +154,9 @@
 //清理缓存
 - (void)clearCache {
     [WLHUDView showHUDWithStr:@"" dim:YES];
+    /// 清除用户信息缓存
+    [[RCIM sharedRCIM] clearUserInfoCache];
+    [[RCIM sharedRCIM] clearGroupInfoCache];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         //这里清除 Library/Caches 里的所有文件，融云的缓存文件及图片存放在 Library/Caches/RongCloud 下

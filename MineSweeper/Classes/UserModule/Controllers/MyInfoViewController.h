@@ -6,8 +6,8 @@
 //  Copyright © 2018年 liuwu. All rights reserved.
 //
 
-#import "SLCommonTableViewController.h"
+#import "SLCommonGroupListViewController.h"
 
-@interface MyInfoViewController : SLCommonTableViewController
+@interface MyInfoViewController : SLCommonGroupListViewController
 
 @end

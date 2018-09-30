@@ -356,7 +356,6 @@
 		1064DE01214CA343002A9DD6 /* RechargeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DE00214CA343002A9DD6 /* RechargeViewController.m */; };
 		1064DE04214CA436002A9DD6 /* NewFriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DE03214CA436002A9DD6 /* NewFriendListViewController.m */; };
 		1064DE07214CA60C002A9DD6 /* TransferViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DE06214CA60C002A9DD6 /* TransferViewController.m */; };
-		1064DE0A214CA695002A9DD6 /* ChatUserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DE09214CA695002A9DD6 /* ChatUserInfoViewController.m */; };
 		1064DE0D214CA6DE002A9DD6 /* ChatSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1064DE0C214CA6DE002A9DD6 /* ChatSettingViewController.m */; };
 		1069EE74214A9D3A0006FFCA /* HomeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1069EE73214A9D3A0006FFCA /* HomeTableViewCell.m */; };
 		106D4AED215C77B60047E8BA /* BaseImageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 106D4AEC215C77B60047E8BA /* BaseImageTableViewCell.m */; };
@@ -1139,8 +1138,6 @@
 		1064DE03214CA436002A9DD6 /* NewFriendListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewFriendListViewController.m; sourceTree = "<group>"; };
 		1064DE05214CA60C002A9DD6 /* TransferViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransferViewController.h; sourceTree = "<group>"; };
 		1064DE06214CA60C002A9DD6 /* TransferViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TransferViewController.m; sourceTree = "<group>"; };
-		1064DE08214CA695002A9DD6 /* ChatUserInfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatUserInfoViewController.h; sourceTree = "<group>"; };
-		1064DE09214CA695002A9DD6 /* ChatUserInfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatUserInfoViewController.m; sourceTree = "<group>"; };
 		1064DE0B214CA6DE002A9DD6 /* ChatSettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatSettingViewController.h; sourceTree = "<group>"; };
 		1064DE0C214CA6DE002A9DD6 /* ChatSettingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatSettingViewController.m; sourceTree = "<group>"; };
 		1069EE72214A9D3A0006FFCA /* HomeTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeTableViewCell.h; sourceTree = "<group>"; };
@@ -1249,6 +1246,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10351A9C2147CDDB00EDC7AD /* AudioToolbox.framework in Frameworks */,
 				10351ACA2147CECF00EDC7AD /* CoreMotion.framework in Frameworks */,
 				10351AA02147CDEB00EDC7AD /* CFNetwork.framework in Frameworks */,
 				10F820B1215E024500B555E3 /* Foundation.framework in Frameworks */,
@@ -1277,7 +1275,6 @@
 				10351AA82147CE0A00EDC7AD /* CoreMedia.framework in Frameworks */,
 				10351AA22147CDF400EDC7AD /* CoreAudio.framework in Frameworks */,
 				10351A9E2147CDE300EDC7AD /* AVFoundation.framework in Frameworks */,
-				10351A9C2147CDDB00EDC7AD /* AudioToolbox.framework in Frameworks */,
 				10351A9A2147CDD500EDC7AD /* AssetsLibrary.framework in Frameworks */,
 				101134302148A7FB0082F74B /* MOBFoundation.framework in Frameworks */,
 				10082DEC2153B34C00EC3FCE /* RongIMKit.framework in Frameworks */,
@@ -2312,8 +2309,6 @@
 				10082DFD2153D39300EC3FCE /* WLChatBaseViewController.m */,
 				10351AD52147D37C00EDC7AD /* ChatListViewController.h */,
 				10351AD62147D37C00EDC7AD /* ChatListViewController.m */,
-				1064DE08214CA695002A9DD6 /* ChatUserInfoViewController.h */,
-				1064DE09214CA695002A9DD6 /* ChatUserInfoViewController.m */,
 				1064DE0B214CA6DE002A9DD6 /* ChatSettingViewController.h */,
 				1064DE0C214CA6DE002A9DD6 /* ChatSettingViewController.m */,
 				109AF9AF2151FE9B00D50F3C /* ChatViewController.h */,
@@ -3516,7 +3511,6 @@
 				10F820A9215DC50500B555E3 /* ChatGetRedPacketCell.m in Sources */,
 				10351A022147B73200EDC7AD /* NSDate+WLAdd.m in Sources */,
 				10454668214B77A500DA7F9F /* QDThemeManager.m in Sources */,
-				1064DE0A214CA695002A9DD6 /* ChatUserInfoViewController.m in Sources */,
 				10082DFE2153D39400EC3FCE /* WLChatBaseViewController.m in Sources */,
 				1035194D2147A34000EDC7AD /* WLLogger.m in Sources */,
 				10351A672147C74B00EDC7AD /* NSFileManager+Godzippa.m in Sources */,

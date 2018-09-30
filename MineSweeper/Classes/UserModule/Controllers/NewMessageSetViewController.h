@@ -6,8 +6,8 @@
 //  Copyright © 2018年 liuwu. All rights reserved.
 //
 
-#import "SLCommonTableViewController.h"
+#import "SLCommonGroupListViewController.h"
 
-@interface NewMessageSetViewController : SLCommonTableViewController
+@interface NewMessageSetViewController : SLCommonGroupListViewController
 
 @end

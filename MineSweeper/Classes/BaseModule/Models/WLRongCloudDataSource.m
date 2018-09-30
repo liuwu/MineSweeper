@@ -124,6 +124,7 @@
                                              group.groupId = groupId;
                                              IGroupDetailInfo *groupDetailInfo = [IGroupDetailInfo modelWithDictionary:resultInfo];
                                              group.groupName = groupDetailInfo.title;
+                                             [[RCIM sharedRCIM] refreshGroupInfoCache:group withGroupId:groupId];
 //                                             group.portraitUri = [groupInfo.logo wl_imageUrlDownloadImageSceneAvatar];
                                              return completion(group);
                                          } Failed:^(NSError *error) {
@@ -166,6 +167,7 @@
         user.name = userModel.nickname;
 //        user.portraitUri = [userModel.avatar wl_imageUrlDownloadImageSceneAvatar];
         user.portraitUri = userModel.avatar;
+        [[RCIM sharedRCIM] refreshUserInfoCache:user withUserId:userId];
 //        [[WLUserDataCenter sharedInstance] saveUserWithInfo:userModel isAsync:YES];
         return completion(user);
     } Failed:^(NSError *error) {

@@ -6,10 +6,10 @@
 //  Copyright © 2018年 liuwu. All rights reserved.
 //
 
-#import "SLCommonTableViewController.h"
+#import "SLCommonGroupListViewController.h"
 #import "IFriendModel.h"
 
-@interface UserInfoViewController : SLCommonTableViewController
+@interface UserInfoViewController : SLCommonGroupListViewController
 
 // 好友信息
 //@property (nonatomic, strong) IFriendModel *friendModel;

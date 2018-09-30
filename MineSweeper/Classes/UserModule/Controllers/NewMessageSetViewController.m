@@ -52,8 +52,9 @@
         item.value = !item.value;
     }];
     [section addItem:messageNotifyItem];
-    REBoolItem *showDetailItem = [REBoolItem itemWithTitle:@"通知显示消息详情" value:YES switchValueChangeHandler:^(REBoolItem *item) {
-        
+    REBoolItem *showDetailItem = [REBoolItem itemWithTitle:@"通知显示消息详情" value:[NSUserDefaults boolForKey:@"kNotificationShowDetailInfo"] switchValueChangeHandler:^(REBoolItem *item) {
+        [NSUserDefaults setBool:item.value forKey:@"kNotificationShowDetailInfo"];
+        item.value = !item.value;
     }];
     [section addItem:showDetailItem];
     REBoolItem *soundItem = [REBoolItem itemWithTitle:@"声音" value:[RCIM sharedRCIM].disableMessageAlertSound switchValueChangeHandler:^(REBoolItem *item) {
@@ -61,8 +62,12 @@
         item.value = !item.value;
     }];
     [section addItem:soundItem];
-    REBoolItem *shakeItem = [REBoolItem itemWithTitle:@"震动" value:YES switchValueChangeHandler:^(REBoolItem *item) {
-        
+    REBoolItem *shakeItem = [REBoolItem itemWithTitle:@"震动" value:[NSUserDefaults boolForKey:@"kAudioPlaySystemSound"] switchValueChangeHandler:^(REBoolItem *item) {
+        // 调用系统震动
+//        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+//        NSNotification *notifi = [[NSNotification alloc] init];
+        [NSUserDefaults setBool:item.value forKey:@"kAudioPlaySystemSound"];
+        item.value = !item.value;
     }];
     [section addItem:shakeItem];
    

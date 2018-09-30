@@ -4,6 +4,12 @@
 使用前，先安装cocoapods。
 使用 pod install 进行第三方库引入，安装完成打开MineSweeper.xcworkspace
 
+修改页面主题在：
+Vendors-> Librarys -> QMUI -> Common -> Configuration -> QMUIConfigurationTemplate.m
+
+接口请求地址修改：
+Helpers -> WLNetworking -> Service -> WLServiceInfo.m中的 serviceBaseUrl；
+
 
 目录结构：
 MineSweeper：项目主目录

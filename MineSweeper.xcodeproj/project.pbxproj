@@ -1742,13 +1742,13 @@
 		103517F82147A33F00EDC7AD /* Librarys */ = {
 			isa = PBXGroup;
 			children = (
+				10454644214B77A400DA7F9F /* QMUI */,
 				1024156221591E26008A365A /* YJLocationPicker */,
 				1018BCD421564FA1004BC57B /* DCCycleScrollView */,
 				1018BCAC2154E0D9004BC57B /* SWQRCode */,
 				10CDC1702151317E0069277D /* TableViewSectionIndex */,
 				1073BC4321509324001EF550 /* AXWebViewController */,
 				10886BA2214F9FC2003DC40A /* HMSegmentedControl */,
-				10454644214B77A400DA7F9F /* QMUI */,
 				10113444214915E10082F74B /* NNValidationView */,
 				103518052147A33F00EDC7AD /* AXBadgeView */,
 				1035180F2147A33F00EDC7AD /* printValue */,
@@ -2240,13 +2240,13 @@
 		1035195C2147A41300EDC7AD /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				10351AE12147D3E600EDC7AD /* HomeModule */,
-				10351AD02147D36700EDC7AD /* FriendModule */,
-				1035195D2147A41300EDC7AD /* ChatModule */,
-				103519622147A41300EDC7AD /* LoginModule */,
-				103519672147A41300EDC7AD /* UserModule */,
 				1035196C2147A41300EDC7AD /* BaseModule */,
+				103519622147A41300EDC7AD /* LoginModule */,
 				103519712147A41300EDC7AD /* MainModule */,
+				10351AE12147D3E600EDC7AD /* HomeModule */,
+				1035195D2147A41300EDC7AD /* ChatModule */,
+				10351AD02147D36700EDC7AD /* FriendModule */,
+				103519672147A41300EDC7AD /* UserModule */,
 			);
 			path = Classes;
 			sourceTree = "<group>";

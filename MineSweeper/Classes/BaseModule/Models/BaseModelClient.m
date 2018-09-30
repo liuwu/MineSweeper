@@ -72,9 +72,9 @@
 //            [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
 //        }
         //系统普通错误，如果服务器返回有错误，弹出hub提醒
-        if (request.error.localizedDescription.length > 0) {
-            [WLHUDView showErrorHUD:request.error.localizedDescription Duration:2.5f];
-        }
+//        if (request.error.localizedDescription.length > 0) {
+//            [WLHUDView showErrorHUD:request.error.localizedDescription Duration:2.5f];
+//        }
         SAFE_BLOCK_CALL(failed, request.error);
     }];
     return api;

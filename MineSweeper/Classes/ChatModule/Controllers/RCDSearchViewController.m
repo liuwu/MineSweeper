@@ -201,9 +201,13 @@
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     [self.resultDictionary removeAllObjects];
     [self.groupTypeArray removeAllObjects];
+    [self hideEmptyView];
     NSArray<RCSearchConversationResult *> *result = [[RCIMClient sharedRCIMClient] searchConversations:@[@(ConversationType_PRIVATE),@(ConversationType_GROUP)] messageType:@[RCTextMessage.getObjectName] keyword:searchBar.text];
     self.datasource = result;
     [self.resultTableView reloadData];
+    if (_datasource.count == 0 && searchText.length > 0) {
+         [self showEmptyViewWithText:[NSString stringWithFormat:@"未搜索到“%@”相关内容", searchText] detailText:@"" buttonTitle:nil buttonAction:NULL];
+    }
 //      dispatch_async(dispatch_get_global_queue(0, 0), ^{
 //    [[RCDSearchDataManager shareInstance] searchDataWithSearchText:searchText
 //                                                      bySearchType:RCDSearchAll
@@ -219,20 +223,22 @@
 
 - (void)refreshSearchView:(NSString *)searchText {
     [self.resultTableView reloadData];
+    [self hideEmptyView];
     NSString *searchStr = [searchText stringByReplacingOccurrencesOfString:@" " withString:@""];
     if (!self.groupTypeArray.count && searchText.length > 0 && searchStr.length > 0) {
-        NSString *str = [NSString stringWithFormat:@"没有搜索到“%@”相关的内容", searchText];
+        [self showEmptyViewWithText:[NSString stringWithFormat:@"未搜索到“%@”相关内容", searchText] detailText:@"" buttonTitle:nil buttonAction:NULL];
+//        NSString *str = [NSString stringWithFormat:@"没有搜索到“%@”相关的内容", searchText];
 //        self.emptyLabel.textColor = HEXCOLOR(0x999999);
 //        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:str];
 //        [attributedString addAttribute:NSForegroundColorAttributeName
 //                                 value:HEXCOLOR(0x0099ff)
 //                                 range:NSMakeRange(6, searchText.length)];
 //        self.emptyLabel.attributedText = attributedString;
-        CGFloat height = [self labelAdaptive:str];
-        CGRect rect = self.emptyLabel.frame;
-        rect.size.height = height;
-        self.emptyLabel.frame = rect;
-        self.emptyLabel.hidden = NO;
+//        CGFloat height = [self labelAdaptive:str];
+//        CGRect rect = self.emptyLabel.frame;
+//        rect.size.height = height;
+//        self.emptyLabel.frame = rect;
+//        self.emptyLabel.hidden = NO;
     } else {
         self.emptyLabel.hidden = YES;
     }

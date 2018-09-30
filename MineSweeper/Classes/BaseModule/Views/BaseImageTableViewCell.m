@@ -121,7 +121,20 @@
         }];
     }
     
-    
+    if (conData.conversationType == ConversationType_GROUP) {
+        if ([lastestMessage isKindOfClass:[RCTextMessage class]]) {
+            RCTextMessage *txtMsg = (RCTextMessage *)lastestMessage;
+            self.detailTextLabel.text = txtMsg.content;//
+        }
+        
+        self.textLabel.text = @" ";//message.senderUserInfo.name;
+        //        long time = conData.messageDirection == MessageDirection_RECEIVE  ? conData.receivedTime : conData.sentTime;
+        WEAKSELF
+        [weakSelf.imageView.image = [UIImage imageNamed:@"game_group_icon"] qmui_imageWithClippedCornerRadius:36.f/2];
+        [[WLRongCloudDataSource shareInstance] getLocalGroupInfoWithGroupId:conData.targetId completion:^(IGameGroupModel *groupModel) {
+            weakSelf.textLabel.text = groupModel.title;//message.senderUserInfo.name;
+        }];
+    }
     //    self.textLabel.text = conData.conversationTitle;
 
 }

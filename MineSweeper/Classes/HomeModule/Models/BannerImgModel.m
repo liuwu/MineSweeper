@@ -11,7 +11,10 @@
 @implementation BannerImgModel
 
 - (BOOL)modelCustomTransformFromDictionary:(NSDictionary *)dic {
-    self.save_path = [NSString stringWithFormat:@"%@%@",@"https://test.cnsunrun.com/saoleiapp/", dic[@"save_path"]];
+    NSString *save_path = dic[@"save_path"];
+    if (![save_path containsString:@"http"]) {
+        self.save_path = [NSString stringWithFormat:@"%@%@",@"https://test.cnsunrun.com/saoleiapp/", dic[@"save_path"]];
+    }
     return YES;
 }
 

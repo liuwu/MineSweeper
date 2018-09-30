@@ -66,31 +66,31 @@
     [kNSNotification addObserver:self selector:@selector(loadData) name:@"kChatUserInfoChanged" object:nil];
 }
 
-#pragma mark - QMUINavigationControllerDelegate
-// 设置是否允许自定义
-- (BOOL)shouldSetStatusBarStyleLight {
-    return YES;
-}
-
-// 设置导航栏的背景图
-- (UIImage *)navigationBarBackgroundImage {
-    return [UIImage qmui_imageWithColor:[UIColor whiteColor]];
-}
-
-// 设置导航栏底部的分隔线图片
-- (UIImage *)navigationBarShadowImage {
-    return [UIImage qmui_imageWithColor:[UIColor whiteColor]];
-}
-
-// nav中的baritem的颜色
-- (UIColor *)navigationBarTintColor {
-    return [UIColor whiteColor];//WLRGB(254.f, 72.f, 30.f);
-}
-
-// nav标题颜色
-- (UIColor *)titleViewTintColor {
-    return [UIColor whiteColor];
-}
+//#pragma mark - QMUINavigationControllerDelegate
+//// 设置是否允许自定义
+//- (BOOL)shouldSetStatusBarStyleLight {
+//    return YES;
+//}
+//
+//// 设置导航栏的背景图
+//- (UIImage *)navigationBarBackgroundImage {
+//    return [UIImage qmui_imageWithColor:[UIColor whiteColor]];
+//}
+//
+//// 设置导航栏底部的分隔线图片
+//- (UIImage *)navigationBarShadowImage {
+//    return [UIImage qmui_imageWithColor:[UIColor whiteColor]];
+//}
+//
+//// nav中的baritem的颜色
+//- (UIColor *)navigationBarTintColor {
+//    return [UIColor whiteColor];//WLRGB(254.f, 72.f, 30.f);
+//}
+//
+//// nav标题颜色
+//- (UIColor *)titleViewTintColor {
+//    return [UIColor whiteColor];
+//}
 
 
 - (void)loadData {
@@ -138,41 +138,10 @@
     }
 }
 
-//- (void)inputTextView:(UITextView *)inputTextView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-//    [super inputTextView:inputTextView shouldChangeTextInRange:range replacementText:text];
-//
-//    DLog(@"shouldChangeTextInRange-----------");
-//}
-
-
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-
-/*!
- 点击Cell中URL的回调
- 
- @param url   点击的URL
- @param model 消息Cell的数据模型
- */
-//- (void)didTapUrlInMessageCell:(NSString *)url
-//                         model:(RCMessageModel *)model {
-//    DLog(@"didTapUrlInMessageCell-----------");
-//}
-
-/*!
- 点击Cell中电话号码的回调
- 
- @param phoneNumber 点击的电话号码
- @param model       消息Cell的数据模型
- */
-//- (void)didTapPhoneNumberInMessageCell:(NSString *)phoneNumber
-//                                 model:(RCMessageModel *)model {
-//    DLog(@"didTapPhoneNumberInMessageCell-----------");
-//}
 
 /*!
  点击Cell内容的回调

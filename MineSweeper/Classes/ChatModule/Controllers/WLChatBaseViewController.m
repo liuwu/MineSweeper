@@ -8,27 +8,14 @@
 
 #import "WLChatBaseViewController.h"
 #import "UserInfoViewController.h"
-//#import "WLActivityDetailInfoController.h"
 #import "WLChatLocationViewController.h"
-//#import "NavViewController.h"
 #import "ActivityMapViewController.h"
-//#import "InvestCerVC.h"
-//#import "WLTransactionDetailsController.h"
 #import "WLPhotoViewController.h"
+
+#import "AXWebViewController.h"
 
 //
 #import "KSPhotoBrowser.h"
-//
-//#import "WLChatCustomCardCell.h"
-//#import "WLChatNewCardCell.h"
-//#import "WLChatCardListCell.h"
-//#import "WLPayHelperCell.h"
-
-//#import "CustomCardMessage.h"
-//#import "WLCardListMessage.h"
-//#import "IProjectClassModel.h"
-//#import "WLPayRemindMessage.h"
-//#import "IGroupChatInfo.h"
 
 #import "ChatRedPacketCell.h"
 #import "ChatGetRedPacketCell.h"
@@ -99,21 +86,10 @@ static NSString *paylistCellid = @"paylistCellid";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    [self.chatSessionInputBarControl.pluginBoardView removeItemWithTag:104];
-    
     //* 注册消息类型，如果使用IMKit，使用此方法，不再使用RongIMLib的同名方法。如果对消息类型进行扩展，可以忽略此方法。
 //    [self registerClass:[ChatRedPacketCell class] forCellWithReuseIdentifier:redPacketCellid];
     [self registerClass:ChatRedPacketCell.class forMessageClass:RCRedPacketMessage.class];
     [self registerClass:ChatGetRedPacketCell.class forMessageClass:RCRedPacketGetMessage.class];
-//    [self registerClass:[WLChatCustomCardCell class] forCellWithReuseIdentifier:customCardCellid];
-//    [self registerClass:[WLChatNewCardCell class] forCellWithReuseIdentifier:newcardCellid];
-//    [self registerClass:[WLChatCardListCell class] forCellWithReuseIdentifier:cardlistCellid];
-    
-//    [self registerClass:[WLChatCustomCardCell class] forMessageClass:[CustomCardMessage class]];
-//    [self registerClass:[WLChatNewCardCell class] forMessageClass:[CustomCardMessage class]];
-//    [self registerClass:[WLChatCardListCell class] forMessageClass:[WLCardListMessage class]];
-    
-//    [self registerClass:[WLPayHelperCell class] forMessageClass:[WLPayRemindMessage class]];
     self.enableUnreadMessageIcon = YES;
     self.enableNewComingMessageIcon = YES;
 }
@@ -163,40 +139,40 @@ static NSString *paylistCellid = @"paylistCellid";
  *  @param indexPath            indexPath
  *  @return 显示的高度
  */
-- (CGSize)rcConversationCollectionView:(UICollectionView *)collectionView
-                                layout:(UICollectionViewLayout *)collectionViewLayout
-                sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    RCMessageModel *model = self.conversationDataRepository[indexPath.row];
-    RCMessageContent *msgContent = model.content;
-//    if ([msgContent isMemberOfClass:[CustomCardMessage class]]) {
-//        CustomCardMessage *customCardM = (CustomCardMessage *)model.content;
-////        CardStatuModel *cardM = [CardStatuModel modelWithDictionary:customCardM.card];
-////        if (cardM.viewType.integerValue) {
-////            return [WLChatNewCardCell cellHigetWithModel:model];
-////        }else{
-////            return [WLChatCustomCardCell getCellSizeWithCardMessage:model];
-////        }
-//    }else if ([msgContent isMemberOfClass:[WLCardListMessage class]]){
-//        return [WLChatCardListCell cellHigetWithModel:model];
+//- (CGSize)rcConversationCollectionView:(UICollectionView *)collectionView
+//                                layout:(UICollectionViewLayout *)collectionViewLayout
+//                sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    RCMessageModel *model = self.conversationDataRepository[indexPath.row];
+//    RCMessageContent *msgContent = model.content;
+////    if ([msgContent isMemberOfClass:[CustomCardMessage class]]) {
+////        CustomCardMessage *customCardM = (CustomCardMessage *)model.content;
+//////        CardStatuModel *cardM = [CardStatuModel modelWithDictionary:customCardM.card];
+//////        if (cardM.viewType.integerValue) {
+//////            return [WLChatNewCardCell cellHigetWithModel:model];
+//////        }else{
+//////            return [WLChatCustomCardCell getCellSizeWithCardMessage:model];
+//////        }
+////    }else if ([msgContent isMemberOfClass:[WLCardListMessage class]]){
+////        return [WLChatCardListCell cellHigetWithModel:model];
+////    }
+////    else if ([msgContent isMemberOfClass:[WLPayRemindMessage class]]){
+////        return  [WLPayHelperCell sizeForMessageModel:model
+////                             withCollectionViewWidth:ScreenWidth
+////                                referenceExtraHeight:0];
+////    }
+//    if ([msgContent isMemberOfClass:[RCRedPacketMessage class]]) {
+//        // 红包cell
+//        return [ChatRedPacketCell sizeForMessageModel:model withCollectionViewWidth:65.f referenceExtraHeight:20.f];
+////        return [ChatRedPacketCell cellHigetWithModel:model];// CGSizeMake(200.f, 65.f);
 //    }
-//    else if ([msgContent isMemberOfClass:[WLPayRemindMessage class]]){
-//        return  [WLPayHelperCell sizeForMessageModel:model
-//                             withCollectionViewWidth:ScreenWidth
-//                                referenceExtraHeight:0];
+//    if ([msgContent isMemberOfClass:[RCRedPacketGetMessage class]]) {
+//        // 红包cell
+//        return [ChatGetRedPacketCell sizeForMessageModel:model withCollectionViewWidth:DEVICE_WIDTH referenceExtraHeight:120.f];
+//        //        return [ChatRedPacketCell cellHigetWithModel:model];// CGSizeMake(200.f, 65.f);
 //    }
-    if ([msgContent isMemberOfClass:[RCRedPacketMessage class]]) {
-        // 红包cell
-        return [ChatRedPacketCell sizeForMessageModel:model withCollectionViewWidth:65.f referenceExtraHeight:20.f];
-//        return [ChatRedPacketCell cellHigetWithModel:model];// CGSizeMake(200.f, 65.f);
-    }
-    if ([msgContent isMemberOfClass:[RCRedPacketGetMessage class]]) {
-        // 红包cell
-        return [ChatGetRedPacketCell sizeForMessageModel:model withCollectionViewWidth:DEVICE_WIDTH referenceExtraHeight:120.f];
-        //        return [ChatRedPacketCell cellHigetWithModel:model];// CGSizeMake(200.f, 65.f);
-    }
-    return CGSizeZero;
-}
+//    return CGSizeZero;
+//}
 
 #pragma mark override
 /**
@@ -229,35 +205,31 @@ static NSString *paylistCellid = @"paylistCellid";
 }
 
 #pragma mark override
-
+// 点击cell中url
 - (void)didTapUrlInMessageCell:(NSString *)url model:(RCMessageModel *)model {
     DLog(@"didTapUrlInMessageCell");
-//    if ([model.content isKindOfClass:[WLPayRemindMessage class]]) {
-//        WLTransactionDetailsController *transactionDetailsVC = [[WLTransactionDetailsController alloc] init];
-//        transactionDetailsVC.urlString=url;
-//        [self.navigationController pushViewController:transactionDetailsVC animated:YES];
-//    }else{
-//        [[AppDelegate sharedAppDelegate] wlopenURLString:url sourceViewControl:self];
-//    }
+    if (url.length > 0) {
+        AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:url];
+        webVC.showsToolBar = NO;
+        webVC.title = @"网页";
+        // webVC.showsNavigationCloseBarButtonItem = NO;
+        if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
+            webVC.webView.allowsLinkPreview = YES;
+        }
+        [self.navigationController pushViewController:webVC animated:YES];
+    }
 }
 
-/**
- *  点击头像事件
- *
- *  @param userId 用户的ID
+/*!
+ 点击Cell中电话号码的回调
+ 
+ @param phoneNumber 点击的电话号码
+ @param model       消息Cell的数据模型
  */
-//- (void)didTapCellPortrait:(NSString *)userId
-//{
-
-    //change by liuwu | 2016.03.08 | 添加userId为空的判断，防止闪退
-//    if (userId != nil && userId.length > 0) {
-//        WLUserModel *userMode = [[WLUserModel alloc] init];
-//        userMode.uid = @(userId.integerValue);
-//        ///**  好友关系，1好友，2好友的好友,-1自己，0没关系   */ ////操作类型0：添加 1：接受  2:已添加 3：待验证   10:隐藏操作按钮
-//        UserInfoViewController *userInfoVC = [[UserInfoViewController alloc] initWithBaseUserM:userMode OperateType:nil HidRightBtn:NO];
-//        [self.navigationController pushViewController:userInfoVC animated:YES];
-//    }
-//}
+- (void)didTapPhoneNumberInMessageCell:(NSString *)phoneNumber
+                                 model:(RCMessageModel *)model {
+    DLog(@"didTapPhoneNumberInMessageCell-----------");
+}
 
 - (void)onBeginRecordEvent {
     [super onBeginRecordEvent];
@@ -273,28 +245,6 @@ static NSString *paylistCellid = @"paylistCellid";
     [super onCancelRecordEvent];
     [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationStopVoicePlayer object:nil];
 }
-
-/**
- *  @author dong, 15-11-13 11:11:31
- *
- *  点击卡片代理
- *
- *  @param cardCell  卡片cell
- *  @param cardModel 卡片数据
- */
-//- (void)chatCustomCardCell:(WLChatCustomCardCell *)cardCell didTapCard:(CardStatuModel *)cardModel
-//{
-//    [self selectedCardMessageWithCardM:cardModel];
-//}
-//- (void)chatNewCardCell:(WLChatNewCardCell *)cardCell didTapCard:(CardStatuModel *)cardModel
-//{
-//    [self selectedCardMessageWithCardM:cardModel];
-//}
-//
-//- (void)chatCardListCell:(WLChatCardListCell *)cardListCell didTapCard:(CardStatuModel *)cardModel
-//{
-//    [self selectedCardMessageWithCardM:cardModel];
-//}
 
 /**
  *  打开大图。开发者可以重写，自己下载并且展示图片。默认使用内置controller

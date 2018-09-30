@@ -269,6 +269,19 @@ single_implementation(AppDelegate);
     //通知通知列表页面刷新数据
     dispatch_sync(dispatch_get_main_queue(), ^{
         //处理好友请求
+        if ([message.content isMemberOfClass:[RCRedPacketMessage class]]) {
+            // 红包消息
+            
+        }
+        if ([message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
+            // 红包被领域消息
+            
+        }
+        if ([message.content isMemberOfClass:[RCContactNotificationMessage class]]) {
+            // 好友请求消息
+            
+        }
+        
 //        if ([message.content isMemberOfClass:[RCContactNotificationMessage class]]) {
 //            NSAssert(message.conversationType == ConversationType_SYSTEM, @"好友消息要发系统消息！！！");
 //            RCContactNotificationMessage *_contactNotificationMsg = (RCContactNotificationMessage *)message.content;
@@ -358,7 +371,7 @@ single_implementation(AppDelegate);
     if ([message.content isMemberOfClass:[RCContactNotificationMessage class]]) {
         RCContactNotificationMessage *msg = (RCContactNotificationMessage *)message.content;
         if ([msg.operation isEqualToString:@"friendRequest"]) {
-            NSDictionary *friendUserDict = [[msg.extra wl_jsonValueDecoded] objectForKey:@"data"];
+//            NSDictionary *friendUserDict = [[msg.extra wl_jsonValueDecoded] objectForKey:@"data"];
 //            WLUserModel *userModel = [WLUserModel modelWithDictionary:friendUserDict];
 //            [self addLocalNotificationWithAlertBody:[NSString stringWithFormat:@"%@：添加好友请求",userModel.name] userInfo:nil];
         }
@@ -402,13 +415,6 @@ single_implementation(AppDelegate);
     //状态监听
     [[RCIM sharedRCIM] setConnectionStatusDelegate:self];
     // 注册自定义消息
-    //    [[RCIM sharedRCIM] registerMessageType:[CustomCardMessage class]];
-    //    [[RCIM sharedRCIM] registerMessageType:[WLSystemPushMessage class]];
-    //    [[RCIM sharedRCIM] registerMessageType:[WLCardListMessage class]];
-    //    [[RCIM sharedRCIM] registerMessageType:[WLHiddenMessage class]];
-    //    [[RCIM sharedRCIM] registerMessageType:[WLFriendRequestMessage class]];
-    //    [[RCIM sharedRCIM] registerMessageType:[WLPayRemindMessage class]];
-    //    [[RCIM sharedRCIM] registerMessageType:[WLDynamicMessage class]];
     // 注册自定义红包消息
     [[RCIM sharedRCIM] registerMessageType:[RCRedPacketMessage class]];
     [[RCIM sharedRCIM] registerMessageType:[RCRedPacketGetMessage class]];
@@ -572,25 +578,6 @@ single_implementation(AppDelegate);
     
     /// 上报定位
     [self getCityLocationInfo];
-
-    
-//    [WLSystemManager init3DTouchActionShow:YES];
-//    // 初始化登录用户信息
-//    [self initLoginUserInfo];
-//    // 获取所有好友
-//    [self loadMyAllFriends];
-//    // 注册APNS
-//    [self registerRemoteNotification];
-//    [self connectRCIM];
-//    [self setQYUserInfo];
-//    // 上报设备信息
-//    [WLLoginModuleClient updateclientID];
-//    // 从本地数据 读取自定义消息
-//    [[WLChatProjectManager sharedInstance] initDataBaseComplete];
-//    /// 上报定位
-//    [self getCityLocationInfo];
-//    [self getV5AccountJWTWithSessionId];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:kWLUserLoginNotification object:nil];
 }
 
 /// 上报定位
@@ -605,7 +592,7 @@ single_implementation(AppDelegate);
         
     }];
     
-    // 要使用百度地图，请先启动BaiduMapManager
+    // 要使用百度地图，请先启动BaiduMapManager，需要获取百度appid
     _mapManager = [[BMKMapManager alloc]init];
     [_mapManager start:@"B6d899fe8925bc5cbb547eba6fc4ccca" generalDelegate:self];
 }

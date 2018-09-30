@@ -249,17 +249,20 @@
                              @"pay_method" : @2
                              };
     [WLHUDView showHUDWithStr:@"充值中..." dim:YES];
-    WEAKSELF
+//    WEAKSELF
     [UserModelClient rechargeWallentWithParams:params Success:^(id resultInfo) {
         [WLHUDView hiddenHud];
-        AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:resultInfo];
-        webVC.showsToolBar = NO;
-        webVC.title = @"充值";
-        // webVC.showsNavigationCloseBarButtonItem = NO;
-        if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
-            webVC.webView.allowsLinkPreview = YES;
+        if ([resultInfo length] > 0) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:resultInfo]];
         }
-        [weakSelf.navigationController pushViewController:webVC animated:YES];
+//        AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:resultInfo];
+//        webVC.showsToolBar = NO;
+//        webVC.title = @"充值";
+//        // webVC.showsNavigationCloseBarButtonItem = NO;
+//        if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
+//            webVC.webView.allowsLinkPreview = YES;
+//        }
+//        [weakSelf.navigationController pushViewController:webVC animated:YES];
         // https://qr.alipay.com/bax070319pqypzwglyvq40b0
     } Failed:^(NSError *error) {
         if (error.localizedDescription.length > 0) {

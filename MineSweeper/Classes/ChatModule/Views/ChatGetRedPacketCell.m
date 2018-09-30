@@ -49,7 +49,6 @@
         [redBtn addTarget:self action:@selector(redBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [backView addSubview:redBtn];
         self.redBtn = redBtn;
-        
     }
     return self;
 }
@@ -79,13 +78,16 @@
     _redIconImageView.image = [UIImage imageNamed:@"chats_redPsmall_icon"];
     
     [_titleLabel sizeToFit];
+    [_redIconImageView sizeToFit];
+    [_redBtn sizeToFit];
+    
+    CGFloat backWith = _titleLabel.width + _redBtn.width + _redIconImageView.width + 25.f;
     [_backView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(self.titleLabel.width + 60, 18));
+        make.size.mas_equalTo(CGSizeMake(backWith , 18));
         make.centerX.mas_equalTo(self.baseContentView);
         make.centerY.mas_equalTo(self.baseContentView);
     }];
     
-    [_redIconImageView sizeToFit];
     [_redIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.backView).mas_offset(10.f);
         make.centerY.mas_equalTo(self.backView);
@@ -96,7 +98,6 @@
         make.centerY.mas_equalTo(self.redIconImageView);
     }];
     
-    [_redBtn sizeToFit];
     [_redBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.titleLabel.mas_right);
         make.centerY.mas_equalTo(self.titleLabel);

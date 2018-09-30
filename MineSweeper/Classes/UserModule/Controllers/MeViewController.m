@@ -19,6 +19,7 @@
 #import "InviteRecommendViewController.h"
 #import "UserInfoViewController.h"
 #import "MessageNotifiListViewController.h"
+#import "ChatViewController.h"
 
 #import "SWQRCode.h"
 
@@ -118,8 +119,6 @@
 }
 
 - (void)addHeaderView {
-    
-    
     //下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
     
@@ -365,12 +364,18 @@
     [section addItem:lotteryItem];
     
     RETableViewItem *customerServiceItem = [RETableViewItem itemWithTitle:@"客服中心" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        
-        
+        [weakSelf customerService];
     }];
     customerServiceItem.image = [UIImage imageNamed:@"mine_service_icon"];
     [section addItem:customerServiceItem];
     [self.manager addSection:section];
+}
+
+- (void)customerService {
+    ChatViewController *vc = [[ChatViewController alloc] initWithConversationType:ConversationType_CUSTOMERSERVICE targetId:configTool.userInfoModel.customer_id];
+    vc.title = configTool.userInfoModel.customer_name;
+    vc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 // 推广海报
@@ -478,7 +483,7 @@
 // 消息按钮点击
 - (void)leftBarButtonItemClicked {
     // 有使用配置表的时候，最简单的代码就只是控制显隐即可，没使用配置表的话，还需要设置其他的属性才能使红点样式正确，具体请看 UIBarButton+QMUIBadge.h 注释
-    self.navigationItem.leftBarButtonItem.qmui_shouldShowUpdatesIndicator = YES;
+    self.navigationItem.leftBarButtonItem.qmui_shouldShowUpdatesIndicator = NO;
     
     MessageNotifiListViewController *messageNotifiVc = [[MessageNotifiListViewController alloc] initWithStyle:UITableViewStylePlain];
     [self.navigationController pushViewController:messageNotifiVc animated:YES];

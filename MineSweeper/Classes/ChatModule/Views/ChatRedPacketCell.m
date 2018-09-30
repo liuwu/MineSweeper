@@ -232,15 +232,15 @@
 //    }];
 }
 
-+ (CGSize)cellHigetWithModel:(RCMessageModel *)model {
-    static CGFloat cardX = 10.f;
-    RCRedPacketMessage *packetModel = (RCRedPacketMessage *)model.content;
-    CGFloat cardHigh = 65.f;
-    if (model) {
-        
-    }
-    return CGSizeMake(DEVICE_WIDTH, cardHigh+20);
-}
+//+ (CGSize)cellHigetWithModel:(RCMessageModel *)model {
+//    static CGFloat cardX = 10.f;
+//    RCRedPacketMessage *packetModel = (RCRedPacketMessage *)model.content;
+//    CGFloat cardHigh = 65.f;
+//    if (model) {
+//        
+//    }
+//    return CGSizeMake(DEVICE_WIDTH, cardHigh+20);
+//}
 
 /*!
  自定义消息 Cell 的 Size

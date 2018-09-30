@@ -72,21 +72,6 @@
             }
             return completion(user);
         }
-//        //判断好友里面是否有用户信息
-//        WLUserModel *userModel = [[WLUserDataCenter sharedInstance] getUserModelWithUid:@(userId.longLongValue)];
-//        if (userModel) {
-//            //调用接口刷新数据
-//            [WLUserModuleClient getMemberWithUid:@(userId.longLongValue) Success:^(id resultInfo) {
-//                //保存用户信息
-//                WLUserModel *userModel = [WLUserModel modelWithDictionary:resultInfo];
-//                [[WLUserDataCenter sharedInstance] saveUserWithInfo:userModel isAsync:YES];
-//            } Failed:^(NSError *error) {
-//                DLog(@"getMember error:%@",error.localizedDescription);
-//            }];
-//
-//            return completion(userModel);
-//        }
-//
 //        //调用接口刷新数据
         NSDictionary *params = @{@"uid" : @(userId.longLongValue)};
 //        WEAKSELF
@@ -98,17 +83,6 @@
             return completion(nil);
             DLog(@"getMember error:%@",error.localizedDescription);
         }];
-        
-//        [WLUserModuleClient getMemberWithUid:@(userId.longLongValue) Success:^(id resultInfo) {
-//            //保存用户信息
-//            WLUserModel *userModel = [WLUserModel modelWithDictionary:resultInfo];
-//            [[WLUserDataCenter sharedInstance] saveUserWithInfo:userModel isAsync:YES];
-//
-//            return completion(userModel);
-//        } Failed:^(NSError *error) {
-//            return completion(nil);
-//            DLog(@"getMember error:%@",error.localizedDescription);
-//        }];
     });
 }
 
@@ -135,33 +109,6 @@
                                              return completion(nil);
                                              DLog(@"getGroup error:%@",error.localizedDescription);
                                          }];
-    
-//
-//    //从数据库查询
-//    group = [[WLChatInfoDataCenter sharedInstance] getGroupChatInfoWithChatID:@(groupId.longLongValue)];
-//    if (group) {
-//        //获取当前群组信息
-//        [WLChatModuleClient getGroupInfoWithId:@(groupId.longLongValue) Ismemberlogos:@(2) Success:^(id resultInfo) {
-//            IGroupChatInfo *groupInfo = resultInfo;
-//            // 保存数据
-//            [[WLChatInfoDataCenter sharedInstance] saveGroupChatInfoWithInfo:groupInfo];
-//        } Failed:^(NSError *error) {
-//            DLog(@"融云回调获取群聊信息失败");
-//        }];
-//        return completion(group);
-//    }else{
-//        //如果本地没有数据，调用接口获取
-//        [WLChatModuleClient getGroupInfoWithId:@(groupId.longLongValue) Ismemberlogos:@(2) Success:^(id resultInfo) {
-//            IGroupChatInfo *groupInfo = resultInfo;
-//            // 保存数据
-//            [[WLChatInfoDataCenter sharedInstance] saveGroupChatInfoWithInfo:groupInfo];
-//            return completion(groupInfo);
-//        } Failed:^(NSError *error) {
-//            IGroupChatInfo *group = [IGroupChatInfo new];
-//            group.groupchatid = @(groupId.longLongValue);
-//            return completion(group);
-//        }];
-//    }
 }
 
 #pragma mark - GroupInfoFetcherDelegate

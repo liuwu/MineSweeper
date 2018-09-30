@@ -16,6 +16,11 @@
 @property (nonatomic, strong) NSString *pack_id;
 // 红包title
 @property (nonatomic, strong) NSString *title;
+//红包类型
+@property (nonatomic, strong) NSNumber *type;
+// tip的内容
+@property (nonatomic, strong) NSString *tip_content;
+
 // 红包总金额
 @property (nonatomic, strong) NSString *total_money;
 // 红包个数

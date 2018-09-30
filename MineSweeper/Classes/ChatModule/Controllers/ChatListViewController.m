@@ -10,8 +10,21 @@
 #import "ChatViewController.h"
 #import "RedPacketViewController.h"
 #import "MessageNotifiListViewController.h"
+#import "RCDSearchViewController.h"
+//#import "QDRecentSearchView.h"
 
-@interface ChatListViewController ()
+@interface ChatListViewController ()<UISearchBarDelegate, RCDSearchViewDelegate>
+
+@property(nonatomic, strong) QMUINavigationController *searchNavigationController;
+@property(nonatomic, strong) UIView *headerView;
+@property(nonatomic, strong) QMUISearchBar *searchBar;
+
+//@property (nonatomic, strong) QMUISearchBar *searchBar;
+@property(nonatomic, strong) NSArray<NSString *> *keywords;
+@property(nonatomic, strong) NSMutableArray<NSString *> *searchResultsKeywords;
+@property(nonatomic, strong) QMUISearchController *mySearchController;
+
+
 
 @end
 
@@ -21,11 +34,27 @@
     return @"消息";
 }
 
+- (QMUISearchBar *)searchBar {
+    if (!_searchBar) {
+        _searchBar =
+        [[QMUISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.conversationListTableView.frame.size.width, 44)];
+    }
+    return _searchBar;
+}
+
+- (UIView *)headerView {
+    if (!_headerView) {
+        _headerView =
+        [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.conversationListTableView.frame.size.width, 44)];
+    }
+    return _headerView;
+}
+
 - (instancetype)init{
     self = [super init];
     if (self) {
         //设置要显示的会话类型
-        [self setDisplayConversationTypes:@[@(ConversationType_PRIVATE),@(ConversationType_GROUP),@(ConversationType_SYSTEM)]];
+        [self setDisplayConversationTypes:@[@(ConversationType_PRIVATE),@(ConversationType_GROUP)]];
         //聚合会话类型
         [self setCollectionConversationType:@[@(ConversationType_SYSTEM)]];
     }
@@ -35,34 +64,15 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-//    [[RCIM sharedRCIM] searchConversation]
-    /*!
-     根据关键字搜索会话
-     
-     @param conversationTypeList 需要搜索的会话类型列表
-     @param objectNameList       需要搜索的消息类型名列表(即每个消息类方法getObjectName的返回值)
-     @param keyword              关键字
-     
-     @return 匹配的会话搜索结果列表
-     
-     @discussion 目前，SDK内置的文本消息、文件消息、图文消息支持搜索。
-     自定义的消息必须要实现RCMessageContent的getSearchableWords接口才能进行搜索。
-     */
-    NSArray<RCSearchConversationResult *> *result = [[RCIMClient sharedRCIMClient] searchConversations:@[@(ConversationType_PRIVATE),@(ConversationType_GROUP)]
-                                           messageType:@[RCTextMessage.getObjectName]
-                                               keyword:@""];
-    
-//    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:WLColoerRGB(255.f)] forBarMetrics:UIBarMetricsDefault];
-//    [self.navigationController.navigationBar setShadowImage:[UIImage imageWithColor:WLColoerRGB(255.f)]];
 }
 
-//- (void)initSubviews {
-//    [super initSubviews];
-//    
+- (void)initSubviews {
+    [super initSubviews];
+//
 //    // 隐藏分割线
 ////    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 ////    self.tableView.backgroundColor = WLColoerRGB(248.f);
-//}
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -71,24 +81,52 @@
     self.navigationItem.leftBarButtonItem = leftBtnItem;
     // Do any additional setup after loading the view.
     
-    //重写显示相关的接口，必须先调用super，否则会屏蔽SDK默认的处理
-//    [super viewDidLoad];
+    // QMUISearchController 有两种使用方式，一种是独立使用，一种是集成到 QMUICommonTableViewController 里使用。为了展示它的使用方式，这里使用第一种，不理会 QMUICommonTableViewController 内部自带的 QMUISearchController
+//    self.mySearchController = [[QMUISearchController alloc] initWithContentsViewController:self];
+//    self.mySearchController.searchResultsDelegate = self;
+//    self.mySearchController.launchView = [[QDRecentSearchView alloc] init];// launchView 会自动布局，无需处理 frame
+//    self.mySearchController.searchBar.qmui_usedAsTableHeaderView = YES;// 以 tableHeaderView 的方式使用 searchBar 的话，将其置为 YES，以辅助兼容一些系统 bug
+//    self.conversationListTableView.tableHeaderView = self.mySearchController.searchBar;
     
-    //设置需要显示哪些类型的会话
-//    [self setDisplayConversationTypes:@[@(ConversationType_PRIVATE),
-//                                        @(ConversationType_DISCUSSION),
-//                                        @(ConversationType_CHATROOM),
-//                                        @(ConversationType_GROUP),
-//                                        @(ConversationType_APPSERVICE),
-//                                        @(ConversationType_SYSTEM)]];
-//    //设置需要将哪些类型的会话在会话列表中聚合显示
-//    [self setCollectionConversationType:@[@(ConversationType_DISCUSSION),
-//                                          @(ConversationType_GROUP)]];
+//    QMUISearchBar *searchBar = [[QMUISearchBar alloc] qmui_initWithSize:CGSizeMake(DEVICE_WIDTH, 44.f)];
+//    searchBar.delegate = self;
+//    self.searchBar = searchBar;
+    //    searchBar.showsCancelButton = YES;
+    self.searchBar.delegate = self;
+    [self.headerView addSubview:self.searchBar];
+    self.conversationListTableView.tableHeaderView = self.headerView;
+    self.conversationListTableView.sectionHeaderHeight = 10.f;
+    self.conversationListTableView.sectionFooterHeight = 0.f;
+    self.conversationListTableView.backgroundColor = WLColoerRGB(248.f);
+    /// 隐藏分割线
+    self.conversationListTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    //设置需要显示哪些类型的会话，会话类型有很多，选择你需要的就好啦
-//    [self setDisplayConversationTypes:@[@(ConversationType_PRIVATE), @(ConversationType_DISCUSSION), @(ConversationType_CHATROOM), @(ConversationType_GROUP), @(ConversationType_APPSERVICE), @(ConversationType_SYSTEM)]]; //设置需要将哪些类型的会话在会话列表中聚合显示
-//    [self setCollectionConversationType:@[@(ConversationType_DISCUSSION), @(ConversationType_GROUP)]];
+    // 设置在NavigatorBar中显示连接中的提示
+    self.showConnectingStatusOnNavigatorBar = YES;
     
+}
+
+#pragma mark - UISearchBarDelegate
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    RCDSearchViewController *searchViewController = [[RCDSearchViewController alloc] init];
+    self.searchNavigationController = [[QMUINavigationController alloc] initWithRootViewController:searchViewController];
+    searchViewController.delegate = self;
+    [self.navigationController.view addSubview:self.searchNavigationController.view];
+}
+
+- (void)didSelectChatModel:(RCSearchConversationResult *)result {
+    ChatViewController *vc = [[ChatViewController alloc] initWithConversationType:result.conversation.conversationType targetId:result.conversation.targetId];
+    vc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:vc animated:YES];
+    [self onSearchCancelClick];
+}
+
+- (void)onSearchCancelClick {
+    [self.searchNavigationController.view removeFromSuperview];
+    [self.searchNavigationController removeFromParentViewController];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [self refreshConversationTableViewIfNeeded];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -125,12 +163,24 @@
 - (void)willDisplayConversationTableCell:(RCConversationBaseCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     RCConversationCell *rcCell = (RCConversationCell *)cell;
-    RCConversationModel *model = self.conversationListDataSource[indexPath.row];
-    rcCell.conversationTitle.textColor = [UIColor wl_Hex333333];
-    rcCell.messageContentLabel.font = WLFONT(12);
-    rcCell.messageContentLabel.textColor = [UIColor wl_Hex999999];
-    rcCell.messageCreatedTimeLabel.font = WLFONT(10);
-    rcCell.messageCreatedTimeLabel.textColor = [UIColor wl_HexCCCCCC];
+//    RCConversationModel *model = self.conversationListDataSource[indexPath.row];
+    rcCell.conversationTitle.font = WLFONT(15);
+    rcCell.conversationTitle.textColor = WLColoerRGB(51.f);
+    rcCell.messageContentLabel.font = WLFONT(14);
+    rcCell.messageContentLabel.textColor = WLColoerRGB(102.f);
+    
+    rcCell.messageCreatedTimeLabel.font = WLFONT(12);
+    rcCell.messageCreatedTimeLabel.textColor = WLColoerRGB(153.f);
+    
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectZero];
+    lineView.backgroundColor = WLColoerRGB(242.f);
+//    lineView.frame = CGRectMake(0.f, rcCell.contentView.size.height - .6f, DEVICE_WIDTH, .6f);
+    [rcCell.contentView addSubview:lineView];
+    [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, .6f));
+        make.bottom.mas_equalTo(rcCell.contentView);
+        make.centerX.mas_equalTo(rcCell.contentView);
+    }];
 }
 
 #pragma mark - 自定义会话列表Cell
@@ -214,7 +264,7 @@
 
 - (void)leftBtnItemClicked{
     // 有使用配置表的时候，最简单的代码就只是控制显隐即可，没使用配置表的话，还需要设置其他的属性才能使红点样式正确，具体请看 UIBarButton+QMUIBadge.h 注释
-    self.navigationItem.leftBarButtonItem.qmui_shouldShowUpdatesIndicator = YES;
+    self.navigationItem.leftBarButtonItem.qmui_shouldShowUpdatesIndicator = NO;
     
     MessageNotifiListViewController *messageNotifiVc = [[MessageNotifiListViewController alloc] initWithStyle:UITableViewStylePlain];
     [self.navigationController pushViewController:messageNotifiVc animated:YES];

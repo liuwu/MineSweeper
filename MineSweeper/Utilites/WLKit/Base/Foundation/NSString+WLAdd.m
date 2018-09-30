@@ -457,6 +457,34 @@ WLSYNTH_DUMMY_CLASS(NSString_WLAdd)
 /// @name 日期格式化
 ///=============================================================================
 
++ (NSString *)dateTimeStampFormatTodateStr:(long)timeStamp {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterFullStyle];// 修改下面提到的北京时间的日期格式
+    [formatter setTimeStyle:NSDateFormatterFullStyle];// 修改下面提到的北京时间的时间格式
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];// 此行代码与上面两行作用一样，故上
+    
+    // 北京时间戳1500000000（可以把北京时间戳转成北京时间、格林尼治时间）
+    NSDate *date1 = [NSDate dateWithTimeIntervalSince1970:timeStamp];
+    NSLog(@"%@",date1);// 这个时间是格林尼治时间
+    NSString *dat = [formatter stringFromDate:date1];
+    NSLog(@"%@", dat);// 这个时间是北京时间
+    return dat;
+}
+
++ (NSDate *)dateTimeStampFormatTodate:(long)timeStamp {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterFullStyle];// 修改下面提到的北京时间的日期格式
+    [formatter setTimeStyle:NSDateFormatterFullStyle];// 修改下面提到的北京时间的时间格式
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];// 此行代码与上面两行作用一样，故上
+    
+    // 北京时间戳1500000000（可以把北京时间戳转成北京时间、格林尼治时间）
+    NSDate *date1 = [NSDate dateWithTimeIntervalSince1970:timeStamp];
+    NSLog(@"%@",date1);// 这个时间是格林尼治时间
+    NSString *dat = [formatter stringFromDate:date1];
+    NSLog(@"%@", dat);// 这个时间是北京时间
+    return date1;
+}
+
 /**
  *  @author liuwu     , 16-05-10
  *

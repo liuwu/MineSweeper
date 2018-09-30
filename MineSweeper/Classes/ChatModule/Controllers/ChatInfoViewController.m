@@ -8,6 +8,8 @@
 
 #import "ChatInfoViewController.h"
 #import "UserInfoViewController.h"
+#import "ChatHistoryMessageSearchViewController.h"
+
 
 #import "RETableViewManager.h"
 #import "RETableViewItem.h"
@@ -152,17 +154,55 @@
     [self.manager addSection:section2];
     
     RETableViewItem *chatHistoryItem = [RETableViewItem itemWithTitle:@"查找聊天记录" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        
+        [weakSelf searchChatHistory];
     }];
     chatHistoryItem.selectionStyle = UITableViewCellSelectionStyleNone;
     [section2 addItem:chatHistoryItem];
     
     RETableViewItem *clearChatHistoryItem = [RETableViewItem itemWithTitle:@"清除聊天记录" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        
+        [weakSelf clearChatMessageAlert];
     }];
     clearChatHistoryItem.selectionStyle = UITableViewCellSelectionStyleNone;
     [section2 addItem:clearChatHistoryItem];
 }
+
+// 搜索聊天历史
+- (void)searchChatHistory {
+    ChatHistoryMessageSearchViewController *vc = [[ChatHistoryMessageSearchViewController alloc] initWithStyle:UITableViewStylePlain ChatHistoryType:ChatHistoryTypePrivate];
+    vc.targetId = _uid;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+// 清除聊天记录
+- (void)clearChatMessageAlert {
+    WEAKSELF
+    QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:NULL];
+    QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"确定" style:QMUIAlertActionStyleDestructive handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+        [weakSelf clearChatMessage];
+    }];
+    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:@"确定清除聊天记录？" message:nil preferredStyle:QMUIAlertControllerStyleAlert];
+    [alertController addAction:action1];
+    [alertController addAction:action2];
+    [alertController showWithAnimated:YES];
+}
+
+// 清除聊天记录
+- (void)clearChatMessage {
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    BOOL success = [[RCIMClient sharedRCIMClient] clearMessages:ConversationType_PRIVATE targetId:_uid];
+    if (success) {
+        [WLHUDView showSuccessHUD:@"清除完成"];
+    } else {
+        [WLHUDView hiddenHud];
+    }
+//    [[RCIMClient sharedRCIMClient] deleteMessages:ConversationType_PRIVATE targetId:_uid success:^{
+//        [WLHUDView showSuccessHUD:@"清除完成"];
+//    } error:^(RCErrorCode status) {
+//        [WLHUDView hiddenHud];
+//    }];
+}
+
+
 - (void)changeChatReject:(REBoolItem *)item {
     if (!item.value) {
         // 移除黑名单
@@ -257,6 +297,8 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
 
 #pragma mark collectionView代理方法
 //返回section个数

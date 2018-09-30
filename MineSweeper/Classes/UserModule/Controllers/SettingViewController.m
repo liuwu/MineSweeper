@@ -82,7 +82,7 @@
     [section addItem:currentVersionItem];
     
     RETableViewItem *clearCacheItem = [RETableViewItem itemWithTitle:@"清理缓存" accessoryType:UITableViewCellAccessoryNone selectionHandler:^(RETableViewItem *item) {
-        
+        [weakSelf clearCacheAlert];
     }];
     clearCacheItem.titleLabelTextColor = UIColorMake(254,72,30);
     clearCacheItem.titleLabelTextFont = UIFontMake(15.f);
@@ -90,7 +90,7 @@
     [section addItem:clearCacheItem];
     
     RETableViewItem *clearChatHisotryItem = [RETableViewItem itemWithTitle:@"清理所有聊天记录" accessoryType:UITableViewCellAccessoryNone selectionHandler:^(RETableViewItem *item) {
-        
+        [weakSelf deleteAllChatListAlert];
     }];
     clearChatHisotryItem.titleLabelTextColor = UIColorMake(254,72,30);
     clearChatHisotryItem.titleLabelTextFont = UIFontMake(15.f);
@@ -115,6 +115,65 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)deleteAllChatListAlert {
+    WEAKSELF
+    QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:NULL];
+    QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"确定" style:QMUIAlertActionStyleDestructive handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+        [weakSelf deleteAllChatList];
+    }];
+    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:@"是否清理所有聊天记录？" message:nil preferredStyle:QMUIAlertControllerStyleAlert];
+    [alertController addAction:action1];
+    [alertController addAction:action2];
+    [alertController showWithAnimated:YES];
+}
+
+- (void)deleteAllChatList {
+    
+}
+
+- (void)clearCacheAlert {
+    WEAKSELF
+    QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:NULL];
+    QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"确定" style:QMUIAlertActionStyleDestructive handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+        [weakSelf clearCache];
+    }];
+    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:@"是否清理缓存？" message:nil preferredStyle:QMUIAlertControllerStyleAlert];
+    [alertController addAction:action1];
+    [alertController addAction:action2];
+    [alertController showWithAnimated:YES];
+}
+
+//清理缓存
+- (void)clearCache {
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        //这里清除 Library/Caches 里的所有文件，融云的缓存文件及图片存放在 Library/Caches/RongCloud 下
+        NSString *cachPath =
+        [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        NSArray *files = [[NSFileManager defaultManager] subpathsAtPath:cachPath];
+        
+        for (NSString *p in files) {
+            NSError *error;
+            NSString *path = [cachPath stringByAppendingPathComponent:p];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+                [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+            }
+        }
+        [self performSelectorOnMainThread:@selector(clearCacheSuccess) withObject:nil waitUntilDone:YES];
+    });
+}
+
+- (void)clearCacheSuccess {
+     [WLHUDView showSuccessHUD:@"清理完成"];
+//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
+//                                                        message:@"缓存清理成功！"
+//                                                       delegate:nil
+//                                              cancelButtonTitle:@"确定"
+//                                              otherButtonTitles:nil, nil];
+//    [alertView show];
 }
 
 #pragma mark - Private

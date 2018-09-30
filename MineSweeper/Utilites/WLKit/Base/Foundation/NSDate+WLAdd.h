@@ -60,7 +60,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)wl_dayFromWeekday;
 + (NSString *)wl_dayFromWeekday:(NSDate *)date;
 
-
 /**
  *  @author liuwu     , 16-05-14
  *

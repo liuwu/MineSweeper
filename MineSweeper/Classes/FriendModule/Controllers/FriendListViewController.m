@@ -727,7 +727,7 @@
 - (void)leftBtnItemClicked {
     [[self.view wl_findFirstResponder] resignFirstResponder];
     // 有使用配置表的时候，最简单的代码就只是控制显隐即可，没使用配置表的话，还需要设置其他的属性才能使红点样式正确，具体请看 UIBarButton+QMUIBadge.h 注释
-    self.navigationItem.leftBarButtonItem.qmui_shouldShowUpdatesIndicator = YES;
+    self.navigationItem.leftBarButtonItem.qmui_shouldShowUpdatesIndicator = NO;
     
     MessageNotifiListViewController *messageNotifiVc = [[MessageNotifiListViewController alloc] initWithStyle:UITableViewStylePlain];
     [self.navigationController pushViewController:messageNotifiVc animated:YES];

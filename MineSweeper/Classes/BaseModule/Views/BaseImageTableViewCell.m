@@ -8,6 +8,9 @@
 
 #import "BaseImageTableViewCell.h"
 
+#import "IFriendModel.h"
+#import "WLRongCloudDataSource.h"
+
 @implementation BaseImageTableViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -89,6 +92,39 @@
                          }];
 }
 
+- (void)setConversationResult:(RCSearchConversationResult *)conversationResult {
+    _conversationResult = conversationResult;
+    
+    RCConversation *conData = _conversationResult.conversation;
+    RCMessageContent *lastestMessage = conData.lastestMessage;
+    if (conData.conversationType == ConversationType_PRIVATE) {
+        if ([lastestMessage isKindOfClass:[RCTextMessage class]]) {
+            RCTextMessage *txtMsg = (RCTextMessage *)lastestMessage;
+            self.detailTextLabel.text = txtMsg.content;//
+        }
+        
+        self.textLabel.text = @" ";//message.senderUserInfo.name;
+        //        long time = conData.messageDirection == MessageDirection_RECEIVE  ? conData.receivedTime : conData.sentTime;
+        WEAKSELF
+        [[WLRongCloudDataSource shareInstance] getLocalUserInfoWithUserId:conData.targetId completion:^(IFriendModel *friendModel) {
+            weakSelf.textLabel.text = friendModel.nickname;//message.senderUserInfo.name;
+            [weakSelf.imageView setImageWithURL:[NSURL URLWithString:friendModel.avatar]
+                                    placeholder:[UIImage imageNamed:@"game_friend_icon"]
+                                        options:YYWebImageOptionProgressive | YYWebImageOptionProgressiveBlur | YYWebImageOptionAvoidSetImage
+                                     completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                                         if (image) {
+                                             weakSelf.imageView.image = [image qmui_imageWithClippedCornerRadius:36.f/2];
+                                         }else {
+                                             weakSelf.imageView.image = [UIImage imageNamed:@"game_friend_icon"];
+                                         }
+                                     }];
+        }];
+    }
+    
+    
+    //    self.textLabel.text = conData.conversationTitle;
+
+}
 
 
 - (void)layoutSubviews {

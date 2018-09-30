@@ -7,7 +7,7 @@
 //
 
 //#import "BaseViewController.h"
-#import "SLCommonTableViewController.h"
+#import "SLCommonGroupListViewController.h"
 #import "IGroupDetailInfo.h"
 
 typedef NS_ENUM(NSInteger, FriendListType)
@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, FriendListType)
     FriendListTypeForGroupChatAddFriend   //群聊添加好友
 };
 
-@interface FriendListViewController : SLCommonTableViewController
+@interface FriendListViewController : SLCommonGroupListViewController
 
 @property (nonatomic, assign) FriendListType frindListType;
 

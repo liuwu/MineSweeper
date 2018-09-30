@@ -49,35 +49,47 @@
     return @"聊天";
 }
 
-/*!
- 扩展功能板的点击回调
- 
- @param pluginBoardView 输入扩展功能板View
- @param tag             输入扩展功能(Item)的唯一标示
- */
-//- (void)pluginBoardView:(RCPluginBoardView *)pluginBoardView clickedItemWithTag:(NSInteger)tag {
-//    DLog(@"pluginBoardView ------");
-//}
-
-//- (void)initSubviews {
-//    [super initSubviews];
-//    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"chats_more_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
-//    self.navigationItem.rightBarButtonItem = rightBtnItem;
-
-    // 隐藏分割线
-//    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//    self.tableView.backgroundColor = WLColoerRGB(248.f);
-//}
+- (void)initSubviews {
+    [super initSubviews];
+    
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"chats_more_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
-    self.navigationItem.rightBarButtonItem = rightBtnItem;
+    if (self.conversationType != ConversationType_CUSTOMERSERVICE) {
+        UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"chats_more_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
+        self.navigationItem.rightBarButtonItem = rightBtnItem;
+    }
     
     [self loadData];
-    
     [kNSNotification addObserver:self selector:@selector(loadData) name:@"kChatUserInfoChanged" object:nil];
+}
+
+#pragma mark - QMUINavigationControllerDelegate
+// 设置是否允许自定义
+- (BOOL)shouldSetStatusBarStyleLight {
+    return YES;
+}
+
+// 设置导航栏的背景图
+- (UIImage *)navigationBarBackgroundImage {
+    return [UIImage qmui_imageWithColor:[UIColor whiteColor]];
+}
+
+// 设置导航栏底部的分隔线图片
+- (UIImage *)navigationBarShadowImage {
+    return [UIImage qmui_imageWithColor:[UIColor whiteColor]];
+}
+
+// nav中的baritem的颜色
+- (UIColor *)navigationBarTintColor {
+    return [UIColor whiteColor];//WLRGB(254.f, 72.f, 30.f);
+}
+
+// nav标题颜色
+- (UIColor *)titleViewTintColor {
+    return [UIColor whiteColor];
 }
 
 
@@ -210,13 +222,17 @@
             [self sendGetRedPacketImMessage:message];
         } Failed:^(NSError *error) {
             // 红包已被抢完
-            [self showPacketGrabEnd];
             if (error.localizedDescription.length > 0) {
                 if ([error.localizedDescription isEqualToString:@"红包已抢"]) {
-                    
-                } else {
-                    [WLHUDView showErrorHUD:error.localizedDescription];
+                    [self showPacketGrabEnd:@"红包已经被抢完"];
+                    return ;
                 }
+                if ([error.localizedDescription isEqualToString:@"红包过期"]) {
+                    [self showPacketGrabEnd:@"红包已过期"];
+                    return ;
+                }
+                
+                [WLHUDView showErrorHUD:error.localizedDescription];
             }
         }];
     }
@@ -458,7 +474,7 @@
 }
 
 // 打开红包被抢完
-- (void)showPacketGrabEnd {
+- (void)showPacketGrabEnd:(NSString *)title {
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 250, 300)];
     
     UIImageView *bgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"openRedP_redP_img"]];
@@ -473,7 +489,7 @@
     QMUILabel *nameLabel = [[QMUILabel alloc] init];
     nameLabel.font = UIFontMake(14);
     nameLabel.textColor = [UIColor whiteColor];
-    nameLabel.text = @"红包已经被抢完";
+    nameLabel.text = title.length > 0 ? title : @"红包已经被抢完";
     [contentView addSubview:nameLabel];
     //    self.idLabel = nameLabel;
     [nameLabel sizeToFit];

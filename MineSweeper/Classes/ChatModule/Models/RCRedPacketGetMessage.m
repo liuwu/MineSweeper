@@ -24,7 +24,9 @@
 -(NSData *)encode {
     
     NSMutableDictionary *dataDict=[NSMutableDictionary dictionary];
-    [dataDict setValue:self.pack_id forKey:@"id"];
+    [dataDict setValue:self.pack_id forKey:@"redpack_id"];
+    [dataDict setValue:self.type forKey:@"type"];
+    [dataDict setValue:self.tip_content forKey:@"tip_content"];
     [dataDict setValue:self.title forKey:@"title"];
     [dataDict setValue:self.total_money forKey:@"total_money"];
     [dataDict setValue:self.num forKey:@"num"];
@@ -50,7 +52,9 @@
                                                          options:kNilOptions
                                                            error:&error];
     if (json) {
-        self.pack_id = json[@"id"];
+        self.pack_id = json[@"redpack_id"];
+        self.type = json[@"type"];
+        self.tip_content = json[@"tip_content"];
         self.title = json[@"title"];
         self.total_money = json[@"total_money"];
         self.num = json[@"num"];

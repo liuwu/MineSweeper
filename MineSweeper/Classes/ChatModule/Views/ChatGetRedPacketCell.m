@@ -8,7 +8,7 @@
 
 #import "ChatGetRedPacketCell.h"
 
-#import "RCRedPacketMessage.h"
+#import "RCRedPacketGetMessage.h"
 
 @interface ChatGetRedPacketCell()
 
@@ -63,9 +63,19 @@
 - (void)setDataModel:(RCMessageModel *)model
 {
     [super setDataModel:model];
-    RCRedPacketMessage *redPacketModel = (RCRedPacketMessage *)model.content;
+    RCRedPacketGetMessage *redPacketModel = (RCRedPacketGetMessage *)model.content;
     //    self.cardList = [NSArray modelArrayWithClass:[CardStatuModel class] json:cardListM.cardlist];
-    _titleLabel.text = [NSString stringWithFormat:@"%@领取了你的", redPacketModel.drawName];
+    NSString *infoStr = @"";
+    if (redPacketModel.tip_content.length > 0) {
+        infoStr = redPacketModel.tip_content;
+    } else {
+        if (redPacketModel.type.integerValue == 1) {
+            infoStr = [NSString stringWithFormat:@"%@领取了你的", redPacketModel.drawName];
+        } else {
+            infoStr = [NSString stringWithFormat:@"你领取了%@的", redPacketModel.drawName];
+        }
+    }
+    _titleLabel.text = infoStr;
     _redIconImageView.image = [UIImage imageNamed:@"chats_redPsmall_icon"];
     
     [_titleLabel sizeToFit];

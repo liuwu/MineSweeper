@@ -236,6 +236,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// @name 日期格式化
 ///=============================================================================
 
++ (NSString *)dateTimeStampFormatTodateStr:(long)timeStamp;
+
++ (NSDate *)dateTimeStampFormatTodate:(long)timeStamp;
+
 /**
  *  @author liuwu     , 16-05-10
  *

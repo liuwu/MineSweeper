@@ -160,16 +160,14 @@ WLSYNTH_DUMMY_CLASS(NSDate_WLAdd)
 - (NSString *)wl_timeAgoSimple {
     NSDate *now = [NSDate date];
     double delta = [now timeIntervalSinceDate:self];
-    CGFloat deltaMinutes = delta / 60.0f;
+//    CGFloat deltaMinutes = delta / 60.0f;
     
     // 3.获得当前时间和发送时间 的 间隔  (now - send)
     NSString *timeStr = @"";
-    if (delta < 60) {// 一分钟内
-        timeStr = @"刚刚";
-    } else if (deltaMinutes < 60) { // 一个小时内
-        timeStr = [NSString stringWithFormat:@"%.f分钟前", deltaMinutes];
-    } else if (deltaMinutes < 60 * 24) { // 一天内
-        timeStr = [NSString stringWithFormat:@"%.f小时前", deltaMinutes/60.f];
+    if ([self isToday]) {
+        timeStr = [self wl_stringWithFormat:@"HH:mm"];
+    }else if ([self isTomorrow]) {
+        timeStr = @"昨天";
     } else { // 几天前
         timeStr = [self wl_stringWithFormat:@"MM-dd"];
     }

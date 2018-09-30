@@ -382,6 +382,9 @@
 		109AF9B12151FE9B00D50F3C /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 109AF9B02151FE9B00D50F3C /* ChatViewController.m */; };
 		109AF9B4215207E100D50F3C /* RedPacketViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 109AF9B3215207E100D50F3C /* RedPacketViewController.m */; };
 		109AF9B7215207FE00D50F3C /* RedPacketHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 109AF9B6215207FE00D50F3C /* RedPacketHistoryViewController.m */; };
+		10A49AD2215F42B1008A2F86 /* ChatHistoryMessageSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10A49AD1215F42B1008A2F86 /* ChatHistoryMessageSearchViewController.m */; };
+		10A49AD6215F82D6008A2F86 /* ChatHistoryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 10A49AD5215F82D6008A2F86 /* ChatHistoryTableViewCell.m */; };
+		10A49AD9215F9903008A2F86 /* RCDSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10A49AD8215F9903008A2F86 /* RCDSearchViewController.m */; };
 		10AE957E215F08A5008C19B7 /* ChatGroupMoreUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10AE957D215F08A5008C19B7 /* ChatGroupMoreUserViewController.m */; };
 		10C575822151D93400FBFE1E /* BaseModelClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 10C575812151D93400FBFE1E /* BaseModelClient.m */; };
 		10C575852151D99B00FBFE1E /* UserModelClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 10C575842151D99B00FBFE1E /* UserModelClient.m */; };
@@ -1185,6 +1188,12 @@
 		109AF9B3215207E100D50F3C /* RedPacketViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RedPacketViewController.m; sourceTree = "<group>"; };
 		109AF9B5215207FE00D50F3C /* RedPacketHistoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RedPacketHistoryViewController.h; sourceTree = "<group>"; };
 		109AF9B6215207FE00D50F3C /* RedPacketHistoryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RedPacketHistoryViewController.m; sourceTree = "<group>"; };
+		10A49AD0215F42B1008A2F86 /* ChatHistoryMessageSearchViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatHistoryMessageSearchViewController.h; sourceTree = "<group>"; };
+		10A49AD1215F42B1008A2F86 /* ChatHistoryMessageSearchViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatHistoryMessageSearchViewController.m; sourceTree = "<group>"; };
+		10A49AD4215F82D6008A2F86 /* ChatHistoryTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatHistoryTableViewCell.h; sourceTree = "<group>"; };
+		10A49AD5215F82D6008A2F86 /* ChatHistoryTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatHistoryTableViewCell.m; sourceTree = "<group>"; };
+		10A49AD7215F9902008A2F86 /* RCDSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCDSearchViewController.h; sourceTree = "<group>"; };
+		10A49AD8215F9903008A2F86 /* RCDSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCDSearchViewController.m; sourceTree = "<group>"; };
 		10AE957C215F08A5008C19B7 /* ChatGroupMoreUserViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatGroupMoreUserViewController.h; sourceTree = "<group>"; };
 		10AE957D215F08A5008C19B7 /* ChatGroupMoreUserViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatGroupMoreUserViewController.m; sourceTree = "<group>"; };
 		10C575802151D93400FBFE1E /* BaseModelClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseModelClient.h; sourceTree = "<group>"; };
@@ -2293,6 +2302,8 @@
 		103519602147A41300EDC7AD /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				10A49AD7215F9902008A2F86 /* RCDSearchViewController.h */,
+				10A49AD8215F9903008A2F86 /* RCDSearchViewController.m */,
 				104CBF3C215B2D92000D4D44 /* ActivityMapViewController.h */,
 				104CBF3D215B2D93000D4D44 /* ActivityMapViewController.m */,
 				10F2D752215A96BA00937D39 /* WLChatLocationViewController.h */,
@@ -2317,6 +2328,8 @@
 				102146C02152A44100BB7FEB /* UserInfoViewController.m */,
 				102146C22152A5CF00BB7FEB /* ChatInfoViewController.h */,
 				102146C32152A5CF00BB7FEB /* ChatInfoViewController.m */,
+				10A49AD0215F42B1008A2F86 /* ChatHistoryMessageSearchViewController.h */,
+				10A49AD1215F42B1008A2F86 /* ChatHistoryMessageSearchViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -2532,6 +2545,8 @@
 				106D4AEC215C77B60047E8BA /* BaseImageTableViewCell.m */,
 				10F820B2215E3B5200B555E3 /* BaseImageSubTitleTableViewCell.h */,
 				10F820B3215E3B5200B555E3 /* BaseImageSubTitleTableViewCell.m */,
+				10A49AD4215F82D6008A2F86 /* ChatHistoryTableViewCell.h */,
+				10A49AD5215F82D6008A2F86 /* ChatHistoryTableViewCell.m */,
 				101134342148CDC40082F74B /* UITextField */,
 				10351A962147CB5000EDC7AD /* WLActionSheet.h */,
 				10351A972147CB5000EDC7AD /* WLActionSheet.m */,
@@ -3494,6 +3509,7 @@
 				103518D02147A34000EDC7AD /* RETableViewCreditCardCell.m in Sources */,
 				103519062147A34000EDC7AD /* RSADataSigner.m in Sources */,
 				1018BCE321565EA4004BC57B /* IGameGroupModel.m in Sources */,
+				10A49AD6215F82D6008A2F86 /* ChatHistoryTableViewCell.m in Sources */,
 				1024156B21591E26008A365A /* YJLocationPicker.m in Sources */,
 				103519222147A34000EDC7AD /* WLAsset.m in Sources */,
 				103518E72147A34000EDC7AD /* REPickerItem.m in Sources */,
@@ -3520,6 +3536,7 @@
 				103518CB2147A34000EDC7AD /* RETableViewNumberCell.m in Sources */,
 				1069EE74214A9D3A0006FFCA /* HomeTableViewCell.m in Sources */,
 				10351A052147B73200EDC7AD /* NSTimer+WLAdd.m in Sources */,
+				10A49AD2215F42B1008A2F86 /* ChatHistoryMessageSearchViewController.m in Sources */,
 				103519522147A34000EDC7AD /* WLBatchRequestManager.m in Sources */,
 				1035192D2147A34000EDC7AD /* DRNRealTimeBlurView.m in Sources */,
 				103518ED2147A34000EDC7AD /* RELengthValidator.m in Sources */,
@@ -3548,6 +3565,7 @@
 				103518E42147A34000EDC7AD /* REInlinePickerItem.m in Sources */,
 				1035194C2147A34000EDC7AD /* WLNetwokingConfig.m in Sources */,
 				1024155B2158F4D4008A365A /* IRedPacektMemberModel.m in Sources */,
+				10A49AD9215F9903008A2F86 /* RCDSearchViewController.m in Sources */,
 				10351ADD2147D39D00EDC7AD /* FriendListViewController.m in Sources */,
 				103519EA2147B73200EDC7AD /* UIControl+WLAdd.m in Sources */,
 				1064DE04214CA436002A9DD6 /* NewFriendListViewController.m in Sources */,

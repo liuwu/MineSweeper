@@ -25,4 +25,6 @@
 
 @property (nonatomic, strong) IRedPacektMemberModel *redPacketMemberModel;
 
+@property (nonatomic, strong) RCSearchConversationResult *conversationResult;
+
 @end

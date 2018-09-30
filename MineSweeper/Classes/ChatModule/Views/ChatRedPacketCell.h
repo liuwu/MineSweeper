@@ -15,6 +15,6 @@
 
 @interface ChatRedPacketCell : RCMessageCell 
 
-+ (CGSize)cellHigetWithModel:(RCMessageModel *)model;
+//+ (CGSize)cellHigetWithModel:(RCMessageModel *)model;
 
 @end

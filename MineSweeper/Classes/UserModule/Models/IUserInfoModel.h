@@ -37,4 +37,11 @@
 // 免密下注 1：免密下注  0：不是
 @property (nonatomic, copy) NSString * is_secret_free;
 
+// 客服ID
+@property (nonatomic, copy) NSString *customer_id;
+// 客服名称
+@property (nonatomic, copy) NSString *customer_name;
+// 客服图片
+@property (nonatomic, copy) NSString *customer_img;
+
 @end

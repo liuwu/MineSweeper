@@ -169,6 +169,7 @@
     pagerView.itemSize = CGSizeMake(ScreenWidth - 60.f, kBannerHeight - 36.f);
     pagerView.transformer = [[FSPagerViewTransformer alloc] initWithType:FSPagerViewTransformerTypeLinear];
     [pagerView registerClass:FSPagerViewCell.class forCellWithReuseIdentifier:@"fspagercell"];
+    pagerView.backgroundColor = WLColoerRGB(248.f);
     [headerView addSubview:pagerView];
     self.pagerView = pagerView;
    
@@ -182,6 +183,7 @@
     [pageControl setFillColor:UIColorMake(254,72,30) forState:UIControlStateSelected];
 //    _pageControl.currentPageIndicatorTintColor = UIColorMake(254,72,30);
 //    _pageControl.pageIndicatorTintColor = WLColoerRGB(51.f)
+    pageControl.backgroundColor = WLColoerRGB(248.f);
     [headerView addSubview:pageControl];
     self.pageControl = pageControl;
 //    pagerView.register(FSPagerViewCell.self, forCellWithReuseIdentifier: "cell")
@@ -288,7 +290,7 @@
 
 - (void)leftBtnItemClicked{
     // 有使用配置表的时候，最简单的代码就只是控制显隐即可，没使用配置表的话，还需要设置其他的属性才能使红点样式正确，具体请看 UIBarButton+QMUIBadge.h 注释
-    self.navigationItem.leftBarButtonItem.qmui_shouldShowUpdatesIndicator = YES;
+    self.navigationItem.leftBarButtonItem.qmui_shouldShowUpdatesIndicator = NO;
     
     MessageNotifiListViewController *messageNotifiVc = [[MessageNotifiListViewController alloc] initWithStyle:UITableViewStylePlain];
     [self.navigationController pushViewController:messageNotifiVc animated:YES];

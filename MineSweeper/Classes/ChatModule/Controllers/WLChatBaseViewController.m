@@ -62,6 +62,21 @@ static NSString *paylistCellid = @"paylistCellid";
     
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor]] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setShadowImage:[UIImage imageWithColor:[UIColor whiteColor]]];
+    // bar背景颜色
+    self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
+    // 返回按钮颜色
+    self.navigationController.navigationBar.tintColor =  WLColoerRGB(51.f);
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+}
+
 - (id)initWithConversationType:(RCConversationType)conversationType targetId:(NSString *)targetId
 {
     self = [super initWithConversationType:conversationType targetId:targetId];
@@ -129,17 +144,17 @@ static NSString *paylistCellid = @"paylistCellid";
  其中，extraHeight是Cell根据界面上下文，需要额外显示的高度（比如时间、用户名的高度等）。
  一般而言，Cell的高度应该是内容显示的高度再加上extraHeight的高度。
  */
-+ (CGSize)sizeForMessageModel:(RCMessageModel *)model
-      withCollectionViewWidth:(CGFloat)collectionViewWidth
-         referenceExtraHeight:(CGFloat)extraHeight {
-//    RCMessageModel *model = self.conversationDataRepository[indexPath.row];
-    RCMessageContent *msgContent = model.content;
-    if ([msgContent isMemberOfClass:[RCRedPacketMessage class]]) {
-        // 红包cell
-        return [ChatRedPacketCell cellHigetWithModel:model];// CGSizeMake(200.f, 65.f);
-    }
-    return CGSizeZero;
-}
+//+ (CGSize)sizeForMessageModel:(RCMessageModel *)model
+//      withCollectionViewWidth:(CGFloat)collectionViewWidth
+//         referenceExtraHeight:(CGFloat)extraHeight {
+////    RCMessageModel *model = self.conversationDataRepository[indexPath.row];
+//    RCMessageContent *msgContent = model.content;
+//    if ([msgContent isMemberOfClass:[RCRedPacketMessage class]]) {
+//        // 红包cell
+//        return [ChatRedPacketCell cellHigetWithModel:model];// CGSizeMake(200.f, 65.f);
+//    }
+//    return CGSizeZero;
+//}
 
 /**
  *  重写方法实现自定义消息的显示的高度

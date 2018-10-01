@@ -59,6 +59,7 @@
 		101BC3A4216091C00048859F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 101BC3A3216091C00048859F /* README.md */; };
 		101BC3A72160C1A30048859F /* INoticeInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 101BC3A62160C1A30048859F /* INoticeInfoModel.m */; };
 		101BC3AB2160C8670048859F /* SGAdvertScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 101BC3A92160C8660048859F /* SGAdvertScrollView.m */; };
+		101BC3B12161D2770048859F /* RcRedPacketMessageExtraModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 101BC3B02161D2770048859F /* RcRedPacketMessageExtraModel.m */; };
 		102146B82152474700BB7FEB /* SendRedPacketViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 102146B72152474700BB7FEB /* SendRedPacketViewController.m */; };
 		102146BB215279AA00BB7FEB /* ChatGroupDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 102146BA215279AA00BB7FEB /* ChatGroupDetailViewController.m */; };
 		102146BE2152887D00BB7FEB /* UserItemCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 102146BD2152887D00BB7FEB /* UserItemCollectionViewCell.m */; };
@@ -508,6 +509,8 @@
 		101BC3A62160C1A30048859F /* INoticeInfoModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = INoticeInfoModel.m; sourceTree = "<group>"; };
 		101BC3A92160C8660048859F /* SGAdvertScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGAdvertScrollView.m; sourceTree = "<group>"; };
 		101BC3AA2160C8660048859F /* SGAdvertScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGAdvertScrollView.h; sourceTree = "<group>"; };
+		101BC3AF2161D2770048859F /* RcRedPacketMessageExtraModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RcRedPacketMessageExtraModel.h; sourceTree = "<group>"; };
+		101BC3B02161D2770048859F /* RcRedPacketMessageExtraModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RcRedPacketMessageExtraModel.m; sourceTree = "<group>"; };
 		102146B62152474700BB7FEB /* SendRedPacketViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SendRedPacketViewController.h; sourceTree = "<group>"; };
 		102146B72152474700BB7FEB /* SendRedPacketViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SendRedPacketViewController.m; sourceTree = "<group>"; };
 		102146B9215279AA00BB7FEB /* ChatGroupDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatGroupDetailViewController.h; sourceTree = "<group>"; };
@@ -2301,6 +2304,8 @@
 				10F2D74C215A4E3000937D39 /* RCRedPacketMessage.m */,
 				10F820AA215DCAB100B555E3 /* RCRedPacketGetMessage.h */,
 				10F820AB215DCAB100B555E3 /* RCRedPacketGetMessage.m */,
+				101BC3AF2161D2770048859F /* RcRedPacketMessageExtraModel.h */,
+				101BC3B02161D2770048859F /* RcRedPacketMessageExtraModel.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3616,6 +3621,7 @@
 				10886BAE214FC1A9003DC40A /* BaseTableViewCell.m in Sources */,
 				103519272147A34000EDC7AD /* CMPopTipView.m in Sources */,
 				103519592147A34000EDC7AD /* WLServiceInfo.m in Sources */,
+				101BC3B12161D2770048859F /* RcRedPacketMessageExtraModel.m in Sources */,
 				103518EE2147A34000EDC7AD /* REPresenceValidator.m in Sources */,
 				104CBF4A215BB225000D4D44 /* IGroupDetailInfo.m in Sources */,
 				1035191F2147A34000EDC7AD /* WLPhotoBottomView.m in Sources */,

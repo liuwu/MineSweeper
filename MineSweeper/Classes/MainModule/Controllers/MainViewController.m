@@ -89,6 +89,7 @@
     [self setupMainUI];
     
     [kNSNotification addObserver:self selector:@selector(userLogout) name:@"kUserLogout" object:nil];
+    [kNSNotification addObserver:self selector:@selector(upChatMessageBarItemBadge) name:kWL_ChatMsgNumChangedNotification object:nil];
 //    [kNSNotification addObserver:self selector:@selector(friendChat) name:@"kFriendChat" object:nil];
 }
 
@@ -105,6 +106,27 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)upChatMessageBarItemBadge {
+    WEAKSELF
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (configTool.loginUser) {
+            NSInteger messageCount = [[RCIMClient sharedRCIMClient] getUnreadCount:@[@(ConversationType_PRIVATE), @(ConversationType_GROUP)]];
+            if (messageCount == 0) {
+                [weakSelf.chatItem setBadgeValue:nil];
+                return;
+            }
+            if (messageCount > 100) {
+                [weakSelf.chatItem setBadgeValue:@"99+"];
+                return;
+            }
+            [weakSelf.chatItem setBadgeValue:[NSString stringWithFormat:@"%ld",messageCount]];
+        }else {
+            [weakSelf.chatItem setBadgeValue:nil];
+        }
+    });
+    
 }
 
 // 设置ui相关信息

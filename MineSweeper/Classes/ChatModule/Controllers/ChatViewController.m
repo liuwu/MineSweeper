@@ -19,6 +19,7 @@
 
 #import "RCRedPacketMessage.h"
 #import "RCRedPacketGetMessage.h"
+#import "RcRedPacketMessageExtraModel.h"
 
 #import "ImGroupModelClient.h"
 #import "IGroupDetailInfo.h"
@@ -65,6 +66,8 @@
     [self loadData];
     
     [kNSNotification addObserver:self selector:@selector(loadData) name:@"kChatUserInfoChanged" object:nil];
+    //添加聊天用户改变监听
+    [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
 }
 
 - (void)loadData {
@@ -162,48 +165,68 @@
 // 打开红包点击
 - (void)openRedPacketClicked:(RCMessageModel *)model {
     RCRedPacketMessage *message = (RCRedPacketMessage *) model.content;
-//    if (message.drawed.integerValue == 1) {
-//        DLog(@"红包 已领过");
-//        IRedPacketModel * redmodel = [IRedPacketModel new];
-//        redmodel.redpack_id = message.pack_id;
-//        redmodel.money = message.money;
-//        // 领到红包
-//        [self showOpenPacket:redmodel];
-//    } else {
         WEAKSELF
-        [ImModelClient imGrabRedpackWithParams:@{@"id" : @(message.pack_id.integerValue)} Success:^(id resultInfo) {
-            IRedPacketModel * redmodel = [IRedPacketModel modelWithDictionary:resultInfo];
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    [ImModelClient imGrabRedpackWithParams:@{@"id" : @(message.pack_id.integerValue)} Success:^(id resultInfo) {
+        [WLHUDView hiddenHud];
+        IRedPacketModel * redmodel = [IRedPacketModel modelWithDictionary:resultInfo];
             // 更新聊天消息数据
-            [message setDrawed:@"1"];
-            [message setDrawUid:configTool.loginUser.uid];
-            [message setDrawName:configTool.userInfoModel.nickname];
-            [message setPack_id:redmodel.redpack_id];
-            [message setMoney:redmodel.money];
-            //                [model setContent:message];
+//            [message setDrawed:@"1"];
+//            [message setDrawUid:configTool.loginUser.uid];
+//            [message setDrawName:configTool.userInfoModel.nickname];
+        [message setPack_id:redmodel.redpack_id];
+        [message setMoney:redmodel.money];
+        wl_dispatch_sync_on_main_queue(^{
+            // 设置发送红包的默认扩展属性
+            RcRedPacketMessageExtraModel *extraModel = [RcRedPacketMessageExtraModel new];
+            extraModel.status = @(1);
+            // 设置扩展字段 红包状态 0：默认  1：已领取 2：红包已抢完 3：红包过期
+            BOOL success = [[RCIMClient sharedRCIMClient] setMessageExtra:model.messageId value:[extraModel modelToJSONString]];
+            if (success) {
+                 [self.conversationMessageCollectionView reloadData];
+            }
             // 领到红包
             [weakSelf showOpenPacket:redmodel];
+        });
 //            [weakSelf sendGetRedPacketImMessage:message];
-        } Failed:^(NSError *error) {
+    } Failed:^(NSError *error) {
+            [WLHUDView hiddenHud];
             // 红包已被抢完
-            if (error.localizedDescription.length > 0) {
+        if (error.localizedDescription.length > 0) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // 设置发送红包的默认扩展属性
+                RcRedPacketMessageExtraModel *extraModel = [RcRedPacketMessageExtraModel new];
                 if ([error.localizedDescription isEqualToString:@"红包已抢完"]) {
+                    extraModel.status = @(2);
+                    [[RCIMClient sharedRCIMClient] setMessageExtra:model.messageId value:[extraModel modelToJSONString]];
+                    [weakSelf.conversationMessageCollectionView reloadData];
                     [weakSelf showPacketGrabEnd:@"红包已经被抢完"];
                     return ;
                 }
                 if ([error.localizedDescription isEqualToString:@"红包已抢"]) {
                     // 查看红包历史
+                    extraModel.status = @(1);
+                    [[RCIMClient sharedRCIMClient] setMessageExtra:model.messageId value:[extraModel modelToJSONString]];
+                    [weakSelf.conversationMessageCollectionView reloadData];
                     [self lookRedPacketHistory:message.pack_id];
                     return ;
                 }
                 if ([error.localizedDescription isEqualToString:@"红包过期"]) {
+                    extraModel.status = @(3);
+                    [[RCIMClient sharedRCIMClient] setMessageExtra:model.messageId value:[extraModel modelToJSONString]];
+                    [weakSelf.conversationMessageCollectionView reloadData];
                     [weakSelf showPacketGrabEnd:@"红包已过期"];
                     return ;
                 }
-                
                 [WLHUDView showErrorHUD:error.localizedDescription];
-            }
-        }];
+            });
+        }
+    }];
 //    }
+}
+
+- (void)updateDataChangeUI {
+    [self.conversationMessageCollectionView reloadData];
 }
 
 - (void)sendGetRedPacketImMessage:(RCRedPacketMessage *)redPacketMsg {
@@ -478,6 +501,7 @@
 // 打开红包页面
 - (void)showOpenPacket:(IRedPacketModel *)model {
     self.openPacketModel = model;
+    
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 250, 300)];
     
     UIImageView *bgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"openRedP_redP_img"]];

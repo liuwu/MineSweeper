@@ -173,12 +173,14 @@ single_implementation(AppDelegate);
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+    [self setIconBadgeNumber];
 }
 
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    [self setIconBadgeNumber];
 }
 
 
@@ -189,11 +191,26 @@ single_implementation(AppDelegate);
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    //添加聊天用户改变监听
+    [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
 }
 
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    [self setIconBadgeNumber];
+}
+
+// 设置所有未读数角标
+- (void)setIconBadgeNumber {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSInteger unreadMsgCount = 0;
+        if (configTool.loginUser) {
+            unreadMsgCount += [[RCIMClient sharedRCIMClient] getUnreadCount:@[@(ConversationType_PRIVATE),@(ConversationType_GROUP)]];
+        }
+        [UIApplication sharedApplication].applicationIconBadgeNumber = unreadMsgCount;
+    });
 }
 
 - (BOOL)application:(UIApplication *)application
@@ -335,10 +352,11 @@ single_implementation(AppDelegate);
 //                }
 //            }
 //        }
-//        if (left == 0) {
-//            //添加聊天用户改变监听
-//            [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
-//        }
+        if (left == 0) {
+            [self setIconBadgeNumber];
+            //添加聊天用户改变监听
+            [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
+        }
     });
     DLog(@"onRCIMReceiveMessage ---- %d",left);
 }
@@ -651,7 +669,8 @@ single_implementation(AppDelegate);
         RCUserInfo *_currentUserInfo = [[RCUserInfo alloc]initWithUserId:userId name:configTool.userInfoModel.nickname portrait:configTool.userInfoModel.avatar];
         [[RCIM sharedRCIM] setCurrentUserInfo:nil];
 //        self->_rcConnectCount = 0;
-        [[NSNotificationCenter defaultCenter] postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
+        //添加聊天用户改变监听
+        [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
         DLog(@"++++++++++++++++++++++++++++++++++++++++++++++链接融云服务器成功++++++++++++++++++++++++++++++++++++");
     } error:^(RCConnectErrorCode status) {
         dispatch_async(dispatch_get_main_queue(), ^{

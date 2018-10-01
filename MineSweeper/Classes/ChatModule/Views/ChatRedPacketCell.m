@@ -7,6 +7,7 @@
 //
 
 #import "ChatRedPacketCell.h"
+#import "RcRedPacketMessageExtraModel.h"
 
 @interface ChatRedPacketCell()
 
@@ -51,10 +52,10 @@
         self.statusLabel = statusLabel;
         
         UIView *topView = [[UIView alloc] init];
-        topView.backgroundColor = [UIColor whiteColor];
+//        topView.backgroundColor = [UIColor whiteColor];
         topView.alpha = .5f;
-        topView.hidden = YES;
-        topView.userInteractionEnabled = YES;
+//        topView.hidden = YES;
+//        topView.userInteractionEnabled = YES;
         [self.messageContentView addSubview:topView];
         self.topView = topView;
         
@@ -66,6 +67,10 @@
 //        self.topCoreView = topCoreView;
         WEAKSELF
         [backView bk_whenTapped:^{
+            [weakSelf didRedPacketTap];
+        }];
+        
+        [topView bk_whenTapped:^{
             [weakSelf didRedPacketTap];
         }];
     }
@@ -84,28 +89,50 @@
     [super setDataModel:model];
     RCRedPacketMessage *redPacketModel = (RCRedPacketMessage *)model.content;
     _nameLabel.text = redPacketModel.title;// @"15-9";
-    _statusLabel.text = redPacketModel.drawed.boolValue ? @"红包已领取" : @"游戏红包";
+    RCMessage *message = [[RCIMClient sharedRCIMClient] getMessage:model.messageId];
+    // 设置扩展字段 红包状态 0：默认  1：已领取 2：红包已抢完 3：红包过期
+    RcRedPacketMessageExtraModel *extraModel = nil;
+    if (message.extra.length > 0) {
+        extraModel = [RcRedPacketMessageExtraModel modelWithJSON:message.extra];
+    }
+    NSString *statusStr = @"游戏红包";
+    if (extraModel) {
+        switch (extraModel.status.integerValue) {
+            case 1:{
+                    statusStr = @"红包已领取";
+            }
+                break;
+            case 2:
+            {
+                statusStr = @"红包已抢完";
+            }
+                break;
+            case 3:
+            {
+                statusStr = @"红包过期";
+            }
+                break;
+            default:
+                break;
+        }
+    }
+    
+    _statusLabel.text = statusStr;
     _redIconImageView.image = [UIImage imageNamed:@"chats_redP_icon_empty"];
-
-    if (model.messageDirection == MessageDirection_SEND) {
-        // 设置红包背景图
-        if (redPacketModel.drawed.boolValue) {
-            _topView.hidden = YES;
-             [_topView wl_setWLRadius:WLRadiusMake(18, 0, 18, 18) withBorderColor:[UIColor whiteColor] borderWidth:1 backgroundColor:[UIColor whiteColor] backgroundImage:[UIImage imageWithColor:[UIColor whiteColor]] contentMode:UIViewContentModeScaleAspectFill];
-        } else {
-            _topView.hidden = YES;
-             [_backView wl_setWLRadius:WLRadiusMake(18, 0, 18, 18) withBorderColor:UIColorMake(254,72,30) borderWidth:1 backgroundColor:UIColorMake(254,72,30) backgroundImage:[UIImage imageWithColor:UIColorMake(254,72,30)] contentMode:UIViewContentModeScaleAspectFill];
-        }
+    
+    if (extraModel && extraModel.status.integerValue > 0) {
+        _topView.hidden = NO;
     } else {
-        // 设置红包背景图
-        if (redPacketModel.drawed.boolValue) {
-            _topView.hidden = YES;
-            [_topView wl_setCornerRadius:18];
-            [_topView wl_setWLRadius:WLRadiusMake(0, 18, 18, 18) withBorderColor:[UIColor whiteColor] borderWidth:1 backgroundColor:[UIColor whiteColor] backgroundImage:[UIImage imageWithColor:[UIColor whiteColor]] contentMode:UIViewContentModeScaleAspectFill];
-        } else {
-            _topView.hidden = YES;
-            [_backView wl_setWLRadius:WLRadiusMake(0, 18, 18, 18) withBorderColor:UIColorMake(254,72,30) borderWidth:1 backgroundColor:UIColorMake(254,72,30) backgroundImage:[UIImage imageWithColor:UIColorMake(254,72,30)] contentMode:UIViewContentModeScaleAspectFill];
-        }
+        _topView.hidden = YES;
+    }
+    if (model.messageDirection == MessageDirection_SEND) {
+        [_topView wl_setWLRadius:WLRadiusMake(18, 0, 18, 18) withBorderColor:[UIColor whiteColor] borderWidth:1 backgroundColor:[UIColor whiteColor] backgroundImage:[UIImage imageWithColor:[UIColor whiteColor]] contentMode:UIViewContentModeScaleAspectFill];
+        
+        [_backView wl_setWLRadius:WLRadiusMake(18, 0, 18, 18) withBorderColor:UIColorMake(254,72,30) borderWidth:1 backgroundColor:UIColorMake(254,72,30) backgroundImage:[UIImage imageWithColor:UIColorMake(254,72,30)] contentMode:UIViewContentModeScaleAspectFill];
+    } else {
+        [_topView wl_setWLRadius:WLRadiusMake(0, 18, 18, 18) withBorderColor:[UIColor whiteColor] borderWidth:1 backgroundColor:[UIColor whiteColor] backgroundImage:[UIImage imageWithColor:[UIColor whiteColor]] contentMode:UIViewContentModeScaleAspectFill];
+        
+        [_backView wl_setWLRadius:WLRadiusMake(0, 18, 18, 18) withBorderColor:UIColorMake(254,72,30) borderWidth:1 backgroundColor:UIColorMake(254,72,30) backgroundImage:[UIImage imageWithColor:UIColorMake(254,72,30)] contentMode:UIViewContentModeScaleAspectFill];
     }
     
     [_backView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -114,7 +141,7 @@
     
     [_topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.messageContentView);
-        //        make.edges.mas_equalTo(self.backView);
+//                make.edges.mas_equalTo(self.backView);
     }];
     
     [_redIconImageView sizeToFit];

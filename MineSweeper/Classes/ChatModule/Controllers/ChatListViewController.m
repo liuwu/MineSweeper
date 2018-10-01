@@ -63,7 +63,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+//    self.navigationController.navigationBar.translucent = NO;
+//    self.edgesForExtendedLayout = UIRectEdgeAll;
+
 }
 
 - (void)initSubviews {
@@ -92,17 +94,28 @@
 //    searchBar.delegate = self;
 //    self.searchBar = searchBar;
     //    searchBar.showsCancelButton = YES;
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+//    self.navigationController.navigationBar.translucent = NO;
+
     self.searchBar.delegate = self;
     [self.headerView addSubview:self.searchBar];
     self.conversationListTableView.tableHeaderView = self.headerView;
-    self.conversationListTableView.sectionHeaderHeight = 10.f;
+//    self.conversationListTableView.bounds = CGRectMake(0., 0.f, DEVICE_WIDTH, self.view.height - 44.f);
+//    self.conversationListTableView.sectionHeaderHeight = 10.f;
     self.conversationListTableView.sectionFooterHeight = 0.f;
     self.conversationListTableView.backgroundColor = WLColoerRGB(248.f);
     /// 隐藏分割线
     self.conversationListTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
+//    [self.conversationListTableView wl_setDebug:YES];
+    self.conversationListTableView.tableFooterView = [UIView new];
     // 设置在NavigatorBar中显示连接中的提示
     self.showConnectingStatusOnNavigatorBar = YES;
+    
+//    //修改tabbar的背景色
+//    UIView *tabBarBG = [UIView new];
+//    tabBarBG.backgroundColor = [UIColor whiteColor];
+//    tabBarBG.frame = self.tabBarController.tabBar.bounds;
+//    [[UITabBar appearance] insertSubview:tabBarBG atIndex:0];
     
 }
 

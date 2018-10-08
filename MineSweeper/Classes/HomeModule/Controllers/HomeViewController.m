@@ -273,6 +273,20 @@
 - (void)pagerView:(FSPagerView *)pagerView didSelectItemAtIndex:(NSInteger)index {
     [pagerView deselectItemAtIndex:index animated:YES];
 //    [pagerView scrollToItemAtIndex:index animated:YES];
+    if (_bannerImageArray.count > 0) {
+        BannerImgModel *model = _bannerImageArray[index];
+        if (model.url.length > 0) {
+            AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:model.url];
+            webVC.showsToolBar = NO;
+            webVC.title = @"Banner";
+            // webVC.showsNavigationCloseBarButtonItem = NO;
+            if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
+                webVC.webView.allowsLinkPreview = YES;
+            }
+            [self.navigationController pushViewController:webVC animated:YES];
+        }
+    }
+    
 }
 
 - (void)pagerViewWillEndDragging:(FSPagerView *)pagerView targetIndex:(NSInteger)targetIndex {

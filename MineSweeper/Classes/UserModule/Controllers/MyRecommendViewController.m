@@ -109,7 +109,7 @@
     
     // 总收益
     QMUILabel *momeyLabel = [[QMUILabel alloc] init];
-    momeyLabel.text = @"25,684.65";
+    momeyLabel.text = @"0.00";
     momeyLabel.font = UIFontMake(25);
     momeyLabel.textColor = [UIColor whiteColor];
     [headerView addSubview:momeyLabel];
@@ -134,7 +134,7 @@
     
     // 今日收益
     QMUILabel *todayMomeyLabel = [[QMUILabel alloc] init];
-    todayMomeyLabel.text = @"+177.00";
+    todayMomeyLabel.text = @"0.00";
     todayMomeyLabel.font = UIFontMake(25);
     todayMomeyLabel.textColor = [UIColor whiteColor];
     [headerView addSubview:todayMomeyLabel];

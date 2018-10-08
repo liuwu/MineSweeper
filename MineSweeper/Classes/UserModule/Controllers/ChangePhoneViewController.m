@@ -132,7 +132,11 @@
     [UserModelClient getChangeMobileVcodeWithParams:nil Success:^(id resultInfo) {
         [WLHUDView showSuccessHUD:@"已发送"];
     } Failed:^(NSError *error) {
-        [WLHUDView hiddenHud];
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
     }];
 }
 
@@ -157,7 +161,11 @@
         weakSelf.vcodeTxtView.textField.text = @"";
         [weakSelf.navigationController popViewControllerAnimated:YES];
     } Failed:^(NSError *error) {
-        [WLHUDView hiddenHud];
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
     }];
 }
 

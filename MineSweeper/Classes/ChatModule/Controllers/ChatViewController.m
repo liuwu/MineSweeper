@@ -320,7 +320,11 @@
                                                      weakSelf.groupDetailInfo = [IGroupDetailInfo modelWithDictionary:resultInfo];
                                                      [weakSelf toGroupDetailInfo];
                                                  } Failed:^(NSError *error) {
-                                                      [WLHUDView hiddenHud];
+                                                     if (error.localizedDescription.length > 0) {
+                                                         [WLHUDView showErrorHUD:error.localizedDescription];
+                                                     } else {
+                                                         [WLHUDView hiddenHud];
+                                                     }
                                                  }];
         }
     }
@@ -335,7 +339,11 @@
                 weakSelf.friendModel = [IFriendModel modelWithDictionary:resultInfo];
                 [weakSelf toUserChatDetailInfo];
             } Failed:^(NSError *error) {
-                [WLHUDView hiddenHud];
+                if (error.localizedDescription.length > 0) {
+                    [WLHUDView showErrorHUD:error.localizedDescription];
+                } else {
+                    [WLHUDView hiddenHud];
+                }
             }];
         }
     }

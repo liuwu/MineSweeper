@@ -233,7 +233,11 @@
             [weakSelf changeChatTopInfo:item];
             [WLHUDView hiddenHud];
         } Failed:^(NSError *error) {
-            [WLHUDView hiddenHud];
+            if (error.localizedDescription.length > 0) {
+                [WLHUDView showErrorHUD:error.localizedDescription];
+            } else {
+                [WLHUDView hiddenHud];
+            }
         }];
     } else {
         // 开启置顶
@@ -241,7 +245,11 @@
             [weakSelf changeChatTopInfo:item];
             [WLHUDView hiddenHud];
         } Failed:^(NSError *error) {
-            [WLHUDView hiddenHud];
+            if (error.localizedDescription.length > 0) {
+                [WLHUDView showErrorHUD:error.localizedDescription];
+            } else {
+                [WLHUDView hiddenHud];
+            }
         }];
     }
 }
@@ -263,7 +271,11 @@
             [weakSelf changeNotDisurbInfo:item];
             [WLHUDView hiddenHud];
         } Failed:^(NSError *error) {
-            [WLHUDView hiddenHud];
+            if (error.localizedDescription.length > 0) {
+                [WLHUDView showErrorHUD:error.localizedDescription];
+            } else {
+                [WLHUDView hiddenHud];
+            }
         }];
     } else {
         // 开启免打扰
@@ -271,7 +283,11 @@
             [weakSelf changeNotDisurbInfo:item];
             [WLHUDView hiddenHud];
         } Failed:^(NSError *error) {
-            [WLHUDView hiddenHud];
+            if (error.localizedDescription.length > 0) {
+                [WLHUDView showErrorHUD:error.localizedDescription];
+            } else {
+                [WLHUDView hiddenHud];
+            }
         }];
     }
 }

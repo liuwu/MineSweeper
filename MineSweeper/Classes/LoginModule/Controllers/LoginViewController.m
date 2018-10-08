@@ -177,15 +177,21 @@
                              @"password" : self.pwdTxtView.textField.text.wl_trimWhitespaceAndNewlines
                              };
     WEAKSELF
+    [WLHUDView showHUDWithStr:@"" dim:YES];
     [LoginModuleClient loginByPwdWithParams:params
                                 Success:^(id resultInfo) {
+                                    [WLHUDView hiddenHud];
                                     // 设置登录用户信息
                                     [configTool initLoginUser:resultInfo];
                                     [NSUserDefaults setString:weakSelf.pwdTxtView.textField.text.wl_trimWhitespaceAndNewlines forKey:[NSString stringWithFormat:@"%@%@", configTool.loginUser.uid, configTool.loginUser.mobile]];
                                     weakSelf.pwdTxtView.textField.text = @"";
                                     [kNSNotification postNotificationName:@"kRefreshFriendList" object:nil];
                                 } Failed:^(NSError *error) {
-                                    
+                                    if (error.localizedDescription.length > 0) {
+                                        [WLHUDView showErrorHUD:error.localizedDescription];
+                                    } else {
+                                        [WLHUDView hiddenHud];
+                                    }
                                 }];
 }
 

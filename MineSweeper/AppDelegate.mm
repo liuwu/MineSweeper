@@ -516,9 +516,10 @@ single_implementation(AppDelegate);
         WEAKSELF
         [LoginModuleClient getUserTokenWithParams:params Success:^(id resultInfo) {
             [configTool refreshLoginUserToken:resultInfo];
-             [kNSNotification postNotificationName:@"kLoginUserTokenRefresh" object:nil];
+            [kNSNotification postNotificationName:@"kLoginUserTokenRefresh" object:nil];
             [weakSelf connectRCIM];
         } Failed:^(NSError *error) {
+            [weakSelf checkTokenExpires];
 //            [WLHUDView hiddenHud];
         }];
     }
@@ -530,12 +531,18 @@ single_implementation(AppDelegate);
         return;
     }
     double minutes = [[configTool.loginUser.token.expires_time wl_dateFormartNormalString] minutesUntil];
-    if (minutes < 30) {
+    if (minutes < 0) {
+        // 已过期，需要重新获取token
+        [self checkTokenExpires];
+        return;
+    }
+    WEAKSELF
+    if (minutes < 30 && minutes > 0) {
         //小于半小时的，重新获取token
         [LoginModuleClient refreshTokenWithParams:@{@"refresh_token": configTool.loginUser.token.refresh_token} Success:^(id resultInfo) {
             [configTool refreshLoginUserToken:resultInfo];
         } Failed:^(NSError *error) {
-            
+            [weakSelf checkTokenExpires];
         }];
     }
 }

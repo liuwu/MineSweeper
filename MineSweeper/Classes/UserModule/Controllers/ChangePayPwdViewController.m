@@ -146,7 +146,11 @@
         weakSelf.pwdNewTxtView.textField.text = @"";
         [weakSelf.navigationController popViewControllerAnimated:YES];
     } Failed:^(NSError *error) {
-        [WLHUDView hiddenHud];
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
     }];
 }
 

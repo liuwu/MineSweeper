@@ -86,7 +86,11 @@
         INoticeModel *data = [INoticeModel modelWithDictionary:resultInfo];
         [weakSelf updateInfo:data];
     } Failed:^(NSError *error) {
-        [WLHUDView hiddenHud];
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
     }];
 }
 

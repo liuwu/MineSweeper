@@ -298,7 +298,11 @@
                                        Success:^(id resultInfo) {
                                            [weakSelf loadVcodeImage:[NSDictionary dictionaryWithDictionary:resultInfo]];
                                        } Failed:^(NSError *error) {
-                                           
+                                           if (error.localizedDescription.length > 0) {
+                                               [WLHUDView showErrorHUD:error.localizedDescription];
+                                           } else {
+                                               [WLHUDView hiddenHud];
+                                           }
                                        }];
 }
 
@@ -330,7 +334,11 @@
                                                Success:^(id resultInfo) {
                                                    
                                                } Failed:^(NSError *error) {
-                                                   
+                                                   if (error.localizedDescription.length > 0) {
+                                                       [WLHUDView showErrorHUD:error.localizedDescription];
+                                                   } else {
+                                                       [WLHUDView hiddenHud];
+                                                   }
                                                }];
         }
             break;
@@ -417,6 +425,7 @@
                              @"code" : self.vcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines
                              };
     WEAKSELF
+    [WLHUDView showHUDWithStr:@"" dim:YES];
     [LoginModuleClient saveForgetPwdWithParams:params
                                        Success:^(id resultInfo) {
                                            [WLHUDView showSuccessHUD:@"密码修改成功"];
@@ -427,7 +436,11 @@
                                                [weakSelf.navigationController popToRootViewControllerAnimated:YES];
                                            }
                                        } Failed:^(NSError *error) {
-                                           
+                                           if (error.localizedDescription.length > 0) {
+                                               [WLHUDView showErrorHUD:error.localizedDescription];
+                                           } else {
+                                               [WLHUDView hiddenHud];
+                                           }
                                        }];
 }
 
@@ -446,13 +459,19 @@
                              @"code" : self.vcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines
                              };
 //    WEAKSELF
+    [WLHUDView showHUDWithStr:@"" dim:YES];
     [LoginModuleClient loginByVcodeWithParams:params
                                       Success:^(id resultInfo) {
+                                          [WLHUDView hiddenHud];
                                           // 设置登录用户信息
                                           [configTool initLoginUser:resultInfo];
                                           [kNSNotification postNotificationName:@"kRefreshFriendList" object:nil];
                                       } Failed:^(NSError *error) {
-                                          
+                                          if (error.localizedDescription.length > 0) {
+                                              [WLHUDView showErrorHUD:error.localizedDescription];
+                                          } else {
+                                              [WLHUDView hiddenHud];
+                                          }
                                       }];
 }
 
@@ -477,12 +496,17 @@
                @"code" : self.vcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines,
                };
     WEAKSELF
+    [WLHUDView showHUDWithStr:@"" dim:YES];
     [LoginModuleClient registWithParams:params
                                 Success:^(id resultInfo) {
                                     [WLHUDView showSuccessHUD:@"注册成功"];
                                     [weakSelf.navigationController popToRootViewControllerAnimated:YES];
                                 } Failed:^(NSError *error) {
-                                    
+                                    if (error.localizedDescription.length > 0) {
+                                        [WLHUDView showErrorHUD:error.localizedDescription];
+                                    } else {
+                                        [WLHUDView hiddenHud];
+                                    }
                                 }];
 }
 

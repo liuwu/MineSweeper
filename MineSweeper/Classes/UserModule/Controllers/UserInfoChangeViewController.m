@@ -249,7 +249,11 @@
                                                   [[NSNotificationCenter defaultCenter] postNotificationName:@"kNickNameChanged" object:nil];
                                                   [weakSelf.navigationController popViewControllerAnimated:YES];
                                               } Failed:^(NSError *error) {
-                                                  [WLHUDView hiddenHud];
+                                                  if (error.localizedDescription.length > 0) {
+                                                      [WLHUDView showErrorHUD:error.localizedDescription];
+                                                  } else {
+                                                      [WLHUDView hiddenHud];
+                                                  }
                                               }];
         }
             break;
@@ -274,7 +278,11 @@
                                                   [[NSNotificationCenter defaultCenter] postNotificationName:@"kRealNameChanged" object:nil];
                                                   [weakSelf.navigationController popViewControllerAnimated:YES];
                                               } Failed:^(NSError *error) {
-                                                  [WLHUDView hiddenHud];
+                                                  if (error.localizedDescription.length > 0) {
+                                                      [WLHUDView showErrorHUD:error.localizedDescription];
+                                                  } else {
+                                                      [WLHUDView hiddenHud];
+                                                  }
                                               }];
         }
             break;
@@ -292,7 +300,11 @@
                 [WLHUDView showSuccessHUD:@"设置成功"];
                 [weakSelf.navigationController popViewControllerAnimated:YES];
             } Failed:^(NSError *error) {
-                [WLHUDView hiddenHud];
+                if (error.localizedDescription.length > 0) {
+                    [WLHUDView showErrorHUD:error.localizedDescription];
+                } else {
+                    [WLHUDView hiddenHud];
+                }
             }];
         }
             break;

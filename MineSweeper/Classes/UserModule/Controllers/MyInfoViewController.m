@@ -222,7 +222,11 @@
                                           item.detailLabelText = configTool.userInfoModel.address;
                                           [item reloadRowWithAnimation:UITableViewRowAnimationNone];
                                       } Failed:^(NSError *error) {
-                                          [WLHUDView hiddenHud];
+                                          if (error.localizedDescription.length > 0) {
+                                              [WLHUDView showErrorHUD:error.localizedDescription];
+                                          } else {
+                                              [WLHUDView hiddenHud];
+                                          }
                                       }];
 }
 
@@ -272,7 +276,11 @@
                                           // 重新加载数据
                                           [item reloadRowWithAnimation:UITableViewRowAnimationNone];
                                       } Failed:^(NSError *error) {
-                                          [WLHUDView hiddenHud];
+                                          if (error.localizedDescription.length > 0) {
+                                              [WLHUDView showErrorHUD:error.localizedDescription];
+                                          } else {
+                                              [WLHUDView hiddenHud];
+                                          }
                                       }];
 }
 

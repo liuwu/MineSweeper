@@ -322,6 +322,10 @@
 		10351AE82147D3F400EDC7AD /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351AE72147D3F400EDC7AD /* HomeViewController.m */; };
 		10351AEB2147EB2E00EDC7AD /* LWLoginTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351AEA2147EB2E00EDC7AD /* LWLoginTextField.m */; };
 		10351AEE21481BB900EDC7AD /* SmsLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10351AED21481BB900EDC7AD /* SmsLoginViewController.m */; };
+		1037ECD2216C56FD002B5E9A /* LWCardTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1037ECD1216C56FD002B5E9A /* LWCardTextView.m */; };
+		1037ECD5216C7B26002B5E9A /* ICardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1037ECD4216C7B26002B5E9A /* ICardModel.m */; };
+		1037ECD8216C7BFE002B5E9A /* MyCardViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1037ECD7216C7BFE002B5E9A /* MyCardViewCell.m */; };
+		1037ECDB216C807E002B5E9A /* MyRecommendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1037ECDA216C807E002B5E9A /* MyRecommendTableViewCell.m */; };
 		10454668214B77A500DA7F9F /* QDThemeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 10454649214B77A400DA7F9F /* QDThemeManager.m */; };
 		10454669214B77A500DA7F9F /* QMUIConfigurationTemplatePinkRose.m in Sources */ = {isa = PBXBuildFile; fileRef = 1045464A214B77A400DA7F9F /* QMUIConfigurationTemplatePinkRose.m */; };
 		1045466A214B77A500DA7F9F /* QMUIConfigurationTemplateGrass.m in Sources */ = {isa = PBXBuildFile; fileRef = 1045464C214B77A400DA7F9F /* QMUIConfigurationTemplateGrass.m */; };
@@ -1077,6 +1081,14 @@
 		10351AEA2147EB2E00EDC7AD /* LWLoginTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LWLoginTextField.m; sourceTree = "<group>"; };
 		10351AEC21481BB900EDC7AD /* SmsLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SmsLoginViewController.h; sourceTree = "<group>"; };
 		10351AED21481BB900EDC7AD /* SmsLoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SmsLoginViewController.m; sourceTree = "<group>"; };
+		1037ECD0216C56FD002B5E9A /* LWCardTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LWCardTextView.h; sourceTree = "<group>"; };
+		1037ECD1216C56FD002B5E9A /* LWCardTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LWCardTextView.m; sourceTree = "<group>"; };
+		1037ECD3216C7B26002B5E9A /* ICardModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICardModel.h; sourceTree = "<group>"; };
+		1037ECD4216C7B26002B5E9A /* ICardModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ICardModel.m; sourceTree = "<group>"; };
+		1037ECD6216C7BFE002B5E9A /* MyCardViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyCardViewCell.h; sourceTree = "<group>"; };
+		1037ECD7216C7BFE002B5E9A /* MyCardViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyCardViewCell.m; sourceTree = "<group>"; };
+		1037ECD9216C807E002B5E9A /* MyRecommendTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyRecommendTableViewCell.h; sourceTree = "<group>"; };
+		1037ECDA216C807E002B5E9A /* MyRecommendTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyRecommendTableViewCell.m; sourceTree = "<group>"; };
 		10454647214B77A400DA7F9F /* QMUIConfigurationTemplateGrass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMUIConfigurationTemplateGrass.h; sourceTree = "<group>"; };
 		10454648214B77A400DA7F9F /* QMUIConfigurationTemplateGrapefruit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMUIConfigurationTemplateGrapefruit.h; sourceTree = "<group>"; };
 		10454649214B77A400DA7F9F /* QDThemeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QDThemeManager.m; sourceTree = "<group>"; };
@@ -2456,6 +2468,8 @@
 				104CBF40215B2EC8000D4D44 /* ISafeIndexModel.m */,
 				106D4AF7215CE6C40047E8BA /* IPosterModel.h */,
 				106D4AF8215CE6C40047E8BA /* IPosterModel.m */,
+				1037ECD3216C7B26002B5E9A /* ICardModel.h */,
+				1037ECD4216C7B26002B5E9A /* ICardModel.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2523,6 +2537,12 @@
 			children = (
 				10886BA9214FA724003DC40A /* GridTableViewCell.h */,
 				10886BAA214FA724003DC40A /* GridTableViewCell.m */,
+				1037ECD9216C807E002B5E9A /* MyRecommendTableViewCell.h */,
+				1037ECDA216C807E002B5E9A /* MyRecommendTableViewCell.m */,
+				1037ECD0216C56FD002B5E9A /* LWCardTextView.h */,
+				1037ECD1216C56FD002B5E9A /* LWCardTextView.m */,
+				1037ECD6216C7BFE002B5E9A /* MyCardViewCell.h */,
+				1037ECD7216C7BFE002B5E9A /* MyCardViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3577,6 +3597,7 @@
 				103519362147A34000EDC7AD /* KSPhotoBrowser+WLAdd.m in Sources */,
 				103519542147A34000EDC7AD /* WLRequestManager.m in Sources */,
 				103519582147A34000EDC7AD /* WLRequest.m in Sources */,
+				1037ECD8216C7BFE002B5E9A /* MyCardViewCell.m in Sources */,
 				1073BC4D21509324001EF550 /* AXSecurityPolicy.m in Sources */,
 				103519572147A34000EDC7AD /* WLRequest+WLAdd.m in Sources */,
 				1024156A21591E26008A365A /* UIView+Frame.m in Sources */,
@@ -3717,6 +3738,7 @@
 				1018BCEC21569F7D004BC57B /* IRecommendInfoModel.m in Sources */,
 				1064DE0D214CA6DE002A9DD6 /* ChatSettingViewController.m in Sources */,
 				1018BCE02156585E004BC57B /* INoticeModel.m in Sources */,
+				1037ECDB216C807E002B5E9A /* MyRecommendTableViewCell.m in Sources */,
 				103519142147A34000EDC7AD /* KxMenu.m in Sources */,
 				1035192C2147A34000EDC7AD /* UIImage+BoxBlur.m in Sources */,
 				103519422147A34000EDC7AD /* WLPersistanceTable.m in Sources */,
@@ -3803,6 +3825,8 @@
 				10351A112147B73200EDC7AD /* WLCGUtilities.m in Sources */,
 				103519292147A34000EDC7AD /* MBProgressHUD.m in Sources */,
 				103519FF2147B73200EDC7AD /* NSDecimalNumber+WLAdd.m in Sources */,
+				1037ECD2216C56FD002B5E9A /* LWCardTextView.m in Sources */,
+				1037ECD5216C7B26002B5E9A /* ICardModel.m in Sources */,
 				1064DDEF214C9DA2002A9DD6 /* PosterViewController.m in Sources */,
 				10351A102147B73200EDC7AD /* NSData+WLAddForHash.m in Sources */,
 				10082DF72153C81300EC3FCE /* ChatGourpNameViewController.m in Sources */,

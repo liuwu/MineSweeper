@@ -9,7 +9,8 @@
 #import "MyRecommendViewController.h"
 #import "RecommendListViewController.h"
 
-#import "GridTableViewCell.h"
+//#import "GridTableViewCell.h"
+#import "MyRecommendTableViewCell.h"
 
 #import "UserModelClient.h"
 #import "IRecommendModel.h"
@@ -190,21 +191,19 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    GridTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"my_recommend_cell"];
+    MyRecommendTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"my_recommend_cell"];
+    if (!cell) {
+        cell = [[MyRecommendTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"my_recommend_cell"];
+    }
     if (indexPath.section == 0) {
-        if (!cell) {
-            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"my_recommend_cell" gridTitles:@[@"昵称", @"金额(元)", @"级别", @"时间"]];
-        }
         cell.titleColor = UIColorMake(254,72,30);
         cell.titleFont = UIFontMake(14.f);
+        cell.gridTitles = @[@"昵称", @"金额(元)", @"级别", @"时间"];
     } else {
-        if (!cell) {
-            IRecommendInfoModel *mode = _datasource[indexPath.row];
-            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"my_recommend_cell" gridTitles:@[mode.from_nickname, mode.total_money, mode.level, mode.add_time]];
-        }
+        IRecommendInfoModel *model = _datasource[indexPath.row];
         cell.titleColor = WLColoerRGB(51.f);
         cell.titleFont = UIFontMake(13.f);
-        
+        cell.gridTitles = @[model.from_nickname ? : @"", model.total_money ? : @"", model.level ? : @"", model.add_time ? : @""];
         if (indexPath.row % 2 == 0) {
             cell.backgroundColor = [UIColor whiteColor];
         } else {

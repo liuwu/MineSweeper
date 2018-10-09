@@ -176,11 +176,20 @@ NSString *const kWLNeedCompleteInfoNotification = @"kWLNeedCompleteInfoNoti";
                     errorCode = state.integerValue;
                 }else {
                     //其它，都当作普通的错误，在这里不做统一提醒处理，交给接口调用的地方进行处理
-                    errorCode = WLNetWorkingResultStateTypeNormal;
+                    errorCode = state.integerValue;// WLNetWorkingResultStateTypeNormal;
                 }
                 if ([msg containsString:@"token 已失效"]) {
                     // 检测过期，重新获取token
                     [[AppDelegate sharedAppDelegate] checkTokenExpires];
+                }
+                
+                // 账号在其他地方登录
+                if (state.integerValue == 3) {
+                    // 设置登录用户信息
+                    [NSUserDefaults setObject:nil forKey:kWLLoginUserIdKey];
+                    [kNSNotification postNotificationName:@"kRefreshFriendList" object:nil];
+                    [kNSNotification postNotificationName:@"kUserLogout" object:nil];
+                    [[AppDelegate sharedAppDelegate] checkLoginStatus];
                 }
                 
                 NSMutableDictionary *info = [NSMutableDictionary dictionary];

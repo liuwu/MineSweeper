@@ -578,13 +578,16 @@ single_implementation(AppDelegate);
 
 #pragma mark - 退出登录
 - (void)logoutWithErrormsg:(NSString *)errormsg {
+    dispatch_async(dispatch_get_main_queue(), ^{
+       
+    });
     // 关闭融云连接
     [[RCIM sharedRCIM] disconnect:NO];
     [[RCIM sharedRCIM] clearUserInfoCache];
     [[RCIM sharedRCIM] clearGroupInfoCache];
     
     [LGAlertView removeAlertViews];
-    [self.window endEditing:YES];
+//    [self.window endEditing:YES];
     if (!_loginNav) {
         LoginViewController *loginVC = [[LoginViewController alloc] init];
         self.loginNav = [[NavViewController alloc] initWithRootViewController:loginVC];

@@ -66,13 +66,18 @@
 //        [self.messageContentView addSubview:topCoreView];
 //        self.topCoreView = topCoreView;
         WEAKSELF
-        [backView bk_whenTapped:^{
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithActionBlock:^(id  _Nonnull sender) {
             [weakSelf didRedPacketTap];
         }];
-        
-        [topView bk_whenTapped:^{
-            [weakSelf didRedPacketTap];
-        }];
+        [backView addGestureRecognizer:tap];
+        [topView addGestureRecognizer:tap];
+//        [backView bk_whenTapped:^{
+//            [weakSelf didRedPacketTap];
+//        }];
+//
+//        [topView bk_whenTapped:^{
+//            [weakSelf didRedPacketTap];
+//        }];
     }
     return self;
 }

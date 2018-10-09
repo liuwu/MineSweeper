@@ -13,13 +13,35 @@
 
 #import "RETableViewManager.h"
 
+#import "LWCardTextView.h"
+
 @interface AddCardViewController ()
 
 @property (nonatomic, strong) RETableViewManager *manager;
 
+@property (nonatomic, strong) LWCardTextView *userTxtView;
+@property (nonatomic, strong) LWCardTextView *cardTxtView;
+@property (nonatomic, strong) LWCardTextView *cardTypeTxtView;
+
+@property (nonatomic, strong) QMUITextField *pwdTextField;
+@property (nonatomic, strong) QMUIModalPresentationViewController *payModalViewController;
+
 @end
 
 @implementation AddCardViewController
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [[YYTextKeyboardManager defaultManager] addObserver:self];
+    //    [DaiDodgeKeyboard addRegisterTheViewNeedDodgeKeyboard:self.view];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.view endEditing:YES];
+    //    [DaiDodgeKeyboard removeRegisterTheViewNeedDodgeKeyboard];
+    [[YYTextKeyboardManager defaultManager] removeObserver:self];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -40,7 +62,12 @@
     [self addSubViews];
     //    [self addConstrainsForSubviews];
     
-    [self addTableViewCell];
+//    [self addTableViewCell];
+}
+
+- (BOOL)shouldHideKeyboardWhenTouchInView:(UIView *)view {
+    // 表示点击空白区域都会降下键盘
+    return YES;
 }
 
 - (void)addSubViews {
@@ -66,12 +93,33 @@
 //    userTxtView.titleLabel.text = @"持卡人";
 //    userTxtView.textField.placeholder = @"姓名";
 //    [headerView addSubview:userTxtView];
-//
-//    [userTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, 44.f));
-//        make.top.mas_equalTo(idLabel.mas_bottom).mas_offset(10.f);
-//        make.centerX.mas_equalTo(headerView);
-//    }];
+
+    LWCardTextView *userTxtView = [[LWCardTextView alloc] initWithType:LWCardTextViewTypeDefault];
+    userTxtView.titleLabel.text = @"持卡人";
+    userTxtView.textField.placeholder = @"姓名";
+    [headerView addSubview:userTxtView];
+    self.userTxtView = userTxtView;
+    [userTxtView wl_setBorderWidth:.8f color:WLColoerRGB(242.f)];
+    [userTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, 44.f));
+        make.top.mas_equalTo(idLabel.mas_bottom).mas_offset(10.f);
+        make.centerX.mas_equalTo(headerView);
+    }];
+    
+    LWCardTextView *cardTxtView = [[LWCardTextView alloc] initWithType:LWCardTextViewTypeCardNO];
+    cardTxtView.textField.placeholder = @"银行卡号";
+    [headerView addSubview:cardTxtView];
+    self.cardTxtView = cardTxtView;
+//    [cardTxtView setQmui_borderColor: WLColoerRGB(242.f)];
+//    [cardTxtView setQmui_borderWidth:.8f];
+//    [cardTxtView setQmui_borderPosition:QMUIBorderViewPositionBottom];
+    [cardTxtView wl_setBorderWidth:.8f color:WLColoerRGB(242.f)];
+    [cardTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, 44.f));
+        make.top.mas_equalTo(userTxtView.mas_bottom).mas_offset(-0.8f);
+        make.centerX.mas_equalTo(headerView);
+    }];
+    
 //
 //    LWLoginTextFieldView *cardTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePhone];
 //    cardTxtView.titleLabel.text = @"卡号";
@@ -86,18 +134,26 @@
 //    LWLoginTextFieldView *cardTypeTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePhone];
 //    cardTypeTxtView.titleLabel.text = @"开户行";
 //    cardTypeTxtView.textField.placeholder = @"开户银行";
-//    [headerView addSubview:cardTypeTxtView];
-//    [cardTypeTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.size.mas_equalTo(userTxtView);
-//        make.top.mas_equalTo(cardTxtView.mas_bottom);
-//        make.centerX.mas_equalTo(headerView);
-//    }];
+    LWCardTextView *cardTypeTxtView = [[LWCardTextView alloc] initWithType:LWCardTextViewTypeDefault];
+    cardTypeTxtView.titleLabel.text = @"开户行";
+    cardTypeTxtView.textField.placeholder = @"开户银行";
+    [headerView addSubview:cardTypeTxtView];
+    self.cardTypeTxtView = cardTypeTxtView;
+//    [cardTypeTxtView setQmui_borderColor: WLColoerRGB(242.f)];
+//    [cardTypeTxtView setQmui_borderWidth:.8f];
+//    [cardTypeTxtView setQmui_borderPosition:QMUIBorderViewPositionBottom];
+    [cardTypeTxtView wl_setBorderWidth:.8f color:WLColoerRGB(242.f)];
+    [cardTypeTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(userTxtView);
+        make.top.mas_equalTo(cardTxtView.mas_bottom).mas_offset(-0.8f);
+        make.centerX.mas_equalTo(headerView);
+    }];
     
     // 添加银行卡
     QMUIFillButton *bindBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
     [bindBtn setTitle:@"绑定" forState:UIControlStateNormal];
     bindBtn.titleLabel.font = UIFontMake(18);
-    [bindBtn setTitleColor:WLColoerRGB(51.f) forState:UIControlStateNormal];
+//    [bindBtn setTitleColor:WLColoerRGB(51.f) forState:UIControlStateNormal];
     [bindBtn addTarget:self action:@selector(bindBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [bindBtn setCornerRadius:5.f];
     [headerView addSubview:bindBtn];
@@ -146,16 +202,133 @@
 
 #pragma mark - Private
 - (void)bindBtnClicked:(UIButton *)sender {
-    NSDictionary *params = @{@"username" : @"持卡人姓名",
-                             @"password" : @"支付密码",
-                             @"account" : @"卡号",
-                             @"bank_adress" : @"开户行"
-                             };
-    [UserModelClient addBankCardListWithParams:params Success:^(id resultInfo) {
-        
-    } Failed:^(NSError *error) {
-        
+    if (_userTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入持卡人"];
+        return;
+    }
+    if (_cardTxtView.number.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入卡号"];
+        return;
+    }
+    if (_cardTypeTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入开户行"];
+        return;
+    }
+    [self inputPayPwd:nil];
+}
+
+
+// 输入支付密码
+- (void)inputPayPwd:(NSString *)money {
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 189.f)];
+    contentView.backgroundColor = [UIColor whiteColor];
+    [contentView wl_setCornerRadius:5.f];
+    
+    QMUILabel *titleLabel = [[QMUILabel alloc] init];
+    titleLabel.font = UIFontMake(17);
+    titleLabel.textColor = WLColoerRGB(51.f);
+    titleLabel.text = @"添加银行卡";
+    [contentView addSubview:titleLabel];
+    [titleLabel sizeToFit];
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(contentView);
+        make.top.mas_equalTo(contentView).mas_offset(16.f);
     }];
+    
+//    QMUILabel *moneyLabel = [[QMUILabel alloc] init];
+//    moneyLabel.font = UIFontMake(17);
+//    moneyLabel.textColor = WLColoerRGB(51.f);
+//    moneyLabel.text = [NSString stringWithFormat:@"%@元", money];
+//    [contentView addSubview:moneyLabel];
+//    //    self.idLabel = nameLabel;
+//    [moneyLabel sizeToFit];
+//    [moneyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerX.mas_equalTo(contentView);
+//        make.top.mas_equalTo(titleLabel.mas_bottom).mas_offset(15.f);
+//    }];
+    
+    QMUITextField *pwdTextField = [[QMUITextField alloc] init];
+    pwdTextField.placeholder = @"输入支付密码";
+    pwdTextField.placeholderColor = WLColoerRGB(153.f);
+    pwdTextField.font = UIFontMake(14.f);
+    pwdTextField.textColor = WLColoerRGB(51.f);
+    pwdTextField.secureTextEntry = YES;
+    pwdTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    [contentView addSubview:pwdTextField];
+    self.pwdTextField = pwdTextField;
+    [pwdTextField wl_setCornerRadius:5.f];
+    [pwdTextField wl_setBorderWidth:1.f color:WLColoerRGB(242.f)];
+    [pwdTextField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(240.f, 36.f));
+        make.centerX.mas_equalTo(contentView);
+        make.top.mas_equalTo(titleLabel.mas_bottom).mas_offset(20.f);
+    }];
+    
+    QMUIFillButton *cancelBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorGray];
+    [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+    cancelBtn.titleLabel.font = WLFONT(14);
+    [cancelBtn addTarget:self action:@selector(cancelBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [cancelBtn setCornerRadius:5.f];
+    [contentView addSubview:cancelBtn];
+    [cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(115.f, 36.f));
+        make.left.mas_equalTo(pwdTextField);
+        make.top.mas_equalTo(pwdTextField.mas_bottom).mas_offset(15.f);
+    }];
+    
+    QMUIFillButton *payBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
+    [payBtn setTitle:@"确认添加" forState:UIControlStateNormal];
+    payBtn.titleLabel.font = WLFONT(14);
+    [payBtn addTarget:self action:@selector(payBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [payBtn setCornerRadius:5.f];
+    [contentView addSubview:payBtn];
+    [payBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(115.f, 36.f));
+        make.right.mas_equalTo(pwdTextField);
+        make.top.mas_equalTo(pwdTextField.mas_bottom).mas_offset(15.f);
+    }];
+    
+    QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
+    modalViewController.animationStyle = QMUIModalPresentationAnimationStylePopup;
+    modalViewController.contentView = contentView;
+    modalViewController.modal = YES;
+    //    modalViewController.delegate = self;
+    [modalViewController showWithAnimated:YES completion:nil];
+    self.payModalViewController =  modalViewController;
+}
+
+// 确认支付
+- (void)payBtnClicked:(UIButton *)sender {
+    if (_pwdTextField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入支付密码"];
+        return;
+    }
+    [_payModalViewController hideWithAnimated:YES completion:nil];
+    
+    NSDictionary *params = @{@"password" : _pwdTextField.text.wl_trimWhitespaceAndNewlines,
+                             @"username" : _userTxtView.textField.text,
+                             @"account" : _cardTxtView.number,
+                             @"bank_adress" : _cardTypeTxtView.textField.text
+                             };
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    WEAKSELF
+    [UserModelClient addBankCardListWithParams:params Success:^(id resultInfo) {
+        [WLHUDView showSuccessHUD:@"添加成功"];
+        [kNSNotification postNotificationName:@"kMyCardChanged" object:nil];
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    } Failed:^(NSError *error) {
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
+    }];
+}
+
+// 取消支付
+- (void)cancelBtnClicked:(UIButton *)sender {
+    [_payModalViewController hideWithAnimated:YES completion:nil];
+    
 }
 
 

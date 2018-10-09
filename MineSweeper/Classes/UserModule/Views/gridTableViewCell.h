@@ -17,6 +17,6 @@
 
 @property (nonatomic, copy) UIFont *titleFont;
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier gridTitles:(NSArray<NSString *> *)gridTitles;
+//- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier gridTitles:(NSArray<NSString *> *)gridTitles;
 
 @end

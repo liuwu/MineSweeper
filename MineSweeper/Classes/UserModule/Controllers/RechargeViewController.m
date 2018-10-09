@@ -15,7 +15,7 @@
 
 #import "UserModelClient.h"
 
-@interface RechargeViewController ()
+@interface RechargeViewController ()<UITextFieldDelegate>
 
 @property (nonatomic, strong) RETableViewManager *manager;
 @property (nonatomic, strong) LWLoginTextFieldView *moenyTxtView;
@@ -91,6 +91,22 @@
     // Dispose of any resources that can be recreated.
 }
 
+//- (void)textFieldDidBeginEditing:(UITextField *)textField {
+//    textField.text = @"";
+//    // 把旧的选中的按钮设置为未选中的颜色
+//    if (self.selectMoneyBtn != nil) {
+//        self.selectMoneyBtn.titleTextColor = UIColorMake(254,72,30);
+//        self.selectMoneyBtn.fillColor = FillButtonColorWhite;
+//    }
+//    self.payMoney = 0.f;
+//    self.payMomeyLabel.text = @"0";
+//}
+//
+//- (void)textFieldDidEndEditing:(UITextField *)textField {
+//    self.payMomeyLabel.text = textField.text;
+//    self.payMoney = [self.payMomeyLabel.text floatValue];
+//}
+
 // 添加表格内容
 - (void)addViews {
     self.view.backgroundColor = WLColoerRGB(248.f);
@@ -98,10 +114,12 @@
     // 充值金额
     LWLoginTextFieldView *moenyTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeMoney];
     moenyTxtView.titleLabel.text = @"充值金额";
+    moenyTxtView.textField.delegate = self;
     [self.view addSubview:moenyTxtView];
     self.moenyTxtView = moenyTxtView;
 //    [moenyTxtView.textField becomeFirstResponder];
     WEAKSELF
+    
     [moenyTxtView.textField setBk_didBeginEditingBlock:^(UITextField *textField) {
         textField.text = @"";
         // 把旧的选中的按钮设置为未选中的颜色
@@ -112,7 +130,7 @@
         weakSelf.payMoney = 0.f;
         weakSelf.payMomeyLabel.text = @"0";
     }];
-    
+
     [moenyTxtView.textField setBk_didEndEditingBlock:^(UITextField *textField) {
         weakSelf.payMomeyLabel.text = textField.text;
         weakSelf.payMoney = [weakSelf.payMomeyLabel.text floatValue];

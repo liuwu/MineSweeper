@@ -7,6 +7,7 @@
 //
 
 #import "WithdrawViewController.h"
+#import "MyCardViewController.h"
 
 #import "RETableViewManager.h"
 #import "RETableViewItem.h"
@@ -33,6 +34,8 @@
 @property (nonatomic, strong) IWallentInfoModel *wallentInfoModel;
 @property (nonatomic, strong) NSString *payPwd;
 
+@property (nonatomic, assign) NSInteger selectType;// 1:支付宝 2：银行卡
+
 @end
 
 @implementation WithdrawViewController
@@ -45,7 +48,7 @@
     [super initSubviews];
     [self addViews];
     [self addViewConstraints];
-    
+    self.selectType = 1;
     [self loadData];
     
     [kNSNotification addObserver:self selector:@selector(alipayUserId:) name:@"kAliPayUserId" object:nil];
@@ -130,6 +133,10 @@
     typeTxtView.textField.leftViewMode = UITextFieldViewModeAlways;
     [self.view addSubview:typeTxtView];
     self.typeTxtView = typeTxtView;
+    WEAKSELF
+    [typeTxtView bk_whenTapped:^{
+        [weakSelf checkSelectStatus:1];
+    }];
     
     // 提现类型金额
     leftView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, 25.f, 20.f)];
@@ -142,8 +149,12 @@
     typeCardTxtView.textField.text = @"提现到银行卡";
     typeCardTxtView.textField.leftView = leftView;
     typeCardTxtView.textField.leftViewMode = UITextFieldViewModeAlways;
+//    typeCardTxtView.subTitleLabel.text = @"";
     [self.view addSubview:typeCardTxtView];
     self.typeCardTxtView = typeCardTxtView;
+    [typeCardTxtView bk_whenTapped:^{
+        [weakSelf checkSelectStatus:2];
+    }];
     
     QMUILabel *aboutLabel = [[QMUILabel alloc] init];
     aboutLabel.text = @"提现说明：";
@@ -160,6 +171,25 @@
     [withdrawBtn setCornerRadius:5.f];
     [self.view addSubview:withdrawBtn];
     self.withdrawBtn = withdrawBtn;
+    
+    // 默认选中
+    [weakSelf checkSelectStatus:_selectType];
+}
+
+- (void)checkSelectStatus:(NSInteger)type {
+    _selectType = type;
+    if (_selectType == 1) {
+        // 支付宝
+        [_typeTxtView wl_setBorderWidth:.8f color:WLRGB(254.f, 72.f, 30.f)];
+        [_typeCardTxtView wl_setBorderWidth:.8f color:WLColoerRGB(242.f)];
+    }
+    if (_selectType == 2) {
+        // 银行卡
+        MyCardViewController *vc = [[MyCardViewController alloc] init];
+//        [self.]
+//        [_typeTxtView wl_setBorderWidth:.8f color:WLColoerRGB(242.f)];
+//        [_typeCardTxtView wl_setBorderWidth:.8f color:WLRGB(254.f, 72.f, 30.f)];
+    }
 }
 
 // 添加页面view布局控制
@@ -306,20 +336,27 @@
     [_payModalViewController hideWithAnimated:YES completion:nil];
     // 钱包 - 提现 - 支付宝授权登录
     [WLHUDView showHUDWithStr:@"提现中..." dim:YES];
-    NSDictionary *params = @{@"password" : _pwdTextField.text.wl_trimWhitespaceAndNewlines,
-                             @"money" : [NSNumber numberWithFloat:_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue]};
-    WEAKSELF
-    [UserModelClient aliPayLoginWithParams:params Success:^(id resultInfo) {
-        [[AlipaySDK defaultService] auth_V2WithInfo:resultInfo fromScheme:@"AlipayMineSweeper" callback:^(NSDictionary *resultDic) {
-            DLog(@"auth_V2WithInfo:%@", resultDic);
+    if (_selectType == 1) {
+        //支付宝
+        NSDictionary *params = @{@"password" : _pwdTextField.text.wl_trimWhitespaceAndNewlines,
+                                 @"money" : [NSNumber numberWithFloat:_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue]};
+        WEAKSELF
+        [UserModelClient aliPayLoginWithParams:params Success:^(id resultInfo) {
+            [[AlipaySDK defaultService] auth_V2WithInfo:resultInfo fromScheme:@"AlipayMineSweeper" callback:^(NSDictionary *resultDic) {
+                DLog(@"auth_V2WithInfo:%@", resultDic);
+            }];
+        } Failed:^(NSError *error) {
+            if (error.localizedDescription.length > 0) {
+                [WLHUDView showErrorHUD:error.localizedDescription];
+            } else {
+                [WLHUDView hiddenHud];
+            }
         }];
-    } Failed:^(NSError *error) {
-        if (error.localizedDescription.length > 0) {
-            [WLHUDView showErrorHUD:error.localizedDescription];
-        } else {
-            [WLHUDView hiddenHud];
-        }
-    }];
+    }
+    if (_selectType == 2) {
+        // 银行卡 user_id：银行卡id
+        [self withdrawData:nil];
+    }
 }
 
 // 获取到支付宝支付信息
@@ -332,7 +369,9 @@
 - (void)withdrawData:(NSString *)userId {
     NSDictionary *params = @{@"user_id" : userId,
                              @"password" : _pwdTextField.text.wl_trimWhitespaceAndNewlines,
-                             @"money" : [NSNumber numberWithFloat:_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue]};
+                             @"money" : [NSNumber numberWithFloat:_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue],
+                             @"pay_type" : _selectType == 1 ? @(10) : @(20)
+                             };
     [UserModelClient withdrawWallentWithParams:params Success:^(id resultInfo) {
         [kNSNotification postNotificationName:@"kUserInfoChanged" object:nil];
         [WLHUDView showSuccessHUD:@"提现成功"];

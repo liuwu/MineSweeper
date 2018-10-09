@@ -1,36 +1,23 @@
 //
-//  GridTableViewCell.m
+//  MyRecommendTableViewCell.m
 //  MineSweeper
 //
-//  Created by liuwu on 2018/9/17.
+//  Created by liuwu on 2018/10/9.
 //  Copyright © 2018年 liuwu. All rights reserved.
 //
 
-#import "GridTableViewCell.h"
+#import "MyRecommendTableViewCell.h"
 
-@interface GridTableViewCell()
-
-//@property (nonatomic, strong) QMUIGridView *gridView;
+@interface MyRecommendTableViewCell()
 
 @property (nonatomic, strong) QMUILabel *titleLabel1;
 @property (nonatomic, strong) QMUILabel *titleLabel2;
 @property (nonatomic, strong) QMUILabel *titleLabel3;
-
-@property (nonatomic, strong) UIView *lineView;
+@property (nonatomic, strong) QMUILabel *titleLabel4;
 
 @end
 
-@implementation GridTableViewCell
-
-//- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier gridTitles:(NSArray<NSString *> *)gridTitles {
-//    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-//    if (self) {
-//        self.gridTitles = gridTitles;
-//        self.selectionStyle = UITableViewCellSelectionStyleNone;
-//        [self addSubViews];
-//    }
-//    return self;
-//}
+@implementation MyRecommendTableViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -43,20 +30,6 @@
 
 // 添加页面内容
 - (void)addSubViews {
-//    QMUIGridView *gridView = [[QMUIGridView alloc] init];
-//    gridView.columnCount = self.gridTitles.count;
-//    gridView.rowHeight = 44.f;
-//    gridView.separatorWidth = PixelOne;
-//    gridView.separatorColor = UIColorSeparator;
-//    gridView.separatorDashed = NO;
-//    [self.contentView addSubview:gridView];
-//    self.gridView = gridView;
-//    [_gridView wl_setDebug:YES];
-//    [gridView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.edges.mas_equalTo(self.contentView);
-//    }];
-    
-    
     QMUILabel *titleLabel1 = [[QMUILabel alloc] init];
     titleLabel1.font = UIFontMake(13.f);
     titleLabel1.textColor = WLColoerRGB(51.f);
@@ -70,7 +43,7 @@
     [self.contentView addSubview:titleLabel1];
     self.titleLabel1 = titleLabel1;
     
-    CGFloat width = DEVICE_WIDTH / 3.f;
+    CGFloat width = DEVICE_WIDTH / 4.f;
     [titleLabel1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(width, self.contentView.height));
         make.left.mas_equalTo(self.contentView);
@@ -108,10 +81,29 @@
     titleLabel3.contentEdgeInsets = UIEdgeInsetsMake(10, 18.f, 10.f, 18.f);
     [self.contentView addSubview:titleLabel3];
     self.titleLabel3 = titleLabel3;
-
+    
     [titleLabel3 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(self.titleLabel1);
         make.left.mas_equalTo(self.titleLabel2.mas_right);
+        make.centerY.mas_equalTo(self.contentView);
+    }];
+    
+    QMUILabel *titleLabel4 = [[QMUILabel alloc] init];
+    titleLabel4.font = UIFontMake(13.f);
+    titleLabel4.textColor = WLColoerRGB(51.f);
+    titleLabel4.numberOfLines = 0;
+    // 居中设置
+    titleLabel4.adjustsFontSizeToFitWidth = YES;
+    titleLabel4.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+    titleLabel4.textAlignment = NSTextAlignmentCenter;
+    // 控制文本内部宽度，让时间换行
+    titleLabel4.contentEdgeInsets = UIEdgeInsetsMake(10, 18.f, 10.f, 18.f);
+    [self.contentView addSubview:titleLabel4];
+    self.titleLabel4 = titleLabel4;
+    
+    [titleLabel4 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(self.titleLabel1);
+        make.left.mas_equalTo(self.titleLabel3.mas_right);
         make.centerY.mas_equalTo(self.contentView);
     }];
     
@@ -134,29 +126,21 @@
         make.centerY.mas_equalTo(self.contentView);
     }];
     
-//    for (NSInteger i = 0; i < 3; i++) {
-//        QMUILabel *momeyLabel = [[QMUILabel alloc] init];
-//        momeyLabel.text = self.gridTitles[i];
-//        momeyLabel.font = UIFontMake(13.f);
-//        momeyLabel.textColor = WLColoerRGB(51.f);
-//        momeyLabel.numberOfLines = 0;
-//        // 居中设置
-//        momeyLabel.adjustsFontSizeToFitWidth = YES;
-//        momeyLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-//        momeyLabel.textAlignment = NSTextAlignmentCenter;
-//        // 控制文本内部宽度，让时间换行
-//        momeyLabel.contentEdgeInsets = UIEdgeInsetsMake(10, 18.f, 10.f, 18.f);
-//        momeyLabel.tag = 100+i;
-//        [_gridView addSubview:momeyLabel];
-//                [momeyLabel wl_setDebug:YES];
-//    }
+    UIView *lineView3 = [[UIView alloc] initWithFrame:CGRectZero];
+    lineView3.backgroundColor = WLColoerRGB(242.f);
+    [self.contentView addSubview:lineView3];
+    [lineView3 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(.6f, self.contentView.height));
+        make.left.mas_equalTo(self.titleLabel3.mas_right);
+        make.centerY.mas_equalTo(self.contentView);
+    }];
     
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectZero];
-    lineView.backgroundColor = WLColoerRGB(242.f);
-    [self.contentView addSubview:lineView];
-    self.lineView = lineView;
-    
-    self.lineView.frame = CGRectMake(0.f, self.contentView.size.height - .6f, DEVICE_WIDTH, .6f);
+//    UIView *lineView = [[UIView alloc] initWithFrame:CGRectZero];
+//    lineView.backgroundColor = WLColoerRGB(242.f);
+//    [self.contentView addSubview:lineView];
+//    self.lineView = lineView;
+//
+//    self.lineView.frame = CGRectMake(0.f, self.contentView.size.height - .6f, DEVICE_WIDTH, .6f);
 }
 
 - (void)setTitleFont:(UIFont *)titleFont {
@@ -164,6 +148,7 @@
     _titleLabel1.font =  _titleFont;
     _titleLabel2.font =  _titleFont;
     _titleLabel3.font =  _titleFont;
+    _titleLabel4.font =  _titleFont;
 }
 
 - (void)setTitleColor:(UIColor *)titleColor {
@@ -171,6 +156,7 @@
     _titleLabel1.textColor =  _titleColor;
     _titleLabel2.textColor = _titleColor;
     _titleLabel3.textColor = _titleColor;
+    _titleLabel4.textColor = _titleColor;
 }
 
 - (void)setGridTitles:(NSArray<NSString *> *)gridTitles {
@@ -179,21 +165,7 @@
     _titleLabel1.text = _gridTitles[0];
     _titleLabel2.text = _gridTitles[1];
     _titleLabel3.text = _gridTitles[2];
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-}
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
+    _titleLabel4.text = _gridTitles[3];
 }
 
 @end

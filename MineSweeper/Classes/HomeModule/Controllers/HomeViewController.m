@@ -293,7 +293,7 @@
         QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"确定" style:QMUIAlertActionStyleDefault handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
             
         }];
-        QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:model.title message:nil preferredStyle:QMUIAlertControllerStyleAlert];
+        QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:@"公告" message:model.title preferredStyle:QMUIAlertControllerStyleAlert];
         //    [alertController addAction:action1];
         [alertController addAction:action2];
         [alertController showWithAnimated:YES];

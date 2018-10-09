@@ -97,9 +97,7 @@
     WEAKSELF
     [UserModelClient setInviteCodeWithParams:params Success:^(id resultInfo) {
         [kNSNotification postNotificationName:@"kUserInfoChanged" object:nil];
-        if (!resultInfo) {
-            [WLHUDView showSuccessHUD:resultInfo];
-        }
+        [WLHUDView showSuccessHUD:@"设置邀请码成功"];
         [weakSelf.navigationController popViewControllerAnimated:YES];
     } Failed:^(NSError *error) {
         if (error.localizedDescription.length > 0) {

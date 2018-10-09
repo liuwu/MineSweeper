@@ -96,11 +96,11 @@
 }
 
 - (void)getLoginUserInfo {
-    [WLHUDView showHUDWithStr:@"" dim:YES];
+//    [WLHUDView showHUDWithStr:@"" dim:YES];
     WEAKSELF
     [UserModelClient getUserInfoWithParams:nil
                                    Success:^(id resultInfo) {
-                                       [WLHUDView hiddenHud];
+//                                       [WLHUDView hiddenHud];
                                        [weakSelf.tableView.mj_header endRefreshing];
                                        [weakSelf.tableView.mj_footer endRefreshing];
                                        IUserInfoModel *userInfoModel = [IUserInfoModel modelWithDictionary:resultInfo];
@@ -108,7 +108,7 @@
                                        [RCDDataSource refreshLogUserInfoCache:userInfoModel];
                                        [weakSelf reloadUI];
                                    } Failed:^(NSError *error) {
-                                       [WLHUDView hiddenHud];
+//                                       [WLHUDView hiddenHud];
                                        [weakSelf.tableView.mj_header endRefreshing];
                                        [weakSelf.tableView.mj_footer endRefreshing];
                                    }];

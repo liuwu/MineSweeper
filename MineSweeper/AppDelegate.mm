@@ -194,6 +194,7 @@ single_implementation(AppDelegate);
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     //添加聊天用户改变监听
     [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
+    [kNSNotification postNotificationName:@"kCheckVersion" object:nil];
 }
 
 
@@ -578,15 +579,15 @@ single_implementation(AppDelegate);
 
 #pragma mark - 退出登录
 - (void)logoutWithErrormsg:(NSString *)errormsg {
-    dispatch_async(dispatch_get_main_queue(), ^{
-       
-    });
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//
+//    });
     // 关闭融云连接
     [[RCIM sharedRCIM] clearUserInfoCache];
     [[RCIM sharedRCIM] clearGroupInfoCache];
     [[RCIM sharedRCIM] disconnect:NO];
     
-    [LGAlertView removeAlertViews];
+//    [LGAlertView removeAlertViews];
 //    [self.window endEditing:YES];
     if (!_loginNav) {
         LoginViewController *loginVC = [[LoginViewController alloc] init];

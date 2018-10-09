@@ -110,6 +110,7 @@
     // 转账金额
     LWLoginTextFieldView *moenyTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeMoney];
     moenyTxtView.titleLabel.text = @"提现金额";
+//    moenyTxtView.isChangeBorder = NO;
     [self.view addSubview:moenyTxtView];
     self.moenyTxtView = moenyTxtView;
     [moenyTxtView.textField becomeFirstResponder];
@@ -374,14 +375,20 @@
 
 // 确认支付
 - (void)payBtnClicked:(UIButton *)sender {
-    [_payModalViewController hideWithAnimated:YES completion:nil];
+    WEAKSELF
+    [_payModalViewController hideWithAnimated:YES completion:^(BOOL finished) {
+        [weakSelf payTypeSelect];
+    }];
+}
+
+- (void)payTypeSelect {
     // 钱包 - 提现 - 支付宝授权登录
     [WLHUDView showHUDWithStr:@"提现中..." dim:YES];
     if (_selectType == 1) {
         //支付宝
         NSDictionary *params = @{@"password" : _pwdTextField.text.wl_trimWhitespaceAndNewlines,
                                  @"money" : [NSNumber numberWithFloat:_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue]};
-        WEAKSELF
+//        WEAKSELF
         [UserModelClient aliPayLoginWithParams:params Success:^(id resultInfo) {
             [[AlipaySDK defaultService] auth_V2WithInfo:resultInfo fromScheme:@"AlipayMineSweeper" callback:^(NSDictionary *resultDic) {
                 DLog(@"auth_V2WithInfo:%@", resultDic);
@@ -418,10 +425,8 @@
     WEAKSELF
     [UserModelClient withdrawWallentWithParams:params Success:^(id resultInfo) {
         [kNSNotification postNotificationName:@"kUserInfoChanged" object:nil];
-        dispatch_async_on_main_queue(^{
-            weakSelf.moenyTxtView.textField.text = @"";
-            [WLHUDView showSuccessHUD:@"提现成功"];
-        });
+        weakSelf.moenyTxtView.textField.text = @"";
+        [WLHUDView showSuccessHUD:@"提现成功"];
     } Failed:^(NSError *error) {
         if (error.localizedDescription.length > 0) {
             [WLHUDView showErrorHUD:error.localizedDescription];

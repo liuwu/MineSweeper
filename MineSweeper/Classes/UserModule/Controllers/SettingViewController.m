@@ -17,6 +17,8 @@
 #import "UserModelClient.h"
 #import "ISafeIndexModel.h"
 
+#import "WLRequestManager.h"
+
 @interface SettingViewController ()
 
 @property (nonatomic, strong) RETableViewManager *manager;
@@ -191,13 +193,16 @@
     QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
         DLog(@"取消");
     }];
+    WEAKSELF
     QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"退出登录" style:QMUIAlertActionStyleDestructive handler:^(QMUIAlertController *aAlertController, QMUIAlertAction *action) {
         DLog(@"退出登录");
+        // 取消所有接口请求
+        [[WLRequestManager sharedInstance] cancelAllRequests];
         // 设置登录用户信息
         [NSUserDefaults setObject:nil forKey:kWLLoginUserIdKey];
-        [kNSNotification postNotificationName:@"kRefreshFriendList" object:nil];
+//        [kNSNotification postNotificationName:@"kRefreshFriendList" object:nil];
         [kNSNotification postNotificationName:@"kUserLogout" object:nil];
-        [self.navigationController popToRootViewControllerAnimated:YES];
+        [weakSelf.navigationController popToRootViewControllerAnimated:YES];
         [[AppDelegate sharedAppDelegate] checkLoginStatus];
     }];
     QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:nil message:@"确认退出？" preferredStyle:QMUIAlertControllerStyleActionSheet];

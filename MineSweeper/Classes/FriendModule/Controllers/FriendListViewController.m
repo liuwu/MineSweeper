@@ -141,10 +141,13 @@
         self.popupByWindow.maskViewBackgroundColor = [UIColor clearColor];//UIColorMaskWhite;// 使用方法 2 并且打开了 automaticallyHidesWhenUserTap 的情况下，可以修改背景遮罩的颜色
         self.popupByWindow.maximumWidth = 120;
         self.popupByWindow.shouldShowItemSeparator = YES;
+        self.popupByWindow.arrowSize = CGSizeMake(10, 8);
 //        self.popupByWindow.separatorInset = UIEdgeInsetsMake(0, self.popupByWindow.padding.left, 0, self.popupByWindow.padding.right);
         self.popupByWindow.itemConfigurationHandler = ^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuButtonItem *aItem, NSInteger section, NSInteger index) {
             // 利用 itemConfigurationHandler 批量设置所有 item 的样式
-            aItem.button.highlightedBackgroundColor = [[QDThemeManager sharedInstance].currentTheme.themeTintColor colorWithAlphaComponent:.2];
+//            aItem.button.highlightedBackgroundColor = [[QDThemeManager sharedInstance].currentTheme.themeTintColor colorWithAlphaComponent:.2];
+            aItem.button.tintColorAdjustsTitleAndImage = WLColoerRGB(51.f);
+            aItem.button.titleLabel.font = UIFontMake(15.f);
         };
         WEAKSELF
         QMUIPopupMenuButtonItem *addItem = [QMUIPopupMenuButtonItem itemWithImage:nil title:@"添加好友" handler:^(QMUIPopupMenuButtonItem *aItem) {

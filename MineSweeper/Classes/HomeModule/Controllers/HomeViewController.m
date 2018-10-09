@@ -46,6 +46,8 @@
 @property (nonatomic, strong) FSPagerView *pagerView;
 @property (nonatomic, strong) FSPageControl *pageControl;
 
+@property (nonatomic, assign) BOOL isFristIn;
+
 @end
 
 @implementation HomeViewController
@@ -69,19 +71,19 @@
 
 - (void)initSubviews {
     [super initSubviews];
+    self.isFristIn = YES;
     
     [self addViews];
-    
-    [kNSNotification addObserver:self selector:@selector(reloadData) name:@"kLoginUserTokenRefresh" object:nil];
     [self reloadData];
+    [kNSNotification addObserver:self selector:@selector(reloadData) name:@"kLoginUserTokenRefresh" object:nil];
+    [kNSNotification addObserver:self selector:@selector(checkVersion) name:@"kCheckVersion" object:nil];
 }
 
 - (void)reloadData {
     [self loadBannerData];
     [self loadNotice];
-    
     [self getLoginUserInfo];
-    [self checkVersion];
+//    [self checkVersion];
 }
 
 - (void)addViews {
@@ -218,6 +220,7 @@
     NSDictionary *params = @{@"type" : @(20),
                              @"version" : @([kAppVersion integerValue])
                              };
+    WEAKSELF
     [ImGroupModelClient checkVersionWithParams:params Success:^(id resultInfo) {
 //    status:(long)1
 //    msg:(long)21  //20需要更新，21不需要更新
@@ -227,11 +230,37 @@
 //    }
         if (resultInfo) {
             NSInteger msg = [resultInfo[@"msg"] integerValue];
-            
+            if (msg == 20) {
+                NSString *path = [resultInfo[@"info"] objectForKey:@"path"];
+                [weakSelf checkVersionMessageAlert:path];
+            } else {
+                if (weakSelf.isFristIn) {
+                    weakSelf.isFristIn = NO;
+                    [weakSelf noticeMessageAlert];
+                }
+                
+            }
         }
     } Failed:^(NSError *error) {
-        
+        if (weakSelf.isFristIn) {
+            weakSelf.isFristIn = NO;
+            [weakSelf noticeMessageAlert];
+        }
     }];
+}
+
+// 检测版本升级
+- (void)checkVersionMessageAlert:(NSString *)path {
+//    WEAKSELF
+    QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"点我更新" style:QMUIAlertActionStyleDefault handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+        if ([path length] > 0) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:path]];
+        }
+    }];
+    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:@"软件已更新，请立即更新！（如果更新失败，请将旧版本卸载后，重新下载安装）" message:nil preferredStyle:QMUIAlertControllerStyleAlert];
+//    [alertController addAction:action1];
+    [alertController addAction:action2];
+    [alertController showWithAnimated:YES];
 }
 
 // 加载系统公告
@@ -252,6 +281,22 @@
             [titleArrays addObject:model.title];
         }
         _noteView.titles = [NSArray arrayWithArray:titleArrays];
+    }
+    [self checkVersion];
+}
+
+// 检测版本升级
+- (void)noticeMessageAlert {
+    //    WEAKSELF
+    if (_noticeArray.count > 0) {
+        INoticeModel *model = _noticeArray[0];
+        QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"确定" style:QMUIAlertActionStyleDefault handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+            
+        }];
+        QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:model.title message:nil preferredStyle:QMUIAlertControllerStyleAlert];
+        //    [alertController addAction:action1];
+        [alertController addAction:action2];
+        [alertController showWithAnimated:YES];
     }
 }
 

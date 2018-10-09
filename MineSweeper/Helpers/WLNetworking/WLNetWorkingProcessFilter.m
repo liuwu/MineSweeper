@@ -9,6 +9,7 @@
 #import "WLNetWorkingProcessFilter.h"
 #import "WLPackAlertController.h"
 #import "AppDelegate.h"
+#import "WLRequestManager.h"
 
 
 /// --------- NSNotification -----------
@@ -185,9 +186,11 @@ NSString *const kWLNeedCompleteInfoNotification = @"kWLNeedCompleteInfoNoti";
                 
                 // 账号在其他地方登录
                 if (state.integerValue == 3) {
+                    // 取消所有接口请求
+                    [[WLRequestManager sharedInstance] cancelAllRequests];
                     // 设置登录用户信息
                     [NSUserDefaults setObject:nil forKey:kWLLoginUserIdKey];
-                    [kNSNotification postNotificationName:@"kRefreshFriendList" object:nil];
+//                    [kNSNotification postNotificationName:@"kRefreshFriendList" object:nil];
                     [kNSNotification postNotificationName:@"kUserLogout" object:nil];
                     [[AppDelegate sharedAppDelegate] checkLoginStatus];
                 }

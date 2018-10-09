@@ -13,12 +13,16 @@
 // post请求
 + (WLRequest *)postWithParams:(NSDictionary *)params
                 apiMethodName:(NSString *)apiMethodName
+ ignoreUnifiedResponseProcess:(BOOL)ignoreUnifiedResponseProcess
+                   checkToken:(BOOL)checkToken
                       Success:(SuccessBlock)success
                        Failed:(FailedBlock)failed;
 
 // get请求
 + (WLRequest *)getWithParams:(NSDictionary *)params
                apiMethodName:(NSString *)apiMethodName
+ignoreUnifiedResponseProcess:(BOOL)ignoreUnifiedResponseProcess
+                  checkToken:(BOOL)checkToken
                      Success:(SuccessBlock)success
                       Failed:(FailedBlock)failed;
 

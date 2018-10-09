@@ -15,6 +15,8 @@
 
 + (WLRequest *)postWithParams:(NSDictionary *)params
                 apiMethodName:(NSString *)apiMethodName
+ ignoreUnifiedResponseProcess:(BOOL)ignoreUnifiedResponseProcess
+                   checkToken:(BOOL)checkToken
                       Success:(SuccessBlock)success
                        Failed:(FailedBlock)failed {
     NSMutableDictionary *paramsMutableDic = [NSMutableDictionary dictionaryWithDictionary:params];
@@ -26,12 +28,19 @@
     requestCriteria.requestSerializerType = WLRequestSerializerTypeHTTP;
     requestCriteria.reponseSerializerType = WLResponseSerializerTypeJSON;
     // 忽略统一返回数据处理
-    requestCriteria.ignoreUnifiedResponseProcess = NO;
+    requestCriteria.ignoreUnifiedResponseProcess = ignoreUnifiedResponseProcess;
     WLRequest *api = [[WLRequest alloc] initWithRequestCriteria:requestCriteria];
     [api startWithCompletionBlockWithSuccess:^(WLRequest *request) {
         // 解析返回的数据
-        SAFE_BLOCK_CALL(success, request.responseJSONObject);
-         [[AppDelegate sharedAppDelegate] checkRefreshToken];
+        if (ignoreUnifiedResponseProcess) {
+            // 忽略统一返回数据处理
+            SAFE_BLOCK_CALL(success, [request.responseJSONObject jsonValueDecoded]);
+        } else {
+            SAFE_BLOCK_CALL(success, request.responseJSONObject);
+        }
+        if (checkToken) {
+            [[AppDelegate sharedAppDelegate] checkRefreshToken];
+        }
     } failure:^(WLRequest *request) {
 //        if (request.error.code != 2604 && request.error.code != 2602) {
 //            // 统一错误处理
@@ -48,6 +57,8 @@
 
 + (WLRequest *)getWithParams:(NSDictionary *)params
                apiMethodName:(NSString *)apiMethodName
+ignoreUnifiedResponseProcess:(BOOL)ignoreUnifiedResponseProcess
+                  checkToken:(BOOL)checkToken
                      Success:(SuccessBlock)success
                       Failed:(FailedBlock)failed {
     NSMutableDictionary *paramsMutableDic = [NSMutableDictionary dictionaryWithDictionary:params];
@@ -60,12 +71,19 @@
     requestCriteria.requestSerializerType = WLRequestSerializerTypeHTTP;
     requestCriteria.reponseSerializerType = WLResponseSerializerTypeJSON;
     // 忽略统一返回数据处理
-    requestCriteria.ignoreUnifiedResponseProcess = NO;
+    requestCriteria.ignoreUnifiedResponseProcess = ignoreUnifiedResponseProcess;
     WLRequest *api = [[WLRequest alloc] initWithRequestCriteria:requestCriteria];
     [api startWithCompletionBlockWithSuccess:^(WLRequest *request) {
         // 解析返回的数据
-        SAFE_BLOCK_CALL(success, request.responseJSONObject);
-         [[AppDelegate sharedAppDelegate] checkRefreshToken];
+        if (ignoreUnifiedResponseProcess) {
+            // 忽略统一返回数据处理
+            SAFE_BLOCK_CALL(success, [request.responseJSONObject jsonValueDecoded]);
+        } else {
+            SAFE_BLOCK_CALL(success, request.responseJSONObject);
+        }
+        if (checkToken) {
+            [[AppDelegate sharedAppDelegate] checkRefreshToken];
+        }
     } failure:^(WLRequest *request) {
 //        if (request.error.code != 2604 && request.error.code != 2602) {
 //            // 统一错误处理

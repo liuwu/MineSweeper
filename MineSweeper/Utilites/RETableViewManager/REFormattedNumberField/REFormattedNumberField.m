@@ -52,7 +52,7 @@
 - (void)commonInit {
     
     self.keyboardType = UIKeyboardTypeNumberPad;
-    self.format = @"X";
+//    self.format = @"X";
     [super setDelegate:self];
     [self addTarget:self action:@selector(formatInput:) forControlEvents:UIControlEventEditingChanged];
 }

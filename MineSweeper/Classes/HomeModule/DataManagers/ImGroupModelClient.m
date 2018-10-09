@@ -15,6 +15,8 @@
                                Success:(SuccessBlock)success
                                 Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_add"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:YES
                                   Success:^(id resultInfo) {
                                       DLog(@"IM- 群组 - 创建 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
@@ -31,6 +33,8 @@
                                 Success:(SuccessBlock)success
                                  Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_join"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:YES
                                   Success:^(id resultInfo) {
                                       DLog(@"IM - 群组 - 加入 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
@@ -47,6 +51,8 @@
                                 Success:(SuccessBlock)success
                                  Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_quit"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:YES
                                   Success:^(id resultInfo) {
                                       DLog(@"IM - 群组 - 退出 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
@@ -63,6 +69,8 @@
                                  Success:(SuccessBlock)success
                                   Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_title"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:YES
                                   Success:^(id resultInfo) {
                                       DLog(@"IM - 群组 - 群名称 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
@@ -79,6 +87,8 @@
                                      Success:(SuccessBlock)success
                                       Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_member_del"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:YES
                                   Success:^(id resultInfo) {
                                       DLog(@"IM - 群组 - 删除群成员 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
@@ -95,6 +105,8 @@
                                       Success:(SuccessBlock)success
                                        Failed:(FailedBlock)failed {
     WLRequest *api = [self getWithParams:params apiMethodName:@"App/IM/IM/group_member_list"
+            ignoreUnifiedResponseProcess:NO
+                              checkToken:YES
                                   Success:^(id resultInfo) {
                                       DLog(@"IM - 群组 - 成员 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
@@ -111,6 +123,8 @@
                                 Success:(SuccessBlock)success
                                  Failed:(FailedBlock)failed {
     WLRequest *api = [self getWithParams:params apiMethodName:@"App/IM/IM/group_info"
+            ignoreUnifiedResponseProcess:NO
+                              checkToken:YES
                                  Success:^(id resultInfo) {
                                      DLog(@"IM - 群组 - 信息 ---- %@",describe(resultInfo));
                                      SAFE_BLOCK_CALL(success,resultInfo);
@@ -127,6 +141,8 @@
                                 Success:(SuccessBlock)success
                                  Failed:(FailedBlock)failed {
     WLRequest *api = [self getWithParams:params apiMethodName:@"App/IM/IM/group_list"
+            ignoreUnifiedResponseProcess:NO
+                              checkToken:YES
                                  Success:^(id resultInfo) {
                                      DLog(@"IM - 群组 - 列表 ---- %@",describe(resultInfo));
                                      SAFE_BLOCK_CALL(success,resultInfo);
@@ -143,6 +159,8 @@
                                   Success:(SuccessBlock)success
                                    Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_notice"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:YES
                                  Success:^(id resultInfo) {
                                      DLog(@"IM - 群组 - 公告 ---- %@",describe(resultInfo));
                                      SAFE_BLOCK_CALL(success,resultInfo);
@@ -159,6 +177,8 @@
                                          Success:(SuccessBlock)success
                                           Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_not_disturb_cancel"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:YES
                                   Success:^(id resultInfo) {
                                       DLog(@"IM - 群组 - 免打扰 - 取消 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
@@ -175,6 +195,8 @@
                                  Success:(SuccessBlock)success
                                   Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_is_top"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:YES
                                   Success:^(id resultInfo) {
                                       DLog(@"IM - 群组 - 置顶---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
@@ -191,6 +213,8 @@
                                        Success:(SuccessBlock)success
                                         Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_is_top_cancel"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:YES
                                   Success:^(id resultInfo) {
                                       DLog(@"IM - 群组 - 置顶 - 取消 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
@@ -207,6 +231,8 @@
                                       Success:(SuccessBlock)success
                                        Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_not_disturb"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:YES
                                   Success:^(id resultInfo) {
                                       DLog(@"IM - 群组 - 免打扰 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
@@ -223,6 +249,8 @@
                                   Success:(SuccessBlock)success
                                    Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/IM/IM/group_remark"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:YES
                                   Success:^(id resultInfo) {
                                       DLog(@"IM - 群组 - 设置名片 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
@@ -239,6 +267,8 @@
                                     Success:(SuccessBlock)success
                                      Failed:(FailedBlock)failed {
     WLRequest *api = [self getWithParams:params apiMethodName:@"App/IM/IM/game_group_list"
+            ignoreUnifiedResponseProcess:NO
+                              checkToken:YES
                                   Success:^(id resultInfo) {
                                       DLog(@"IM - 红包 - 群组 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
@@ -255,6 +285,8 @@
                              Success:(SuccessBlock)success
                               Failed:(FailedBlock)failed {
     WLRequest *api = [self getWithParams:params apiMethodName:@"App/IM/IM/get_banner"
+            ignoreUnifiedResponseProcess:NO
+                              checkToken:YES
                                   Success:^(id resultInfo) {
                                       DLog(@"IM - 获取轮播图 ---- %@",describe(resultInfo));
                                       SAFE_BLOCK_CALL(success,resultInfo);
@@ -271,6 +303,8 @@
                                    Success:(SuccessBlock)success
                                     Failed:(FailedBlock)failed {
     WLRequest *api = [self getWithParams:params apiMethodName:@"App/IM/IM/get_notice"
+            ignoreUnifiedResponseProcess:NO
+                              checkToken:YES
                                  Success:^(id resultInfo) {
                                      DLog(@"IM - 获取系统公告 ---- %@",describe(resultInfo));
                                      SAFE_BLOCK_CALL(success,resultInfo);
@@ -287,6 +321,8 @@
                                          Success:(SuccessBlock)success
                                           Failed:(FailedBlock)failed {
     WLRequest *api = [self getWithParams:params apiMethodName:@"App/IM/IM/get_notice_detail"
+            ignoreUnifiedResponseProcess:NO
+                              checkToken:YES
                                  Success:^(id resultInfo) {
                                      DLog(@"IM - 获取系统公告详情 ---- %@",describe(resultInfo));
                                      SAFE_BLOCK_CALL(success,resultInfo);
@@ -303,6 +339,8 @@
                               Success:(SuccessBlock)success
                                Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Info/check_version"
+             ignoreUnifiedResponseProcess:YES
+                               checkToken:YES
                                  Success:^(id resultInfo) {
                                      DLog(@"检测更新 ---- %@",describe(resultInfo));
                                      SAFE_BLOCK_CALL(success,resultInfo);

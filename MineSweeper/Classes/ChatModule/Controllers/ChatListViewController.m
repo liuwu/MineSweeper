@@ -110,19 +110,24 @@
     self.popupByWindow.maximumWidth = 120;
     self.popupByWindow.shouldShowItemSeparator = YES;
     //        self.popupByWindow.separatorInset = UIEdgeInsetsMake(0, self.popupByWindow.padding.left, 0, self.popupByWindow.padding.right);
-    self.popupByWindow.itemConfigurationHandler = ^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem, NSInteger section, NSInteger index) {
+    self.popupByWindow.itemConfigurationHandler = ^(QMUIPopupMenuView *aMenuView, __kindof QMUIPopupMenuButtonItem *aItem, NSInteger section, NSInteger index) {
         // 利用 itemConfigurationHandler 批量设置所有 item 的样式
         aItem.button.highlightedBackgroundColor = [[QDThemeManager sharedInstance].currentTheme.themeTintColor colorWithAlphaComponent:.2];
     };
+//    self.popupByWindow.itemConfigurationHandler = ^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem, NSInteger section, NSInteger index) {
+//        // 利用 itemConfigurationHandler 批量设置所有 item 的样式
+//        aItem.button.highlightedBackgroundColor = [[QDThemeManager sharedInstance].currentTheme.themeTintColor colorWithAlphaComponent:.2];
+//    };
     WEAKSELF
-    QMUIPopupMenuItem *addItem = [QMUIPopupMenuItem itemWithImage:nil title:@"添加好友" handler:^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem) {
+    QMUIPopupMenuButtonItem *addItem = [QMUIPopupMenuButtonItem itemWithImage:nil title:@"添加好友" handler:^(QMUIPopupMenuButtonItem *aItem) {
         [aItem.menuView hideWithAnimated:YES];
         [weakSelf searchFriendToAdd];
     }];
     addItem.button.titleLabel.textAlignment = NSTextAlignmentCenter;
     [addItem.button setTitleColor:WLColoerRGB(51.f) forState:UIControlStateNormal];
     addItem.button.titleLabel.font = UIFontMake(15.f);
-    QMUIPopupMenuItem *createGroupItem = [QMUIPopupMenuItem itemWithImage:nil title:@"创建群组" handler:^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem) {
+    
+    QMUIPopupMenuButtonItem *createGroupItem = [QMUIPopupMenuButtonItem itemWithImage:nil title:@"创建群组" handler:^(QMUIPopupMenuButtonItem *aItem) {
         [aItem.menuView hideWithAnimated:YES];
         [weakSelf createGroup];
     }];

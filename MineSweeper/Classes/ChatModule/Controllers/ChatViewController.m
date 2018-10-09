@@ -125,7 +125,7 @@
             make.centerY.mas_equalTo(self.chatSessionInputBarControl.inputTextView);
         }];
         
-        self.chatSessionInputBarControl.inputTextView.text = @"";
+//        self.chatSessionInputBarControl.inputTextView.text = @"";
         self.chatSessionInputBarControl.inputTextView.textColor = WLColoerRGB(153);
         self.chatSessionInputBarControl.inputTextView.backgroundColor = WLColoerRGB(248);
         self.chatSessionInputBarControl.inputTextView.editable = NO;

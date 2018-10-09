@@ -241,7 +241,8 @@ NS_ASSUME_NONNULL_END
 //检测iphone6p(bool)
 //#define Iphone6plus [[NSString getCurrentDeviceModel] isEqualToString:@"iPhone6Plus"]
 
-#define iPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
+//#define iPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
+#define iPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? (UIScreen.mainScreen.currentMode.size.height/UIScreen.mainScreen.currentMode.size.width > 2.0) : NO)
 
 #define iphone4And4s ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 960),[[UIScreen mainScreen] currentMode].size) : NO)
 

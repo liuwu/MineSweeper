@@ -329,124 +329,6 @@ static NSString *paylistCellid = @"paylistCellid";
     ActivityMapViewController *mapVC = [[ActivityMapViewController alloc] initWithRCLocationMsg:locationMessageContent];
     [self.navigationController pushViewController:mapVC animated:YES];
 }
-
-//- (void)selectedCardMessageWithCardM:(CardStatuModel *)cardModel
-//{
-//    //3 活动，10项目，11 网页  13 投递项目卡片 14 用户名片卡片 15 投资人索要项目卡片 20项目集 22 融资活动
-//    switch (cardModel.type.integerValue) {
-//        case WLBubbleMessageCardTypeActivity:{
-//            WLActivityDetailInfoController *activityInfoVC = [[WLActivityDetailInfoController alloc] initWithActivityStyle:WLActivityStyleCarveout activityID:cardModel.cid];
-//            if (activityInfoVC) {
-//                [self.navigationController pushViewController:activityInfoVC animated:YES];
-//            }
-//        }
-//            break;
-//        case WLBubbleMessageCardTypeFinaceActivity:{
-//            //查询本地有没有该活动
-//            WLActivityDetailInfoController *activityInfoVC = [[WLActivityDetailInfoController alloc] initWithActivityStyle:WLActivityStyleFinancing activityID:cardModel.cid];
-//            if (activityInfoVC) {
-//                [self.navigationController pushViewController:activityInfoVC animated:YES];
-//            }
-//        }
-//            break;
-//        case WLBubbleMessageCardTypeProject: {
-//            NSNumber *projectPid = nil;
-//            NSNumber *orderId = nil;
-//            WLProjectFromType fromtype = WLProjectFromTypeNormal;
-//            if (cardModel.subType.integerValue == 1) {
-//                // 判断自己是否是投资人
-//                BOOL isinvert =  [self judgeInvestorAuth];
-//                if (!isinvert) return;
-//
-//                //转推的项目
-//                fromtype = WLProjectFromTypeForward;
-//                projectPid = cardModel.cid;
-//                orderId = cardModel.relationid;
-//            } else if(cardModel.subType.integerValue == 2){
-//                //微链推荐
-//                fromtype = WLProjectFromTypeCommend;
-//                projectPid = cardModel.cid;
-//                orderId = cardModel.relationid;
-//            } else{
-//                projectPid = cardModel.cid;
-//            }
-//            //进入项目详情
-//            [[AppDelegate sharedAppDelegate] showInfoWithType:JumpTypeProDetail
-//                                                        param:projectPid.stringValue
-//                                                     subparam:orderId.stringValue
-//                                              projectFromType:fromtype
-//                                                       fromVC:self];
-//        }
-//            break;
-//        case WLBubbleMessageCardTypeWeb: {
-//            [[AppDelegate sharedAppDelegate] wlopenURLString:cardModel.url sourceViewControl:self];
-//        }
-//            break;
-//        case WLBubbleMessageCardTypeInvestorPost: {
-//            // 判断自己是否是投资人
-//            BOOL isinvert =  [self judgeInvestorAuth];
-//            if (!isinvert) return;
-//            //进入项目详情
-//            [[AppDelegate sharedAppDelegate] showInfoWithType:JumpTypeProDetail
-//                                                        param:cardModel.cid.stringValue
-//                                                     subparam:cardModel.relationid.stringValue
-//                                              projectFromType:WLProjectFromTypePost
-//                                                       fromVC:self];
-//        }
-//            break;
-//        case WLBubbleMessageCardTypeCircle: {
-//            //圈子点击
-//            [[AppDelegate sharedAppDelegate] showInfoWithType:JumpTypeCircle
-//                                                        param:cardModel.cid.stringValue
-//                                                     subparam:nil
-//                                              projectFromType:WLProjectFromTypeNormal
-//                                                       fromVC:self];
-//        }
-//            break;
-//        case WLBubbleMessageCardTypeInvestorDetail: {
-//            //投资人点击
-//            [[AppDelegate sharedAppDelegate] showInfoWithType:JumpTypeInvestorDetail
-//                                                        param:cardModel.cid.stringValue
-//                                                     subparam:nil
-//                                              projectFromType:WLProjectFromTypeNormal
-//                                                       fromVC:self];
-//        }
-//            break;
-//        default:
-//            break;
-//    }
-//}
-//
-//#pragma mark - 判断自己是否是投资人
-//- (BOOL)judgeInvestorAuth {
-//    WLUserDetailInfoModel *loginUser = configTool.loginUser;
-//    /**  投资者认证  0 默认状态  1  认证成功  -2 正在审核  -1 认证失败 */
-//    switch (loginUser.investorauth.integerValue) {
-//        case 0:
-//        case -1:
-//        {
-//            WEAKSELF
-//            [[LGAlertView alertViewWithTitle:@"你当前不是投资人，去认证？" message:nil style:LGAlertViewStyleAlert buttonTitles:nil cancelButtonTitle:@"取消" destructiveButtonTitle:@"去认证" actionHandler:nil cancelHandler:nil destructiveHandler:^(LGAlertView *alertView) {
-//                InvestCerVC *investcerVC = [[InvestCerVC alloc] init];
-//                [weakSelf.navigationController pushViewController:investcerVC animated:YES];
-//
-//            }] showAnimated:YES completionHandler:nil];
-//        }
-//            break;
-//        case -2:
-//        {
-//            [[LGAlertView alertViewWithTitle:@"你当前投资状态正在审核中，请耐心等待" message:nil style:LGAlertViewStyleAlert buttonTitles:nil cancelButtonTitle:nil destructiveButtonTitle:@"知道了" actionHandler:nil cancelHandler:nil destructiveHandler:nil] showAnimated:YES completionHandler:nil];
-//        }
-//            break;
-//        default:
-//            break;
-//    }
-//    if (loginUser.investorauth.integerValue == 1) {
-//        return YES;
-//    }else{
-//        return NO;
-//    }
-//}
 //
 //#pragma mark override
 ///**
@@ -459,30 +341,30 @@ static NSString *paylistCellid = @"paylistCellid";
 //    DLog(@"pluginBoardView ----%d",tag);
     WEAKSELF
     switch (tag) {
-        case 1001: {
-            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypePhotos completionHandler:^(WLSystemAuthStatus status) {
-                if (status == WLSystemAuthStatusAuthorized) {
-                    [weakSelf showPicVC];
-                }
-            }];
-        }
-            break;
-        case 1002: {
-            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeCamera completionHandler:^(WLSystemAuthStatus status) {
-                if (status == WLSystemAuthStatusAuthorized) {
-                    [weakSelf clickSheetCamera];
-                }
-            }];
-        }
-            break;
-        case 1003: {
-            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeLocation completionHandler:^(WLSystemAuthStatus status) {
-                if (status == WLSystemAuthStatusAuthorized) {
-                    [weakSelf showLocationMapVC];
-                }
-            }];
-        }
-            break;
+//        case 1001: {
+//            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypePhotos completionHandler:^(WLSystemAuthStatus status) {
+//                if (status == WLSystemAuthStatusAuthorized) {
+//                    [weakSelf showPicVC];
+//                }
+//            }];
+//        }
+//            break;
+//        case 1002: {
+//            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeCamera completionHandler:^(WLSystemAuthStatus status) {
+//                if (status == WLSystemAuthStatusAuthorized) {
+//                    [weakSelf clickSheetCamera];
+//                }
+//            }];
+//        }
+//            break;
+//        case 1003: {
+//            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeLocation completionHandler:^(WLSystemAuthStatus status) {
+//                if (status == WLSystemAuthStatusAuthorized) {
+//                    [weakSelf showLocationMapVC];
+//                }
+//            }];
+//        }
+//            break;
         case 6001: {
             // 转账
             FriendListViewController *vc = [[FriendListViewController alloc] initWithFriendListType:FriendListTypeForTransfer];

@@ -582,9 +582,9 @@ single_implementation(AppDelegate);
        
     });
     // 关闭融云连接
-    [[RCIM sharedRCIM] disconnect:NO];
     [[RCIM sharedRCIM] clearUserInfoCache];
     [[RCIM sharedRCIM] clearGroupInfoCache];
+    [[RCIM sharedRCIM] disconnect:NO];
     
     [LGAlertView removeAlertViews];
 //    [self.window endEditing:YES];

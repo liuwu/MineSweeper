@@ -35,6 +35,7 @@
 @property (nonatomic, strong) NSString *payPwd;
 
 @property (nonatomic, assign) NSInteger selectType;// 1:支付宝 2：银行卡
+@property (nonatomic, strong) ICardModel *selectCardModel;//选中的银行卡
 
 @end
 
@@ -46,9 +47,9 @@
 
 - (void)initSubviews {
     [super initSubviews];
+    self.selectType = 1;
     [self addViews];
     [self addViewConstraints];
-    self.selectType = 1;
     [self loadData];
     
     [kNSNotification addObserver:self selector:@selector(alipayUserId:) name:@"kAliPayUserId" object:nil];
@@ -139,16 +140,37 @@
     }];
     
     // 提现类型金额
-    leftView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, 25.f, 20.f)];
+    leftView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, 137.f, 20.f)];
     iconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic_card"]];
     iconView.frame = CGRectMake(0.f, 0.f, 20.f, 20.f);
     [leftView addSubview:iconView];
     
+    QMUILabel *titleLabel = [[QMUILabel alloc] init];
+    titleLabel.text = @"提现到银行卡";
+    titleLabel.font = UIFontMake(15);
+    titleLabel.textColor = WLColoerRGB(51.f);
+    titleLabel.frame = CGRectMake(25.f, 0.f, 110.f, 20.f);
+    [leftView addSubview:titleLabel];
+    
+    UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, 20.f, 20.f)];
+    UIImageView *backView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]];
+    [rightView addSubview:backView];
+    [backView sizeToFit];
+    [backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(rightView);
+        make.left.mas_equalTo(rightView);
+    }];
+    
     LWLoginTextFieldView *typeCardTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeDefault];
     typeCardTxtView.textField.enabled = NO;
-    typeCardTxtView.textField.text = @"提现到银行卡";
+//    typeCardTxtView.textField.text = @"提现到银行卡";
+    typeCardTxtView.textField.font = UIFontMake(12);
+    typeCardTxtView.textField.textColor = WLColoerRGB(102.f);
+    typeCardTxtView.textField.textAlignment = NSTextAlignmentRight;
     typeCardTxtView.textField.leftView = leftView;
     typeCardTxtView.textField.leftViewMode = UITextFieldViewModeAlways;
+    typeCardTxtView.textField.rightView = rightView;
+    typeCardTxtView.textField.rightViewMode = UITextFieldViewModeAlways;
 //    typeCardTxtView.subTitleLabel.text = @"";
     [self.view addSubview:typeCardTxtView];
     self.typeCardTxtView = typeCardTxtView;
@@ -186,9 +208,28 @@
     if (_selectType == 2) {
         // 银行卡
         MyCardViewController *vc = [[MyCardViewController alloc] init];
-//        [self.]
-//        [_typeTxtView wl_setBorderWidth:.8f color:WLColoerRGB(242.f)];
-//        [_typeCardTxtView wl_setBorderWidth:.8f color:WLRGB(254.f, 72.f, 30.f)];
+        [self.navigationController pushViewController:vc animated:YES];
+        if (_selectCardModel) {
+            [_typeTxtView wl_setBorderWidth:.8f color:WLColoerRGB(242.f)];
+            [_typeCardTxtView wl_setBorderWidth:.8f color:WLRGB(254.f, 72.f, 30.f)];
+        }
+        WEAKSELF
+        [vc setCardSelectBlock:^(ICardModel *cardModel) {
+            [weakSelf updateSelectCardType:cardModel];
+        }];
+    }
+}
+
+- (void)updateSelectCardType:(ICardModel *)cardModel {
+    self.selectCardModel = cardModel;
+    if (_selectCardModel) {
+        [_typeTxtView wl_setBorderWidth:.8f color:WLColoerRGB(242.f)];
+        [_typeCardTxtView wl_setBorderWidth:.8f color:WLRGB(254.f, 72.f, 30.f)];
+        
+        _typeCardTxtView.textField.text = [NSString stringWithFormat:@"%@（%@）", _selectCardModel.bank_adress, [_selectCardModel.account substringFromIndex:(cardModel.account.length - 4)]];
+    } else {
+        _selectType = 1;
+        [self checkSelectStatus:_selectType];
     }
 }
 
@@ -355,7 +396,9 @@
     }
     if (_selectType == 2) {
         // 银行卡 user_id：银行卡id
-        [self withdrawData:nil];
+        if (_selectCardModel) {
+            [self withdrawData:_selectCardModel.cardId];
+        }
     }
 }
 
@@ -372,9 +415,13 @@
                              @"money" : [NSNumber numberWithFloat:_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue],
                              @"pay_type" : _selectType == 1 ? @(10) : @(20)
                              };
+    WEAKSELF
     [UserModelClient withdrawWallentWithParams:params Success:^(id resultInfo) {
         [kNSNotification postNotificationName:@"kUserInfoChanged" object:nil];
-        [WLHUDView showSuccessHUD:@"提现成功"];
+        dispatch_async_on_main_queue(^{
+            weakSelf.moenyTxtView.textField.text = @"";
+            [WLHUDView showSuccessHUD:@"提现成功"];
+        });
     } Failed:^(NSError *error) {
         if (error.localizedDescription.length > 0) {
             [WLHUDView showErrorHUD:error.localizedDescription];

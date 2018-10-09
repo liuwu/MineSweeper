@@ -8,6 +8,12 @@
 
 #import "SLCommonGroupListViewController.h"
 
+#import "ICardModel.h"
+
+typedef void (^MyCardSelectedBlock)(ICardModel *cardModel);
+
 @interface MyCardViewController : SLCommonGroupListViewController
+
+@property (nonatomic, copy) MyCardSelectedBlock cardSelectBlock;
 
 @end

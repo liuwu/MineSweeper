@@ -22,6 +22,7 @@
 @property (nonatomic, copy) NSString *type;
 
 
+
 //username:(NSString *)刘武
 //account:(NSString *)6225885864447263
 //id:(NSString *)53

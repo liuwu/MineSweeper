@@ -4,6 +4,9 @@
 使用前，先安装cocoapods。
 使用 pod install 进行第三方库引入，安装完成打开MineSweeper.xcworkspace
 
+pod安装完成后，把Pods-MineSweeper.debug.xcconfig和Pods-MineSweeper.release.xcconfig里面的下面内容删掉
+-l"stdc++.6.0.9"
+
 修改页面主题在：
 Vendors-> Librarys -> QMUI -> Common -> Configuration -> QMUIConfigurationTemplate.m
 

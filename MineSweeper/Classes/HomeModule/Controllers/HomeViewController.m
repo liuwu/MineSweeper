@@ -215,7 +215,6 @@
 }
 
 - (void)checkVersion {
-    
     NSDictionary *params = @{@"type" : @(20),
                              @"version" : @([kAppVersion integerValue])
                              };

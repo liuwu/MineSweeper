@@ -11,8 +11,6 @@
 
 #import "UserModelClient.h"
 
-#import "ICardModel.h"
-
 #import "MyCardViewCell.h"
 
 
@@ -136,7 +134,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     DLog(@"didSelectRowAtIndexPath------");
-    
+    ICardModel *model = _datasource[indexPath.row];
+    if (_cardSelectBlock) {
+        _cardSelectBlock(model);
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

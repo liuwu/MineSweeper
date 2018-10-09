@@ -11,7 +11,11 @@
 
 #import "UserModelClient.h"
 
+#import "RETableViewManager.h"
+
 @interface AddCardViewController ()
+
+@property (nonatomic, strong) RETableViewManager *manager;
 
 @end
 
@@ -35,6 +39,8 @@
     [super initSubviews];
     [self addSubViews];
     //    [self addConstrainsForSubviews];
+    
+    [self addTableViewCell];
 }
 
 - (void)addSubViews {
@@ -56,36 +62,36 @@
         make.top.mas_equalTo(15.f);
     }];
 
-    LWLoginTextFieldView *userTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePhone];
-    userTxtView.titleLabel.text = @"持卡人";
-    userTxtView.textField.placeholder = @"姓名";
-    [headerView addSubview:userTxtView];
-    
-    [userTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, 44.f));
-        make.top.mas_equalTo(idLabel.mas_bottom).mas_offset(10.f);
-        make.centerX.mas_equalTo(headerView);
-    }];
-    
-    LWLoginTextFieldView *cardTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePhone];
-    cardTxtView.titleLabel.text = @"卡号";
-    cardTxtView.textField.placeholder = @"银行卡号";
-    [headerView addSubview:cardTxtView];
-    [cardTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(userTxtView);
-        make.top.mas_equalTo(userTxtView.mas_bottom);
-        make.centerX.mas_equalTo(headerView);
-    }];
-    
-    LWLoginTextFieldView *cardTypeTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePhone];
-    cardTypeTxtView.titleLabel.text = @"开户行";
-    cardTypeTxtView.textField.placeholder = @"开户银行";
-    [headerView addSubview:cardTypeTxtView];
-    [cardTypeTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(userTxtView);
-        make.top.mas_equalTo(cardTxtView.mas_bottom);
-        make.centerX.mas_equalTo(headerView);
-    }];
+//    LWLoginTextFieldView *userTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePhone];
+//    userTxtView.titleLabel.text = @"持卡人";
+//    userTxtView.textField.placeholder = @"姓名";
+//    [headerView addSubview:userTxtView];
+//
+//    [userTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, 44.f));
+//        make.top.mas_equalTo(idLabel.mas_bottom).mas_offset(10.f);
+//        make.centerX.mas_equalTo(headerView);
+//    }];
+//
+//    LWLoginTextFieldView *cardTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePhone];
+//    cardTxtView.titleLabel.text = @"卡号";
+//    cardTxtView.textField.placeholder = @"银行卡号";
+//    [headerView addSubview:cardTxtView];
+//    [cardTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.size.mas_equalTo(userTxtView);
+//        make.top.mas_equalTo(userTxtView.mas_bottom);
+//        make.centerX.mas_equalTo(headerView);
+//    }];
+//
+//    LWLoginTextFieldView *cardTypeTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePhone];
+//    cardTypeTxtView.titleLabel.text = @"开户行";
+//    cardTypeTxtView.textField.placeholder = @"开户银行";
+//    [headerView addSubview:cardTypeTxtView];
+//    [cardTypeTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.size.mas_equalTo(userTxtView);
+//        make.top.mas_equalTo(cardTxtView.mas_bottom);
+//        make.centerX.mas_equalTo(headerView);
+//    }];
     
     // 添加银行卡
     QMUIFillButton *bindBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
@@ -100,6 +106,42 @@
         make.bottom.mas_equalTo(headerView);
         make.centerX.mas_equalTo(headerView);
     }];
+}
+
+// 添加表格内容
+- (void)addTableViewCell {
+    self.manager = [[RETableViewManager alloc] initWithTableView:self.tableView];
+    WEAKSELF
+    RETableViewSection *section = [RETableViewSection section];
+    RETextItem *commendItem = [RETextItem itemWithTitle:@"持卡人" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
+        
+    }];
+    commendItem.placeholder = @"持卡人姓名";
+    commendItem.style = UITableViewCellStyleValue1;
+    commendItem.detailLabelText = configTool.userInfoModel.invite_code;
+    commendItem.titleDetailTextColor = WLColoerRGB(153.f);
+    commendItem.titleDetailTextFont = UIFontMake(15.f);
+//    commendItem.image = [UIImage imageNamed:@"mine_recommend_icon"];
+    [section addItem:commendItem];
+//    self.commendItem = commendItem;
+    
+    RETextItem *cardItem = [RETextItem itemWithTitle:@"卡号" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
+        
+    }];
+    cardItem.style = UITableViewCellStyleValue1;
+    //    cardItem.detailLabelText = configTool.userInfoModel.invite_code;
+    cardItem.titleDetailTextColor = WLColoerRGB(153.f);
+    cardItem.titleDetailTextFont = UIFontMake(15.f);
+//    cardItem.image = [UIImage imageNamed:@"mine_card"];
+    [section addItem:cardItem];
+//    self.cardItem = cardItem;
+    
+    RETextItem *promotionPosterItem = [RETextItem itemWithTitle:@"开户行" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
+        
+    }];
+//    promotionPosterItem.image = [UIImage imageNamed:@"mine_share_icon"];
+    [section addItem:promotionPosterItem];
+    [self.manager addSection:section];
 }
 
 

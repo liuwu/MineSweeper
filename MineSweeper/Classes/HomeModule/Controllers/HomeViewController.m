@@ -220,7 +220,16 @@
                              @"version" : @([kAppVersion integerValue])
                              };
     [ImGroupModelClient checkVersionWithParams:params Success:^(id resultInfo) {
-        
+//    status:(long)1
+//    msg:(long)21  //20需要更新，21不需要更新
+//    info:{
+//    path:(NSString *)https://test.cnsunrun.com/saoleiapp/
+//    version:(NSString *)1.0
+//    }
+        if (resultInfo) {
+            NSInteger msg = [resultInfo[@"msg"] integerValue];
+            
+        }
     } Failed:^(NSError *error) {
         
     }];

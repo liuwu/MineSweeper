@@ -16,6 +16,8 @@
                               Success:(SuccessBlock)success
                                Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/OAuth/refresh"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:NO
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
                                       DLog(@"我的 - 刷新 token ---- %@",describe(resultInfo));
@@ -33,6 +35,8 @@
                               Success:(SuccessBlock)success
                                Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/OAuth/token"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:NO
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
                                       DLog(@"我的 - token ---- %@",describe(resultInfo));
@@ -50,6 +54,8 @@
                                Success:(SuccessBlock)success
                                 Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Register/get_code_verification"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:NO
                  Success:^(id resultInfo) {
 //                     NSDictionary *resultInfo = request.responseJSONObject;
                      DLog(@"注册-获取图形验证码 ---- %@",describe(resultInfo));
@@ -67,6 +73,8 @@
                                 Success:(SuccessBlock)success
                                  Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Register/register_password_sms"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:NO
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
                                       DLog(@"注册-获取短信验证码 ---- %@",describe(resultInfo));
@@ -84,6 +92,8 @@
                         Success:(SuccessBlock)success
                          Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Register/register"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:NO
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
                                       DLog(@"注册 ---- %@",describe(resultInfo));
@@ -101,6 +111,8 @@
                                Success:(SuccessBlock)success
                                 Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Login/get_login_sms"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:NO
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
                                       DLog(@"登录 - 短信验证码 ---- %@",describe(resultInfo));
@@ -118,6 +130,8 @@
                               Success:(SuccessBlock)success
                                Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Login/login_sms"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:NO
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
                                       DLog(@"登录 - 短信登录 ---- %@",describe(resultInfo));
@@ -135,6 +149,8 @@
                             Success:(SuccessBlock)success
                              Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Login/login"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:NO
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
                                       DLog(@"登录 - 密码登录 ---- %@",describe(resultInfo));
@@ -152,6 +168,8 @@
                                    Success:(SuccessBlock)success
                                     Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Login/forget_password_sms"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:NO
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
                                       DLog(@"找回密码-发送验证码 ---- %@",describe(resultInfo));
@@ -169,6 +187,8 @@
                                Success:(SuccessBlock)success
                                 Failed:(FailedBlock)failed {
     WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Login/forget_password"
+             ignoreUnifiedResponseProcess:NO
+                               checkToken:NO
                                   Success:^(id resultInfo) {
                                       //                     NSDictionary *resultInfo = request.responseJSONObject;
                                       DLog(@"找回密码-保存 ---- %@",describe(resultInfo));

@@ -19,7 +19,7 @@
 
 @interface LoginViewController ()
 
-
+@property (nonatomic, strong) UIImageView *logoImageView;
 @property (nonatomic, strong) LWLoginTextFieldView *phoneTxtView;
 @property (nonatomic, strong) LWLoginTextFieldView *pwdTxtView;
 @property (nonatomic, strong) UIButton *loginBtn;
@@ -47,11 +47,39 @@
     [DaiDodgeKeyboard removeRegisterTheViewNeedDodgeKeyboard];
 }
 
+#pragma mark - QMUINavigationControllerDelegate
+// 设置是否允许自定义
+- (BOOL)shouldSetStatusBarStyleLight {
+    return YES;
+}
+
+// 设置导航栏的背景图
+- (UIImage *)navigationBarBackgroundImage {
+    return [UIImage qmui_imageWithColor:WLColoerRGB(248.f)];
+}
+
+// 设置导航栏底部的分隔线图片
+- (UIImage *)navigationBarShadowImage {
+    return [UIImage qmui_imageWithColor:WLColoerRGB(248.f)];
+}
+
+// nav中的baritem的颜色
+- (UIColor *)navigationBarTintColor {
+    return WLColoerRGB(51.f);//[UIColor whiteColor];//WLRGB(254.f, 72.f, 30.f);
+}
+
+// nav标题颜色
+- (UIColor *)titleViewTintColor {
+    return [UIColor whiteColor];
+}
+
 - (void)initSubviews {
     // 子类重写
     [super initSubviews];
     [self addSubviews];
     [self addConstrainsForSubviews];
+    
+    self.view.backgroundColor = WLColoerRGB(248.f);
 }
 
 - (void)viewDidLoad {
@@ -71,11 +99,16 @@
     UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithTitle:@"注册" target:self action:@selector(rightBarButtonItemClicked)];
     self.navigationItem.rightBarButtonItem = rightBtnItem;
     
+    
 //    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"注册"
 //                                                                              style:UIBarButtonItemStylePlain
 //                                                                             target:self
 //                                                                             action:@selector(rightBarButtonItemClicked)];
 //
+    UIImageView *logoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logoImg"]];
+    [self.view addSubview:logoImageView];
+    self.logoImageView = logoImageView;
+    
     LWLoginTextFieldView *phoneTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePhone];
     phoneTxtView.textField.text = [NSUserDefaults stringForKey:kWLLastLoginUserPhoneKey];
     [self.view addSubview:phoneTxtView];
@@ -124,15 +157,16 @@
 
 // 布局控制
 - (void)addConstrainsForSubviews {
+    [_logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(150.f, 150.f));
+        make.top.mas_equalTo(self.view).mas_offset(self.qmui_navigationBarMaxYInViewCoordinator + 40.f);
+        make.centerX.mas_equalTo(self.view);
+    }];
     
     [_phoneTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
-        if (@available(iOS 11.0, *)) {
-            make.top.mas_equalTo(self.view.mas_safeAreaLayoutGuideTop).offset(kWL_NormalMarginWidth_14);
-        } else {
-            make.top.mas_equalTo(self.view.mas_top).offset(kWL_NormalMarginWidth_14);
-        }
+        make.top.mas_equalTo(self.logoImageView.mas_bottom).offset(40.f);
         make.centerX.mas_equalTo(self.view);
-        make.width.mas_equalTo(ScreenWidth - kWL_NormalMarginWidth_10 * 2.f);
+        make.width.mas_equalTo(DEVICE_WIDTH - kWL_NormalMarginWidth_10 * 2.f);
         make.height.mas_equalTo(kWL_NormalTextFieldHeight);
     }];
     

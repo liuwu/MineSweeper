@@ -298,4 +298,20 @@
     return api;
 }
 
+// 检测更新
++ (WLRequest *)checkVersionWithParams:(NSDictionary *)params
+                              Success:(SuccessBlock)success
+                               Failed:(FailedBlock)failed {
+    WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Info/check_version"
+                                 Success:^(id resultInfo) {
+                                     DLog(@"检测更新 ---- %@",describe(resultInfo));
+                                     SAFE_BLOCK_CALL(success,resultInfo);
+                                 } Failed:^(NSError *error) {
+                                     // 统一错误处理
+                                     //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                     SAFE_BLOCK_CALL(failed, error);
+                                 }];
+    return api;
+}
+
 @end

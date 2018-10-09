@@ -98,22 +98,22 @@
         make.edges.mas_equalTo(UIEdgeInsetsMake(3.f, 3.f, 3.f, 3.f));
     }];
     
-    QMUILabel *logoLabel = [[QMUILabel alloc] init];
-    logoLabel.text = @"LOGO";
-    logoLabel.font = UIFontMake(14);
-    logoLabel.backgroundColor = [UIColor clearColor];//UIColorMake(254,72,30);
-    logoLabel.textColor = [UIColor whiteColor];
-    logoLabel.textAlignment = NSTextAlignmentCenter;
-    [logoLabel wl_setBorderWidth:3.f color:[UIColor whiteColor]];
-    [logoLabel wl_setCornerRadius:15.f];
-    [shadowView addSubview:logoLabel];
-//    [logoLabel wl_setDebug:YES];
-    [logoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsMake(3.f, 3.f, 3.f, 3.f));
-//        make.width.height.mas_equalTo(100.f);
-//        make.centerX.mas_equalTo(self.view);
-//        make.centerY.mas_equalTo(cotentView.mas_top);
-    }];
+//    QMUILabel *logoLabel = [[QMUILabel alloc] init];
+//    logoLabel.text = @"LOGO";
+//    logoLabel.font = UIFontMake(14);
+//    logoLabel.backgroundColor = [UIColor clearColor];//UIColorMake(254,72,30);
+//    logoLabel.textColor = [UIColor whiteColor];
+//    logoLabel.textAlignment = NSTextAlignmentCenter;
+//    [logoLabel wl_setBorderWidth:3.f color:[UIColor whiteColor]];
+//    [logoLabel wl_setCornerRadius:15.f];
+//    [shadowView addSubview:logoLabel];
+////    [logoLabel wl_setDebug:YES];
+//    [logoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.edges.mas_equalTo(UIEdgeInsetsMake(3.f, 3.f, 3.f, 3.f));
+////        make.width.height.mas_equalTo(100.f);
+////        make.centerX.mas_equalTo(self.view);
+////        make.centerY.mas_equalTo(cotentView.mas_top);
+//    }];
     
     WEAKSELF
     [logoImageView setImageWithURL:[NSURL URLWithString:_posterModel.app_logo]
@@ -138,7 +138,7 @@
     [titleLabel sizeToFit];
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.view);
-        make.top.mas_equalTo(logoLabel.mas_bottom).offset(10.f);
+        make.top.mas_equalTo(logoImageView.mas_bottom).offset(10.f);
     }];
     
     UIView *codeBgView = [[UIView alloc] init];

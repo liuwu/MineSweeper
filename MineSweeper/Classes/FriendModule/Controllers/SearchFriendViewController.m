@@ -106,8 +106,11 @@
     [FriendModelClient getImMemberSearchWithParams:@{@"mobile" : searchBar.text.wl_trimWhitespaceAndNewlines}
                                            Success:^(id resultInfo) {
                                                [WLHUDView hiddenHud];
-                                               FriendRquestViewController *vc = [[FriendRquestViewController alloc] init];
-                                               vc.uid = resultInfo[@"id"];
+//                                               FriendRquestViewController *vc = [[FriendRquestViewController alloc] init];
+//                                               vc.uid = resultInfo[@"id"];
+                                               UserInfoViewController *vc = [[UserInfoViewController alloc] init];
+                                               vc.userId = resultInfo[@"id"];
+                                               vc.hidesBottomBarWhenPushed = YES;
                                                [weakSelf.navigationController pushViewController:vc animated:YES];
                                            } Failed:^(NSError *error) {
                                                if (error.localizedDescription.length > 0) {

@@ -427,4 +427,52 @@
     return api;
 }
 
+// 我的银行卡列表
++ (WLRequest *)getBankCardListWithParams:(NSDictionary *)params
+                                 Success:(SuccessBlock)success
+                                  Failed:(FailedBlock)failed {
+    WLRequest *api = [self getWithParams:params apiMethodName:@"App/User/Wallet/get_bank_card"
+                                 Success:^(id resultInfo) {
+                                     DLog(@"我的银行卡列表 ---- %@",describe(resultInfo));
+                                     SAFE_BLOCK_CALL(success,resultInfo);
+                                 } Failed:^(NSError *error) {
+                                     // 统一错误处理
+                                     //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                     SAFE_BLOCK_CALL(failed, error);
+                                 }];
+    return api;
+}
+
+// 新增银行卡
++ (WLRequest *)addBankCardListWithParams:(NSDictionary *)params
+                                 Success:(SuccessBlock)success
+                                  Failed:(FailedBlock)failed {
+    WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Wallet/add_bank_card"
+                                 Success:^(id resultInfo) {
+                                     DLog(@"新增银行卡 ---- %@",describe(resultInfo));
+                                     SAFE_BLOCK_CALL(success,resultInfo);
+                                 } Failed:^(NSError *error) {
+                                     // 统一错误处理
+                                     //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                     SAFE_BLOCK_CALL(failed, error);
+                                 }];
+    return api;
+}
+
+// 银行卡解绑
++ (WLRequest *)delBankCardListWithParams:(NSDictionary *)params
+                                 Success:(SuccessBlock)success
+                                  Failed:(FailedBlock)failed {
+    WLRequest *api = [self postWithParams:params apiMethodName:@"App/User/Wallet/bank_card_del"
+                                 Success:^(id resultInfo) {
+                                     DLog(@"银行卡解绑 ---- %@",describe(resultInfo));
+                                     SAFE_BLOCK_CALL(success,resultInfo);
+                                 } Failed:^(NSError *error) {
+                                     // 统一错误处理
+                                     //                     [WLNetWorkingProcessFilter checkErrorWithRequest:request customMsg:nil];
+                                     SAFE_BLOCK_CALL(failed, error);
+                                 }];
+    return api;
+}
+
 @end

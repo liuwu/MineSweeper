@@ -20,6 +20,7 @@
 #import "UserInfoViewController.h"
 #import "MessageNotifiListViewController.h"
 #import "ChatViewController.h"
+#import "MyCardViewController.h"
 
 #import "SWQRCode.h"
 
@@ -59,6 +60,7 @@
 @property (nonatomic, strong) IPosterModel *posterModel;
 
 @property (nonatomic, strong) RETableViewItem *commendItem;
+@property (nonatomic, strong) RETableViewItem *cardItem;
 
 @end
 
@@ -359,6 +361,18 @@
     commendItem.image = [UIImage imageNamed:@"mine_recommend_icon"];
     [section addItem:commendItem];
     self.commendItem = commendItem;
+    
+    RETableViewItem *cardItem = [RETableViewItem itemWithTitle:@"我的银行卡" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
+        MyCardViewController *vc = [[MyCardViewController alloc] init];
+        [weakSelf.navigationController pushViewController:vc animated:YES];
+    }];
+    cardItem.style = UITableViewCellStyleValue1;
+//    cardItem.detailLabelText = configTool.userInfoModel.invite_code;
+    cardItem.titleDetailTextColor = WLColoerRGB(153.f);
+    cardItem.titleDetailTextFont = UIFontMake(15.f);
+    cardItem.image = [UIImage imageNamed:@"mine_card"];
+    [section addItem:cardItem];
+    self.cardItem = cardItem;
     
     RETableViewItem *promotionPosterItem = [RETableViewItem itemWithTitle:@"推广海报" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
         [weakSelf poster:item];

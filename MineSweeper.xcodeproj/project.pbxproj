@@ -394,6 +394,8 @@
 		10C575882151D9B100FBFE1E /* ImModelClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 10C575872151D9B100FBFE1E /* ImModelClient.m */; };
 		10C5758B2151D9D100FBFE1E /* ImGroupModelClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 10C5758A2151D9D100FBFE1E /* ImGroupModelClient.m */; };
 		10C5758E2151DA5E00FBFE1E /* FriendModelClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 10C5758D2151DA5E00FBFE1E /* FriendModelClient.m */; };
+		10C6C752216BAFB5000A9EA1 /* MyCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10C6C751216BAFB5000A9EA1 /* MyCardViewController.m */; };
+		10C6C755216BB41A000A9EA1 /* AddCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10C6C754216BB41A000A9EA1 /* AddCardViewController.m */; };
 		10CDC16821509F430069277D /* LoginModuleClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 10CDC16721509F430069277D /* LoginModuleClient.m */; };
 		10CDC16C2150AC4B0069277D /* BaseResultModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 10CDC16B2150AC4B0069277D /* BaseResultModel.m */; };
 		10CDC16F21511EFB0069277D /* SetPayPwdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10CDC16E21511EFB0069277D /* SetPayPwdViewController.m */; };
@@ -1214,6 +1216,10 @@
 		10C5758A2151D9D100FBFE1E /* ImGroupModelClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImGroupModelClient.m; sourceTree = "<group>"; };
 		10C5758C2151DA5E00FBFE1E /* FriendModelClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendModelClient.h; sourceTree = "<group>"; };
 		10C5758D2151DA5E00FBFE1E /* FriendModelClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FriendModelClient.m; sourceTree = "<group>"; };
+		10C6C750216BAFB5000A9EA1 /* MyCardViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyCardViewController.h; sourceTree = "<group>"; };
+		10C6C751216BAFB5000A9EA1 /* MyCardViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyCardViewController.m; sourceTree = "<group>"; };
+		10C6C753216BB41A000A9EA1 /* AddCardViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddCardViewController.h; sourceTree = "<group>"; };
+		10C6C754216BB41A000A9EA1 /* AddCardViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddCardViewController.m; sourceTree = "<group>"; };
 		10CDC16621509F430069277D /* LoginModuleClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginModuleClient.h; sourceTree = "<group>"; };
 		10CDC16721509F430069277D /* LoginModuleClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginModuleClient.m; sourceTree = "<group>"; };
 		10CDC16A2150AC4B0069277D /* BaseResultModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseResultModel.h; sourceTree = "<group>"; };
@@ -2504,6 +2510,10 @@
 				109AF9AD2151F73300D50F3C /* RestPayPwdViewController.m */,
 				1018BD072157DCB4004BC57B /* ChangePayPwdViewController.h */,
 				1018BD082157DCB4004BC57B /* ChangePayPwdViewController.m */,
+				10C6C750216BAFB5000A9EA1 /* MyCardViewController.h */,
+				10C6C751216BAFB5000A9EA1 /* MyCardViewController.m */,
+				10C6C753216BB41A000A9EA1 /* AddCardViewController.h */,
+				10C6C754216BB41A000A9EA1 /* AddCardViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -3587,6 +3597,7 @@
 				103518E42147A34000EDC7AD /* REInlinePickerItem.m in Sources */,
 				1035194C2147A34000EDC7AD /* WLNetwokingConfig.m in Sources */,
 				1024155B2158F4D4008A365A /* IRedPacektMemberModel.m in Sources */,
+				10C6C755216BB41A000A9EA1 /* AddCardViewController.m in Sources */,
 				10A49AD9215F9903008A2F86 /* RCDSearchViewController.m in Sources */,
 				10351ADD2147D39D00EDC7AD /* FriendListViewController.m in Sources */,
 				103519EA2147B73200EDC7AD /* UIControl+WLAdd.m in Sources */,
@@ -3805,6 +3816,7 @@
 				109AF9AE2151F73300D50F3C /* RestPayPwdViewController.m in Sources */,
 				1018BCBB2154E0D9004BC57B /* SWQRCodeViewController.m in Sources */,
 				103518D92147A34000EDC7AD /* NSString+RETableViewManagerAdditions.m in Sources */,
+				10C6C752216BAFB5000A9EA1 /* MyCardViewController.m in Sources */,
 				103518DB2147A34000EDC7AD /* REFormattedNumberField.m in Sources */,
 				1018BCBA2154E0D9004BC57B /* SWQRCodeManager.m in Sources */,
 				103518E92147A34000EDC7AD /* RERadioItem.m in Sources */,

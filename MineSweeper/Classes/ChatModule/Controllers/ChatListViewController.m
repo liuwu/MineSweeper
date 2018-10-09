@@ -11,6 +11,8 @@
 #import "RedPacketViewController.h"
 #import "MessageNotifiListViewController.h"
 #import "RCDSearchViewController.h"
+#import "SearchFriendViewController.h"
+#import "FriendListViewController.h"
 //#import "QDRecentSearchView.h"
 
 @interface ChatListViewController ()<UISearchBarDelegate, RCDSearchViewDelegate>
@@ -24,7 +26,7 @@
 @property(nonatomic, strong) NSMutableArray<NSString *> *searchResultsKeywords;
 @property(nonatomic, strong) QMUISearchController *mySearchController;
 
-
+@property(nonatomic, strong) QMUIPopupMenuView *popupByWindow;
 
 @end
 
@@ -76,11 +78,62 @@
 ////    self.tableView.backgroundColor = WLColoerRGB(248.f);
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    CGFloat minY = self.qmui_navigationBarMaxYInViewCoordinator;
+    CGFloat viewportHeight = CGRectGetHeight(self.view.bounds) - minY;
+    CGFloat sectionHeight = viewportHeight / 3.0;
+    
+    [self.popupByWindow layoutWithTargetView:self.navigationItem.rightBarButtonItem.customView];// 相对于 button2 布局
+    //
+    //    // 在横竖屏旋转时，viewDidLayoutSubviews 这个时机还无法获取到正确的 navigationItem 的 frame，所以直接隐藏掉
+    //    if (self.popupAtBarButtonItem.isShowing) {
+    //        [self.popupAtBarButtonItem hideWithAnimated:NO];
+    //    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"home_notice_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(leftBtnItemClicked)];
     self.navigationItem.leftBarButtonItem = leftBtnItem;
+    
+    
+    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"common_addFriend_icon_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
+    self.navigationItem.rightBarButtonItem = rightBtnItem;
+    
+    
+    // 使用方法 2，以 UIWindow 的形式显示到界面上，这种无需默认隐藏，也无需 add 到某个 UIView 上
+    self.popupByWindow = [[QMUIPopupMenuView alloc] init];
+    self.popupByWindow.automaticallyHidesWhenUserTap = YES;// 点击空白地方消失浮层
+    self.popupByWindow.maskViewBackgroundColor = [UIColor clearColor];//UIColorMaskWhite;// 使用方法 2 并且打开了 automaticallyHidesWhenUserTap 的情况下，可以修改背景遮罩的颜色
+    self.popupByWindow.maximumWidth = 120;
+    self.popupByWindow.shouldShowItemSeparator = YES;
+    //        self.popupByWindow.separatorInset = UIEdgeInsetsMake(0, self.popupByWindow.padding.left, 0, self.popupByWindow.padding.right);
+    self.popupByWindow.itemConfigurationHandler = ^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem, NSInteger section, NSInteger index) {
+        // 利用 itemConfigurationHandler 批量设置所有 item 的样式
+        aItem.button.highlightedBackgroundColor = [[QDThemeManager sharedInstance].currentTheme.themeTintColor colorWithAlphaComponent:.2];
+    };
+    WEAKSELF
+    QMUIPopupMenuItem *addItem = [QMUIPopupMenuItem itemWithImage:nil title:@"添加好友" handler:^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem) {
+        [aItem.menuView hideWithAnimated:YES];
+        [weakSelf searchFriendToAdd];
+    }];
+    addItem.button.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [addItem.button setTitleColor:WLColoerRGB(51.f) forState:UIControlStateNormal];
+    addItem.button.titleLabel.font = UIFontMake(15.f);
+    QMUIPopupMenuItem *createGroupItem = [QMUIPopupMenuItem itemWithImage:nil title:@"创建群组" handler:^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem) {
+        [aItem.menuView hideWithAnimated:YES];
+        [weakSelf createGroup];
+    }];
+    createGroupItem.button.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [createGroupItem.button setTitleColor:WLColoerRGB(51.f) forState:UIControlStateNormal];
+    createGroupItem.button.titleLabel.font = UIFontMake(15.f);
+    self.popupByWindow.items = @[addItem, createGroupItem];
+    self.popupByWindow.didHideBlock = ^(BOOL hidesByUserTap) {
+        //            [weakSelf.button2 setTitle:@"显示菜单浮层" forState:UIControlStateNormal];
+    };
+    
     // Do any additional setup after loading the view.
     
     // QMUISearchController 有两种使用方式，一种是独立使用，一种是集成到 QMUICommonTableViewController 里使用。为了展示它的使用方式，这里使用第一种，不理会 QMUICommonTableViewController 内部自带的 QMUISearchController
@@ -274,6 +327,10 @@
 //    return 70.f;
 //}
 
+// 右侧按钮点击
+- (void)rightBtnItemClicked {
+    [self.popupByWindow showWithAnimated:YES];
+}
 
 - (void)leftBtnItemClicked{
     // 有使用配置表的时候，最简单的代码就只是控制显隐即可，没使用配置表的话，还需要设置其他的属性才能使红点样式正确，具体请看 UIBarButton+QMUIBadge.h 注释
@@ -281,6 +338,18 @@
     
     MessageNotifiListViewController *messageNotifiVc = [[MessageNotifiListViewController alloc] initWithStyle:UITableViewStylePlain];
     [self.navigationController pushViewController:messageNotifiVc animated:YES];
+}
+
+// 添加好友
+- (void)searchFriendToAdd {
+    SearchFriendViewController *vc = [[SearchFriendViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+// 创建群组
+- (void)createGroup {
+    FriendListViewController *vc = [[FriendListViewController alloc] initWithFriendListType:FriendListTypeForGroupChat];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end

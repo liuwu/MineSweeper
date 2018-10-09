@@ -25,6 +25,7 @@
 @property (nonatomic, strong) QMUILabel *titleLabel;
 @property (nonatomic, strong) QMUILabel *timeLabel;
 @property (nonatomic, strong) QMUILabel *momeyLabel;
+@property (nonatomic, strong) UIImageView *thunderView;
 
 @end
 
@@ -71,6 +72,7 @@
     _titleLabel.text = [NSString stringWithFormat:@"来自 %@ 的红包", _model.nickname];
     _timeLabel.text = _model.title;
     _momeyLabel.text = _model.grab_money;
+    _thunderView.hidden = !_model.is_thunder.boolValue;
     
     WEAKSELF
     [_logoImgView setImageWithURL:[NSURL URLWithString:_model.avatar]
@@ -182,6 +184,18 @@
 //        make.left.mas_equalTo(todayTitleLabel);
 //        make.centerY.mas_equalTo(momeyLabel);
 //    }];
+    
+    UIImageView *thunderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_image"]];
+    [self.tableView addSubview:thunderView];
+    self.thunderView = thunderView;
+//    [thunderView wl_setDebug:YES];
+    [thunderView sizeToFit];
+    [thunderView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH, 32.f));
+        make.top.mas_equalTo(150.f);
+        make.centerX.mas_equalTo(self.tableView);
+    }];
+
     
 }
 

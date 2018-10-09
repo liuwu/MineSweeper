@@ -101,4 +101,9 @@
                                          Success:(SuccessBlock)success
                                           Failed:(FailedBlock)failed;
 
+// 检测更新
++ (WLRequest *)checkVersionWithParams:(NSDictionary *)params
+                              Success:(SuccessBlock)success
+                               Failed:(FailedBlock)failed;
+
 @end

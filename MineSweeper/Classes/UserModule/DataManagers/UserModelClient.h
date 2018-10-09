@@ -141,4 +141,19 @@
                              Success:(SuccessBlock)success
                               Failed:(FailedBlock)failed;
 
+// 我的银行卡列表
++ (WLRequest *)getBankCardListWithParams:(NSDictionary *)params
+                                 Success:(SuccessBlock)success
+                                  Failed:(FailedBlock)failed;
+
+// 新增银行卡
++ (WLRequest *)addBankCardListWithParams:(NSDictionary *)params
+                                 Success:(SuccessBlock)success
+                                  Failed:(FailedBlock)failed;
+
+// 银行卡解绑
++ (WLRequest *)delBankCardListWithParams:(NSDictionary *)params
+                                 Success:(SuccessBlock)success
+                                  Failed:(FailedBlock)failed;
+
 @end

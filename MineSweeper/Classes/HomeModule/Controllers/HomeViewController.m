@@ -81,6 +81,7 @@
     [self loadNotice];
     
     [self getLoginUserInfo];
+    [self checkVersion];
 }
 
 - (void)addViews {
@@ -211,6 +212,18 @@
 - (void)loadBanerUi {
     _pageControl.numberOfPages = _bannerImageArray.count;
     [_pagerView reloadData];
+}
+
+- (void)checkVersion {
+    
+    NSDictionary *params = @{@"type" : @(20),
+                             @"version" : @([kAppVersion integerValue])
+                             };
+    [ImGroupModelClient checkVersionWithParams:params Success:^(id resultInfo) {
+        
+    } Failed:^(NSError *error) {
+        
+    }];
 }
 
 // 加载系统公告

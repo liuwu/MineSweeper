@@ -129,29 +129,29 @@
     }];
     
     // 不可用余额
-    QMUILabel *balanceTitleLabel = [[QMUILabel alloc] init];
-    balanceTitleLabel.text = @"不可用余额(元)";
-    balanceTitleLabel.font = UIFontMake(12);
-    balanceTitleLabel.textColor = [UIColor whiteColor];
-    [userView addSubview:balanceTitleLabel];
-    [balanceTitleLabel sizeToFit];
-    [balanceTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(momeyTitleLabel);
-        make.left.mas_equalTo(headerView.centerX);
-    }];
-    
-    // 不可用余额
-    QMUILabel *balanceMomeyLabel = [[QMUILabel alloc] init];
-    balanceMomeyLabel.text = @"0.00";
-    balanceMomeyLabel.font = UIFontMake(25);
-    balanceMomeyLabel.textColor = [UIColor whiteColor];
-    [userView addSubview:balanceMomeyLabel];
-    self.balanceMomeyLabel = balanceMomeyLabel;
-    [balanceMomeyLabel sizeToFit];
-    [balanceMomeyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(balanceTitleLabel);
-        make.centerY.mas_equalTo(momeyLabel);
-    }];
+//    QMUILabel *balanceTitleLabel = [[QMUILabel alloc] init];
+//    balanceTitleLabel.text = @"不可用余额(元)";
+//    balanceTitleLabel.font = UIFontMake(12);
+//    balanceTitleLabel.textColor = [UIColor whiteColor];
+//    [userView addSubview:balanceTitleLabel];
+//    [balanceTitleLabel sizeToFit];
+//    [balanceTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerY.mas_equalTo(momeyTitleLabel);
+//        make.left.mas_equalTo(headerView.centerX);
+//    }];
+//
+//    // 不可用余额
+//    QMUILabel *balanceMomeyLabel = [[QMUILabel alloc] init];
+//    balanceMomeyLabel.text = @"0.00";
+//    balanceMomeyLabel.font = UIFontMake(25);
+//    balanceMomeyLabel.textColor = [UIColor whiteColor];
+//    [userView addSubview:balanceMomeyLabel];
+//    self.balanceMomeyLabel = balanceMomeyLabel;
+//    [balanceMomeyLabel sizeToFit];
+//    [balanceMomeyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(balanceTitleLabel);
+//        make.centerY.mas_equalTo(momeyLabel);
+//    }];
     
      [self.tableView.mj_header beginRefreshing];
 }
@@ -226,20 +226,21 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     GridTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"wallent_cell"];
+    if (!cell) {
+        cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"wallent_cell"];
+    }
     if (indexPath.section == 0) {
-        if (!cell) {
-            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"wallent_cell" gridTitles:@[@"时间", @"金额", @"状态"]];
-        }
+//        if (!cell) {
+//            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"wallent_cell" gridTitles:@[@"时间", @"金额", @"状态"]];
+//        }
         cell.titleColor = UIColorMake(254,72,30);
         cell.titleFont = UIFontMake(14.f);
+        cell.gridTitles = @[@"时间", @"金额", @"状态"];
     } else {
-        if (!cell) {
-            IWallentHistoryModel *model = _datasource[indexPath.row];
-            cell = [[GridTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"wallent_cell" gridTitles:@[model.add_time ? : @"", model.money ? : @"", model.pay_title ? : @""]];
-        }
+        IWallentHistoryModel *model = _datasource[indexPath.row];
         cell.titleColor = WLColoerRGB(51.f);
         cell.titleFont = UIFontMake(13.f);
-        
+        cell.gridTitles = @[model.add_time ? : @"", model.money ? : @"", model.pay_title ? : @""];
         if (indexPath.row % 2 == 0) {
             cell.backgroundColor = [UIColor whiteColor];
         } else {

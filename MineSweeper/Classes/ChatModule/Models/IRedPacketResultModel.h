@@ -27,6 +27,8 @@
 @property (nonatomic, copy) NSString *grab_money;
 // 头像
 @property (nonatomic, copy) NSString *avatar;
+// 是否中雷 0：未中雷  1：中雷
+@property (nonatomic, copy) NSNumber *is_thunder;
 // 抢红包人列表
 @property (nonatomic, strong) NSArray *list;
 

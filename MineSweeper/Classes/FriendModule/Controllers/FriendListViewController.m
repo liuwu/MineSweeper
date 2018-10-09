@@ -49,6 +49,8 @@
 @property (nonatomic, copy) NSString *groupName;
 @property (nonatomic, strong) NSMutableArray *selectChatArray;
 
+@property(nonatomic, strong) QMUIPopupMenuView *popupByWindow;
+
 
 @end
 
@@ -92,6 +94,20 @@
     [kNSNotification addObserver:self selector:@selector(loadData) name:@"kRefreshFriendList" object:nil];
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    CGFloat minY = self.qmui_navigationBarMaxYInViewCoordinator;
+    CGFloat viewportHeight = CGRectGetHeight(self.view.bounds) - minY;
+    CGFloat sectionHeight = viewportHeight / 3.0;
+    
+    [self.popupByWindow layoutWithTargetView:self.navigationItem.rightBarButtonItem.customView];// 相对于 button2 布局
+//
+//    // 在横竖屏旋转时，viewDidLayoutSubviews 这个时机还无法获取到正确的 navigationItem 的 frame，所以直接隐藏掉
+//    if (self.popupAtBarButtonItem.isShowing) {
+//        [self.popupAtBarButtonItem hideWithAnimated:NO];
+//    }
+}
+
 - (void)addViews {
     self.iconArray = @[@"game_friend_icon", @"game_group_icon"];
     self.iconTitleArray = @[@"新朋友", @"群聊"];
@@ -117,6 +133,38 @@
         
         UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"common_addFriend_icon_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
         self.navigationItem.rightBarButtonItem = rightBtnItem;
+        
+        
+        // 使用方法 2，以 UIWindow 的形式显示到界面上，这种无需默认隐藏，也无需 add 到某个 UIView 上
+        self.popupByWindow = [[QMUIPopupMenuView alloc] init];
+        self.popupByWindow.automaticallyHidesWhenUserTap = YES;// 点击空白地方消失浮层
+        self.popupByWindow.maskViewBackgroundColor = [UIColor clearColor];//UIColorMaskWhite;// 使用方法 2 并且打开了 automaticallyHidesWhenUserTap 的情况下，可以修改背景遮罩的颜色
+        self.popupByWindow.maximumWidth = 120;
+        self.popupByWindow.shouldShowItemSeparator = YES;
+//        self.popupByWindow.separatorInset = UIEdgeInsetsMake(0, self.popupByWindow.padding.left, 0, self.popupByWindow.padding.right);
+        self.popupByWindow.itemConfigurationHandler = ^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem, NSInteger section, NSInteger index) {
+            // 利用 itemConfigurationHandler 批量设置所有 item 的样式
+            aItem.button.highlightedBackgroundColor = [[QDThemeManager sharedInstance].currentTheme.themeTintColor colorWithAlphaComponent:.2];
+        };
+        WEAKSELF
+        QMUIPopupMenuItem *addItem = [QMUIPopupMenuItem itemWithImage:nil title:@"添加好友" handler:^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem) {
+            [aItem.menuView hideWithAnimated:YES];
+            [weakSelf searchFriendToAdd];
+        }];
+        addItem.button.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [addItem.button setTitleColor:WLColoerRGB(51.f) forState:UIControlStateNormal];
+        addItem.button.titleLabel.font = UIFontMake(15.f);
+        QMUIPopupMenuItem *createGroupItem = [QMUIPopupMenuItem itemWithImage:nil title:@"创建群组" handler:^(QMUIPopupMenuView *aMenuView, QMUIPopupMenuItem *aItem) {
+            [aItem.menuView hideWithAnimated:YES];
+            [weakSelf createGroup];
+        }];
+        createGroupItem.button.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [createGroupItem.button setTitleColor:WLColoerRGB(51.f) forState:UIControlStateNormal];
+        createGroupItem.button.titleLabel.font = UIFontMake(15.f);
+        self.popupByWindow.items = @[addItem, createGroupItem];
+        self.popupByWindow.didHideBlock = ^(BOOL hidesByUserTap) {
+//            [weakSelf.button2 setTitle:@"显示菜单浮层" forState:UIControlStateNormal];
+        };
     }
     if (_frindListType == FriendListTypeForGroupChat||_frindListType == FriendListTypeForGroupChatAddFriend) {
         [self.tableView setEditing:YES animated:YES];
@@ -793,12 +841,23 @@
             
         default:
         {
-            SearchFriendViewController *vc = [[SearchFriendViewController alloc] init];
-            [self.navigationController pushViewController:vc animated:YES];
+             [self.popupByWindow showWithAnimated:YES];
         }
             break;
     }
 //    ChatInfoViewController *vc = [[ChatInfoViewController alloc] init];
+}
+
+// 添加好友
+- (void)searchFriendToAdd {
+    SearchFriendViewController *vc = [[SearchFriendViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+// 创建群组
+- (void)createGroup {
+    FriendListViewController *vc = [[FriendListViewController alloc] initWithFriendListType:FriendListTypeForGroupChat];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 // 下拉刷新

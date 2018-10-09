@@ -18,7 +18,7 @@
  @discussion 指明此消息类型在本地是否存储、是否计入未读消息数。
  */
 +(RCMessagePersistent)persistentFlag {
-    return MessagePersistent_ISCOUNTED;
+    return MessagePersistent_ISPERSISTED;
 }
 
 #pragma mark - RCMessageCoding delegate methods

@@ -23,6 +23,7 @@
 @property (nonatomic, strong) LWLoginTextFieldView *moenyTxtView;
 @property (nonatomic, strong) QMUILabel *momeyLabel;
 @property (nonatomic, strong) LWLoginTextFieldView *typeTxtView;
+@property (nonatomic, strong) LWLoginTextFieldView *typeCardTxtView;
 @property (nonatomic, strong) QMUILabel *aboutLabel;
 @property (nonatomic, strong) QMUIFillButton *withdrawBtn;
 
@@ -130,6 +131,20 @@
     [self.view addSubview:typeTxtView];
     self.typeTxtView = typeTxtView;
     
+    // 提现类型金额
+    leftView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, 25.f, 20.f)];
+    iconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic_card"]];
+    iconView.frame = CGRectMake(0.f, 0.f, 20.f, 20.f);
+    [leftView addSubview:iconView];
+    
+    LWLoginTextFieldView *typeCardTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeDefault];
+    typeCardTxtView.textField.enabled = NO;
+    typeCardTxtView.textField.text = @"提现到银行卡";
+    typeCardTxtView.textField.leftView = leftView;
+    typeCardTxtView.textField.leftViewMode = UITextFieldViewModeAlways;
+    [self.view addSubview:typeCardTxtView];
+    self.typeCardTxtView = typeCardTxtView;
+    
     QMUILabel *aboutLabel = [[QMUILabel alloc] init];
     aboutLabel.text = @"提现说明：";
     aboutLabel.font = UIFontMake(12);
@@ -168,14 +183,20 @@
         make.top.mas_equalTo(self.moenyTxtView.mas_bottom).offset(29.f);
     }];
     
+    [_typeCardTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(self.typeTxtView);
+        make.centerX.mas_equalTo(self.typeTxtView);
+        make.top.mas_equalTo(self.typeTxtView.mas_bottom).offset(15.f);
+    }];
+    
     [_aboutLabel sizeToFit];
     [_aboutLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.momeyLabel);
-        make.top.mas_equalTo(self.typeTxtView.mas_bottom).offset(8.f);
+        make.top.mas_equalTo(self.typeCardTxtView.mas_bottom).offset(8.f);
     }];
     
     [_withdrawBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.typeTxtView.mas_bottom).offset(39.f);
+        make.top.mas_equalTo(self.typeCardTxtView.mas_bottom).offset(39.f);
         make.left.mas_equalTo(kWL_NormalMarginWidth_10);
         make.right.mas_equalTo(self.view).mas_offset(-kWL_NormalMarginWidth_10);
         make.height.mas_equalTo(kWL_NormalButtonHeight);

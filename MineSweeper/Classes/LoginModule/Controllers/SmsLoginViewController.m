@@ -72,6 +72,8 @@
     [super initSubviews];
     [self addSubviews];
     [self addConstrainsForSubviews];
+    
+    self.view.backgroundColor = WLColoerRGB(248.f);
 }
 
 #pragma mark setup
@@ -134,18 +136,18 @@
         case UseTypeRegist:
             [loginBtn setTitle:@"注册" forState:UIControlStateNormal];
             
-            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"登录"
-                                                                                      style:UIBarButtonItemStylePlain
-                                                                                     target:self
-                                                                                     action:@selector(rightBarButtonItemClicked)];
+//            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"登录"
+//                                                                                      style:UIBarButtonItemStylePlain
+//                                                                                     target:self
+//                                                                                     action:@selector(rightBarButtonItemClicked)];
             break;
         case UseTypeForget:
             [loginBtn setTitle:@"重置密码" forState:UIControlStateNormal];
             
-            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"登录"
-                                                                                      style:UIBarButtonItemStylePlain
-                                                                                     target:self
-                                                                                     action:@selector(rightBarButtonItemClicked)];
+//            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"登录"
+//                                                                                      style:UIBarButtonItemStylePlain
+//                                                                                     target:self
+//                                                                                     action:@selector(rightBarButtonItemClicked)];
             break;
         case UseTypeRestPwd:
             [loginBtn setTitle:@"重置密码" forState:UIControlStateNormal];

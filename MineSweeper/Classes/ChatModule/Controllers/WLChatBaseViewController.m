@@ -11,6 +11,7 @@
 #import "WLChatLocationViewController.h"
 #import "ActivityMapViewController.h"
 #import "WLPhotoViewController.h"
+#import "FriendListViewController.h"
 
 #import "AXWebViewController.h"
 
@@ -92,6 +93,12 @@ static NSString *paylistCellid = @"paylistCellid";
     [self registerClass:ChatGetRedPacketCell.class forMessageClass:RCRedPacketGetMessage.class];
     self.enableUnreadMessageIcon = YES;
     self.enableNewComingMessageIcon = YES;
+    
+    // 移除定位扩展
+    [self.chatSessionInputBarControl.pluginBoardView removeItemWithTag:1003];
+    [self.chatSessionInputBarControl.pluginBoardView insertItemWithImage:[UIImage imageNamed:@"ic-transter"]
+                                                                   title:@"转账"
+                                                                     tag:6001];
 }
 
 /**
@@ -271,7 +278,6 @@ static NSString *paylistCellid = @"paylistCellid";
  */
 - (void)presentImagePreviewController:(RCMessageModel *)model
 {
-    
     [self.chatSessionInputBarControl endEditing:YES];
     NSArray *messageArray = [[RCIMClient sharedRCIMClient] getLatestMessages:self.conversationType targetId:self.targetId count:1];
     if (!messageArray.count) return;
@@ -475,6 +481,12 @@ static NSString *paylistCellid = @"paylistCellid";
                     [weakSelf showLocationMapVC];
                 }
             }];
+        }
+            break;
+        case 6001: {
+            // 转账
+            FriendListViewController *vc = [[FriendListViewController alloc] initWithFriendListType:FriendListTypeForTransfer];
+            [self.navigationController pushViewController:vc animated:YES];
         }
             break;
         default:

@@ -112,33 +112,32 @@
 - (void)addTableViewCell {
     self.manager = [[RETableViewManager alloc] initWithTableView:self.tableView];
     WEAKSELF
-    RETableViewSection *section = [RETableViewSection section];
-    RETextItem *commendItem = [RETextItem itemWithTitle:@"持卡人" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        
-    }];
-    commendItem.placeholder = @"持卡人姓名";
-    commendItem.style = UITableViewCellStyleValue1;
-    commendItem.detailLabelText = configTool.userInfoModel.invite_code;
-    commendItem.titleDetailTextColor = WLColoerRGB(153.f);
-    commendItem.titleDetailTextFont = UIFontMake(15.f);
+    RETableViewSection *section = [RETableViewSection sectionWithHeaderTitle:@"请绑定持卡人本人的银行卡"];
+    
+    RETextItem *commendItem = [RETextItem itemWithTitle:@"持卡人" value:nil placeholder:@"持卡人姓名"];
+    commendItem.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//    commendItem.style = UITableViewCellStyleValue1;
+//    commendItem.detailLabelText = configTool.userInfoModel.invite_code;
+//    commendItem.titleDetailTextColor = WLColoerRGB(153.f);
+//    commendItem.titleDetailTextFont = UIFontMake(15.f);
 //    commendItem.image = [UIImage imageNamed:@"mine_recommend_icon"];
     [section addItem:commendItem];
 //    self.commendItem = commendItem;
     
-    RETextItem *cardItem = [RETextItem itemWithTitle:@"卡号" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        
-    }];
-    cardItem.style = UITableViewCellStyleValue1;
+    RECreditCardItem *cardItem = [RECreditCardItem item];
+//    cardItem.style = UITableViewCellStyleValue1;
     //    cardItem.detailLabelText = configTool.userInfoModel.invite_code;
-    cardItem.titleDetailTextColor = WLColoerRGB(153.f);
-    cardItem.titleDetailTextFont = UIFontMake(15.f);
+//    cardItem.titleDetailTextColor = WLColoerRGB(153.f);
+//    cardItem.titleDetailTextFont = UIFontMake(15.f);
 //    cardItem.image = [UIImage imageNamed:@"mine_card"];
+//    cardItem.creditCardType = RECreditCardTypeUnknown;
+    cardItem.title = @"卡号";
+    cardItem.cvvRequired = NO;
+    cardItem.keyboardAppearance = UIKeyboardAppearanceDefault;
     [section addItem:cardItem];
 //    self.cardItem = cardItem;
     
-    RETextItem *promotionPosterItem = [RETextItem itemWithTitle:@"开户行" accessoryType:UITableViewCellAccessoryDisclosureIndicator selectionHandler:^(RETableViewItem *item) {
-        
-    }];
+    RETextItem *promotionPosterItem = [RETextItem itemWithTitle:@"开户行" value:nil placeholder:@"开户行"];
 //    promotionPosterItem.image = [UIImage imageNamed:@"mine_share_icon"];
     [section addItem:promotionPosterItem];
     [self.manager addSection:section];

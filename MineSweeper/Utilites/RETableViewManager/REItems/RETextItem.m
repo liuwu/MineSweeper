@@ -51,7 +51,7 @@
     self.title = title;
     self.value = value;
     self.placeholder = placeholder;
-    
+//    self.textAlignment = NSTextAlignmentRight;
     return self;
 }
 

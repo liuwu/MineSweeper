@@ -32,6 +32,8 @@
 @property (copy, nonatomic) NSString *value;
 @property (copy, nonatomic) NSString *placeholder;
 
+//@property(nonatomic)        NSTextAlignment         textAlignment; 
+
 // TextField
 //
 @property (assign, nonatomic) UITextFieldViewMode clearButtonMode;        // default is UITextFieldViewModeNever

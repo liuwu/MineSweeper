@@ -200,6 +200,8 @@
         [[WLRequestManager sharedInstance] cancelAllRequests];
         // 设置登录用户信息
         [NSUserDefaults setObject:nil forKey:kWLLoginUserIdKey];
+        configTool.userInfoModel = nil;
+        configTool.rcToken = nil;
 //        [kNSNotification postNotificationName:@"kRefreshFriendList" object:nil];
         [kNSNotification postNotificationName:@"kUserLogout" object:nil];
         [weakSelf.navigationController popToRootViewControllerAnimated:YES];

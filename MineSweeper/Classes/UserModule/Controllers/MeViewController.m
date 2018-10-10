@@ -63,6 +63,9 @@
 @property (nonatomic, strong) RETableViewItem *commendItem;
 @property (nonatomic, strong) RETableViewItem *cardItem;
 
+@property (nonatomic, strong) WKWebViewConfiguration *configuration;
+@property (nonatomic, strong) WKUserContentController *userContentController;
+
 @end
 
 @implementation MeViewController
@@ -435,24 +438,19 @@
 
 // 抽奖
 - (void)lottery:(RETableViewItem *)item {
-    
     NSString *urlStr = [NSString stringWithFormat:@"https:/test.cnsunrun.com/saoleiapp/App/User/LuckDraw/index?member_id=%@", configTool.loginUser.uid];
-//    AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:urlStr];
     //配置环境
-    WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc]init];
-    WKUserContentController *userContentController = [[WKUserContentController alloc]init];
-    configuration.userContentController = userContentController;
-    [userContentController addScriptMessageHandler:self name:@"dialog"];
-    
-//    webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 0, 100, 100) configuration:configuration];
-    //注册方法
-//    WKDelegateController * delegateController = [[WKDelegateController alloc]init];
-//    delegateController.delegate = self;
-    
-    AXWebViewController *webVC = [[AXWebViewController alloc] initWithURL:[NSURL URLWithString:urlStr] configuration:configuration];
-    
-//    [webViewBridge setWebViewDelegate:self];
-//    configuration.userContentController = webVC.;
+    if (!_configuration) {
+        self.configuration = [[WKWebViewConfiguration alloc]init];
+    }
+    if (!_userContentController) {
+         self.userContentController = [[WKUserContentController alloc]init];
+    }
+    _configuration.userContentController = _userContentController;
+    // 添加注册方法
+    [_userContentController addScriptMessageHandler:self name:@"dialog"];
+    //    AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:urlStr];
+    AXWebViewController *webVC = [[AXWebViewController alloc] initWithURL:[NSURL URLWithString:urlStr] configuration:_configuration];
     webVC.showsToolBar = NO;
     webVC.title = @"抽奖";
     // webVC.showsNavigationCloseBarButtonItem = NO;
@@ -460,16 +458,6 @@
         webVC.webView.allowsLinkPreview = YES;
     }
     [self.navigationController pushViewController:webVC animated:YES];
-//    WKWebViewJavascriptBridge *webViewBridge = [WKWebViewJavascriptBridge bridgeForWebView:webVC.webView];
-//    @weakify(self)
-//    [webViewBridge registerHandler:@"dialog" handler:^(id data, WVJBResponseCallback responseCallback) {
-//        @strongify(self)
-//
-//        DLog(@"test---");
-//        DLog(@"test---");
-//        DLog(@"test---");
-////        responseCallback([responseDic modelToJSONString]);
-//    }];
 }
 
 #pragma mark - WKScriptMessageHandler
@@ -495,6 +483,8 @@
             }
         }
     }
+    // //这里需要注意，前面增加过的方法一定要remove掉。
+    [userContentController removeScriptMessageHandlerForName:@"dialog"];
 }
 
 - (void)showSuccessAlert:(NSString *)title {

@@ -76,6 +76,7 @@
     [self addViews];
     [self reloadData];
     [kNSNotification addObserver:self selector:@selector(reloadData) name:@"kLoginUserTokenRefresh" object:nil];
+    [kNSNotification addObserver:self selector:@selector(reloadData) name:@"kUserLoginSuccess" object:nil];
     [kNSNotification addObserver:self selector:@selector(checkVersion) name:@"kCheckVersion" object:nil];
 }
 

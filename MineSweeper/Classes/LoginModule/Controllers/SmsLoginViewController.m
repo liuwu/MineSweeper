@@ -96,7 +96,20 @@
     self.imageVcodeTxtView = imageVcodeTxtView;
     
     LWLoginTextFieldView *vcodeTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeVcode];
-    [vcodeTxtView.rightButton addTarget:self action:@selector(getVcode) forControlEvents:UIControlEventTouchUpInside];
+//    [vcodeTxtView.rightButton addTarget:self action:@selector(getVcode) forControlEvents:UIControlEventTouchUpInside];
+    @weakify(self);
+    [vcodeTxtView.rightButton addToucheHandler:^(JKCountDownButton *countDownButton, NSInteger tag) {
+        @strongify(self);
+        [self getVcode];
+    }];
+    [vcodeTxtView.rightButton didChange:^NSString *(JKCountDownButton *countDownButton, int second) {
+        NSString *title = [NSString stringWithFormat:@"获取验证码(%d)",second];
+        return title;
+    }];
+    [vcodeTxtView.rightButton didFinished:^NSString *(JKCountDownButton *countDownButton, int second) {
+        countDownButton.enabled = YES;
+        return @"获取验证码";
+    }];
     [self.view addSubview:vcodeTxtView];
     self.vcodeTxtView = vcodeTxtView;
     
@@ -321,6 +334,7 @@
         return;
     }
     NSDictionary *params = nil;
+    @weakify(self);
     switch (_useType) {
         case UseTypeSMS:
         {
@@ -332,9 +346,13 @@
                        @"mobile" : self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines,
                        @"verifi_code" : self.imageVcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines
                        };
+            [WLHUDView showHUDWithStr:@"" dim:YES];
             [LoginModuleClient getLoginVcodeWithParams:params
                                                Success:^(id resultInfo) {
-                                                   
+                                                   [WLHUDView showSuccessHUD:@"已发送"];
+                                                   @strongify(self);
+                                                   self.vcodeTxtView.rightButton.enabled = NO;
+                                                   [self.vcodeTxtView.rightButton startWithSecond:60];
                                                } Failed:^(NSError *error) {
                                                    if (error.localizedDescription.length > 0) {
                                                        [WLHUDView showErrorHUD:error.localizedDescription];
@@ -354,11 +372,19 @@
               @"mobile" : self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines,
               @"verifi_code" : self.imageVcodeTxtView.textField.text.wl_trimWhitespaceAndNewlines
               };
+            [WLHUDView showHUDWithStr:@"" dim:YES];
             [LoginModuleClient getRegistVcodeWithParams:params
                                                Success:^(id resultInfo) {
-                                                   
+                                                   [WLHUDView showSuccessHUD:@"已发送"];
+                                                   @strongify(self);
+                                                   self.vcodeTxtView.rightButton.enabled = NO;
+                                                   [self.vcodeTxtView.rightButton startWithSecond:60];
                                                } Failed:^(NSError *error) {
-                                                   [WLHUDView showOnlyTextHUD:error.localizedDescription];
+                                                   if (error.localizedDescription.length > 0) {
+                                                       [WLHUDView showErrorHUD:error.localizedDescription];
+                                                   } else {
+                                                       [WLHUDView hiddenHud];
+                                                   }
                                                }];
         }
             break;
@@ -368,11 +394,19 @@
             params = @{
                        @"mobile" : self.phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines
                        };
+            [WLHUDView showHUDWithStr:@"" dim:YES];
             [LoginModuleClient getForgetPwdVcodeWithParams:params
                                                    Success:^(id resultInfo) {
-                                                       
+                                                       [WLHUDView showSuccessHUD:@"已发送"];
+                                                       @strongify(self);
+                                                       self.vcodeTxtView.rightButton.enabled = NO;
+                                                       [self.vcodeTxtView.rightButton startWithSecond:60];
                                                    } Failed:^(NSError *error) {
-                                                       
+                                                       if (error.localizedDescription.length > 0) {
+                                                           [WLHUDView showErrorHUD:error.localizedDescription];
+                                                       } else {
+                                                           [WLHUDView hiddenHud];
+                                                       }
                                                    }];
         }
             break;

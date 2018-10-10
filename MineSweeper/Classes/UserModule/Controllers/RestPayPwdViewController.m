@@ -57,7 +57,20 @@
     [phoneTxtView.textField becomeFirstResponder];
     
     LWLoginTextFieldView *vcodeTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeVcode];
-    [vcodeTxtView.rightButton addTarget:self action:@selector(getVcode) forControlEvents:UIControlEventTouchUpInside];
+//    [vcodeTxtView.rightButton addTarget:self action:@selector(getVcode) forControlEvents:UIControlEventTouchUpInside];
+    @weakify(self);
+    [vcodeTxtView.rightButton addToucheHandler:^(JKCountDownButton *countDownButton, NSInteger tag) {
+        @strongify(self);
+        [self getVcode];
+    }];
+    [vcodeTxtView.rightButton didChange:^NSString *(JKCountDownButton *countDownButton, int second) {
+        NSString *title = [NSString stringWithFormat:@"获取验证码(%d)",second];
+        return title;
+    }];
+    [vcodeTxtView.rightButton didFinished:^NSString *(JKCountDownButton *countDownButton, int second) {
+        countDownButton.enabled = YES;
+        return @"获取验证码";
+    }];
     [self.view addSubview:vcodeTxtView];
     self.vcodeTxtView = vcodeTxtView;
     
@@ -117,17 +130,21 @@
 #pragma mark - Private
 // 获取验证码
 - (void)getVcode {
-//    if (_phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
-//        [WLHUDView showOnlyTextHUD:@"请输入手机号"];
-//        return;
-//    }
-//    if (_phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines.length != 11) {
-//        [WLHUDView showOnlyTextHUD:@"请输入正确的手机号"];
-//        return;
-//    }
+    if (_phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
+        [WLHUDView showOnlyTextHUD:@"请输入手机号"];
+        return;
+    }
+    if (_phoneTxtView.textField.text.wl_trimWhitespaceAndNewlines.length != 11) {
+        [WLHUDView showOnlyTextHUD:@"请输入正确的手机号"];
+        return;
+    }
     [WLHUDView showHUDWithStr:@"" dim:YES];
+    @weakify(self);
     [UserModelClient forgetPayPwdVcodeWithParams:nil Success:^(id resultInfo) {
         [WLHUDView showSuccessHUD:@"验证码已发送"];
+        @strongify(self);
+        self.vcodeTxtView.rightButton.enabled = NO;
+        [self.vcodeTxtView.rightButton startWithSecond:60];
     } Failed:^(NSError *error) {
         if (error.localizedDescription.length > 0) {
             [WLHUDView showErrorHUD:error.localizedDescription];

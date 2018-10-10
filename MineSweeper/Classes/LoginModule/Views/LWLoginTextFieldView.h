@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "NNValidationView.h"
+#import "JKCountDownButton.h"
 
 typedef NS_ENUM(NSInteger, LWLoginTextFieldType)
 {
@@ -41,7 +42,7 @@ typedef NS_ENUM(NSInteger, LWLoginTextFieldType)
 //@property (nonatomic, strong) NNValidationView *captchaView;
 @property (nonatomic, strong) UIImageView *vcodeImageView;
 // 右侧按钮
-@property (nonatomic, strong) UIButton *rightButton;
+@property (nonatomic, strong) JKCountDownButton *rightButton;
 
 /**默认边框颜色*/
 @property (nonatomic,copy) UIColor *defaultBorderColor;

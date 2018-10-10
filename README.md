@@ -1,6 +1,9 @@
 # MineSweeper
 一个小的外接项目：番茄
 
+开发工具要求：
+xcode：1.0及以上
+
 使用前，先安装cocoapods。
 使用 pod install 进行第三方库引入，安装完成打开MineSweeper.xcworkspace
 

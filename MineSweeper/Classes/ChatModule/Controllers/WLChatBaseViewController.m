@@ -12,6 +12,7 @@
 #import "ActivityMapViewController.h"
 #import "WLPhotoViewController.h"
 #import "FriendListViewController.h"
+#import "TransferViewController.h"
 
 #import "AXWebViewController.h"
 
@@ -29,6 +30,9 @@
 
 #import "RCRedPacketMessage.h"
 #import "RCRedPacketGetMessage.h"
+
+#import "ImModelClient.h"
+#import "FriendModelClient.h"
 
 
 #define kImageMsgMaxCount 5000
@@ -366,9 +370,40 @@ static NSString *paylistCellid = @"paylistCellid";
 //        }
 //            break;
         case 6001: {
-            // 转账
-            FriendListViewController *vc = [[FriendListViewController alloc] initWithFriendListType:FriendListTypeForTransfer];
-            [self.navigationController pushViewController:vc animated:YES];
+            WEAKSELF
+            [WLHUDView showHUDWithStr:@"" dim:YES];
+            [FriendModelClient getImMemberInfoWithParams:@{@"uid" : self.targetId} Success:^(id resultInfo) {
+                [WLHUDView hiddenHud];
+                IFriendModel *friendModel = [IFriendModel modelWithDictionary:resultInfo];
+                // 转账
+                TransferViewController *vc = [[TransferViewController alloc] init];
+                vc.friendModel = friendModel;
+                [weakSelf.navigationController pushViewController:vc animated:YES];
+            } Failed:^(NSError *error) {
+                if (error.localizedDescription.length > 0) {
+                    [WLHUDView showErrorHUD:error.localizedDescription];
+                } else {
+                    [WLHUDView showErrorHUD:@"获取信息失败，请重试"];
+                }
+            }];
+            
+//            [WLHUDView showHUDWithStr:@"" dim:YES];
+//            [ImModelClient getImChatInfoWithParams:@{@"fuid": @(self.targetId.integerValue)} Success:^(id resultInfo) {
+//                [WLHUDView hiddenHud];
+//                IFriendModel *friendModel = [IFriendModel modelWithDictionary:resultInfo];
+//                // 转账
+//                TransferViewController *vc = [[TransferViewController alloc] init];
+//                vc.friendModel = friendModel;
+//                [weakSelf.navigationController pushViewController:vc animated:YES];
+//            } Failed:^(NSError *error) {
+//                if (error.localizedDescription.length > 0) {
+//                    [WLHUDView showErrorHUD:error.localizedDescription];
+//                } else {
+//                    [WLHUDView showErrorHUD:@"获取信息失败，请重试"];
+//                }
+//            }];
+//            FriendListViewController *vc = [[FriendListViewController alloc] initWithFriendListType:FriendListTypeForTransfer];
+//            [self.navigationController pushViewController:vc animated:YES];
         }
             break;
         default:

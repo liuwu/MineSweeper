@@ -72,7 +72,11 @@
     _titleLabel.text = [NSString stringWithFormat:@"来自 %@ 的红包", _model.nickname];
     _timeLabel.text = _model.title;
     _momeyLabel.text = _model.grab_money;
-    _thunderView.hidden = !_model.is_thunder.boolValue;
+    if (_isFirstLook) {
+        _thunderView.hidden = !_model.is_thunder.boolValue;
+    } else {
+        _thunderView.hidden = YES;
+    }
     
     WEAKSELF
     [_logoImgView setImageWithURL:[NSURL URLWithString:_model.avatar]
@@ -186,6 +190,7 @@
 //    }];
     
     UIImageView *thunderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_image"]];
+    thunderView.hidden = YES;
     [self.tableView addSubview:thunderView];
     self.thunderView = thunderView;
 //    [thunderView wl_setDebug:YES];

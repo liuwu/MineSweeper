@@ -575,12 +575,17 @@
     DLog(@"lookMoreBtnClickedBtn --------");
     [_packetModalViewController hideWithAnimated:YES completion:nil];
     // 查看红包历史
-    [self lookRedPacketHistory:_openPacketModel.redpack_id];
+//    [self lookRedPacketHistory:_openPacketModel.redpack_id];
+    RedPacketViewController *vc = [[RedPacketViewController alloc] init];
+    vc.packetId = _openPacketModel.redpack_id;
+    vc.isFirstLook = YES;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)lookRedPacketHistory:(NSString *)packId {
     RedPacketViewController *vc = [[RedPacketViewController alloc] init];
     vc.packetId = packId;
+    vc.isFirstLook = NO;
     [self.navigationController pushViewController:vc animated:YES];
 }
 

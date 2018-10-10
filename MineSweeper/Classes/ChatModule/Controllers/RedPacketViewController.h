@@ -12,5 +12,6 @@
 
 // 红包ID
 @property (nonatomic, copy) NSString *packetId;
+@property (nonatomic, assign) BOOL isFirstLook;
 
 @end

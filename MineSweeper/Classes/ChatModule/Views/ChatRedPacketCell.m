@@ -59,25 +59,19 @@
         [self.messageContentView addSubview:topView];
         self.topView = topView;
         
-//        UIView *topCoreView = [[UIView alloc] init];
-//        topCoreView.backgroundColor = [UIColor whiteColor];
-//        topCoreView.alpha = .5f;
-//        topCoreView.hidden = YES;
-//        [self.messageContentView addSubview:topCoreView];
-//        self.topCoreView = topCoreView;
         WEAKSELF
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithActionBlock:^(id  _Nonnull sender) {
+//        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithActionBlock:^(id  _Nonnull sender) {
+//            [weakSelf didRedPacketTap];
+//        }];
+//        [backView addGestureRecognizer:tap];
+//        [topView addGestureRecognizer:tap];
+        [backView bk_whenTapped:^{
             [weakSelf didRedPacketTap];
         }];
-        [backView addGestureRecognizer:tap];
-        [topView addGestureRecognizer:tap];
-//        [backView bk_whenTapped:^{
-//            [weakSelf didRedPacketTap];
-//        }];
-//
-//        [topView bk_whenTapped:^{
-//            [weakSelf didRedPacketTap];
-//        }];
+
+        [topView bk_whenTapped:^{
+            [weakSelf didRedPacketTap];
+        }];
     }
     return self;
 }

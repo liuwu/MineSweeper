@@ -209,10 +209,13 @@
                 _textField.clearsOnBeginEditing = YES;
                 _textField.returnKeyType = UIReturnKeyDone;
                 
-                UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                JKCountDownButton *rightButton = [JKCountDownButton buttonWithType:UIButtonTypeCustom];
                 [rightButton setTitle:@"获取验证码" forState:UIControlStateNormal];
                 [rightButton setTitleColor:WLRGB(254.f, 72.f, 30.f) forState:UIControlStateNormal];
+                [rightButton setTitleColor:WLColoerRGB(128.f) forState:UIControlStateDisabled];
                 rightButton.titleLabel.font = WLFONT(15);
+//                rightButton.titleLabel.textAlignment = NSTextAlignmentRight;
+                rightButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
 //                rightButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
 //                rightButton.adjustsImageWhenHighlighted = NO;
                 [self addSubview:rightButton];
@@ -222,7 +225,7 @@
                 [_rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.right.mas_equalTo(self).offset(-kWL_NormalMarginWidth_10);
                     make.top.bottom.mas_equalTo(self);
-                    make.width.mas_equalTo(80.f);
+                    make.width.mas_equalTo(150.f);
                 }];
                 
                 [self.textField mas_makeConstraints:^(MASConstraintMaker *make) {

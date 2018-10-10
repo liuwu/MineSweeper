@@ -60,7 +60,20 @@
     [self.view addSubview:imageVcodeTxtView];
     
     LWLoginTextFieldView *vcodeTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeVcode];
-    [vcodeTxtView.rightButton addTarget:self action:@selector(getVcode) forControlEvents:UIControlEventTouchUpInside];
+//    [vcodeTxtView.rightButton addTarget:self action:@selector(getVcode) forControlEvents:UIControlEventTouchUpInside];
+    @weakify(self);
+    [vcodeTxtView.rightButton addToucheHandler:^(JKCountDownButton *countDownButton, NSInteger tag) {
+        @strongify(self);
+        [self getVcode];
+    }];
+    [vcodeTxtView.rightButton didChange:^NSString *(JKCountDownButton *countDownButton, int second) {
+        NSString *title = [NSString stringWithFormat:@"获取验证码(%d)",second];
+        return title;
+    }];
+    [vcodeTxtView.rightButton didFinished:^NSString *(JKCountDownButton *countDownButton, int second) {
+        countDownButton.enabled = YES;
+        return @"获取验证码";
+    }];
     [self.view addSubview:vcodeTxtView];
     self.vcodeTxtView = vcodeTxtView;
     
@@ -129,8 +142,12 @@
     }
 
     [WLHUDView showHUDWithStr:@"" dim:YES];
+    @weakify(self);
     [UserModelClient getChangeMobileVcodeWithParams:nil Success:^(id resultInfo) {
-        [WLHUDView showSuccessHUD:@"已发送"];
+        [WLHUDView showSuccessHUD:@"验证码已发送"];
+        @strongify(self);
+        self.vcodeTxtView.rightButton.enabled = NO;
+        [self.vcodeTxtView.rightButton startWithSecond:60];
     } Failed:^(NSError *error) {
         if (error.localizedDescription.length > 0) {
             [WLHUDView showErrorHUD:error.localizedDescription];

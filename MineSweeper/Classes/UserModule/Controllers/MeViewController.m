@@ -21,6 +21,7 @@
 #import "MessageNotifiListViewController.h"
 #import "ChatViewController.h"
 #import "MyCardViewController.h"
+#import <WebViewJavascriptBridge/WKWebViewJavascriptBridge.h>
 
 #import "SWQRCode.h"
 
@@ -437,6 +438,20 @@
     
     NSString *urlStr = [NSString stringWithFormat:@"https:/test.cnsunrun.com/saoleiapp/App/User/LuckDraw/index?member_id=%@", configTool.loginUser.uid];
     AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:urlStr];
+    //配置环境
+//    WKWebViewConfiguration * configuration = [[WKWebViewConfiguration alloc]init];
+//    userContentController = [[WKUserContentController alloc]init];
+    
+//    webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 0, 100, 100) configuration:configuration];
+    //注册方法
+//    WKDelegateController * delegateController = [[WKDelegateController alloc]init];
+//    delegateController.delegate = self;
+    
+//    AXWebViewController *webVC = [[AXWebViewController alloc] initWithURL:[NSURL URLWithString:urlStr] configuration:configuration];
+//    WKWebViewJavascriptBridge *webViewBridge = [WKWebViewJavascriptBridge bridgeForWebView:webVC.webView];
+//    [webViewBridge setWebViewDelegate:self];
+    
+//    configuration.userContentController = webVC.;
     webVC.showsToolBar = NO;
     webVC.title = @"抽奖";
     // webVC.showsNavigationCloseBarButtonItem = NO;
@@ -445,26 +460,15 @@
     }
     [self.navigationController pushViewController:webVC animated:YES];
     
-//    [WLHUDView showHUDWithStr:@"" dim:YES];
-//    WEAKSELF
-//    [UserModelClient getLuckDrawWithParams:@{@"member_id" : @(configTool.loginUser.uid.integerValue)}
-//                                   Success:^(id resultInfo) {
-//                                       [WLHUDView hiddenHud];
-//                                       NSString *url = @"https://www.apple.com";
-//                                       if (resultInfo) {
-//                                           url = resultInfo;
-//                                       }
-//                                       AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:url];
-//                                       webVC.showsToolBar = NO;
-//                                       webVC.title = @"抽奖";
-//                                       // webVC.showsNavigationCloseBarButtonItem = NO;
-//                                       if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
-//                                           webVC.webView.allowsLinkPreview = YES;
-//                                       }
-//                                       [weakSelf.navigationController pushViewController:webVC animated:YES];
-//                                   } Failed:^(NSError *error) {
-//                                       [WLHUDView hiddenHud];
-//                                   }];
+//    @weakify(self)
+//    [webViewBridge registerHandler:@"dialog" handler:^(id data, WVJBResponseCallback responseCallback) {
+//        @strongify(self)
+//
+//        DLog(@"test---");
+//        DLog(@"test---");
+//        DLog(@"test---");
+////        responseCallback([responseDic modelToJSONString]);
+//    }];
 }
 
 #pragma mark - QMUINavigationControllerDelegate

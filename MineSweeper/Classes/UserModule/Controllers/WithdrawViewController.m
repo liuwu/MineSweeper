@@ -427,12 +427,23 @@
         [kNSNotification postNotificationName:@"kUserInfoChanged" object:nil];
         weakSelf.moenyTxtView.textField.text = @"";
         [WLHUDView showSuccessHUD:@"提现成功"];
+        [weakSelf reloadData];
     } Failed:^(NSError *error) {
         if (error.localizedDescription.length > 0) {
             [WLHUDView showErrorHUD:error.localizedDescription];
         } else {
             [WLHUDView hiddenHud];
         }
+    }];
+}
+
+- (void)reloadData {
+    WEAKSELF
+    [UserModelClient withdrawInfoWithParams:nil Success:^(id resultInfo) {
+        weakSelf.wallentInfoModel = [IWallentInfoModel modelWithDictionary:resultInfo];
+        [weakSelf updateUi];
+    } Failed:^(NSError *error) {
+        [WLHUDView hiddenHud];
     }];
 }
 

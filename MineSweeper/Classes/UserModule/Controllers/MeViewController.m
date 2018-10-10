@@ -39,7 +39,7 @@
 
 #import "WLRongCloudDataSource.h"
 
-@interface MeViewController ()
+@interface MeViewController ()<WKScriptMessageHandler>
 
 @property (nonatomic, strong) RETableViewManager *manager;
 @property (nonatomic, strong) UIView *headerView;
@@ -437,17 +437,19 @@
 - (void)lottery:(RETableViewItem *)item {
     
     NSString *urlStr = [NSString stringWithFormat:@"https:/test.cnsunrun.com/saoleiapp/App/User/LuckDraw/index?member_id=%@", configTool.loginUser.uid];
-    AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:urlStr];
+//    AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:urlStr];
     //配置环境
-//    WKWebViewConfiguration * configuration = [[WKWebViewConfiguration alloc]init];
-//    userContentController = [[WKUserContentController alloc]init];
+    WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc]init];
+    WKUserContentController *userContentController = [[WKUserContentController alloc]init];
+    configuration.userContentController = userContentController;
+    [userContentController addScriptMessageHandler:self name:@"dialog"];
     
 //    webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 0, 100, 100) configuration:configuration];
     //注册方法
 //    WKDelegateController * delegateController = [[WKDelegateController alloc]init];
 //    delegateController.delegate = self;
     
-//    AXWebViewController *webVC = [[AXWebViewController alloc] initWithURL:[NSURL URLWithString:urlStr] configuration:configuration];
+    AXWebViewController *webVC = [[AXWebViewController alloc] initWithURL:[NSURL URLWithString:urlStr] configuration:configuration];
     
 //    [webViewBridge setWebViewDelegate:self];
 //    configuration.userContentController = webVC.;
@@ -468,6 +470,45 @@
 //        DLog(@"test---");
 ////        responseCallback([responseDic modelToJSONString]);
 //    }];
+}
+
+#pragma mark - WKScriptMessageHandler
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
+    // name:dialog\\n body:{"status":1,"title":"恭喜您抽中6.66元!","ran":18,"onceran":120}
+    DLog(@"name:%@\\\\n body:%@\\\\n frameInfo:%@\\\\n",message.name,message.body,message.frameInfo);
+    if ([message.name isEqualToString:@"dialog"]) {
+        NSDictionary *dataInfo = [message.body jsonValueDecoded];
+        if ([dataInfo[@"status"] integerValue] == 0) {
+            NSString *title = dataInfo[@"title"];
+            if (title.length > 0) {
+                [WLHUDView showErrorHUD:title];
+            } else {
+                [WLHUDView showErrorHUD:@"出错了，请重试"];
+            }
+        } else {
+            NSString *title = dataInfo[@"title"];
+            if ([title containsString:@"再接再厉"]) {
+                // not Wing
+            } else {
+                // wing
+                [self showSuccessAlert:title];
+            }
+        }
+    }
+}
+
+- (void)showSuccessAlert:(NSString *)title {
+    if (title.length == 0) {
+        return;
+    }
+    //    WEAKSELF
+    QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"确定" style:QMUIAlertActionStyleDefault handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+       
+    }];
+    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:title message:nil preferredStyle:QMUIAlertControllerStyleAlert];
+    //    [alertController addAction:action1];
+    [alertController addAction:action2];
+    [alertController showWithAnimated:YES];
 }
 
 #pragma mark - QMUINavigationControllerDelegate

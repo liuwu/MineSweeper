@@ -448,9 +448,8 @@
 //    delegateController.delegate = self;
     
 //    AXWebViewController *webVC = [[AXWebViewController alloc] initWithURL:[NSURL URLWithString:urlStr] configuration:configuration];
-//    WKWebViewJavascriptBridge *webViewBridge = [WKWebViewJavascriptBridge bridgeForWebView:webVC.webView];
-//    [webViewBridge setWebViewDelegate:self];
     
+//    [webViewBridge setWebViewDelegate:self];
 //    configuration.userContentController = webVC.;
     webVC.showsToolBar = NO;
     webVC.title = @"抽奖";
@@ -459,7 +458,7 @@
         webVC.webView.allowsLinkPreview = YES;
     }
     [self.navigationController pushViewController:webVC animated:YES];
-    
+//    WKWebViewJavascriptBridge *webViewBridge = [WKWebViewJavascriptBridge bridgeForWebView:webVC.webView];
 //    @weakify(self)
 //    [webViewBridge registerHandler:@"dialog" handler:^(id data, WVJBResponseCallback responseCallback) {
 //        @strongify(self)

@@ -338,6 +338,16 @@
     } else {
         [WLHUDView hiddenHud];
     }
+    
+    // 红包消息，删除远程历史
+    if (_groupDetailInfo.type.integerValue == 1) {
+        // 此方法从服务器端清除历史消息，但是必须先开通历史消息云存储功能。
+        [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:ConversationType_GROUP targetId:_groupId recordTime:0 success:^{
+            DLog(@"删除群组服务器聊天历史消息成功");
+        } error:^(RCErrorCode status) {
+            DLog(@"删除群组服务器聊天历史消息失败");
+        }];
+    }
 //    [[RCIMClient sharedRCIMClient] deleteMessages:ConversationType_GROUP targetId:_groupId success:^{
 //        [WLHUDView showSuccessHUD:@"清除完成"];
 //    } error:^(RCErrorCode status) {

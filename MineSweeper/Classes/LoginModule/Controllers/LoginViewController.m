@@ -31,7 +31,7 @@
 @implementation LoginViewController
 
 - (NSString *)title {
-    return @"登录";
+    return @"";
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -96,8 +96,8 @@
 #pragma mark setup
 // 添加页面UI组件
 - (void)addSubviews {
-    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithTitle:@"注册" target:self action:@selector(rightBarButtonItemClicked)];
-    self.navigationItem.rightBarButtonItem = rightBtnItem;
+//    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithTitle:@"注册" target:self action:@selector(rightBarButtonItemClicked)];
+//    self.navigationItem.rightBarButtonItem = rightBtnItem;
     
     
 //    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"注册"
@@ -106,6 +106,7 @@
 //                                                                             action:@selector(rightBarButtonItemClicked)];
 //
     UIImageView *logoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logoImg"]];
+    [logoImageView wl_setCornerRadius:18.f];
     [self.view addSubview:logoImageView];
     self.logoImageView = logoImageView;
     

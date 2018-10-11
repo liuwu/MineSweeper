@@ -36,6 +36,8 @@
 
 @property (nonatomic, strong) IRedPacketModel *openPacketModel;
 
+@property (nonatomic, assign) BOOL isGotoNextVC;
+
 @end
 
 @implementation ChatViewController
@@ -53,6 +55,34 @@
 - (void)initSubviews {
     [super initSubviews];
     
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.isGotoNextVC = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (!_isGotoNextVC) {
+        if (self.conversationType == ConversationType_GROUP && _groupDetailInfo.type.integerValue == 1) {
+            // 清除聊天记录
+            BOOL success = [[RCIMClient sharedRCIMClient] clearMessages:ConversationType_GROUP targetId:self.targetId];
+            if (success) {
+                DLog(@"删除群组聊天消息成功");
+            } else {
+                DLog(@"删除群组聊天消息失败");
+            }
+            // 此方法从服务器端清除历史消息，但是必须先开通历史消息云存储功能。
+            [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:ConversationType_GROUP targetId:self.targetId recordTime:0 success:^{
+                
+                DLog(@"删除群组服务器聊天历史消息成功");
+            } error:^(RCErrorCode status) {
+                DLog(@"删除群组服务器聊天历史消息失败");
+            }];
+            
+        }
+    }
 }
 
 - (void)viewDidLoad {
@@ -89,6 +119,10 @@
         }];
     }
 }
+
+//- (void)dealloc {
+//
+//}
 
 // 后去群聊详情数据
 - (void)loadGroupInfo {
@@ -282,6 +316,7 @@
 
 #pragma mark 点击头像
 - (void)didTapCellPortrait:(NSString *)userId {
+    self.isGotoNextVC = YES;
     DLog(@"didTapCellPortrait-----------: %@", userId);
     UserInfoViewController *vc = [[UserInfoViewController alloc] init];
     vc.userId = userId;
@@ -295,6 +330,7 @@
 
 #pragma mark - private
 - (void)toGroupDetailInfo {
+    self.isGotoNextVC = YES;
     ChatGroupDetailViewController *vc = [[ChatGroupDetailViewController alloc] init];
     vc.groupId = self.targetId;
     vc.groupDetailInfo = self.groupDetailInfo;
@@ -302,6 +338,7 @@
 }
 
 - (void)toUserChatDetailInfo {
+    self.isGotoNextVC = YES;
     ChatInfoViewController *vc = [[ChatInfoViewController alloc] init];
     vc.uid = self.targetId;
     vc.friendModel = self.friendModel;
@@ -353,6 +390,7 @@
 
 // 发红包
 - (void)redPacketClicked:(UIButton *)sender {
+    self.isGotoNextVC = YES;
     DLog(@"redPacketClicked-----------");
     [self.chatSessionInputBarControl resetToDefaultStatus];
 //     进入发红包页面
@@ -574,6 +612,7 @@
 
 // 查看更多红包
 - (void)lookMoreBtnClickedBtn:(UIButton *)sender {
+    self.isGotoNextVC = YES;
     DLog(@"lookMoreBtnClickedBtn --------");
     [_packetModalViewController hideWithAnimated:YES completion:nil];
     // 查看红包历史
@@ -585,6 +624,7 @@
 }
 
 - (void)lookRedPacketHistory:(NSString *)packId {
+    self.isGotoNextVC = YES;
     RedPacketViewController *vc = [[RedPacketViewController alloc] init];
     vc.packetId = packId;
     vc.isFirstLook = NO;

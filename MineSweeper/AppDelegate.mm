@@ -14,6 +14,8 @@
 #import "QDCommonUI.h"
 #import "QDUIHelper.h"
 
+#import "ChatViewController.h"
+
 ///引入地图功能所有的头文件
 #import <BaiduMapAPI_Map/BMKMapComponent.h>
 
@@ -278,6 +280,23 @@ single_implementation(AppDelegate);
 }
 
 #pragma mark - RCIMReceiveMessageDelegate
+/*!
+ 当 Kit 收到消息回调的方法
+ 
+ @param message 接收到的消息
+ @return       YES 拦截, 不显示  NO: 不拦截, 显示此消息。
+ 此处只处理实时收到消息时，在界面上是否显示此消息。
+ 在重新加载会话页面时，不受此处逻辑控制。
+ 若要永久不显示此消息，需要从数据库删除该消息，在回调处理中调用 deleteMessages,
+ 否则在重新加载会话时会将此消息重新加载出来
+ 
+ @discussion 收到消息，会执行此方法。
+ 
+ */
+//- (BOOL)interceptMessage:(RCMessage *)message {
+//
+//}
+
 /**
  接收消息到消息后执行。
  @param message 接收到的消息。
@@ -287,9 +306,12 @@ single_implementation(AppDelegate);
     //通知通知列表页面刷新数据
     dispatch_sync(dispatch_get_main_queue(), ^{
         //处理好友请求
-        if ([message.content isMemberOfClass:[RCRedPacketMessage class]]) {
-            // 红包消息
-            
+        if ([message.content isMemberOfClass:[RCRedPacketMessage class]] || [message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
+            // 如果不是在聊天页面，删掉红包消息
+            if (![[UIViewController getCurrentViewCtrl] isKindOfClass:[ChatViewController class]]) {
+                // 删除消息
+                [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
+            }
         }
         if ([message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
             // 红包被领域消息
@@ -386,6 +408,13 @@ single_implementation(AppDelegate);
     if ([message.content isMemberOfClass:[RCInformationNotificationMessage class]]) {
         return YES;
     }
+    // 红包不弹出本地推送通知
+    if ([message.content isMemberOfClass:[RCRedPacketMessage class]]) {
+        return YES;
+    }
+    if ([message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
+        return YES;
+    }
     //特殊处理 friendAdd类型 不谈通知 否则会出现2个通知
     if ([message.content isMemberOfClass:[RCContactNotificationMessage class]]) {
         RCContactNotificationMessage *msg = (RCContactNotificationMessage *)message.content;
@@ -423,8 +452,6 @@ single_implementation(AppDelegate);
 - (BOOL)onRCIMCustomAlertSound:(RCMessage*)message {
     return YES;
 }
-
-
 
 #pragma mark - Private
 // 初始化融云信息

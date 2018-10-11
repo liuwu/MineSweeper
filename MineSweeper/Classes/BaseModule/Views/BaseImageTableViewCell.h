@@ -30,4 +30,7 @@
 
 @property (nonatomic, strong) RCSearchConversationResult *conversationResult;
 
+
+@property (nonatomic, assign) BOOL showBadge;
+
 @end

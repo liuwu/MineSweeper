@@ -172,7 +172,19 @@
 //        make.left.mas_equalTo(10.f);
 //    }];
     self.textLabel.left = self.imageView.right + 10.f;
-    self.detailTextLabel.left = self.imageView.right + 10.f;
+    if (_showBadge) {
+        self.detailTextLabel.size = CGSizeMake(20.f, 20.f);
+        self.detailTextLabel.right = self.contentView.width - 10.f;
+        self.detailTextLabel.textAlignment = NSTextAlignmentCenter;
+    } else {
+        self.detailTextLabel.textAlignment = NSTextAlignmentLeft;
+        self.detailTextLabel.left = self.imageView.right + 10.f;
+    }
+//    if (self.style == UITableViewCellStyleValue1) {
+//        self.detailTextLabel.right = self.contentView.width - 15.f;
+//    } else {
+//        self.detailTextLabel.left = self.imageView.right + 10.f;
+//    }
 }
 
 - (void)awakeFromNib {

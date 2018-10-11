@@ -109,7 +109,7 @@
     [kNSNotification addObserver:self selector:@selector(loadData) name:@"kChatUserInfoChanged" object:nil];
     //聊天消息数量改变监听
     [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
-    [kNSNotification addObserver:self selector:@selector(clearRCMessagesWithRedPacket) name:UIApplicationDidFinishLaunchingNotification object:nil];
+    [kNSNotification addObserver:self selector:@selector(clearRCMessagesWithRedPacket) name:UIApplicationWillTerminateNotification object:nil];
 }
 
 - (void)loadData {
@@ -178,22 +178,22 @@
         self.chatSessionInputBarControl.switchButton.enabled = NO;
         self.chatSessionInputBarControl.emojiButton.enabled = NO;
         
-        if (!_isGotoNextVC) {
-            // 清除聊天记录
-            BOOL success = [[RCIMClient sharedRCIMClient] clearMessages:ConversationType_GROUP targetId:self.targetId];
-            if (success) {
-                DLog(@"删除群组聊天消息成功");
-            } else {
-                DLog(@"删除群组聊天消息失败");
-            }
-            // 此方法从服务器端清除历史消息，但是必须先开通历史消息云存储功能。
-            [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:ConversationType_GROUP targetId:self.targetId recordTime:0 success:^{
-                
-                DLog(@"删除群组服务器聊天历史消息成功");
-            } error:^(RCErrorCode status) {
-                DLog(@"删除群组服务器聊天历史消息失败");
-            }];
-        }
+//        if (!_isGotoNextVC) {
+//            // 清除聊天记录
+//            BOOL success = [[RCIMClient sharedRCIMClient] clearMessages:ConversationType_GROUP targetId:self.targetId];
+//            if (success) {
+//                DLog(@"删除群组聊天消息成功");
+//            } else {
+//                DLog(@"删除群组聊天消息失败");
+//            }
+//            // 此方法从服务器端清除历史消息，但是必须先开通历史消息云存储功能。
+//            [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:ConversationType_GROUP targetId:self.targetId recordTime:0 success:^{
+//
+//                DLog(@"删除群组服务器聊天历史消息成功");
+//            } error:^(RCErrorCode status) {
+//                DLog(@"删除群组服务器聊天历史消息失败");
+//            }];
+//        }
     }
 }
 

@@ -87,9 +87,12 @@
     // 设置ui相关信息
     [self setupUIInfo];
     [self setupMainUI];
+    [self updateNewFriendBadge];
     
     [kNSNotification addObserver:self selector:@selector(userLogout) name:@"kUserLogout" object:nil];
     [kNSNotification addObserver:self selector:@selector(upChatMessageBarItemBadge) name:kWL_ChatMsgNumChangedNotification object:nil];
+    // 监听新好友添加
+    [kNSNotification addObserver:self selector:@selector(updateNewFriendBadge) name:@"kNewFriendRequest" object:nil];
 //    [kNSNotification addObserver:self selector:@selector(friendChat) name:@"kFriendChat" object:nil];
 }
 
@@ -126,7 +129,16 @@
             [weakSelf.chatItem setBadgeValue:nil];
         }
     });
-    
+}
+
+// 监听新好友消息数量
+- (void)updateNewFriendBadge {
+    NSInteger count = [NSUserDefaults intForKey:@"kNewFriendRequest"];
+    if (count > 0) {
+        [self.FriendItem setBadgeValue:[NSString stringWithFormat:@"%ld",count]];
+    } else {
+        [self.FriendItem setBadgeValue:nil];
+    }
 }
 
 // 设置ui相关信息

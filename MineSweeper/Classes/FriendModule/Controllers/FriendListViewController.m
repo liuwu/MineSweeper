@@ -92,6 +92,12 @@
     [self loadData];
     
     [kNSNotification addObserver:self selector:@selector(loadData) name:@"kRefreshFriendList" object:nil];
+    // 监听新好友添加
+    [kNSNotification addObserver:self selector:@selector(updateNewFriendBadge) name:@"kNewFriendRequest" object:nil];
+}
+
+- (void)updateNewFriendBadge {
+    [self.tableView reloadData];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -485,9 +491,10 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     BaseImageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"friend_list_cell"];
     if (!cell) {
-        cell = [[BaseImageTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleDefault reuseIdentifier:@"friend_list_cell"];
+        cell = [[BaseImageTableViewCell alloc] initForTableView:tableView withStyle:UITableViewCellStyleValue1 reuseIdentifier:@"friend_list_cell"];
     }
     cell.showBottomLine = YES;
+    cell.showBadge = NO;
 //    if (!(_frindListType == FriendListTypeForGroupChat && _frindListType == FriendListTypeForGroupChatAddFriend)) {
 //        cell.selectionStyle = UITableViewCellSelectionStyleNone;
 //    }
@@ -526,9 +533,28 @@
             if (indexPath.section == 0) {
                 cell.imageView.image = [UIImage imageNamed:_iconArray[indexPath.row]];
                 cell.textLabel.text = _iconTitleArray[indexPath.row];
+                NSInteger count = [NSUserDefaults intForKey:@"kNewFriendRequest"];
+                if (indexPath.row == 0) {
+                    NSString *newCount = [NSString stringWithFormat:@"%ld",count];
+                    if (count > 0) {
+                        cell.showBadge = YES;
+                        cell.detailTextLabel.text = newCount;
+                        cell.detailTextLabel.font = UIFontMake(16.f);
+//                        cell.detailTextLabel.textAlignment = NSTextAlignmentCenter;
+                        cell.detailTextLabel.textColor = [UIColor whiteColor];// UIColorMake(254.f, 72.f, 30.f);
+//                        cell.detailTextLabel.backgroundColor = [UIColor redColor];
+//                        cell.detailTextLabel.size = CGSizeMake(20, 20);
+//                        [cell.detailTextLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+//                            make.size.mas_equalTo(CGSizeMake(20.f, 20.f));
+//                        }];
+                        [cell.detailTextLabel wl_setCornerRadius:10.f withImage:[UIImage imageWithColor:[UIColor redColor]]];
+                    } else {
+                        cell.showBadge = NO;
+                        cell.detailTextLabel.text = @"";
+                    }
+                }
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             } else {
-                
 //                cell.imageView.image = [UIImage qmui_imageWithShape:QMUIImageShapeOval size:CGSizeMake(30, 30) lineWidth:2 tintColor:[QDCommonUI randomThemeColor]];
                 if (self.searchBar.text.length) {
                     IFriendModel *model = [[_filterFriendDict objectForKey:_filterAllKeys[indexPath.section - 1]] objectAtIndex:indexPath.row];
@@ -598,6 +624,10 @@
             if (indexPath.section == 0 && indexPath.row == 0) {
                 NewFriendListViewController *newFriendVc = [[NewFriendListViewController alloc] init];
                 [self.navigationController pushViewController:newFriendVc animated:YES];
+                // 更新当前新好友数量
+                [NSUserDefaults setInteger:0 forKey:@"kNewFriendRequest"];
+                [kNSNotification postNotificationName:@"kNewFriendRequest" object:nil];
+//                [self updateNewFriendBadge];
                 return;
             }
             if (indexPath.section == 0 && indexPath.row == 1) {

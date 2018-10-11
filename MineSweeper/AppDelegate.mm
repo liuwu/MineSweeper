@@ -326,6 +326,10 @@ single_implementation(AppDelegate);
         }
         if ([message.content isMemberOfClass:[RCCommandMessage class]]) {
             RCCommandMessage *msg = (RCCommandMessage *)message.content;
+            // name是add_user  data是用户id
+            NSInteger count = [NSUserDefaults intForKey:@"kNewFriendRequest"];
+            [NSUserDefaults setInteger:(count + 1) forKey:@"kNewFriendRequest"];
+            [kNSNotification postNotificationName:@"kNewFriendRequest" object:nil];
             DLog(@"data:%@   name:%@" , msg.data, msg.name);
         }
         
@@ -588,34 +592,15 @@ single_implementation(AppDelegate);
         [self logoutWithErrormsg:nil];
     } else {
         [self loginSucceed];
-//        if (!_mainVc) {
-//            double minutes = [[configTool.loginUser.token.expires_time wl_dateFormartNormalString] minutesUntil];
-//            if (minutes < 10) {
-//                WEAKSELF
-//                //小于半小时的，重新获取token
-//                NSDictionary *params = @{
-//                                         @"uid" : [NSNumber numberWithInteger:configTool.loginUser.uid.integerValue],
-//                                         @"password" : [NSUserDefaults stringForKey:[NSString stringWithFormat:@"%@%@", configTool.loginUser.uid, configTool.loginUser.mobile]],
-//                                         @"_password" : configTool.loginUser.password
-//                                         };
-//                [LoginModuleClient getUserTokenWithParams:params Success:^(id resultInfo) {
-//                    [configTool refreshLoginUserToken:resultInfo];
-//                    [weakSelf loginSucceed];
-//                } Failed:^(NSError *error) {
-////                    [WLHUDView hiddenHud];
-//                }];
-//            } else {
-//
-//            }
-//        }
     }
+    [kNSNotification postNotificationName:@"kNewFriendRequest" object:nil];
 }
 
 #pragma mark - 退出登录
 - (void)logoutWithErrormsg:(NSString *)errormsg {
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//
-//    });
+    // 更新当前新好友数量
+    [NSUserDefaults setInteger:0 forKey:@"kNewFriendRequest"];
+
     // 关闭融云连接
 //    [[RCIM sharedRCIM] clearUserInfoCache];
 //    [[RCIM sharedRCIM] clearGroupInfoCache];
@@ -632,7 +617,6 @@ single_implementation(AppDelegate);
 
 #pragma mark - 登录成功
 - (void)loginSucceed {
-    
     [self connectRCIM];
     // 启动前，清下一下群组的缓存
     [[RCIM sharedRCIM] clearGroupInfoCache];

@@ -59,11 +59,16 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     self.isGotoNextVC = NO;
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
     if (!_isGotoNextVC) {
         if (self.conversationType == ConversationType_GROUP && _groupDetailInfo.type.integerValue == 1) {
             // 清除聊天记录
@@ -98,7 +103,7 @@
     [self loadData];
     
     [kNSNotification addObserver:self selector:@selector(loadData) name:@"kChatUserInfoChanged" object:nil];
-    //添加聊天用户改变监听
+    //聊天消息数量改变监听
     [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
 }
 
@@ -240,8 +245,12 @@
             }
             // 领到红包
             [weakSelf showOpenPacket:redmodel];
+            
+//            [weakSelf sendGetRedPacketImMessage:message drawName:@"我我额为"];
+//            [weakSelf sendGetRedPacketImMessage:message drawName:@"维吾尔文二翁绕弯儿"];
+//            [weakSelf sendGetRedPacketImMessage:message drawName:@"未亡人热翁绕弯儿翁绕弯儿翁绕弯儿"];
+//            [weakSelf sendGetRedPacketImMessage:message drawName:@"地方大幅度"];
         });
-//            [weakSelf sendGetRedPacketImMessage:message];
     } Failed:^(NSError *error) {
             [WLHUDView hiddenHud];
             // 红包已被抢完
@@ -282,7 +291,7 @@
     [self.conversationMessageCollectionView reloadData];
 }
 
-- (void)sendGetRedPacketImMessage:(RCRedPacketMessage *)redPacketMsg {
+- (void)sendGetRedPacketImMessage:(RCRedPacketMessage *)redPacketMsg drawName:(NSString *)drawName {
     // 构建消息的内容，这里以文本消息为例。
     RCRedPacketGetMessage *msg = [[RCRedPacketGetMessage alloc] init];
     RCUserInfo *senderUserInfo = [[RCUserInfo alloc] initWithUserId:configTool.userInfoModel.userId
@@ -295,7 +304,7 @@
     msg.num = redPacketMsg.num;
     msg.drawed = @"1";
     msg.drawUid = configTool.loginUser.uid;
-    msg.drawName = configTool.userInfoModel.nickname;
+    msg.drawName = drawName;// configTool.userInfoModel.nickname;
     msg.money = redPacketMsg.money;
     msg.thunder = redPacketMsg.thunder;
     msg.uid = @(configTool.loginUser.uid.integerValue);

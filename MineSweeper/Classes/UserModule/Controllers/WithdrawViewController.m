@@ -78,7 +78,7 @@
     QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"确定" style:QMUIAlertActionStyleDefault handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
         [weakSelf.navigationController popViewControllerAnimated:YES];
     }];
-    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:_wallentInfoModel.winthdraw_explain message:nil preferredStyle:QMUIAlertControllerStyleAlert];
+    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:@"公告" message:_wallentInfoModel.withdraw_explain ? : @"提现维护中" preferredStyle:QMUIAlertControllerStyleAlert];
     //    [alertController addAction:action1];
     [alertController addAction:action2];
     [alertController showWithAnimated:YES];
@@ -94,6 +94,9 @@
     }
     _momeyLabel.text = [NSString stringWithFormat:@"我的余额：￥%@　可提现：￥%@", _wallentInfoModel.balance, _wallentInfoModel.enbale_balance.stringValue];
     _aboutLabel.text = [NSString stringWithFormat:@"提现说明：%@", _wallentInfoModel.info];
+    if (_wallentInfoModel.status.integerValue == 0) {
+        [_moenyTxtView.textField becomeFirstResponder];
+    }
 }
 
 - (BOOL)shouldHideKeyboardWhenTouchInView:(UIView *)view {
@@ -132,7 +135,6 @@
 //    moenyTxtView.isChangeBorder = NO;
     [self.view addSubview:moenyTxtView];
     self.moenyTxtView = moenyTxtView;
-    [moenyTxtView.textField becomeFirstResponder];
     
     QMUILabel *momeyLabel = [[QMUILabel alloc] init];
     momeyLabel.text = @"我的余额：￥0.00　可提现：￥0.00";

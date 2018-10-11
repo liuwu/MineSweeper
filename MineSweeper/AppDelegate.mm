@@ -324,6 +324,10 @@ single_implementation(AppDelegate);
             // 好友请求消息
             
         }
+        if ([message.content isMemberOfClass:[RCCommandMessage class]]) {
+            RCCommandMessage *msg = (RCCommandMessage *)message.content;
+            DLog(@"data:%@   name:%@" , msg.data, msg.name);
+        }
         
 //        if ([message.content isMemberOfClass:[RCContactNotificationMessage class]]) {
 //            NSAssert(message.conversationType == ConversationType_SYSTEM, @"好友消息要发系统消息！！！");

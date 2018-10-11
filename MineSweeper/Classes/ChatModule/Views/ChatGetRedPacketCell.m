@@ -49,6 +49,29 @@
         [redBtn addTarget:self action:@selector(redBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [backView addSubview:redBtn];
         self.redBtn = redBtn;
+        
+        [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.redIconImageView).offset(-10.f);
+            make.right.equalTo(self.redBtn).offset(10.f);
+            make.height.equalTo(self.redIconImageView).offset(8.f);
+            make.centerX.equalTo(self.baseContentView);
+            make.centerY.equalTo(self.baseContentView);
+        }];
+        
+        [self.redIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.backView).offset(10.f);
+            make.centerY.equalTo(self.backView);
+        }];
+        
+        [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.redIconImageView.mas_right).offset(5.f);
+            make.centerY.equalTo(self.redIconImageView);
+        }];
+        
+        [self.redBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.titleLabel.mas_right).offset(4.f);
+            make.centerY.equalTo(self.titleLabel);
+        }];
     }
     return self;
 }
@@ -75,12 +98,13 @@
 //        }
     }
     _titleLabel.text = infoStr;
-    _redIconImageView.image = [UIImage imageNamed:@"chats_redPsmall_icon"];
+    
+    
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    CGSize size = [_titleLabel.text wl_sizeWithFont:UIFontBoldMake(11) constrainedToWidth:DEVICE_WIDTH - 20];
+//    CGSize size = [_titleLabel.text wl_sizeWithFont:UIFontBoldMake(11) constrainedToWidth:DEVICE_WIDTH - 20];
 //    [_redIconImageView sizeToFit];
 //    _redIconImageView.left = 10.f;
 //    _redIconImageView.centerY = 18.f / 2.f;
@@ -99,33 +123,33 @@
 //    _backView.centerX = self.baseContentView.width / 2.f;
 //    _backView.centerY = self.baseContentView.height / 2.f;
     
-    CGFloat redBtnWith = 15;
-    CGFloat redIconWith = 10;
-//    CGFloat backWith = _titleLabel.width + _redBtn.width + _redIconImageView.width + 30.f;
-    CGFloat backWith = size.width + redBtnWith + redIconWith + 30.f;
-    [_backView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(backWith , 18));
-        make.centerX.mas_equalTo(self.baseContentView);
-        make.centerY.mas_equalTo(self.baseContentView);
-    }];
-
-    [_redIconImageView sizeToFit];
-    [_redIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.backView).mas_offset(10.f);
-        make.centerY.mas_equalTo(self.backView);
-    }];
-
-    [_titleLabel sizeToFit];
-    [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.redIconImageView.mas_right).mas_offset(5.f);
-        make.centerY.mas_equalTo(self.redIconImageView);
-    }];
-
-    [_redBtn sizeToFit];
-    [_redBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.titleLabel.mas_right);
-        make.centerY.mas_equalTo(self.titleLabel);
-    }];
+//    CGFloat redBtnWith = 15;
+//    CGFloat redIconWith = 10;
+////    CGFloat backWith = _titleLabel.width + _redBtn.width + _redIconImageView.width + 30.f;
+//    CGFloat backWith = size.width + redBtnWith + redIconWith + 30.f;
+//    [_backView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.size.mas_equalTo(CGSizeMake(backWith , 18));
+//        make.centerX.mas_equalTo(self.baseContentView);
+//        make.centerY.mas_equalTo(self.baseContentView);
+//    }];
+//
+////    [_redIconImageView sizeToFit];
+//    [_redIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(self.backView).mas_offset(10.f);
+//        make.centerY.mas_equalTo(self.backView);
+//    }];
+//
+////    [_titleLabel sizeToFit];
+//    [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(self.redIconImageView.mas_right).mas_offset(5.f);
+//        make.centerY.mas_equalTo(self.redIconImageView);
+//    }];
+//
+////    [_redBtn sizeToFit];
+//    [_redBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(self.titleLabel.mas_right);
+//        make.centerY.mas_equalTo(self.titleLabel);
+//    }];
 }
 
 /*!

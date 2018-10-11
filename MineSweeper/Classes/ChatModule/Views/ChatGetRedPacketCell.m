@@ -83,7 +83,7 @@
     [_redIconImageView sizeToFit];
     [_redBtn sizeToFit];
     
-    CGFloat backWith = size.width + _redBtn.width + _redIconImageView.width + 30.f;
+    CGFloat backWith = _titleLabel.width + _redBtn.width + _redIconImageView.width + 30.f;
     [_backView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(backWith , 18));
         make.centerX.mas_equalTo(self.baseContentView);

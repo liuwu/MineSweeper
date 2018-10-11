@@ -72,7 +72,22 @@
     }];
 }
 
+// 提现维护中提醒
+- (void)wainMessageAlert {
+    WEAKSELF
+    QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"确定" style:QMUIAlertActionStyleDefault handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    }];
+    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:_wallentInfoModel.winthdraw_explain message:nil preferredStyle:QMUIAlertControllerStyleAlert];
+    //    [alertController addAction:action1];
+    [alertController addAction:action2];
+    [alertController showWithAnimated:YES];
+}
+
 - (void)updateUi {
+    if (_wallentInfoModel.status.integerValue == 1) {
+        [self wainMessageAlert];
+    }
     if (_wallentInfoModel.bank_card.account && _wallentInfoModel.bank_card.bank_adress.length > 0) {
         self.selectCardModel = _wallentInfoModel.bank_card;
         _typeCardTxtView.textField.text = [NSString stringWithFormat:@"%@（%@）", _selectCardModel.bank_adress, [_selectCardModel.account substringFromIndex:(_selectCardModel.account.length - 4)]];

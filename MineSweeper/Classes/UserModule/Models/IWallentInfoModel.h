@@ -17,6 +17,10 @@
 @property (nonatomic, copy) NSNumber *enbale_balance;
 // 信息
 @property (nonatomic, copy) NSString *info;
+// 提现状态 1：提现维护弹出维护公告信息  0没有维护
+@property (nonatomic, copy) NSNumber *status;
+// 提现维护内容
+@property (nonatomic, copy) NSString *winthdraw_explain;
 
 @property (nonatomic, strong) ICardModel *bank_card;
 

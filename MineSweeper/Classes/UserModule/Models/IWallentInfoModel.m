@@ -10,4 +10,10 @@
 
 @implementation IWallentInfoModel
 
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    // value should be Class or Class name.
+    return @{@"bank_card" : [ICardModel class]};
+}
+
+
 @end

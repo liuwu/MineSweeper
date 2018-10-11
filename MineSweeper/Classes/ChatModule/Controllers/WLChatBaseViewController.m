@@ -363,14 +363,14 @@ static NSString *paylistCellid = @"paylistCellid";
             }];
         }
             break;
-//        case 1003: {
-//            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeLocation completionHandler:^(WLSystemAuthStatus status) {
-//                if (status == WLSystemAuthStatusAuthorized) {
-//                    [weakSelf showLocationMapVC];
-//                }
-//            }];
-//        }
-//            break;
+        case 1003: {
+            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeLocation completionHandler:^(WLSystemAuthStatus status) {
+                if (status == WLSystemAuthStatusAuthorized) {
+                    [weakSelf showLocationMapVC];
+                }
+            }];
+        }
+            break;
         case 6001: {
             WEAKSELF
             [WLHUDView showHUDWithStr:@"" dim:YES];

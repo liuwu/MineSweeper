@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ICardModel.h"
 
 @interface IWallentInfoModel : NSObject
 
@@ -16,6 +17,8 @@
 @property (nonatomic, copy) NSNumber *enbale_balance;
 // 信息
 @property (nonatomic, copy) NSString *info;
+
+@property (nonatomic, strong) ICardModel *bank_card;
 
 
 //balance:(NSString *)9909.10

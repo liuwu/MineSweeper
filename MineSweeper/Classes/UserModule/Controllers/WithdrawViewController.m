@@ -73,6 +73,10 @@
 }
 
 - (void)updateUi {
+    if (_wallentInfoModel.bank_card) {
+        self.selectCardModel = _wallentInfoModel.bank_card;
+        _typeCardTxtView.textField.text = [NSString stringWithFormat:@"%@（%@）", _selectCardModel.bank_adress, [_selectCardModel.account substringFromIndex:(_selectCardModel.account.length - 4)]];
+    }
     _momeyLabel.text = [NSString stringWithFormat:@"我的余额：￥%@　可提现：￥%@", _wallentInfoModel.balance, _wallentInfoModel.enbale_balance.stringValue];
     _aboutLabel.text = [NSString stringWithFormat:@"提现说明：%@", _wallentInfoModel.info];
 }

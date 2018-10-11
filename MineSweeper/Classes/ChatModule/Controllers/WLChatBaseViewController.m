@@ -38,7 +38,7 @@
 #define kImageMsgMaxCount 5000
 
 
-@interface WLChatBaseViewController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate,RCMessageCellDelegate, WLPhotoViewControllerDelegate>
+@interface WLChatBaseViewController ()<UIImagePickerControllerDelegate,RCMessageCellDelegate, WLPhotoViewControllerDelegate>
 
 @end
 
@@ -282,59 +282,59 @@ static NSString *paylistCellid = @"paylistCellid";
  *
  *  @param model 图片消息model
  */
-- (void)presentImagePreviewController:(RCMessageModel *)model
-{
-    [self.chatSessionInputBarControl endEditing:YES];
-    NSArray *messageArray = [[RCIMClient sharedRCIMClient] getLatestMessages:self.conversationType targetId:self.targetId count:1];
-    if (!messageArray.count) return;
-    RCMessage *lastMessage = messageArray.firstObject;
-    RCMessageContent *lastMessageContent = lastMessage.content;
-    
-    NSMutableArray *allImageArrayM = [NSMutableArray array];
-    NSArray *imageMessageM = [[RCIMClient sharedRCIMClient] getHistoryMessages:self.conversationType targetId:self.targetId objectName:RCImageMessageTypeIdentifier oldestMessageId:lastMessage.messageId count:kImageMsgMaxCount];
-    NSMutableArray *imageMutableArray = [NSMutableArray arrayWithArray:imageMessageM];
-    if ([lastMessageContent isMemberOfClass:[RCImageMessage class]]) {
-        [imageMutableArray insertObject:lastMessage atIndex:0];
-    }
-    __block NSInteger selectedRow = 0;
-    [imageMutableArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        RCMessage *message = obj;
-        if ([message.content isMemberOfClass:[RCImageMessage class]]) {
-            RCImageMessage *imageMsgContent = (RCImageMessage *)message.content;
-            NSString *imageURL = imageMsgContent.imageUrl;
-            if (imageMsgContent.localPath && imageMsgContent.localPath.length) {
-                NSString *cacheFolder = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
-                NSString *aaaa = [[imageMsgContent.localPath componentsSeparatedByString:@"/Caches/"] lastObject];
-                NSString *localpath = [cacheFolder stringByAppendingPathComponent:aaaa];
-                KSPhotoItem *photo = [KSPhotoItem itemWithSourceView:nil image:[UIImage imageWithContentsOfFile:localpath]];
-                [allImageArrayM addObject:photo];
-            }else if ([imageURL hasPrefix:@"http://"] || [imageURL hasPrefix:@"https://"]) {
-                KSPhotoItem *photo = [KSPhotoItem itemWithThumbImage:imageMsgContent.thumbnailImage imageUrlString:imageURL];
-                [allImageArrayM addObject:photo];
-            }else{
-
-            }
-            if (message.messageId == model.messageId) {
-                selectedRow = idx;
-            }
-        }
-    }];
-    // 2.显示相册
-    KSPhotoBrowser *browser = [KSPhotoBrowser browserWithPhotoItems:allImageArrayM selectedIndex:allImageArrayM.count - selectedRow-1];
-    browser.pageindicatorStyle = KSPhotoBrowserPageIndicatorStyleText;
-    [browser showFromViewController:self];
-}
+//- (void)presentImagePreviewController:(RCMessageModel *)model
+//{
+//    [self.chatSessionInputBarControl endEditing:YES];
+//    NSArray *messageArray = [[RCIMClient sharedRCIMClient] getLatestMessages:self.conversationType targetId:self.targetId count:1];
+//    if (!messageArray.count) return;
+//    RCMessage *lastMessage = messageArray.firstObject;
+//    RCMessageContent *lastMessageContent = lastMessage.content;
+//
+//    NSMutableArray *allImageArrayM = [NSMutableArray array];
+//    NSArray *imageMessageM = [[RCIMClient sharedRCIMClient] getHistoryMessages:self.conversationType targetId:self.targetId objectName:RCImageMessageTypeIdentifier oldestMessageId:lastMessage.messageId count:kImageMsgMaxCount];
+//    NSMutableArray *imageMutableArray = [NSMutableArray arrayWithArray:imageMessageM];
+//    if ([lastMessageContent isMemberOfClass:[RCImageMessage class]]) {
+//        [imageMutableArray insertObject:lastMessage atIndex:0];
+//    }
+//    __block NSInteger selectedRow = 0;
+//    [imageMutableArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        RCMessage *message = obj;
+//        if ([message.content isMemberOfClass:[RCImageMessage class]]) {
+//            RCImageMessage *imageMsgContent = (RCImageMessage *)message.content;
+//            NSString *imageURL = imageMsgContent.imageUrl;
+//            if (imageMsgContent.localPath && imageMsgContent.localPath.length) {
+//                NSString *cacheFolder = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+//                NSString *aaaa = [[imageMsgContent.localPath componentsSeparatedByString:@"/Caches/"] lastObject];
+//                NSString *localpath = [cacheFolder stringByAppendingPathComponent:aaaa];
+//                KSPhotoItem *photo = [KSPhotoItem itemWithSourceView:nil image:[UIImage imageWithContentsOfFile:localpath]];
+//                [allImageArrayM addObject:photo];
+//            }else if ([imageURL hasPrefix:@"http://"] || [imageURL hasPrefix:@"https://"]) {
+//                KSPhotoItem *photo = [KSPhotoItem itemWithThumbImage:imageMsgContent.thumbnailImage imageUrlString:imageURL];
+//                [allImageArrayM addObject:photo];
+//            }else{
+//
+//            }
+//            if (message.messageId == model.messageId) {
+//                selectedRow = idx;
+//            }
+//        }
+//    }];
+//    // 2.显示相册
+//    KSPhotoBrowser *browser = [KSPhotoBrowser browserWithPhotoItems:allImageArrayM selectedIndex:allImageArrayM.count - selectedRow-1];
+//    browser.pageindicatorStyle = KSPhotoBrowserPageIndicatorStyleText;
+//    [browser showFromViewController:self];
+//}
 
 /**
  *  打开地理位置。开发者可以重写，自己根据经纬度打开地图显示位置。默认使用内置地图
  *
  *  @param locationMessageContent 位置消息
  */
-- (void)presentLocationViewController:(RCLocationMessage *)locationMessageContent
-{
-    ActivityMapViewController *mapVC = [[ActivityMapViewController alloc] initWithRCLocationMsg:locationMessageContent];
-    [self.navigationController pushViewController:mapVC animated:YES];
-}
+//- (void)presentLocationViewController:(RCLocationMessage *)locationMessageContent
+//{
+//    ActivityMapViewController *mapVC = [[ActivityMapViewController alloc] initWithRCLocationMsg:locationMessageContent];
+//    [self.navigationController pushViewController:mapVC animated:YES];
+//}
 //
 //#pragma mark override
 ///**
@@ -345,17 +345,17 @@ static NSString *paylistCellid = @"paylistCellid";
 // */
 - (void)pluginBoardView:(RCPluginBoardView*)pluginBoardView clickedItemWithTag:(NSInteger)tag {
 //    DLog(@"pluginBoardView ----%d",tag);
-    WEAKSELF
     switch (tag) {
-        case 1001: {
-            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypePhotos completionHandler:^(WLSystemAuthStatus status) {
-                if (status == WLSystemAuthStatusAuthorized) {
-                    [weakSelf showPicVC];
-                }
-            }];
-        }
-            break;
+//        case 1001: {
+//            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypePhotos completionHandler:^(WLSystemAuthStatus status) {
+//                if (status == WLSystemAuthStatusAuthorized) {
+//                    [weakSelf showPicVC];
+//                }
+//            }];
+//        }
+//            break;
         case 1002: {
+            WEAKSELF
             [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeCamera completionHandler:^(WLSystemAuthStatus status) {
                 if (status == WLSystemAuthStatusAuthorized) {
                     [weakSelf clickSheetCamera];
@@ -363,14 +363,14 @@ static NSString *paylistCellid = @"paylistCellid";
             }];
         }
             break;
-        case 1003: {
-            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeLocation completionHandler:^(WLSystemAuthStatus status) {
-                if (status == WLSystemAuthStatusAuthorized) {
-                    [weakSelf showLocationMapVC];
-                }
-            }];
-        }
-            break;
+//        case 1003: {
+//            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeLocation completionHandler:^(WLSystemAuthStatus status) {
+//                if (status == WLSystemAuthStatusAuthorized) {
+//                    [weakSelf showLocationMapVC];
+//                }
+//            }];
+//        }
+//            break;
         case 6001: {
             WEAKSELF
             [WLHUDView showHUDWithStr:@"" dim:YES];
@@ -388,22 +388,6 @@ static NSString *paylistCellid = @"paylistCellid";
                     [WLHUDView showErrorHUD:@"获取信息失败，请重试"];
                 }
             }];
-            
-//            [WLHUDView showHUDWithStr:@"" dim:YES];
-//            [ImModelClient getImChatInfoWithParams:@{@"fuid": @(self.targetId.integerValue)} Success:^(id resultInfo) {
-//                [WLHUDView hiddenHud];
-//                IFriendModel *friendModel = [IFriendModel modelWithDictionary:resultInfo];
-//                // 转账
-//                TransferViewController *vc = [[TransferViewController alloc] init];
-//                vc.friendModel = friendModel;
-//                [weakSelf.navigationController pushViewController:vc animated:YES];
-//            } Failed:^(NSError *error) {
-//                if (error.localizedDescription.length > 0) {
-//                    [WLHUDView showErrorHUD:error.localizedDescription];
-//                } else {
-//                    [WLHUDView showErrorHUD:@"获取信息失败，请重试"];
-//                }
-//            }];
 //            FriendListViewController *vc = [[FriendListViewController alloc] initWithFriendListType:FriendListTypeForTransfer];
 //            [self.navigationController pushViewController:vc animated:YES];
         }
@@ -414,68 +398,51 @@ static NSString *paylistCellid = @"paylistCellid";
     }
 }
 
-- (void)showLocationMapVC {
-    WEAKSELF
-    WLChatLocationViewController *chatlocationVC = [[WLChatLocationViewController alloc] initWithSendLocationMsgeBlock:^(RCLocationMessage *locMessage) {
-        [weakSelf sendMessage:locMessage pushContent:[NSString stringWithFormat:@"%@:[位置]",configTool.userInfoModel.nickname]];
-    }];
-    QMUINavigationController *navLocation = [[QMUINavigationController alloc] initWithRootViewController:chatlocationVC];
-    [self presentViewController:navLocation animated:YES completion:nil];
-}
 
-- (void)showPicVC {
-    WLPhotoViewController *imagePickerVC = [[WLPhotoViewController alloc] init];
-    imagePickerVC.delegate = self;
-    QMUINavigationController *navigationController = [[QMUINavigationController alloc] initWithRootViewController:imagePickerVC];
-    [self presentViewController:navigationController animated:YES completion:nil];
-}
-
-#pragma mark - WLPhotoViewControllerDelegate && WLPhotoPreviewControllerDelegate
-- (void)photoViewControllerDidCancel:(WLPhotoViewController *)photoViewController {
-    [photoViewController.navigationController dismissViewControllerAnimated:YES completion:NULL];
-}
-
-- (void)photoViewController:(WLPhotoViewController *)photoViewController didFinishPickingImageWithImagesAssetArray:(NSMutableArray<WLAsset *> *)imagesAssetArray {
-    [photoViewController.navigationController dismissViewControllerAnimated:YES completion:NULL];
-
-    dispatch_queue_t queue = dispatch_queue_create("welian.sendimagemessage.gcd", DISPATCH_QUEUE_SERIAL);
-    for (WLAsset *asset in imagesAssetArray) {
-        dispatch_async(queue, ^{
-            [asset requestPreviewImageWithCompletion:^(UIImage *image, NSDictionary *info) {
-                BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue]);
-                if (image && downloadFinined) {
-                    @autoreleasepool {
-                        dispatch_async(queue, ^{
-                            RCImageMessage *imageMessage = [RCImageMessage messageWithImage:image];
-                            imageMessage.full = YES;
-                            [self sendMessage:imageMessage pushContent:@"图片"];
-                        });
-                    }
-                }
-            } withProgressHandler:NULL];
-        });
-    }
-}
-
+//#pragma mark - WLPhotoViewControllerDelegate && WLPhotoPreviewControllerDelegate
+//- (void)photoViewControllerDidCancel:(WLPhotoViewController *)photoViewController {
+//    [photoViewController.navigationController dismissViewControllerAnimated:YES completion:NULL];
+//}
+//
+//- (void)photoViewController:(WLPhotoViewController *)photoViewController didFinishPickingImageWithImagesAssetArray:(NSMutableArray<WLAsset *> *)imagesAssetArray {
+//    [photoViewController.navigationController dismissViewControllerAnimated:YES completion:NULL];
+//
+//    dispatch_queue_t queue = dispatch_queue_create("welian.sendimagemessage.gcd", DISPATCH_QUEUE_SERIAL);
+//    for (WLAsset *asset in imagesAssetArray) {
+//        dispatch_async(queue, ^{
+//            [asset requestPreviewImageWithCompletion:^(UIImage *image, NSDictionary *info) {
+//                BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey] && ![[info objectForKey:PHImageResultIsDegradedKey] boolValue]);
+//                if (image && downloadFinined) {
+//                    @autoreleasepool {
+//                        dispatch_async(queue, ^{
+//                            RCImageMessage *imageMessage = [RCImageMessage messageWithImage:image];
+//                            imageMessage.full = YES;
+//                            [self sendMessage:imageMessage pushContent:@"图片"];
+//                        });
+//                    }
+//                }
+//            } withProgressHandler:NULL];
+//        });
+//    }
+//}
+//
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     [picker dismissViewControllerAnimated:YES completion:NULL];
     UIImage *image = [info valueForKey:UIImagePickerControllerOriginalImage];
     RCImageMessage *imageMessage = [RCImageMessage messageWithImage:image];
     imageMessage.full = YES;
     [self sendMessage:imageMessage pushContent:@"图片"];
-    [self sendMessage:[RCImageMessage messageWithImage:image] pushContent:@"图片"];
-    
     WLImageWriteToSavedPhotosAlbumWithUserLibrary(image, ^(WLAsset *asset, NSError *error) {
         if (asset && !error) {
         }
     });
 }
-
+//
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     [picker dismissViewControllerAnimated:YES completion:NULL];
 }
-
-// 拍照
+//
+//// 拍照
 - (void)clickSheetCamera {
     UIImagePickerController *imagePickerVC = [[UIImagePickerController alloc] init];
     imagePickerVC.sourceType = UIImagePickerControllerSourceTypeCamera;

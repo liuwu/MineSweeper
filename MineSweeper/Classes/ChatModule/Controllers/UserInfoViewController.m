@@ -262,9 +262,10 @@
 
 // 删除好友
 - (void)deleteBtnClicked:(UIButton *)sender {
+    WEAKSELF
     QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleCancel handler:NULL];
     QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"删除" style:QMUIAlertActionStyleDestructive handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
-        
+        [weakSelf deleteFriend];
     }];
     QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:@"确定删除？" message:nil preferredStyle:QMUIAlertControllerStyleAlert];
     [alertController addAction:action1];
@@ -276,6 +277,7 @@
     [WLHUDView showHUDWithStr:@"删除中..." dim:YES];
     WEAKSELF
     [FriendModelClient deleteImFriendWithParams:@{@"fuid" : [NSNumber numberWithInteger:_userModel.uid.integerValue]} Success:^(id resultInfo) {
+        [WLHUDView showSuccessHUD:@"已删除"];
         [kNSNotification postNotificationName:@"kRefreshFriendList" object:nil];
         [weakSelf.navigationController popViewControllerAnimated:YES];
     } Failed:^(NSError *error) {

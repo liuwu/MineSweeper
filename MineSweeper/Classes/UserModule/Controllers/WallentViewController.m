@@ -14,7 +14,7 @@
 #import "UserModelClient.h"
 #import "IWallentModel.h"
 
-@interface WallentViewController ()
+@interface WallentViewController ()<UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) QMUILabel *momeyLabel;
 @property (nonatomic, strong) QMUILabel *balanceMomeyLabel;
@@ -24,6 +24,9 @@
 
 @property (nonatomic, strong) IWallentModel *wallentModel;
 @property (nonatomic, strong) NSMutableArray *datasource;
+
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) QMUILabel *noteLabel;
 
 @end
 
@@ -53,20 +56,59 @@
 
 // 添加头部信息
 - (void)addHeaderView {
-    // 隐藏分割线
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    //下拉刷新
-    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
-    self.tableView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(beginPullUpRefreshingNew)];
-    
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, SCREEN_WIDTH, 108.f)];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectZero];
     headerView.backgroundColor = [UIColor whiteColor];
-    self.tableView.tableHeaderView = headerView;
+    [self.view addSubview:headerView];
+//    self.tableView.tableHeaderView = headerView;
+    [headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, 108.f));
+        make.top.mas_equalTo(self.view).mas_offset(self.qmui_navigationBarMaxYInViewCoordinator);
+        make.centerX.mas_equalTo(self.view);
+    }];
+    
+    // 隐藏分割线
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    tableView.backgroundColor = WLColoerRGB(248.f);
+    tableView.dataSource = self;
+    tableView.delegate = self;
+    [self.view addSubview:tableView];
+    self.tableView = tableView;
+//    [tableView wl_setDebug:YES];
+    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(DEVICE_WIDTH);
+        make.height.mas_equalTo(self.view).mas_offset(-(108.f + self.qmui_navigationBarMaxYInViewCoordinator));
+        make.top.mas_equalTo(headerView.mas_bottom);
+        make.centerX.mas_equalTo(self.view);
+    }];
+    
+    QMUILabel *noteLabel = [[QMUILabel alloc] init];
+    noteLabel.text = @"暂无数据";
+    noteLabel.font = UIFontMake(15);
+    noteLabel.textColor = UIColorMake(93, 100, 110);
+    //    momeyTitleLabel.canPerformCopyAction = YES;
+    noteLabel.hidden = YES;
+    [tableView addSubview:noteLabel];
+    self.noteLabel = noteLabel;
+    [noteLabel sizeToFit];
+    [noteLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(200.f);
+        make.centerX.mas_equalTo(tableView);
+    }];
+    
+    //下拉刷新
+    _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
+    _tableView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(beginPullUpRefreshingNew)];
     
     // 用户信息
     UIView *userView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, headerView.width, 64.f)];
     userView.backgroundColor = UIColorMake(254.f, 72.f, 30.f);
     [headerView addSubview:userView];
+    [userView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, 64.f));
+        make.top.mas_equalTo(headerView);
+        make.centerX.mas_equalTo(headerView);
+    }];
     
     NSArray<NSString *> *titles = @[@"充值记录", @"转账记录", @"提现记录", @"支付记录"];
     HMSegmentedControl *segmentedControl = [[HMSegmentedControl alloc] initWithSectionTitles:titles];
@@ -91,6 +133,12 @@
     segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0.f, 10.f, 0.f, 20.f);
     [segmentedControl addTarget:self action:@selector(segmentedControlChangedValue:) forControlEvents:UIControlEventValueChanged];
     [headerView addSubview:segmentedControl];
+//    [segmentedControl wl_setDebug:YES];
+    [segmentedControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(DEVICE_WIDTH, 44.f));
+        make.bottom.mas_equalTo(headerView);
+        make.centerX.mas_equalTo(headerView);
+    }];
     
     UIImageView *bgImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mine_bg_img"]];
     [userView addSubview:bgImg];
@@ -153,11 +201,12 @@
 //        make.centerY.mas_equalTo(momeyLabel);
 //    }];
     
-     [self.tableView.mj_header beginRefreshing];
+     [_tableView.mj_header beginRefreshing];
 }
 
 - (void)loadData {
-    [self hideEmptyView];
+//    [self hideEmptyView];
+    _noteLabel.hidden = YES;
     NSDictionary *params = @{@"type" : [NSNumber numberWithInteger:_selectType],
                              @"p": [NSNumber numberWithInteger:_page]
                              };
@@ -179,7 +228,8 @@
         [self.datasource addObjectsFromArray:_wallentModel.list];
     }
     if (_datasource.count == 0) {
-        [self showEmptyViewWithText:@"暂无数据" detailText:@"" buttonTitle:nil buttonAction:NULL];
+//        [self showEmptyViewWithText:@"暂无数据" detailText:@"" buttonTitle:nil buttonAction:NULL];
+        _noteLabel.hidden = NO;
     }
     _momeyLabel.text = _wallentModel.balance;
     _balanceMomeyLabel.text = _wallentModel.frozen;

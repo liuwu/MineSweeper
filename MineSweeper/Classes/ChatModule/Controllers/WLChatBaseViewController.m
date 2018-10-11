@@ -347,22 +347,22 @@ static NSString *paylistCellid = @"paylistCellid";
 //    DLog(@"pluginBoardView ----%d",tag);
     WEAKSELF
     switch (tag) {
-//        case 1001: {
-//            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypePhotos completionHandler:^(WLSystemAuthStatus status) {
-//                if (status == WLSystemAuthStatusAuthorized) {
-//                    [weakSelf showPicVC];
-//                }
-//            }];
-//        }
-//            break;
-//        case 1002: {
-//            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeCamera completionHandler:^(WLSystemAuthStatus status) {
-//                if (status == WLSystemAuthStatusAuthorized) {
-//                    [weakSelf clickSheetCamera];
-//                }
-//            }];
-//        }
-//            break;
+        case 1001: {
+            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypePhotos completionHandler:^(WLSystemAuthStatus status) {
+                if (status == WLSystemAuthStatusAuthorized) {
+                    [weakSelf showPicVC];
+                }
+            }];
+        }
+            break;
+        case 1002: {
+            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeCamera completionHandler:^(WLSystemAuthStatus status) {
+                if (status == WLSystemAuthStatusAuthorized) {
+                    [weakSelf clickSheetCamera];
+                }
+            }];
+        }
+            break;
 //        case 1003: {
 //            [WLSystemAuth showAlertWithAuthType:WLSystemAuthTypeLocation completionHandler:^(WLSystemAuthStatus status) {
 //                if (status == WLSystemAuthStatusAuthorized) {

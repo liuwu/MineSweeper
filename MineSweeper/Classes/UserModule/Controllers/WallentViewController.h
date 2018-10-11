@@ -6,8 +6,9 @@
 //  Copyright © 2018年 liuwu. All rights reserved.
 //
 
-#import "SLCommonGroupListViewController.h"
+//#import "SLCommonGroupListViewController.h"
+#import "QMUICommonViewController.h"
 
-@interface WallentViewController : SLCommonGroupListViewController
+@interface WallentViewController : QMUICommonViewController// SLCommonGroupListViewController
 
 @end

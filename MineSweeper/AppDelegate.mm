@@ -294,7 +294,10 @@ single_implementation(AppDelegate);
  
  */
 //- (BOOL)interceptMessage:(RCMessage *)message {
-//
+//    if ([message.content isMemberOfClass:[RCRedPacketMessage class]] || [message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
+//        return YES;
+//    }
+//    return NO;
 //}
 
 /**

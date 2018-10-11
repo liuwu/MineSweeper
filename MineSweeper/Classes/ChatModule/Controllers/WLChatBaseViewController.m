@@ -100,9 +100,11 @@ static NSString *paylistCellid = @"paylistCellid";
     
     // 移除定位扩展
     [self.chatSessionInputBarControl.pluginBoardView removeItemWithTag:1003];
-    [self.chatSessionInputBarControl.pluginBoardView insertItemWithImage:[UIImage imageNamed:@"ic-transter"]
-                                                                   title:@"转账"
-                                                                     tag:6001];
+    if (configTool.userInfoModel.customer_id.intValue != self.targetId.intValue) {
+        [self.chatSessionInputBarControl.pluginBoardView insertItemWithImage:[UIImage imageNamed:@"ic-transter"]
+                                                                       title:@"转账"
+                                                                         tag:6001];
+    }
 }
 
 /**

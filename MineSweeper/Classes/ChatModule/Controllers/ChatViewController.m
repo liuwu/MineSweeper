@@ -59,8 +59,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     if (self.conversationType != ConversationType_CUSTOMERSERVICE) {
-        UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"chats_more_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
-        self.navigationItem.rightBarButtonItem = rightBtnItem;
+        if (configTool.userInfoModel.customer_id.intValue != self.targetId.intValue) {
+            UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"chats_more_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
+            self.navigationItem.rightBarButtonItem = rightBtnItem;
+        }
     }
     
     [self loadData];

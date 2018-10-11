@@ -407,10 +407,12 @@
 }
 
 - (void)customerService {
-    ChatViewController *vc = [[ChatViewController alloc] initWithConversationType:ConversationType_CUSTOMERSERVICE targetId:configTool.userInfoModel.customer_id];
-    vc.title = configTool.userInfoModel.customer_name;
-    vc.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:vc animated:YES];
+    if (configTool.userInfoModel.customer_id.length > 0) {
+        ChatViewController *vc = [[ChatViewController alloc] initWithConversationType:ConversationType_PRIVATE targetId:configTool.userInfoModel.customer_id];
+        vc.title = configTool.userInfoModel.customer_name;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 // 推广海报
@@ -613,9 +615,11 @@
     contentView.backgroundColor = [UIColor whiteColor];
     self.qrUserCodeView = contentView;
     
-    UIImageView *iconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"openRedP_redP_img"]];
+    UIImageView *iconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"game_friend_icon"]];
     //    contentView.backgroundColor = UIColorWhite;
     [iconImageView wl_setCornerRadius:27.5f];
+    [iconImageView setImageWithURL:[NSURL URLWithString:configTool.userInfoModel.avatar]
+                  placeholderImage:[UIImage imageNamed:@"game_friend_icon"]];
     [contentView addSubview:iconImageView];
     [iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(55.f, 55.f));

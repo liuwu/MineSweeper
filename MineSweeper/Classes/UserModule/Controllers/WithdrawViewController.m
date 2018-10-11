@@ -73,7 +73,7 @@
 }
 
 - (void)updateUi {
-    if (_wallentInfoModel.bank_card) {
+    if (_wallentInfoModel.bank_card.account && _wallentInfoModel.bank_card.bank_adress.length > 0) {
         self.selectCardModel = _wallentInfoModel.bank_card;
         _typeCardTxtView.textField.text = [NSString stringWithFormat:@"%@（%@）", _selectCardModel.bank_adress, [_selectCardModel.account substringFromIndex:(_selectCardModel.account.length - 4)]];
     }

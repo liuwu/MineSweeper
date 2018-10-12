@@ -81,6 +81,14 @@
 //    [self.navigationController.navigationBar setShadowImage:[UIImage imageWithColor:WLColoerRGB(255.f)]];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    // //这里需要注意，前面增加过的方法一定要remove掉。
+    if (_userContentController) {
+        [_userContentController removeScriptMessageHandlerForName:@"dialog"];
+    }
+}
+
 - (void)initSubviews {
     [super initSubviews];
     [self getLoginUserInfo];
@@ -485,8 +493,6 @@
             }
         }
     }
-    // //这里需要注意，前面增加过的方法一定要remove掉。
-    [userContentController removeScriptMessageHandlerForName:@"dialog"];
 }
 
 - (void)showSuccessAlert:(NSString *)title {

@@ -18,4 +18,8 @@
 
 @property (nonatomic, strong) IFriendModel *friendModel;
 
+// 是否显示删除按钮
+//@property (nonatomic, assign) BOOL showDel;
+@property (nonatomic, strong) QMUIFillButton *deleteBtn;
+
 @end

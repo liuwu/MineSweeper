@@ -49,6 +49,21 @@
         make.centerX.mas_equalTo(self.contentView);
         make.top.mas_equalTo(self.logoImageView.mas_bottom).mas_offset(5.f);
     }];
+    
+    QMUIFillButton *deleteBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
+    [deleteBtn setTitle:@"-" forState:UIControlStateNormal];
+    deleteBtn.titleLabel.textAlignment = NSTextAlignmentCenter;//设置title的字体居中
+    deleteBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    deleteBtn.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    deleteBtn.titleEdgeInsets = UIEdgeInsetsMake(-1, 0, 0, 0);
+    deleteBtn.hidden = YES;
+    [self.contentView addSubview:deleteBtn];
+    self.deleteBtn = deleteBtn;
+    [deleteBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(20.f, 20.f));
+        make.right.mas_equalTo(self.logoImageView.mas_right);
+        make.bottom.mas_equalTo(self.logoImageView.mas_top).mas_offset(10.f);
+    }];
 }
 
 - (void)setFriendModel:(IFriendModel *)friendModel {

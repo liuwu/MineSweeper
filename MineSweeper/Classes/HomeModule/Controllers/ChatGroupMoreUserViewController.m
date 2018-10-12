@@ -11,10 +11,13 @@
 #import "UserInfoViewController.h"
 #import "FriendListViewController.h"
 
+#import "ImGroupModelClient.h"
+
 @interface ChatGroupMoreUserViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) UICollectionView *mainCollectionView;
+@property (nonatomic, assign) BOOL isIn;
 
 @end
 
@@ -24,18 +27,46 @@
     return @"群成员";
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.isIn = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.isIn = NO;
+}
+
 - (void)initSubviews {
     [super initSubviews];
     [self addTableHeaderInfo];
 //    [self addTableViewCell];
     //    [self loadData];
     
+    [kNSNotification addObserver:self selector:@selector(loadData) name:@"kGroupInfoChanged" object:nil];
 //    [kNSNotification addObserver:self selector:@selector(loadData) name:@"kGroupInfoChanged" object:nil];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+// 获取群主信息接口
+- (void)loadData {
+    //    [WLHUDView showHUDWithStr:@"" dim:YES];
+    if (!_isIn) {
+        WEAKSELF
+        [ImGroupModelClient getImGroupInfoWithParams:@{@"id" : [NSNumber numberWithInteger:_groupDetailInfo.groupId.integerValue]}
+                                             Success:^(id resultInfo) {
+                                                 //                                             [WLHUDView hiddenHud];
+                                                 weakSelf.groupDetailInfo = [IGroupDetailInfo modelWithDictionary:resultInfo];
+                                                 [weakSelf.mainCollectionView reloadData];
+                                             } Failed:^(NSError *error) {
+                                                 //                                             [WLHUDView hiddenHud];
+                                             }];
+    }
+   
 }
 
 // 获取群主信息接口
@@ -122,6 +153,47 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - private
+- (void)deleteUserAlert:(UIButton *)btn {
+    IFriendModel *model = _groupDetailInfo.member_list[btn.tag];
+    // 加入
+    @weakify(self);
+    QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleDefault handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+    }];
+    QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"移除" style:QMUIAlertActionStyleDefault handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
+        @strongify(self);
+        [self deleteUser:model index:btn.tag];
+    }];
+    QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:@"提醒" message:@"确认移除当前成员？" preferredStyle:QMUIAlertControllerStyleAlert];
+    [alertController addAction:action2];
+    [alertController addAction:action1];
+    [alertController showWithAnimated:YES];
+}
+
+// 移除成员
+- (void)deleteUser:(IFriendModel *)model index:(NSInteger)index {
+    NSDictionary *params = @{@"id" : @(_groupDetailInfo.groupId.integerValue),
+                             @"uid" : @[@(model.uid.integerValue)]
+                             };
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    @weakify(self);
+    [ImGroupModelClient deleteImGroupMemberWithParams:params Success:^(id resultInfo) {
+        @strongify(self);
+        [WLHUDView showSuccessHUD:@"移除成功"];
+        [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
+        NSMutableArray *datasource = [NSMutableArray arrayWithArray:self.groupDetailInfo.member_list];
+        [datasource removeObjectAtIndex:index];
+        self.groupDetailInfo.member_list = [NSArray arrayWithArray:datasource];
+        [self.mainCollectionView reloadData];
+    } Failed:^(NSError *error) {
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
+    }];
+}
+
 #pragma mark collectionView代理方法
 //返回section个数
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -151,17 +223,29 @@
         // 游戏群组，无法修改
         IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
         cell.friendModel = model;
+        cell.deleteBtn.hidden = YES;
     } else {
         if (_groupDetailInfo._uid.integerValue == configTool.userInfoModel.userId.integerValue) {
             if (indexPath.row == _groupDetailInfo.member_list.count) {
                 cell.logoImageView.image = [UIImage imageNamed:@"chatDetail_icon_add"];
+                cell.titleLabel.text = @"";
+                cell.deleteBtn.hidden = YES;
             } else {
                 IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
                 cell.friendModel = model;
+                cell.deleteBtn.hidden = _groupDetailInfo._uid.intValue == model.uid.intValue;
+                cell.deleteBtn.tag = indexPath.row;
+                [cell.deleteBtn addTarget:self action:@selector(deleteUserAlert:) forControlEvents:UIControlEventTouchUpInside];
+//                @weakify(self);
+//                [cell.deleteBtn addBlockForControlEvents:UIControlEventTouchUpInside block:^(id  _Nonnull sender) {
+//                    @strongify(self);
+//                    [self deleteUserAlert:model indexPath:indexPath];
+//                }];
             }
         } else {
             IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
             cell.friendModel = model;
+            cell.deleteBtn.hidden = YES;
         }
     }
     return cell;

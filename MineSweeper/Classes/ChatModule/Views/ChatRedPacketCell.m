@@ -94,11 +94,15 @@
     if (message.extra.length > 0) {
         extraModel = [RcRedPacketMessageExtraModel modelWithJSON:message.extra];
     }
+    
     NSString *statusStr = @"游戏红包";
+    if (model.messageDirection == MessageDirection_SEND) {
+        statusStr = @"红包已发送";
+    }
     if (extraModel) {
         switch (extraModel.status.integerValue) {
             case 1:{
-                    statusStr = @"红包已领取";
+                statusStr = @"红包已领取";
             }
                 break;
             case 2:

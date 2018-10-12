@@ -427,6 +427,12 @@
 //     进入发红包页面
     SendRedPacketViewController *vc = [[SendRedPacketViewController alloc] init];
     vc.groupId = self.targetId;
+    @weakify(self);
+    vc.sendRedPacketBlock = ^(RCMessage *sendMsg) {
+        @strongify(self);
+        // 在会话页面中插入一条消息并展示
+        [self appendAndDisplayMessage:sendMsg];
+    };
     [self.navigationController pushViewController:vc animated:YES];
 }
 

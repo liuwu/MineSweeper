@@ -8,8 +8,12 @@
 
 #import "QDCommonViewController.h"
 
+typedef void (^SendRedPacketSuccessBlock)(RCMessage *sendMsg);
+
 @interface SendRedPacketViewController : QDCommonViewController
 
 @property (nonatomic, copy) NSString *groupId;
+
+@property (nonatomic, copy) SendRedPacketSuccessBlock sendRedPacketBlock;
 
 @end

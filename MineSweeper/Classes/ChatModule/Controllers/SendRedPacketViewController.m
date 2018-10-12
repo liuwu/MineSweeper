@@ -332,28 +332,26 @@
 //    [self sendMessage:msg pushContent:@"hahha"];
 //    RCTextMessage *testMessage = [RCTextMessage messageWithContent:@"test"];
     // 调用RCIMClient的sendMessage方法进行发送，结果会通过回调进行反馈。
-    WEAKSELF
-    [[RCIM sharedRCIM] sendMessage:ConversationType_GROUP
-                          targetId:_groupId
-                           content:msg
-                       pushContent:nil
-                          pushData:nil
-                           success:^(long messageId) {
-                               DLog(@"发送成功。当前消息ID：%ld", messageId);
-                           } error:^(RCErrorCode nErrorCode, long messageId) {
-                               DLog(@"发送失败。消息ID：%ld， 错误码：%ld", messageId, nErrorCode);
-                           }];
-//    [[RCIMClient sharedRCIMClient] sendMessage:ConversationType_GROUP
-//                                      targetId:_groupId
-//                                       content:msg
-//                                   pushContent:nil
-//                                      pushData:nil
-//                                       success:^(long messageId) {
-//                                           DLog(@"发送成功。当前消息ID：%ld", messageId);
-//                                           [[RCIMClient sharedRCIMClient] insertOutgoingMessage:ConversationType_GROUP targetId: weakSelf.groupId sentStatus:SentStatus_SENT content:msg];
-//                                       } error:^(RCErrorCode nErrorCode, long messageId) {
-//                                           DLog(@"发送失败。消息ID：%ld， 错误码：%ld", messageId, nErrorCode);
-//                                       }];
+//    WEAKSELF
+    RCMessage *sendMsg = [[RCIMClient sharedRCIMClient] insertOutgoingMessage:ConversationType_GROUP
+                                                targetId:_groupId
+                                              sentStatus:SentStatus_SENT
+                                                 content:msg];
+    
+    if (_sendRedPacketBlock) {
+        _sendRedPacketBlock(sendMsg);
+    }
+    
+//    [[RCIM sharedRCIM] sendMessage:ConversationType_GROUP
+//                          targetId:_groupId
+//                           content:msg
+//                       pushContent:nil
+//                          pushData:nil
+//                           success:^(long messageId) {
+//                               DLog(@"发送成功。当前消息ID：%ld", messageId);
+//                           } error:^(RCErrorCode nErrorCode, long messageId) {
+//                               DLog(@"发送失败。消息ID：%ld， 错误码：%ld", messageId, nErrorCode);
+//                           }];
 }
 
 @end

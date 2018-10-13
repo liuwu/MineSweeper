@@ -58,6 +58,7 @@ single_implementation(AppDelegate);
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self.window makeKeyAndVisible];
     [NSUserDefaults setString:nil forKey:@"kNowRedGroupChatUserId"];
+    [kNSNotification addObserver:self selector:@selector(setIconBadgeNumber) name:kWL_ChatMsgNumChangedNotification object:nil];
     
     [self setupUIStyle];
     [self initRongIM];

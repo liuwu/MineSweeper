@@ -131,22 +131,37 @@ static NSString *paylistCellid = @"paylistCellid";
 - (void)willDisplayMessageCell:(RCMessageBaseCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     if ([cell isKindOfClass:[RCTextMessageCell class]]) {
         RCTextMessageCell *txtCell = (RCTextMessageCell *)cell;
-//        txtCell.bubbleBackgroundView
-        txtCell.bubbleBackgroundView.image = [txtCell.bubbleBackgroundView.image
-                                           resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,
-                                                                                        20.f, 30.f)];
+        // 设置自定义聊天背景图
+        if (txtCell.model.messageDirection == MessageDirection_SEND) {
+            txtCell.textLabel.textColor = [UIColor whiteColor];
+            // 发送
+            txtCell.bubbleBackgroundView.image = [[UIImage imageNamed:@"chat_to_bg_normal"] resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,20.f, 30.f)];
+        } else {
+            txtCell.textLabel.textColor = WLColoerRGB(51.f);
+            txtCell.bubbleBackgroundView.image = [[UIImage imageNamed:@"chat_from_bg_normal"] resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,20.f, 30.f)];
+        }
+//        txtCell.bubbleBackgroundView.image = [txtCell.bubbleBackgroundView.image
+//                                           resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,20.f, 30.f)];
     }
     if ([cell isKindOfClass:[RCVoiceMessageCell class]]) {
         RCVoiceMessageCell *txtCell = (RCVoiceMessageCell *)cell;
-        txtCell.bubbleBackgroundView.image = [txtCell.bubbleBackgroundView.image
-                                              resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,
-                                                                                           20.f, 30.f)];
+        if (txtCell.model.messageDirection == MessageDirection_SEND) {
+            txtCell.voiceDurationLabel.textColor = [UIColor whiteColor];
+            // 发送
+            txtCell.bubbleBackgroundView.image = [[UIImage imageNamed:@"chat_to_bg_normal"] resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,20.f, 30.f)];
+        } else {
+            txtCell.voiceDurationLabel.textColor = WLColoerRGB(51.f);
+            txtCell.bubbleBackgroundView.image = [[UIImage imageNamed:@"chat_from_bg_normal"] resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,20.f, 30.f)];
+        }
+//        txtCell.bubbleBackgroundView.image = [txtCell.bubbleBackgroundView.image
+//                                              resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,20.f, 30.f)];
     }
     if ([cell isKindOfClass:[RCImageMessageCell class]]) {
-        RCImageMessageCell *txtCell = (RCImageMessageCell *)cell;
-        txtCell.bubbleBackgroundView.image = [txtCell.bubbleBackgroundView.image
-                                              resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,
-                                                                                           20.f, 30.f)];
+//        RCImageMessageCell *txtCell = (RCImageMessageCell *)cell;
+        
+//        txtCell.pictureView.image = [UIImage imageWithColor:[UIColor greenColor]];// txtCell.pictureView.image; //[txtCell.bubbleBackgroundView.image
+                                      //        resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,
+                                        //                                                   20.f, 30.f)];
     }
 }
 

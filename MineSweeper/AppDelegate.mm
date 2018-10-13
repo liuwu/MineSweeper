@@ -310,10 +310,33 @@ single_implementation(AppDelegate);
     dispatch_sync(dispatch_get_main_queue(), ^{
         //处理好友请求
         if ([message.content isMemberOfClass:[RCRedPacketMessage class]] || [message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
+            DLog(@":%@  UIViewController:%@" , [UIViewController getCurrentViewCtrl] , [[UIViewController getCurrentViewCtrl] class]);
             // 如果不是在聊天页面，删掉红包消息
             if (![[UIViewController getCurrentViewCtrl] isKindOfClass:[ChatViewController class]]) {
                 // 删除消息
                 [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
+                // 清除聊天记录
+                BOOL success = [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
+                if (success) {
+                    DLog(@"删除群组聊天消息成功");
+                } else {
+                    DLog(@"删除群组聊天消息失败");
+                    [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
+                }
+                // 此方法从服务器端清除历史消息，但是必须先开通历史消息云存储功能。
+                [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:message.conversationType targetId:message.targetId recordTime:0 success:^{
+                    
+                    DLog(@"删除群组服务器聊天历史消息成功");
+                } error:^(RCErrorCode status) {
+                    DLog(@"删除群组服务器聊天历史消息失败");
+                    // 此方法从服务器端清除历史消息，但是必须先开通历史消息云存储功能。
+                    [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:message.conversationType targetId:message.targetId recordTime:0 success:^{
+                        
+                        DLog(@"删除群组服务器聊天历史消息成功");
+                    } error:^(RCErrorCode status) {
+                        DLog(@"删除群组服务器聊天历史消息失败");
+                    }];
+                }];
             }
         }
         if ([message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
@@ -387,9 +410,14 @@ single_implementation(AppDelegate);
 //            }
 //        }
         if (left == 0) {
-            [self setIconBadgeNumber];
-            //添加聊天用户改变监听
-            [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
+            // 如果不是在聊天页面，删掉红包消息
+            if (![[UIViewController getCurrentViewCtrl] isKindOfClass:[ChatViewController class]]) {
+                // 删除消息
+//                [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
+                [self setIconBadgeNumber];
+                //添加聊天用户改变监听
+                [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
+            }
         }
     });
     DLog(@"onRCIMReceiveMessage ---- %d",left);
@@ -418,6 +446,36 @@ single_implementation(AppDelegate);
     NSLog(@"onRCIMCustomLocalNotification %@",message);
     if ([message.content isMemberOfClass:[RCInformationNotificationMessage class]]) {
         return YES;
+    }
+    // 如果不是在聊天页面，删掉红包消息
+    if ([message.content isMemberOfClass:[RCRedPacketMessage class]] || [message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
+        DLog(@":%@  UIViewController:%@" , [UIViewController getCurrentViewCtrl] , [[UIViewController getCurrentViewCtrl] class]);
+        // 如果不是在聊天页面，删掉红包消息
+        if (![[UIViewController getCurrentViewCtrl] isKindOfClass:[ChatViewController class]]) {
+            // 删除消息
+             [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
+            // 清除聊天记录
+            BOOL success = [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
+            if (success) {
+                DLog(@"删除群组聊天消息成功");
+            } else {
+                [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
+                DLog(@"删除群组聊天消息失败");
+            }
+            // 此方法从服务器端清除历史消息，但是必须先开通历史消息云存储功能。
+            [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:message.conversationType targetId:message.targetId recordTime:0 success:^{
+                
+                DLog(@"删除群组服务器聊天历史消息成功");
+            } error:^(RCErrorCode status) {
+                DLog(@"删除群组服务器聊天历史消息失败");
+                [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:message.conversationType targetId:message.targetId recordTime:0 success:^{
+                    
+                    DLog(@"删除群组服务器聊天历史消息成功");
+                } error:^(RCErrorCode status) {
+                    DLog(@"删除群组服务器聊天历史消息失败");
+                }];
+            }];
+        }
     }
     // 红包不弹出本地推送通知
     if ([message.content isMemberOfClass:[RCRedPacketMessage class]]) {

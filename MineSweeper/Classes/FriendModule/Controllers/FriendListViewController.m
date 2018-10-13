@@ -137,7 +137,11 @@
         UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithImage:[UIImage imageNamed:@"home_notice_btn"] target:self action:@selector(leftBtnItemClicked)];
         self.navigationItem.leftBarButtonItem = leftBtnItem;
         
-        UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithImage:[UIImage imageNamed:@"common_addFriend_icon_normal"] target:self action:@selector(rightBtnItemClicked)];
+        // 必须用自定义view
+        QMUINavigationButton *rightBtn = [[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"common_addFriend_icon_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+        //拓展宽度，以保证用 leftBarButtonItems/rightBarButtonItems 时，按钮与按钮之间间距与系统的保持一致
+        rightBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -20);
+        UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:rightBtn target:self action:@selector(rightBtnItemClicked)];
         self.navigationItem.rightBarButtonItem = rightBtnItem;
         
         // 使用方法 2，以 UIWindow 的形式显示到界面上，这种无需默认隐藏，也无需 add 到某个 UIView 上

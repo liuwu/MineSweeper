@@ -70,6 +70,7 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     if (!_isGotoNextVC) {
+        [NSUserDefaults setString:nil forKey:@"kNowRedGroupChatUserId"];
         [self clearRCMessagesWithRedPacket];
     }
 }
@@ -154,6 +155,8 @@
     self.title = _groupDetailInfo.title;
     // 群组，没有扩展功能，只有发红包 设置扩展功能按钮图片
     if (self.conversationType == ConversationType_GROUP && _groupDetailInfo.type.integerValue == 1) {
+        [NSUserDefaults setString:self.targetId forKey:@"kNowRedGroupChatUserId"];
+        
         [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateNormal];
         [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateSelected];
         [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateHighlighted];

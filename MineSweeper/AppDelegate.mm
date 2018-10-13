@@ -57,6 +57,7 @@ single_implementation(AppDelegate);
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self.window makeKeyAndVisible];
+    [NSUserDefaults setString:nil forKey:@"kNowRedGroupChatUserId"];
     
     [self setupUIStyle];
     [self initRongIM];
@@ -306,137 +307,78 @@ single_implementation(AppDelegate);
  @param left    剩余消息数.
  */
 - (void)onRCIMReceiveMessage:(RCMessage *)message left:(int)left {
+    DLog(@"onRCIMReceiveMessage ---- %d",left);
     //通知通知列表页面刷新数据
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        //处理好友请求
-        if ([message.content isMemberOfClass:[RCRedPacketMessage class]] || [message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
-            DLog(@":%@  UIViewController:%@" , [UIViewController getCurrentViewCtrl] , [[UIViewController getCurrentViewCtrl] class]);
-            // 如果不是在聊天页面，删掉红包消息
-            if (![[UIViewController getCurrentViewCtrl] isKindOfClass:[ChatViewController class]]) {
-                // 删除消息
-                BOOL success = [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
-                if (success) {
-                    DLog(@"删除群组聊天消息成功");
-                } else {
-                    DLog(@"删除群组聊天消息失败");
-                    [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
-                }
+    //处理好友请求
+    if ([message.content isMemberOfClass:[RCRedPacketMessage class]] || [message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
+        DLog(@":%@  UIViewController:%@" , [UIViewController getCurrentViewCtrl] , [[UIViewController getCurrentViewCtrl] class]);
+        // 如果不是在聊天页面，删掉红包消息
+        NSString *chatGroupId = [NSUserDefaults stringForKey:@"kNowRedGroupChatUserId"];
+        if (!(message.targetId && message.targetId.intValue == chatGroupId.intValue)) {
+            // 删除消息
+            BOOL success = [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
+            if (success) {
+                DLog(@"删除群组聊天消息成功");
+            } else {
+                DLog(@"删除群组聊天消息失败");
+                [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
+            }
+            
+            [[RCIMClient sharedRCIMClient] deleteMessages:message.conversationType targetId:message.targetId success:^{
+                DLog(@"删除群组聊天消息成功");
+            } error:^(RCErrorCode status) {
+                DLog(@"删除群组聊天消息失败");
+            }];
+            
+            // 清除聊天记录
+            BOOL success2 = [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
+            if (success2) {
+                DLog(@"删除群组聊天消息成功");
+            } else {
+                DLog(@"删除群组聊天消息失败");
+                [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
+            }
+            // 此方法从服务器端清除历史消息，但是必须先开通历史消息云存储功能。
+            [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:message.conversationType targetId:message.targetId recordTime:0 success:^{
                 
-                [[RCIMClient sharedRCIMClient] deleteMessages:message.conversationType targetId:message.targetId success:^{
-                    DLog(@"删除群组聊天消息成功");
-                } error:^(RCErrorCode status) {
-                    DLog(@"删除群组聊天消息失败");
-                }];
-                
-                // 清除聊天记录
-                BOOL success2 = [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
-                if (success2) {
-                    DLog(@"删除群组聊天消息成功");
-                } else {
-                    DLog(@"删除群组聊天消息失败");
-                    [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
-                }
+                DLog(@"删除群组服务器聊天历史消息成功");
+            } error:^(RCErrorCode status) {
+                DLog(@"删除群组服务器聊天历史消息失败");
                 // 此方法从服务器端清除历史消息，但是必须先开通历史消息云存储功能。
                 [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:message.conversationType targetId:message.targetId recordTime:0 success:^{
                     
                     DLog(@"删除群组服务器聊天历史消息成功");
                 } error:^(RCErrorCode status) {
                     DLog(@"删除群组服务器聊天历史消息失败");
-                    // 此方法从服务器端清除历史消息，但是必须先开通历史消息云存储功能。
-                    [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:message.conversationType targetId:message.targetId recordTime:0 success:^{
-                        
-                        DLog(@"删除群组服务器聊天历史消息成功");
-                    } error:^(RCErrorCode status) {
-                        DLog(@"删除群组服务器聊天历史消息失败");
-                    }];
                 }];
-                
-                if (left == 0) {
-                    [self setIconBadgeNumber];
-                    //添加聊天用户改变监听
-                    [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
-                }
-            }
-        } else {
-            if (left == 0) {
-                [self setIconBadgeNumber];
-                //添加聊天用户改变监听
-                [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
-            }
-        }
-        
-        if ([message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
-            // 红包被领域消息
+            }];
             
         }
-        if ([message.content isMemberOfClass:[RCContactNotificationMessage class]]) {
-            // 好友请求消息
-            
-        }
-        if ([message.content isMemberOfClass:[RCCommandMessage class]]) {
-            RCCommandMessage *msg = (RCCommandMessage *)message.content;
-            // name是add_user  data是用户id
-            NSInteger count = [NSUserDefaults intForKey:@"kNewFriendRequest"];
-            [NSUserDefaults setInteger:(count + 1) forKey:@"kNewFriendRequest"];
-            [kNSNotification postNotificationName:@"kNewFriendRequest" object:nil];
-            DLog(@"data:%@   name:%@" , msg.data, msg.name);
-        }
-        
-//        if ([message.content isMemberOfClass:[RCContactNotificationMessage class]]) {
-//            NSAssert(message.conversationType == ConversationType_SYSTEM, @"好友消息要发系统消息！！！");
-//            RCContactNotificationMessage *_contactNotificationMsg = (RCContactNotificationMessage *)message.content;
-//            if (_contactNotificationMsg.sourceUserId == nil || _contactNotificationMsg.sourceUserId .length ==0) {
-//                return;
-//            }
-//            NSString *reqestType = [[_contactNotificationMsg.extra wl_jsonValueDecoded] objectForKey:@"type"];
-////            if ([reqestType isEqualToString:@"friendAdd"]) {
-////                // 别人同意添加我为好友，直接加入好友列表
-////                NSDictionary *friendUserDict = [[_contactNotificationMsg.extra wl_jsonValueDecoded] objectForKey:@"data"];
-////                WLUserModel *userModel = [WLUserModel modelWithDictionary:friendUserDict];
-////                userModel.friendship = @(1);
-////                // 异步保存用户信息
-////                [[WLUserDataCenter sharedInstance] saveUserWithInfo:userModel isAsync:YES];
-////            }else if ([reqestType isEqualToString:@"friendRequest"]) {
-////                //保存新的好友的数量
-////                [[WLSystemDataCenter sharedInstance] saveNewFriendCountWithInfo:1];
-////            }
-//        }else if ([message.content isMemberOfClass:[WLSystemPushMessage class]]){
-//            //change by liuwu | 2015.11.16 | V2.6:添加通知消息类型
-////            WLSystemPushMessage *sysPushMsg = (WLSystemPushMessage *)message.content;
-////            if (sysPushMsg.type.integerValue == 17) {
-////                // 读写数据库 请放到主线程
-////                NSDictionary *extraDic = [sysPushMsg.wl_info wl_jsonValueDecoded];
-////                NSInteger investorauthInt = [extraDic[@"investorauth"] integerValue];
-////                NSString *authmsgStr = extraDic[@"authmsg"];// 认证失败会有 authmsg值
-////                if (investorauthInt == -1){ // 认证失败
-////                    [[WLUserDataCenter sharedInstance] updateLoginUserInvestorAuthMsgInfo:authmsgStr.length ? authmsgStr : @""];
-////                }
-////                [[WLUserDataCenter sharedInstance] updateLoginUserInvestorauthInfo:extraDic[@"investorauth"]];
-////            }
-//            //保存系统消息
-//            WLPushMessageModel *model = [[WLSystemDataCenter sharedInstance] savePushMessageInfoWith:sysPushMsg rcmessageid:@(message.messageId)];
-//            if (model) {
-//                //通知通知列表页面刷新数据
-//                [kNSNotification postNotificationName:@"PushInfoHasNewMsg" object:nil userInfo:@{@"pushMsgInfo": model}];
-//            }
-//        }else if ([message.content isMemberOfClass:[WLHiddenMessage class]]){
-//            WLHiddenMessage *hiddenMsg = (WLHiddenMessage *)message.content;
-//            [self addLocalNotification:hiddenMsg];
-//        }else if ([message.content isMemberOfClass:[WLDynamicMessage class]]) {
-//            [[WLMessageDataCenter sharedInstance] saveHomePushMessageWithInfo:[message.content modelToJSONObject] rcmessageid:@(message.messageId)];
-//        } else if ([message.content isMemberOfClass:[RCCommandMessage class]]) {
-//            NSDictionary *contentDic = [message.content modelToJSONObject];
-//            if ([contentDic[@"name"] isEqualToString:KWL_BindWxGift]) {
-//                NSDictionary *data = [NSJSONSerialization JSONObjectWithData:[contentDic[@"data"] dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingAllowFragments error:nil];
-//                //绑定微信有礼
-//                if (data && [data isKindOfClass:[NSDictionary class]]) {
-//                    NSString *key = [KWL_BindWxGift stringByAppendingString:configTool.loginUser.uid.stringValue];
-//                    [NSUserDefaults setObject:data forKey:key];
-//                }
-//            }
+//        if (![[UIViewController getCurrentViewCtrl] isKindOfClass:[ChatViewController class]]) {
 //        }
-    });
-    DLog(@"onRCIMReceiveMessage ---- %d",left);
+    }
+    
+    if ([message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
+        // 红包被领域消息
+        
+    }
+    if ([message.content isMemberOfClass:[RCContactNotificationMessage class]]) {
+        // 好友请求消息
+        
+    }
+    if ([message.content isMemberOfClass:[RCCommandMessage class]]) {
+        RCCommandMessage *msg = (RCCommandMessage *)message.content;
+        // name是add_user  data是用户id
+        NSInteger count = [NSUserDefaults intForKey:@"kNewFriendRequest"];
+        [NSUserDefaults setInteger:(count + 1) forKey:@"kNewFriendRequest"];
+        [kNSNotification postNotificationName:@"kNewFriendRequest" object:nil];
+        DLog(@"data:%@   name:%@" , msg.data, msg.name);
+    }
+    if (left == 0) {
+        [self setIconBadgeNumber];
+        //添加聊天用户改变监听
+        [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
+    }
 }
 
 #pragma mark - 融云 关闭小灰条通知栏提示
@@ -466,10 +408,12 @@ single_implementation(AppDelegate);
     // 如果不是在聊天页面，删掉红包消息
     if ([message.content isMemberOfClass:[RCRedPacketMessage class]] || [message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
         DLog(@":%@  UIViewController:%@" , [UIViewController getCurrentViewCtrl] , [[UIViewController getCurrentViewCtrl] class]);
+        NSString *chatGroupId = [NSUserDefaults stringForKey:@"kNowRedGroupChatUserId"];
+        if (!(message.targetId && message.targetId.intValue == chatGroupId.intValue)) {
         // 如果不是在聊天页面，删掉红包消息
-        if (![[UIViewController getCurrentViewCtrl] isKindOfClass:[ChatViewController class]]) {
+//        if (![[UIViewController getCurrentViewCtrl] isKindOfClass:[ChatViewController class]]) {
             // 删除消息
-             [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
+            [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
             [[RCIMClient sharedRCIMClient] deleteMessages:message.conversationType targetId:message.targetId success:^{
                 DLog(@"删除群组聊天消息成功");
             } error:^(RCErrorCode status) {

@@ -134,12 +134,11 @@
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
     
     if (_frindListType == FriendListTypeNormal) {
-        UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"home_notice_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(leftBtnItemClicked)];
+        UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithImage:[UIImage imageNamed:@"home_notice_btn"] target:self action:@selector(leftBtnItemClicked)];
         self.navigationItem.leftBarButtonItem = leftBtnItem;
         
-        UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"common_addFriend_icon_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
+        UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithImage:[UIImage imageNamed:@"common_addFriend_icon_normal"] target:self action:@selector(rightBtnItemClicked)];
         self.navigationItem.rightBarButtonItem = rightBtnItem;
-        
         
         // 使用方法 2，以 UIWindow 的形式显示到界面上，这种无需默认隐藏，也无需 add 到某个 UIView 上
         self.popupByWindow = [[QMUIPopupMenuView alloc] init];

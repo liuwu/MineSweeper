@@ -95,11 +95,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"home_notice_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(leftBtnItemClicked)];
+    UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithImage:[UIImage imageNamed:@"home_notice_btn"] target:self action:@selector(leftBtnItemClicked)];
     self.navigationItem.leftBarButtonItem = leftBtnItem;
     
-    
-    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"common_addFriend_icon_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
+    UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithImage:[UIImage imageNamed:@"common_addFriend_icon_normal"] target:self action:@selector(rightBtnItemClicked)];
     self.navigationItem.rightBarButtonItem = rightBtnItem;
     
     

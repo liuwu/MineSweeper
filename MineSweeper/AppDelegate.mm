@@ -314,10 +314,23 @@ single_implementation(AppDelegate);
             // 如果不是在聊天页面，删掉红包消息
             if (![[UIViewController getCurrentViewCtrl] isKindOfClass:[ChatViewController class]]) {
                 // 删除消息
-                [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
-                // 清除聊天记录
-                BOOL success = [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
+                BOOL success = [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
                 if (success) {
+                    DLog(@"删除群组聊天消息成功");
+                } else {
+                    DLog(@"删除群组聊天消息失败");
+                    [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
+                }
+                
+                [[RCIMClient sharedRCIMClient] deleteMessages:message.conversationType targetId:message.targetId success:^{
+                    DLog(@"删除群组聊天消息成功");
+                } error:^(RCErrorCode status) {
+                    DLog(@"删除群组聊天消息失败");
+                }];
+                
+                // 清除聊天记录
+                BOOL success2 = [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
+                if (success2) {
                     DLog(@"删除群组聊天消息成功");
                 } else {
                     DLog(@"删除群组聊天消息失败");
@@ -337,8 +350,21 @@ single_implementation(AppDelegate);
                         DLog(@"删除群组服务器聊天历史消息失败");
                     }];
                 }];
+                
+                if (left == 0) {
+                    [self setIconBadgeNumber];
+                    //添加聊天用户改变监听
+                    [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
+                }
+            }
+        } else {
+            if (left == 0) {
+                [self setIconBadgeNumber];
+                //添加聊天用户改变监听
+                [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
             }
         }
+        
         if ([message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
             // 红包被领域消息
             
@@ -409,16 +435,6 @@ single_implementation(AppDelegate);
 //                }
 //            }
 //        }
-        if (left == 0) {
-            // 如果不是在聊天页面，删掉红包消息
-            if (![[UIViewController getCurrentViewCtrl] isKindOfClass:[ChatViewController class]]) {
-                // 删除消息
-//                [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
-                [self setIconBadgeNumber];
-                //添加聊天用户改变监听
-                [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
-            }
-        }
     });
     DLog(@"onRCIMReceiveMessage ---- %d",left);
 }
@@ -454,6 +470,11 @@ single_implementation(AppDelegate);
         if (![[UIViewController getCurrentViewCtrl] isKindOfClass:[ChatViewController class]]) {
             // 删除消息
              [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
+            [[RCIMClient sharedRCIMClient] deleteMessages:message.conversationType targetId:message.targetId success:^{
+                DLog(@"删除群组聊天消息成功");
+            } error:^(RCErrorCode status) {
+                DLog(@"删除群组聊天消息失败");
+            }];
             // 清除聊天记录
             BOOL success = [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
             if (success) {

@@ -121,6 +121,36 @@ static NSString *paylistCellid = @"paylistCellid";
 }
 
 /*!
+ 即将显示消息Cell的回调
+ 
+ @param cell        消息Cell
+ @param indexPath   该Cell对应的消息Cell数据模型在数据源中的索引值
+ 
+ @discussion 您可以在此回调中修改Cell的显示和某些属性。
+ */
+- (void)willDisplayMessageCell:(RCMessageBaseCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    if ([cell isKindOfClass:[RCTextMessageCell class]]) {
+        RCTextMessageCell *txtCell = (RCTextMessageCell *)cell;
+//        txtCell.bubbleBackgroundView
+        txtCell.bubbleBackgroundView.image = [txtCell.bubbleBackgroundView.image
+                                           resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,
+                                                                                        20.f, 30.f)];
+    }
+    if ([cell isKindOfClass:[RCVoiceMessageCell class]]) {
+        RCVoiceMessageCell *txtCell = (RCVoiceMessageCell *)cell;
+        txtCell.bubbleBackgroundView.image = [txtCell.bubbleBackgroundView.image
+                                              resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,
+                                                                                           20.f, 30.f)];
+    }
+    if ([cell isKindOfClass:[RCImageMessageCell class]]) {
+        RCImageMessageCell *txtCell = (RCImageMessageCell *)cell;
+        txtCell.bubbleBackgroundView.image = [txtCell.bubbleBackgroundView.image
+                                              resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,
+                                                                                           20.f, 30.f)];
+    }
+}
+
+/*!
  自定义消息 Cell 的 Size
  
  @param model               要显示的消息model

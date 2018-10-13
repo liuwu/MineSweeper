@@ -88,9 +88,9 @@
 }
 
 - (void)addViews {
-    UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"home_notice_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(leftBtnItemClicked)];
+    UIBarButtonItem *leftBtnItem = [UIBarButtonItem qmui_itemWithImage:[UIImage imageNamed:@"home_notice_btn"] target:self action:@selector(leftBtnItemClicked)];
     self.navigationItem.leftBarButtonItem = leftBtnItem;
-    
+//    [self.navigationItem.titleView wl_setDebug:YES];
     //    NSArray *imageArr = @[@"h1.jpg",
     //                          @"h2.jpg",
     //                          @"h3.jpg",

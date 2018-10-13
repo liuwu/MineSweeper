@@ -102,8 +102,10 @@
     self.titleLabel4 = titleLabel4;
     
     [titleLabel4 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(self.titleLabel1);
-        make.left.mas_equalTo(self.titleLabel3.mas_right);
+//        make.size.mas_equalTo(self.titleLabel1);
+        make.width.mas_equalTo(120.f);
+        make.height.mas_equalTo(self.contentView.height);
+        make.left.mas_equalTo(self.titleLabel3.mas_right).mas_offset((width - 120.f) / 2.f);
         make.centerY.mas_equalTo(self.contentView);
     }];
     

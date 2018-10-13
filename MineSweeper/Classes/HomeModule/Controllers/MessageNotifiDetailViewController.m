@@ -11,9 +11,10 @@
 
 #import "ImGroupModelClient.h"
 
-@interface MessageNotifiDetailViewController ()<QMUITextViewDelegate>
+@interface MessageNotifiDetailViewController ()<QMUITextViewDelegate, YYTextViewDelegate>
 
-@property (nonatomic,strong) QMUITextView *textView;
+//@property (nonatomic,strong) QMUITextView *textView;
+@property (nonatomic,strong) YYTextView *textView;
 @property (nonatomic, assign) CGFloat textViewMinimumHeight;
 @property (nonatomic, strong) NSArray *datasource;
 
@@ -27,7 +28,7 @@
 
 - (void)initSubviews {
     [super initSubviews];
-    self.textViewMinimumHeight = 206;
+    self.textViewMinimumHeight = self.view.height - 100 - self.qmui_navigationBarMaxYInViewCoordinator;
     
     [self addViews];
     [self intData];
@@ -39,12 +40,14 @@
     self.tableView.backgroundColor = WLColoerRGB(248.f);
     
     
-    QMUITextView *textView = [[QMUITextView alloc] initWithFrame:CGRectMake(0.f, 0.f, DEVICE_WIDTH, self.textViewMinimumHeight)];
+    YYTextView *textView = [[YYTextView alloc] initWithFrame:CGRectMake(0.f, 0.f, DEVICE_WIDTH, self.textViewMinimumHeight)];
     textView.delegate = self;
     textView.backgroundColor = [UIColor clearColor];
 //    textView.placeholder = @"支持 placeholder、支持自适应高度、支持限制文本输入长度";
 //    textView.placeholderColor = UIColorPlaceholder; // 自定义 placeholder 的颜色
     textView.editable = NO;
+    textView.showsVerticalScrollIndicator = YES;
+    textView.scrollEnabled = YES;
     textView.text = @"";
     textView.textContainerInset = UIEdgeInsetsMake(20, 7, 10, 7);
     textView.returnKeyType = UIReturnKeyDone;
@@ -55,7 +58,7 @@
     // 限制可输入的字符长度
 //    textView.maximumTextLength = 1000;//100;
     // 限制输入框自增高的最大高度
-    textView.maximumHeight = self.textViewMinimumHeight;//200;
+//    textView.maximumHeight = self.textViewMinimumHeight;//200;
     textView.layer.borderWidth = PixelOne;
     textView.layer.borderColor = UIColorSeparator.CGColor;
     //    self.textView.layer.cornerRadius = 4;
@@ -95,7 +98,13 @@
 }
 
 - (void)updateInfo:(INoticeModel *)data {
-    self.textView.text = data.content;
+    //将网页内容格式化
+    NSAttributedString * attrStr = [[NSAttributedString alloc] initWithData:[data.content dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+//    self.textView.text = data.content;
+//    self.textView.attributedText = attrStr;
+    [self.textView setAttributedText:attrStr];
+    [self.textView scrollRangeToVisible:NSMakeRange(0, 0)];
+//    self.textView.textVerticalAlignment = YYTextVerticalAlignmentTop;
     self.datasource = [NSArray arrayWithObject:data];
     if (self.datasource.count == 0) {
         [self showEmptyViewWithText:@"暂无数据" detailText:@"" buttonTitle:nil buttonAction:NULL];

@@ -298,7 +298,20 @@
         //    [alertController addAction:action1];
         [alertController addAction:action2];
         [alertController showWithAnimated:YES];
+    } else {
+        [self loadNoticeToShowNoticeAlert];
     }
+}
+
+// 加载系统公告
+- (void)loadNoticeToShowNoticeAlert {
+    WEAKSELF
+    [ImGroupModelClient getImSystemNoticeWithParams:nil Success:^(id resultInfo) {
+        INoticeInfoModel *model = [INoticeInfoModel modelWithDictionary:resultInfo];
+        weakSelf.noticeArray = model.list;
+        [weakSelf noticeMessageAlert];
+    } Failed:^(NSError *error) {
+    }];
 }
 
 // 广告被点击

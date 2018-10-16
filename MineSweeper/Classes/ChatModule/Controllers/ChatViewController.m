@@ -91,7 +91,8 @@
         } error:^(RCErrorCode status) {
             DLog(@"删除群组服务器聊天历史消息失败");
         }];
-        
+        //添加聊天用户改变监听
+        [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
     }
 }
 

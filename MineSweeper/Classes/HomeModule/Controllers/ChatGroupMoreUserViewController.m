@@ -18,6 +18,7 @@
 @property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) UICollectionView *mainCollectionView;
 @property (nonatomic, assign) BOOL isIn;
+@property (nonatomic, strong) NSArray *datasource;
 
 @end
 
@@ -42,14 +43,45 @@
     [self addTableHeaderInfo];
 //    [self addTableViewCell];
     //    [self loadData];
-    
-    [kNSNotification addObserver:self selector:@selector(loadData) name:@"kGroupInfoChanged" object:nil];
+    [self loadGroupUser];
 //    [kNSNotification addObserver:self selector:@selector(loadData) name:@"kGroupInfoChanged" object:nil];
+    [kNSNotification addObserver:self selector:@selector(loadGroupUserNOhub) name:@"kGroupUserChanged" object:nil];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+- (void)loadGroupUserNOhub {
+    @weakify(self);
+    [ImGroupModelClient getImGroupMemberListWithParams:@{@"id" : [NSNumber numberWithInteger:_groupDetailInfo.groupId.integerValue]} Success:^(id resultInfo) {
+        @strongify(self);
+        self.datasource = [NSArray modelArrayWithClass:[IFriendModel class] json:resultInfo];
+        [self.mainCollectionView reloadData];
+        //        [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
+        //        [weakSelf.navigationController popViewControllerAnimated:YES];
+    } Failed:^(NSError *error) {
+    }];
+}
+
+- (void)loadGroupUser {
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    @weakify(self);
+    [ImGroupModelClient getImGroupMemberListWithParams:@{@"id" : [NSNumber numberWithInteger:_groupDetailInfo.groupId.integerValue]} Success:^(id resultInfo) {
+        [WLHUDView hiddenHud];
+        @strongify(self);
+        self.datasource = [NSArray modelArrayWithClass:[IFriendModel class] json:resultInfo];
+        [self.mainCollectionView reloadData];
+//        [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
+//        [weakSelf.navigationController popViewControllerAnimated:YES];
+    } Failed:^(NSError *error) {
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
+    }];
 }
 
 // 获取群主信息接口
@@ -140,6 +172,7 @@
     //4.设置代理
     mainCollectionView.delegate = self;
     mainCollectionView.dataSource = self;
+    mainCollectionView.showsVerticalScrollIndicator = NO;
     //    [mainCollectionView wl_setDebug:YES];
     self.mainCollectionView = mainCollectionView;
     
@@ -155,7 +188,7 @@
 
 #pragma mark - private
 - (void)deleteUserAlert:(UIButton *)btn {
-    IFriendModel *model = _groupDetailInfo.member_list[btn.tag];
+    IFriendModel *model = _datasource[btn.tag];
     // 加入
     @weakify(self);
     QMUIAlertAction *action1 = [QMUIAlertAction actionWithTitle:@"取消" style:QMUIAlertActionStyleDefault handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
@@ -181,9 +214,9 @@
         @strongify(self);
         [WLHUDView showSuccessHUD:@"移除成功"];
         [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
-        NSMutableArray *datasource = [NSMutableArray arrayWithArray:self.groupDetailInfo.member_list];
+        NSMutableArray *datasource = [NSMutableArray arrayWithArray:self.datasource];
         [datasource removeObjectAtIndex:index];
-        self.groupDetailInfo.member_list = [NSArray arrayWithArray:datasource];
+        self.datasource = [NSArray arrayWithArray:datasource];
         [self.mainCollectionView reloadData];
     } Failed:^(NSError *error) {
         if (error.localizedDescription.length > 0) {
@@ -204,12 +237,12 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (_groupDetailInfo.type.integerValue == 1) {
         // 游戏群组，无法修改
-        return _groupDetailInfo.member_list.count;
+        return _datasource.count;
     } else {
         if (_groupDetailInfo._uid.integerValue == configTool.userInfoModel.userId.integerValue) {
-            return _groupDetailInfo.member_list.count + 1;
+            return _datasource.count + 1;
         } else {
-            return _groupDetailInfo.member_list.count ;
+            return _datasource.count ;
         }
         
     }
@@ -221,17 +254,17 @@
     
     if (_groupDetailInfo.type.integerValue == 1) {
         // 游戏群组，无法修改
-        IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
+        IFriendModel *model = _datasource[indexPath.row];
         cell.friendModel = model;
         cell.deleteBtn.hidden = YES;
     } else {
         if (_groupDetailInfo._uid.integerValue == configTool.userInfoModel.userId.integerValue) {
-            if (indexPath.row == _groupDetailInfo.member_list.count) {
+            if (indexPath.row == _datasource.count) {
                 cell.logoImageView.image = [UIImage imageNamed:@"chatDetail_icon_add"];
                 cell.titleLabel.text = @"";
                 cell.deleteBtn.hidden = YES;
             } else {
-                IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
+                IFriendModel *model = _datasource[indexPath.row];
                 cell.friendModel = model;
                 cell.deleteBtn.hidden = _groupDetailInfo._uid.intValue == model.uid.intValue;
                 cell.deleteBtn.tag = indexPath.row;
@@ -243,7 +276,7 @@
 //                }];
             }
         } else {
-            IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
+            IFriendModel *model = _datasource[indexPath.row];
             cell.friendModel = model;
             cell.deleteBtn.hidden = YES;
         }
@@ -304,14 +337,14 @@
     //    NSLog(@"%@",msg);
     DLog(@"didSelectItemAtIndexPath：");
     if (_groupDetailInfo.type.integerValue == 0 || _groupDetailInfo._uid.integerValue == configTool.userInfoModel.userId.integerValue) {
-        if (indexPath.row == _groupDetailInfo.member_list.count) {
+        if (indexPath.row == _datasource.count) {
             FriendListViewController *vc = [[FriendListViewController alloc] initWithFriendListType:FriendListTypeForGroupChatAddFriend];
             vc.groupDetailInfo = _groupDetailInfo;
             [self.navigationController pushViewController:vc animated:YES];
             return;
         }
     }
-    IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
+    IFriendModel *model = _datasource[indexPath.row];
     UserInfoViewController *vc = [[UserInfoViewController alloc] init];
     vc.userId = model.uid;
     [self.navigationController pushViewController:vc animated:YES];

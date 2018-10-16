@@ -842,6 +842,7 @@
                 // 聊天信息发送改变
                 [kNSNotification postNotificationName:@"kChatUserInfoChanged" object:nil];
                 [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
+                [kNSNotification postNotificationName:@"kGroupUserChanged" object:nil];
                 [weakSelf.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:self.navigationController.viewControllers.count - 2] animated:YES];
             } Failed:^(NSError *error) {
                 [WLHUDView hiddenHud];

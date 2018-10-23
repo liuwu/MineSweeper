@@ -71,9 +71,9 @@
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
     
     //上提加载更多
-    MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(beginPullUpRefreshingNew)];
-    self.tableView.mj_footer = footer;
-    self.tableView.mj_footer.hidden = YES;
+//    MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(beginPullUpRefreshingNew)];
+//    self.tableView.mj_footer = footer;
+//    self.tableView.mj_footer.hidden = YES;
     
     [self loadData];
 }
@@ -81,7 +81,7 @@
 - (void)loadData {
     [self hideEmptyView];
     NSDictionary *params = @{
-//                             @"member_pid": @713,
+                             @"member_id": @(configTool.loginUser.uid.integerValue),
                              @"distance" : @(_distance)
                              };
     WEAKSELF
@@ -150,6 +150,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     DLog(@"didSelectRowAtIndexPath------");
+    if (_distance == 7) {
+        return;
+    }
     RecommendListViewController *recommendListVc = [[RecommendListViewController alloc] initWithDistance:_distance + 1];
     [self.navigationController pushViewController:recommendListVc animated:YES];
 }

@@ -15,6 +15,7 @@
 #import "ImModelClient.h"
 #import "RCRedPacketMessage.h"
 #import "IRedPacketResultModel.h"
+#import "UserModelClient.h"
 
 @interface SendRedPacketViewController ()<QMUIModalPresentationViewControllerDelegate>
 
@@ -202,9 +203,28 @@
     }
 }
 
+// 设置免密下注
+- (void)setFreeChip:(UISwitch *)item {
+    [WLHUDView showHUDWithStr:@"" dim:YES];
+    NSDictionary *params = @{@"is_secret_free" : [NSNumber numberWithBool:item.on]};
+    [UserModelClient setSecretFreeWithParams:params Success:^(id resultInfo) {
+        [WLHUDView showSuccessHUD:@"已设置"];
+        configTool.userInfoModel.is_secret_free = @(item.on).stringValue;
+        //        [item reloadRowWithAnimation:UITableViewRowAnimationNone];
+    } Failed:^(NSError *error) {
+        item.on = !item.on;
+        if (error.localizedDescription.length > 0) {
+            [WLHUDView showErrorHUD:error.localizedDescription];
+        } else {
+            [WLHUDView hiddenHud];
+        }
+    }];
+    
+}
+
 // 输入支付密码
 - (void)inputPayPwd:(NSString *)money {
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 189.f)];
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 234.f)];
     contentView.backgroundColor = [UIColor whiteColor];
     [contentView wl_setCornerRadius:5.f];
 
@@ -247,6 +267,27 @@
         make.centerX.mas_equalTo(contentView);
         make.top.mas_equalTo(moneyLabel.mas_bottom).mas_offset(15.f);
     }];
+    
+    UISwitch *pwdSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+    pwdSwitch.on = configTool.userInfoModel.is_secret_free.boolValue;
+    [pwdSwitch addTarget:self action:@selector(setFreeChip:) forControlEvents:UIControlEventValueChanged];
+    [contentView addSubview:pwdSwitch];
+    [pwdSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.size.mas_equalTo(CGSizeMake(60, 44.f));
+        make.top.mas_equalTo(pwdTextField.mas_bottom).mas_offset(5.f);
+        make.right.mas_equalTo(pwdTextField);
+    }];
+    
+    QMUILabel *pwdLabel = [[QMUILabel alloc] init];
+    pwdLabel.font = UIFontMake(14);
+    pwdLabel.textColor = WLColoerRGB(51.f);
+    pwdLabel.text = @"免密下注";
+    [contentView addSubview:pwdLabel];
+//    [pwdLabel sizeToFit];
+    [pwdLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(pwdSwitch);
+        make.right.mas_equalTo(pwdSwitch.mas_left).mas_offset(-5.f);
+    }];
 
     QMUIFillButton *payBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
     [payBtn setTitle:@"确认支付" forState:UIControlStateNormal];
@@ -257,7 +298,7 @@
     [payBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(115.f, 36.f));
         make.left.mas_equalTo(pwdTextField);
-        make.top.mas_equalTo(pwdTextField.mas_bottom).mas_offset(15.f);
+        make.top.mas_equalTo(pwdSwitch.mas_bottom).mas_offset(10.f);
     }];
 
     QMUIFillButton *cancelBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorGray];
@@ -269,7 +310,7 @@
     [cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(payBtn);
         make.right.mas_equalTo(pwdTextField);
-        make.top.mas_equalTo(pwdTextField.mas_bottom).mas_offset(15.f);
+        make.top.mas_equalTo(pwdSwitch.mas_bottom).mas_offset(10.f);
     }];
 
     QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];

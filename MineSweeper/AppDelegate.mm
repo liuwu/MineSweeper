@@ -33,6 +33,9 @@
 
 #import <AlipaySDK/AlipaySDK.h>
 
+#import "IGameGroupModel.h"
+#import "ImGroupModelClient.h"
+
 // 引入 JPush 功能所需头文件
 #import "JPUSHService.h"
 // iOS10 注册 APNs 所需头文件
@@ -46,6 +49,7 @@
 
 @property (nonatomic, strong) NavViewController *loginNav;
 @property (nonatomic, strong) MainViewController *mainVc;
+@property (nonatomic, assign) BOOL isBack;//进入后台
 
 @end
 
@@ -184,6 +188,9 @@ single_implementation(AppDelegate);
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    // 退出群聊
+    [kNSNotification postNotificationName:@"kChatDidEnterBackground" object:nil];
+    self.isBack = YES;
     [self setIconBadgeNumber];
 }
 
@@ -196,6 +203,9 @@ single_implementation(AppDelegate);
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    self.isBack = NO;
+    // 加入群聊
+    [kNSNotification postNotificationName:@"kChatDidBecomeActive" object:nil];
     //添加聊天用户改变监听
     [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
     [kNSNotification postNotificationName:@"kCheckVersion" object:nil];
@@ -315,7 +325,7 @@ single_implementation(AppDelegate);
         DLog(@":%@  UIViewController:%@" , [UIViewController getCurrentViewCtrl] , [[UIViewController getCurrentViewCtrl] class]);
         // 如果不是在聊天页面，删掉红包消息
         NSString *chatGroupId = [NSUserDefaults stringForKey:@"kNowRedGroupChatUserId"];
-        if (!(message.targetId && message.targetId.intValue == chatGroupId.intValue)) {
+        if (!(message.targetId && message.targetId.intValue == chatGroupId.intValue) || _isBack) {
             // 删除消息
             BOOL success = [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
             if (success) {
@@ -410,7 +420,7 @@ single_implementation(AppDelegate);
     if ([message.content isMemberOfClass:[RCRedPacketMessage class]] || [message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
         DLog(@":%@  UIViewController:%@" , [UIViewController getCurrentViewCtrl] , [[UIViewController getCurrentViewCtrl] class]);
         NSString *chatGroupId = [NSUserDefaults stringForKey:@"kNowRedGroupChatUserId"];
-        if (!(message.targetId && message.targetId.intValue == chatGroupId.intValue)) {
+        if (!(message.targetId && message.targetId.intValue == chatGroupId.intValue) || _isBack) {
         // 如果不是在聊天页面，删掉红包消息
 //        if (![[UIViewController getCurrentViewCtrl] isKindOfClass:[ChatViewController class]]) {
             // 删除消息
@@ -485,6 +495,15 @@ single_implementation(AppDelegate);
  
  */
 - (BOOL)onRCIMCustomAlertSound:(RCMessage*)message {
+    
+    // 如果不是在聊天页面，删掉红包消息
+    if ([message.content isMemberOfClass:[RCRedPacketMessage class]] || [message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
+        DLog(@":%@  UIViewController:%@" , [UIViewController getCurrentViewCtrl] , [[UIViewController getCurrentViewCtrl] class]);
+        NSString *chatGroupId = [NSUserDefaults stringForKey:@"kNowRedGroupChatUserId"];
+        if (message.targetId && message.targetId.intValue == chatGroupId.intValue && !_isBack) {
+            return NO;
+        }
+    }
     return YES;
 }
 
@@ -651,6 +670,30 @@ single_implementation(AppDelegate);
     self.window.rootViewController = _mainVc;
     /// 上报定位
     [self getCityLocationInfo];
+    // 退出融云所有h红包群组
+    [self quitAllRCGameGroup];
+}
+
+- (void)quitAllRCGameGroup {
+    @weakify(self);
+    [ImGroupModelClient setImGameGroupListWithParams:nil Success:^(id resultInfo) {
+        @strongify(self);
+        NSArray *data = [NSArray modelArrayWithClass:[IGameGroupModel class] json:resultInfo];
+        [self quitAllRcGroup:data];
+    } Failed:^(NSError *error) {
+    }];
+}
+
+- (void)quitAllRcGroup:(NSArray *)list {
+    if (list.count > 0) {
+        for (IGameGroupModel *model in list) {
+            [[RCIMClient sharedRCIMClient] quitGroup:model.groupId success:^{
+                DLog(@"退出群组聊天成功");
+            } error:^(RCErrorCode status) {
+                DLog(@"退出群组聊天失败");
+            }];
+        }
+    }
 }
 
 /// 上报定位

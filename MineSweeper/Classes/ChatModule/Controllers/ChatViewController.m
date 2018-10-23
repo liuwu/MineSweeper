@@ -91,6 +91,11 @@
         } error:^(RCErrorCode status) {
             DLog(@"删除群组服务器聊天历史消息失败");
         }];
+        [[RCIMClient sharedRCIMClient] quitGroup:self.targetId success:^{
+            DLog(@"退出群组聊天成功");
+        } error:^(RCErrorCode status) {
+            DLog(@"退出群组聊天失败");
+        }];
         //添加聊天用户改变监听
         [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
     }
@@ -112,6 +117,35 @@
     //聊天消息数量改变监听
     [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
     [kNSNotification addObserver:self selector:@selector(clearRCMessagesWithRedPacket) name:UIApplicationWillTerminateNotification object:nil];
+    
+    // 退出群聊
+    [kNSNotification addObserver:self selector:@selector(quitGroup) name:@"kChatDidEnterBackground" object:nil];
+    // 加入群聊
+    [kNSNotification addObserver:self selector:@selector(joinGroup) name:@"kChatDidBecomeActive" object:nil];
+}
+
+- (void)quitGroup {
+    if (self.conversationType == ConversationType_GROUP && _groupDetailInfo.type.integerValue == 1 && !_isGotoNextVC) {
+        [[RCIMClient sharedRCIMClient] quitGroup:self.targetId success:^{
+            DLog(@"退出群组聊天成功");
+        } error:^(RCErrorCode status) {
+            DLog(@"退出群组聊天失败");
+            [self quitGroup];
+        }];
+    }
+}
+
+- (void)joinGroup {
+    // 群组，没有扩展功能，只有发红包 设置扩展功能按钮图片
+    if (self.conversationType == ConversationType_GROUP && _groupDetailInfo.type.integerValue == 1 && !_isGotoNextVC) {
+        // 加入群聊
+        [[RCIMClient sharedRCIMClient] joinGroup:self.targetId groupName:_groupDetailInfo.title success:^{
+            DLog(@"加入群组聊天成功");
+        } error:^(RCErrorCode status) {
+            DLog(@"加入群组聊天失败");
+            [self joinGroup];
+        }];
+    }
 }
 
 - (void)loadData {
@@ -157,6 +191,12 @@
     // 群组，没有扩展功能，只有发红包 设置扩展功能按钮图片
     if (self.conversationType == ConversationType_GROUP && _groupDetailInfo.type.integerValue == 1) {
         [NSUserDefaults setString:self.targetId forKey:@"kNowRedGroupChatUserId"];
+        // 加入群聊
+        [[RCIMClient sharedRCIMClient] joinGroup:self.targetId groupName:_groupDetailInfo.title success:^{
+            DLog(@"加入群组聊天成功");
+        } error:^(RCErrorCode status) {
+            DLog(@"加入群组聊天失败");
+        }];
         
         [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateNormal];
         [self.chatSessionInputBarControl.additionalButton setImage:[UIImage imageNamed:@"chats_redP_btn"] forState:UIControlStateSelected];

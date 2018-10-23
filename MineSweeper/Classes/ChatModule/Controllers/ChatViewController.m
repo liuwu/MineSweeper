@@ -77,6 +77,11 @@
 
 - (void)clearRCMessagesWithRedPacket {
     if (self.conversationType == ConversationType_GROUP && _groupDetailInfo.type.integerValue == 1) {
+        [[RCIMClient sharedRCIMClient] quitGroup:self.targetId success:^{
+            DLog(@"退出群组聊天成功");
+        } error:^(RCErrorCode status) {
+            DLog(@"退出群组聊天失败");
+        }];
         // 清除聊天记录
         BOOL success = [[RCIMClient sharedRCIMClient] clearMessages:ConversationType_GROUP targetId:self.targetId];
         if (success) {
@@ -90,11 +95,6 @@
             DLog(@"删除群组服务器聊天历史消息成功");
         } error:^(RCErrorCode status) {
             DLog(@"删除群组服务器聊天历史消息失败");
-        }];
-        [[RCIMClient sharedRCIMClient] quitGroup:self.targetId success:^{
-            DLog(@"退出群组聊天成功");
-        } error:^(RCErrorCode status) {
-            DLog(@"退出群组聊天失败");
         }];
         //添加聊天用户改变监听
         [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];

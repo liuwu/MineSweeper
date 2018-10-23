@@ -495,7 +495,6 @@ single_implementation(AppDelegate);
  
  */
 - (BOOL)onRCIMCustomAlertSound:(RCMessage*)message {
-    
     // 如果不是在聊天页面，删掉红包消息
     if ([message.content isMemberOfClass:[RCRedPacketMessage class]] || [message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
         DLog(@":%@  UIViewController:%@" , [UIViewController getCurrentViewCtrl] , [[UIViewController getCurrentViewCtrl] class]);
@@ -532,6 +531,7 @@ single_implementation(AppDelegate);
     [RCIM sharedRCIM].groupInfoDataSource = RCDDataSource;
     
     [RCIM sharedRCIM].receiveMessageDelegate = self;
+    [RCIM sharedRCIM].disableMessageAlertSound = NO;
     //设置显示未注册的消息
     //如：新版本增加了某种自定义消息，但是老版本不能识别，开发者可以在旧版本中预先自定义这种未识别的消息的显示
     [RCIM sharedRCIM].showUnkownMessage = YES;

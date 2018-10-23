@@ -76,7 +76,9 @@
 - (void)wainMessageAlert {
     WEAKSELF
     QMUIAlertAction *action2 = [QMUIAlertAction actionWithTitle:@"确定" style:QMUIAlertActionStyleDefault handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
-        [weakSelf.navigationController popViewControllerAnimated:YES];
+        if (weakSelf.wallentInfoModel.status.integerValue == 1) {
+             [weakSelf.navigationController popViewControllerAnimated:YES];
+        }
     }];
     QMUIAlertController *alertController = [QMUIAlertController alertControllerWithTitle:@"公告" message:_wallentInfoModel.withdraw_explain ? : @"提现维护中" preferredStyle:QMUIAlertControllerStyleAlert];
     //    [alertController addAction:action1];
@@ -221,6 +223,28 @@
 }
 
 - (void)checkSelectStatus:(NSInteger)type {
+    if (_wallentInfoModel.status.integerValue > 0) {
+        switch (_wallentInfoModel.status.integerValue) {
+            case 1:
+                [self wainMessageAlert];
+                return;
+                break;
+            case 2:
+                if (type == 1) {
+                    [self wainMessageAlert];
+                    return;
+                }
+                break;
+            case 3:
+                if (type == 2) {
+                    [self wainMessageAlert];
+                    return;
+                }
+                break;
+            default:
+                break;
+        }
+    }
     _selectType = type;
     if (_selectType == 1) {
         // 支付宝

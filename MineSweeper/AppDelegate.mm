@@ -19,6 +19,8 @@
 ///引入地图功能所有的头文件
 #import <BaiduMapAPI_Map/BMKMapComponent.h>
 
+#import "WLAudioPlayer.h"
+
 #import <RongIMKit/RongIMKit.h>
 #import "WLRongCloudDataSource.h"
 
@@ -369,6 +371,14 @@ single_implementation(AppDelegate);
 //        }
     }
     
+    // 收到红包消息，播放声音
+    if ([message.content isMemberOfClass:[RCRedPacketMessage class]] || [message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
+        NSString *chatGroupId = [NSUserDefaults stringForKey:@"kNowRedGroupChatUserId"];
+        if (message.targetId && message.targetId.intValue == chatGroupId.intValue && !_isBack && left == 0) {
+            [self playSound];
+        }
+    }
+    
     if ([message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
         // 红包被领域消息
         
@@ -453,7 +463,6 @@ single_implementation(AppDelegate);
             }];
         }
     }
-    // 红包不弹出本地推送通知
     if ([message.content isMemberOfClass:[RCRedPacketMessage class]]) {
         return YES;
     }
@@ -495,15 +504,20 @@ single_implementation(AppDelegate);
  
  */
 - (BOOL)onRCIMCustomAlertSound:(RCMessage*)message {
-    // 如果不是在聊天页面，删掉红包消息
-    if ([message.content isMemberOfClass:[RCRedPacketMessage class]] || [message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
-        DLog(@":%@  UIViewController:%@" , [UIViewController getCurrentViewCtrl] , [[UIViewController getCurrentViewCtrl] class]);
-        NSString *chatGroupId = [NSUserDefaults stringForKey:@"kNowRedGroupChatUserId"];
-        if (message.targetId && message.targetId.intValue == chatGroupId.intValue && !_isBack) {
-            return NO;
-        }
-    }
+//    // 如果不是在聊天页面，删掉红包消息
+//    if ([message.content isMemberOfClass:[RCRedPacketMessage class]] || [message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
+//        DLog(@":%@  UIViewController:%@" , [UIViewController getCurrentViewCtrl] , [[UIViewController getCurrentViewCtrl] class]);
+//        NSString *chatGroupId = [NSUserDefaults stringForKey:@"kNowRedGroupChatUserId"];
+//        if (message.targetId && message.targetId.intValue == chatGroupId.intValue && !_isBack) {
+//            return NO;
+//        }
+//    }
     return YES;
+}
+
+- (void)playSound {
+    //sms-received.caf
+    [WLAudioPlayer playSoundWithFileName:@"sms-received" bundleName:@"RongCloud" ofType:@"caf" andAlert:YES];
 }
 
 #pragma mark - Private

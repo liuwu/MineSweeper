@@ -375,6 +375,7 @@
 		1073BC4E21509324001EF550 /* AXWebViewControllerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1073BC4921509324001EF550 /* AXWebViewControllerActivity.m */; };
 		1073BC4F21509324001EF550 /* AXWebViewController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1073BC4B21509324001EF550 /* AXWebViewController.bundle */; };
 		1073BC5021509324001EF550 /* AXWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1073BC4C21509324001EF550 /* AXWebViewController.m */; };
+		107E150E217F39FD00F2A11C /* WLAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 107E150D217F39FD00F2A11C /* WLAudioPlayer.m */; };
 		10886BA5214F9FC2003DC40A /* HMSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 10886BA4214F9FC2003DC40A /* HMSegmentedControl.m */; };
 		10886BAB214FA724003DC40A /* GridTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 10886BAA214FA724003DC40A /* GridTableViewCell.m */; };
 		10886BAE214FC1A9003DC40A /* BaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 10886BAD214FC1A9003DC40A /* BaseTableViewCell.m */; };
@@ -1184,6 +1185,8 @@
 		1073BC4A21509324001EF550 /* AXWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXWebViewController.h; sourceTree = "<group>"; };
 		1073BC4B21509324001EF550 /* AXWebViewController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AXWebViewController.bundle; sourceTree = "<group>"; };
 		1073BC4C21509324001EF550 /* AXWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXWebViewController.m; sourceTree = "<group>"; };
+		107E150C217F39FD00F2A11C /* WLAudioPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WLAudioPlayer.h; sourceTree = "<group>"; };
+		107E150D217F39FD00F2A11C /* WLAudioPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WLAudioPlayer.m; sourceTree = "<group>"; };
 		10886BA3214F9FC2003DC40A /* HMSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HMSegmentedControl.h; sourceTree = "<group>"; };
 		10886BA4214F9FC2003DC40A /* HMSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HMSegmentedControl.m; sourceTree = "<group>"; };
 		10886BA9214FA724003DC40A /* GridTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GridTableViewCell.h; sourceTree = "<group>"; };
@@ -2010,6 +2013,8 @@
 				103518692147A34000EDC7AD /* WLPersistance */,
 				1035189B2147A34000EDC7AD /* Helpers.h */,
 				1035189C2147A34000EDC7AD /* WLNetworking */,
+				107E150C217F39FD00F2A11C /* WLAudioPlayer.h */,
+				107E150D217F39FD00F2A11C /* WLAudioPlayer.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -3747,6 +3752,7 @@
 				109AF9B12151FE9B00D50F3C /* ChatViewController.m in Sources */,
 				10351A2D2147B84500EDC7AD /* WLHubProgressView.m in Sources */,
 				103519332147A34000EDC7AD /* WLSystemAuth.m in Sources */,
+				107E150E217F39FD00F2A11C /* WLAudioPlayer.m in Sources */,
 				1018BCEF21575220004BC57B /* IFriendModel.m in Sources */,
 				1035192F2147A34000EDC7AD /* DaiDodgeKeyboard+Animation.m in Sources */,
 				1018BD032157B9A4004BC57B /* UserInfoChangeViewController.m in Sources */,

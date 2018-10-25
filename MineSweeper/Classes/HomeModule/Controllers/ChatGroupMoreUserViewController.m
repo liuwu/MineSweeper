@@ -344,6 +344,9 @@
             return;
         }
     }
+    if (_groupDetailInfo.type.integerValue == 1) {
+        return;
+    }
     IFriendModel *model = _datasource[indexPath.row];
     UserInfoViewController *vc = [[UserInfoViewController alloc] init];
     vc.userId = model.uid;

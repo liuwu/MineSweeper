@@ -15,6 +15,9 @@
 #import "FriendListViewController.h"
 //#import "QDRecentSearchView.h"
 
+#import "RCRedPacketMessage.h"
+#import "RCRedPacketGetMessage.h"
+
 @interface ChatListViewController ()<UISearchBarDelegate, RCDSearchViewDelegate>
 
 @property(nonatomic, strong) QMUINavigationController *searchNavigationController;
@@ -242,6 +245,11 @@
 - (void)willDisplayConversationTableCell:(RCConversationBaseCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     RCConversationCell *rcCell = (RCConversationCell *)cell;
+    if ([rcCell.model.lastestMessage isMemberOfClass:[RCRedPacketMessage class]]
+        || [rcCell.model.lastestMessage isMemberOfClass:[RCRedPacketGetMessage class]]) {
+        rcCell.messageContentLabel.text = @"";
+    }
+    
 //    RCConversationModel *model = self.conversationListDataSource[indexPath.row];
     rcCell.conversationTitle.font = WLFONT(15);
     rcCell.conversationTitle.textColor = WLColoerRGB(51.f);

@@ -601,6 +601,10 @@
             return;
         }
     }
+    
+    if (_groupDetailInfo.type.integerValue == 1) {
+        return;
+    }
     IFriendModel *model = _groupDetailInfo.member_list[indexPath.row];
     UserInfoViewController *vc = [[UserInfoViewController alloc] init];
     vc.userId = model.uid;

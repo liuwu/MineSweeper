@@ -395,6 +395,9 @@
 - (void)didTapCellPortrait:(NSString *)userId {
     self.isGotoNextVC = YES;
     DLog(@"didTapCellPortrait-----------: %@", userId);
+    if (self.conversationType == ConversationType_GROUP && _groupDetailInfo.type.integerValue == 1) {
+        return;
+    }
     UserInfoViewController *vc = [[UserInfoViewController alloc] init];
     vc.userId = userId;
     [self.navigationController pushViewController:vc animated:YES];

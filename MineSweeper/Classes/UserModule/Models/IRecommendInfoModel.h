@@ -31,7 +31,7 @@
 // 层级
 @property (nonatomic, copy) NSString *distance;
 // 数量
-@property (nonatomic, copy) NSNumber *num;
+@property (nonatomic, copy) NSString *num;
 
 
 

@@ -72,8 +72,10 @@
     _titleLabel.text = [NSString stringWithFormat:@"来自 %@ 的红包", _model.nickname];
     _timeLabel.text = _model.title;
     _momeyLabel.text = _model.grab_money;
-    if (_isFirstLook) {
+    BOOL isLooked = [NSUserDefaults boolForKey:_packetId];
+    if (!isLooked) {
         _thunderView.hidden = !_model.is_thunder.boolValue;
+        [NSUserDefaults setBool:YES forKey:_packetId];
     } else {
         _thunderView.hidden = YES;
     }

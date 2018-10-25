@@ -292,6 +292,8 @@
             if (success) {
                  [self.conversationMessageCollectionView reloadData];
             }
+            // 设置未查看红包详情
+//            [NSUserDefaults setBool:false forKey:redmodel.redpack_id];
             // 领到红包
             [weakSelf showOpenPacket:redmodel];
             

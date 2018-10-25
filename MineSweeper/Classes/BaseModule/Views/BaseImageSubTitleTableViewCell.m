@@ -22,7 +22,7 @@
     _recommendModel = recommendModel;
     
     self.textLabel.text = _recommendModel.nickname;
-    self.detailTextLabel.text = _recommendModel.num ? _recommendModel.num.stringValue : @"0";//_recommendModel.add_time;// @"2018-8-12";
+    self.detailTextLabel.text = _recommendModel.num ? _recommendModel.num : @"0";//_recommendModel.add_time;// @"2018-8-12";
     WEAKSELF
     [self.imageView setImageWithURL:[NSURL URLWithString:_recommendModel.avatar]
                         placeholder:[UIImage imageNamed:@"game_friend_icon"]

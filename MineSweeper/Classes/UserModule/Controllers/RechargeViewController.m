@@ -13,7 +13,11 @@
 #import "RETableViewItem.h"
 #import "LWLoginTextFieldView.h"
 
+#import "PayWebViewController.h"
+
 #import "UserModelClient.h"
+
+#import <AlipaySDK/AlipaySDK.h>
 
 @interface RechargeViewController ()<UITextFieldDelegate>
 
@@ -40,9 +44,17 @@
 // 选中的支付方式 1:余额支付  2：支付宝支付
 @property (nonatomic, assign) NSInteger selectPayType;
 
+@property (strong, nonatomic) UIWebView *webView;
+
 @end
 
 @implementation RechargeViewController
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    self.webView.delegate = nil;
+}
 
 - (NSString *)title {
     return @"充值";
@@ -53,6 +65,11 @@
     self.moneyTitleArray = @[@"50元", @"100元", @"200元", @"500元", @"1000元", @"2000元"];
     self.moneyArray = @[@50, @100, @200, @500, @1000, @2000];
     self.selectPayType = 1;
+    
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectZero];
+    webView.delegate = self;
+    [self.view addSubview:webView];
+    self.webView = webView;
     
     [self addViews];
     [self addViewConstraints];
@@ -252,6 +269,60 @@
     }];
 }
 
+
+#pragma mark -
+#pragma mark   ============== webview相关 回调及加载 ==============
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    //新版本的H5拦截支付对老版本的获取订单串和订单支付接口进行合并，推荐使用该接口
+//    __weak PayWebViewController* wself = self;
+    @weakify(self);
+    BOOL isIntercepted = [[AlipaySDK defaultService] payInterceptorWithUrl:[request.URL absoluteString] fromScheme:@"AlipayPayMineSweeper" callback:^(NSDictionary *result) {
+        @strongify(self);
+        // 处理支付结果
+        DLog(@"支付结果 ------ %@", result);
+        // isProcessUrlPay 代表 支付宝已经处理该URL
+        if ([result[@"isProcessUrlPay"] boolValue]) {
+            dispatch_async_on_main_queue(^{
+                NSInteger resultCode = [result[@"resultCode"] integerValue];
+                [self showSuccess:resultCode];
+            });
+            // returnUrl 代表 第三方App需要跳转的成功页URL
+            //            NSString* urlStr = result[@"returnUrl"];
+            //            [wself loadWithUrlStr:urlStr];
+        }
+    }];
+    
+    if (isIntercepted) {
+        return NO;
+    }
+    return YES;
+}
+
+- (void)showSuccess:(NSInteger)resultCode {
+//    9000——订单支付成功8000——正在处理中4000——订单支付失败5000——重复请求6001——用户中途取消6002——网络连接出错
+    if (resultCode == 9000) {
+        _moenyTxtView.textField.text = @"";
+        _payMoney = 0.f;
+        _payMomeyLabel.text = @"0";
+        
+        [WLHUDView showSuccessHUD:@"充值成功"];
+    } else {
+        [WLHUDView showErrorHUD:@"充值失败，请重试"];
+    }
+}
+
+- (void)loadWithUrlStr:(NSString*)urlStr {
+    if (urlStr.length > 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSURLRequest *webRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]
+                                                        cachePolicy:NSURLRequestReturnCacheDataElseLoad
+                                                    timeoutInterval:30];
+            [self.webView loadRequest:webRequest];
+        });
+    }
+}
+
 #pragma mark - private
 // 立即充值按钮点击
 - (void)payBtnClicked:(UIButton *)sender {
@@ -263,24 +334,41 @@
         [WLHUDView showOnlyTextHUD:@"充值金额大于0"];
         return;
     }
+    [[self.view wl_findFirstResponder] resignFirstResponder];
+    
     NSDictionary *params = @{@"money": [NSNumber numberWithFloat:[_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines floatValue]],
                              @"pay_method" : @2
                              };
     [WLHUDView showHUDWithStr:@"充值中..." dim:YES];
-//    WEAKSELF
+    WEAKSELF
     [UserModelClient rechargeWallentWithParams:params Success:^(id resultInfo) {
         [WLHUDView hiddenHud];
-        if ([resultInfo length] > 0) {
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:resultInfo]];
+        if ([[resultInfo objectForKey:@"url"] isKindOfClass:[NSString class]]) {
+            NSString *url = [resultInfo objectForKey:@"url"];
+            NSNumber *pay_type = [resultInfo objectForKey:@"pay_type"];
+            if ([url length] > 0) {
+                //            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+                if (pay_type.intValue == 0) {
+                    // 当面付，webview打开url
+                    AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:url];
+                    webVC.showsToolBar = NO;
+                    webVC.title = @"充值";
+                    // webVC.showsNavigationCloseBarButtonItem = NO;
+                    if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
+                        webVC.webView.allowsLinkPreview = YES;
+                    }
+                    [weakSelf.navigationController pushViewController:webVC animated:YES];
+//                    PayWebViewController *vc = [[PayWebViewController alloc] initWithUrl:url];
+//                    [weakSelf.navigationController pushViewController:vc animated:YES];
+                }
+                if (pay_type.intValue == 1) {
+                    // h5 支付 https://docs.open.alipay.com/204/105695/
+                    [weakSelf loadWithUrlStr:url];
+                }
+            }
+        } else {
+            [WLHUDView showErrorHUD:@"获取支付信息失败，请重试"];
         }
-//        AXWebViewController *webVC = [[AXWebViewController alloc] initWithAddress:resultInfo];
-//        webVC.showsToolBar = NO;
-//        webVC.title = @"充值";
-//        // webVC.showsNavigationCloseBarButtonItem = NO;
-//        if (AX_WEB_VIEW_CONTROLLER_iOS9_0_AVAILABLE()) {
-//            webVC.webView.allowsLinkPreview = YES;
-//        }
-//        [weakSelf.navigationController pushViewController:webVC animated:YES];
         // https://qr.alipay.com/bax070319pqypzwglyvq40b0
     } Failed:^(NSError *error) {
         if (error.localizedDescription.length > 0) {

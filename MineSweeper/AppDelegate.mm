@@ -235,6 +235,21 @@ single_implementation(AppDelegate);
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
     NSLog(@"sourceApplication:%@", url);
+    if ([url.scheme isEqualToString:@"AlipayPayMineSweeper"]) {
+        //如果极简开发包不可用，会跳转支付宝钱包进行支付，需要将支付宝钱包的支付结果回传给开发包
+        if ([url.host isEqualToString:@"safepay"]) {
+            [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
+                //【由于在跳转支付宝客户端支付的过程中，商户app在后台很可能被系统kill了，所以pay接口的callback就会失效，请商户对standbyCallback返回的回调结果进行处理,就是在这个方法里面处理跟callback一样的逻辑】
+                NSLog(@"result = %@",resultDic);
+            }];
+        }
+        if ([url.host isEqualToString:@"platformapi"]){//支付宝钱包快登授权返回authCode
+            [[AlipaySDK defaultService] processAuthResult:url standbyCallback:^(NSDictionary *resultDic) {
+                //【由于在跳转支付宝客户端支付的过程中，商户app在后台很可能被系统kill了，所以pay接口的callback就会失效，请商户对standbyCallback返回的回调结果进行处理,就是在这个方法里面处理跟callback一样的逻辑】
+                NSLog(@"result = %@",resultDic);
+            }];
+        }
+    }
     if ([url.scheme isEqualToString:@"AlipayMineSweeper"]) {
         NSString *user_id = [self getAliPayUserId:url.absoluteString];
         NSLog(@"AliPay user_id:%@",url.query);
@@ -252,6 +267,21 @@ single_implementation(AppDelegate);
 //    [[AlipaySDK defaultService] processAuth_V2Result:url standbyCallback:^(NSDictionary *resultDic) {
 //         NSLog(@"result = %@",resultDic);
 //    }];
+    if ([url.scheme isEqualToString:@"AlipayPayMineSweeper"]) {
+        //如果极简开发包不可用，会跳转支付宝钱包进行支付，需要将支付宝钱包的支付结果回传给开发包
+        if ([url.host isEqualToString:@"safepay"]) {
+            [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
+                //【由于在跳转支付宝客户端支付的过程中，商户app在后台很可能被系统kill了，所以pay接口的callback就会失效，请商户对standbyCallback返回的回调结果进行处理,就是在这个方法里面处理跟callback一样的逻辑】
+                NSLog(@"result = %@",resultDic);
+            }];
+        }
+        if ([url.host isEqualToString:@"platformapi"]){//支付宝钱包快登授权返回authCode
+            [[AlipaySDK defaultService] processAuthResult:url standbyCallback:^(NSDictionary *resultDic) {
+                //【由于在跳转支付宝客户端支付的过程中，商户app在后台很可能被系统kill了，所以pay接口的callback就会失效，请商户对standbyCallback返回的回调结果进行处理,就是在这个方法里面处理跟callback一样的逻辑】
+                NSLog(@"result = %@",resultDic);
+            }];
+        }
+    }
     if ([url.scheme isEqualToString:@"AlipayMineSweeper"]) {
         // AlipayMineSweeper://safepay/?%7B%22memo%22:%7B%22result%22:%22success=true&result_code=200&app_id=2018063060556036&auth_code=5429bdde54b444ad9a78235a80edUX43&scope=kuaijie&alipay_open_id=20880084727651257014501641111643&user_id=2088802664730435&target_id=725%22,%22ResultStatus%22:%229000%22,%22memo%22:%22%22%7D,%22requestType%22:%22safepay%22%7D
         NSString *user_id = [self getAliPayUserId:url.absoluteString];

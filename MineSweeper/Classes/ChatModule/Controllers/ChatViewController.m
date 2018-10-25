@@ -77,6 +77,7 @@
 
 - (void)clearRCMessagesWithRedPacket {
     if (self.conversationType == ConversationType_GROUP && _groupDetailInfo.type.integerValue == 1) {
+        [[RCIMClient sharedRCIMClient] removeConversation:ConversationType_GROUP targetId:self.targetId];
         [[RCIMClient sharedRCIMClient] quitGroup:self.targetId success:^{
             DLog(@"退出群组聊天成功");
         } error:^(RCErrorCode status) {

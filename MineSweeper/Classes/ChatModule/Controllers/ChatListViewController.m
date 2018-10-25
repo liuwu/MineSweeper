@@ -245,6 +245,7 @@
 - (void)willDisplayConversationTableCell:(RCConversationBaseCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     RCConversationCell *rcCell = (RCConversationCell *)cell;
+//    [self didDeleteConversationCell:cell.model];
     if ([rcCell.model.lastestMessage isMemberOfClass:[RCRedPacketMessage class]]
         || [rcCell.model.lastestMessage isMemberOfClass:[RCRedPacketGetMessage class]]) {
         rcCell.messageContentLabel.text = @"";

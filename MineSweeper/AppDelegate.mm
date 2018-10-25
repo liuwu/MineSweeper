@@ -715,7 +715,7 @@ single_implementation(AppDelegate);
     /// 上报定位
     [self getCityLocationInfo];
     // 退出融云所有h红包群组
-    [self quitAllRCGameGroup];
+//    [self quitAllRCGameGroup];
 }
 
 - (void)quitAllRCGameGroup {
@@ -724,6 +724,7 @@ single_implementation(AppDelegate);
         @strongify(self);
         NSArray *data = [NSArray modelArrayWithClass:[IGameGroupModel class] json:resultInfo];
         [self quitAllRcGroup:data];
+//        [self deleteGameGroupChatCell:data];
     } Failed:^(NSError *error) {
     }];
 }
@@ -731,6 +732,12 @@ single_implementation(AppDelegate);
 - (void)quitAllRcGroup:(NSArray *)list {
     if (list.count > 0) {
         for (IGameGroupModel *model in list) {
+            BOOL success = [[RCIMClient sharedRCIMClient] removeConversation:ConversationType_GROUP targetId:model.groupId];
+            if (success) {
+                DLog(@"本地删除游戏群会话成功");
+            } else {
+                DLog(@"本地删除游戏群会话失败");
+            }
             [[RCIMClient sharedRCIMClient] quitGroup:model.groupId success:^{
                 DLog(@"退出群组聊天成功");
             } error:^(RCErrorCode status) {
@@ -811,6 +818,8 @@ single_implementation(AppDelegate);
 //        self->_rcConnectCount = 0;
         //添加聊天用户改变监听
         [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
+        // 退出融云所有h红包群组
+        [self quitAllRCGameGroup];
         DLog(@"++++++++++++++++++++++++++++++++++++++++++++++链接融云服务器成功++++++++++++++++++++++++++++++++++++");
     } error:^(RCConnectErrorCode status) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -838,6 +847,21 @@ single_implementation(AppDelegate);
         });
     }];
 }
+
+//- (void)deleteGameGroupChatCell:(NSArray *)list {
+//    NSArray *conversationList = [[RCIMClient sharedRCIMClient]
+//                                 getConversationList:@[@(ConversationType_GROUP)]];
+//    for (RCConversation *conversation in conversationList) {
+//        DLog(@"会话类型：%lu，目标会话ID：%@", (unsigned long)conversation.conversationType, conversation.targetId);
+//        IGameGroupModel *model = [list bk_match:^BOOL(id obj) {
+//            return [[obj groupId] integerValue] == conversation.targetId.integerValue;
+//        }];
+//        if (model) {
+//
+//        }
+//    }
+//
+//}
 
 
 @end

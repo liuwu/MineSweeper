@@ -20,12 +20,15 @@
 
 @property (nonatomic, assign) NSInteger distance;
 
+@property (nonatomic, assign) NSInteger memberId;
+
 @end
 
 @implementation RecommendListViewController
 
-- (instancetype)initWithDistance:(NSInteger)distance {
+- (instancetype)initWithDistance:(NSInteger)distance memberId:(NSInteger)memberId {
     self.distance = distance;
+    self.memberId = memberId;
     self = [super self];
     if (self) {
         
@@ -81,7 +84,7 @@
 - (void)loadData {
     [self hideEmptyView];
     NSDictionary *params = @{
-                             @"member_id": @(configTool.loginUser.uid.integerValue),
+                             @"member_id": @(_memberId),
                              @"distance" : @(_distance)
                              };
     WEAKSELF
@@ -153,7 +156,8 @@
     if (_distance == 7) {
         return;
     }
-    RecommendListViewController *recommendListVc = [[RecommendListViewController alloc] initWithDistance:_distance + 1];
+    IRecommendInfoModel *mode = _datasource[indexPath.row];
+    RecommendListViewController *recommendListVc = [[RecommendListViewController alloc] initWithDistance:_distance + 1 memberId:mode.member_id.integerValue];
     [self.navigationController pushViewController:recommendListVc animated:YES];
 }
 

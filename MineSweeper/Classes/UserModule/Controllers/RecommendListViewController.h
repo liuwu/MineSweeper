@@ -10,6 +10,6 @@
 
 @interface RecommendListViewController : SLCommonGroupListViewController
 
-- (instancetype)initWithDistance:(NSInteger)distance;
+- (instancetype)initWithDistance:(NSInteger)distance memberId:(NSInteger)memberId;
 
 @end

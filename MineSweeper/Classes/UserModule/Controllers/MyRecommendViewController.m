@@ -237,7 +237,7 @@
 #pragma mark - Private
 // 右侧导航按钮点击
 - (void)rightBarButtonItemClicked {
-    RecommendListViewController *recommendListVc = [[RecommendListViewController alloc] initWithDistance:1];
+    RecommendListViewController *recommendListVc = [[RecommendListViewController alloc] initWithDistance:1 memberId:configTool.loginUser.uid.integerValue];
     [self.navigationController pushViewController:recommendListVc animated:YES];
 }
 

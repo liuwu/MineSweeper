@@ -157,8 +157,10 @@
         return;
     }
     IRecommendInfoModel *mode = _datasource[indexPath.row];
-    RecommendListViewController *recommendListVc = [[RecommendListViewController alloc] initWithDistance:_distance + 1 memberId:mode.member_id.integerValue];
-    [self.navigationController pushViewController:recommendListVc animated:YES];
+    if (mode) {
+        RecommendListViewController *recommendListVc = [[RecommendListViewController alloc] initWithDistance:_distance + 1 memberId:mode.member_id.integerValue];
+        [self.navigationController pushViewController:recommendListVc animated:YES];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

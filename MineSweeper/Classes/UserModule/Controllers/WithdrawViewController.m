@@ -324,15 +324,16 @@
 // 立即提现按钮点击
 - (void)withdrawBtnClicked:(UIButton *)sender {
     if (_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.length == 0) {
-        [WLHUDView showOnlyTextHUD:@"请输入提现金额"];
+        [WLHUDView showErrorHUD:@"请输入提现金额"];
         return;
     }
     if (_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue == 0) {
-        [WLHUDView showOnlyTextHUD:@"提现金额大于0元"];
+        [WLHUDView showErrorHUD:@"提现金额大于0元"];
         return;
     }
     if (_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue > _wallentInfoModel.enbale_balance.floatValue) {
-        [WLHUDView showOnlyTextHUD:[NSString stringWithFormat:@"提现金额不能大于%@",_wallentInfoModel.enbale_balance.stringValue]];
+        [WLHUDView showErrorHUD:@"余额不足"];
+        //        [WLHUDView showOnlyTextHUD:[NSString stringWithFormat:@"提现金额不能大于%@",_wallentInfoModel.enbale_balance.stringValue]];
         return;
     }
     

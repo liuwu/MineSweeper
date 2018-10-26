@@ -26,6 +26,8 @@
 @property (nonatomic, strong) UIButton *loginBtn;
 @property (nonatomic, strong) UIButton *pwdLoginBtn;
 
+@property (nonatomic, strong) UIImageView *logoImageView;
+
 @end
 
 @implementation SmsLoginViewController
@@ -79,6 +81,13 @@
 #pragma mark setup
 // 添加页面UI组件
 - (void)addSubviews {
+    
+    UIImageView *logoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logoImg"]];
+    [logoImageView wl_setCornerRadius:18.f];
+    logoImageView.hidden = YES;
+    [self.view addSubview:logoImageView];
+    self.logoImageView = logoImageView;
+    
     LWLoginTextFieldView *phoneTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypePhone];
     [self.view addSubview:phoneTxtView];
     self.phoneTxtView = phoneTxtView;
@@ -184,16 +193,34 @@
 
 // 布局控制
 - (void)addConstrainsForSubviews {
-    [_phoneTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
-        if (@available(iOS 11.0, *)) {
-            make.top.mas_equalTo(self.view.mas_safeAreaLayoutGuideTop).offset(kWL_NormalMarginWidth_14);
-        } else {
-            make.top.mas_equalTo(self.view.mas_top).offset(kWL_NormalMarginWidth_14);
-        }
-        make.centerX.mas_equalTo(self.view);
-        make.width.mas_equalTo(ScreenWidth - kWL_NormalMarginWidth_10 * 2.f);
-        make.height.mas_equalTo(kWL_NormalTextFieldHeight);
-    }];
+    if (_useType == UseTypeForget || _useType == UseTypeSMS) {
+        _logoImageView.hidden = NO;
+        [_logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(100.f, 100.f));
+            make.top.mas_equalTo(self.view).mas_offset(self.qmui_navigationBarMaxYInViewCoordinator + kWL_NormalMarginWidth_14);
+            make.centerX.mas_equalTo(self.view);
+        }];
+     
+        [_phoneTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.logoImageView.mas_bottom).offset(kWL_NormalMarginWidth_20);
+            make.centerX.mas_equalTo(self.view);
+            make.width.mas_equalTo(ScreenWidth - kWL_NormalMarginWidth_10 * 2.f);
+            make.height.mas_equalTo(kWL_NormalTextFieldHeight);
+        }];
+    } else {
+        _logoImageView.hidden = YES;
+        
+        [_phoneTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
+            if (@available(iOS 11.0, *)) {
+                make.top.mas_equalTo(self.view.mas_safeAreaLayoutGuideTop).offset(kWL_NormalMarginWidth_14);
+            } else {
+                make.top.mas_equalTo(self.view.mas_top).offset(kWL_NormalMarginWidth_14);
+            }
+            make.centerX.mas_equalTo(self.view);
+            make.width.mas_equalTo(ScreenWidth - kWL_NormalMarginWidth_10 * 2.f);
+            make.height.mas_equalTo(kWL_NormalTextFieldHeight);
+        }];
+    }
     
     switch (_useType) {
         case UseTypeSMS:

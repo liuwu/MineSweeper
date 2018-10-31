@@ -15,6 +15,10 @@
 @property (nonatomic, copy) NSString *balance;
 // 可提现金额
 @property (nonatomic, copy) NSNumber *enbale_balance;
+// 最大提现金额
+@property (nonatomic, copy) NSString *max_money;
+// 最低提现金额
+@property (nonatomic, copy) NSString *min_money;
 // 信息
 @property (nonatomic, copy) NSString *info;
 // 提现状态 1：提现维护弹出维护公告信息  0没有维护

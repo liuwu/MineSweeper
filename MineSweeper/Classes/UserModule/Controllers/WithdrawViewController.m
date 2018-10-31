@@ -331,6 +331,14 @@
         [WLHUDView showErrorHUD:@"提现金额大于0元"];
         return;
     }
+    if (_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue < _wallentInfoModel.min_money.floatValue) {
+        [WLHUDView showErrorHUD:[NSString stringWithFormat:@"提现金额最低为%@元", _wallentInfoModel.min_money]];
+        return;
+    }
+    if (_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue > _wallentInfoModel.max_money.floatValue) {
+        [WLHUDView showErrorHUD:[NSString stringWithFormat:@"提现金额最高为%@元", _wallentInfoModel.max_money]];
+        return;
+    }
     if (_moenyTxtView.textField.text.wl_trimWhitespaceAndNewlines.floatValue > _wallentInfoModel.enbale_balance.floatValue) {
         [WLHUDView showErrorHUD:@"余额不足"];
         //        [WLHUDView showOnlyTextHUD:[NSString stringWithFormat:@"提现金额不能大于%@",_wallentInfoModel.enbale_balance.stringValue]];

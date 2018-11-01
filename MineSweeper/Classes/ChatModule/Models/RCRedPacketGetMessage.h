@@ -45,4 +45,7 @@
 /**  发送人uid   */
 @property (nonatomic, strong) NSNumber *uid;
 
+/**  排序  */
+@property (nonatomic, strong) NSNumber *sorted;
+
 @end

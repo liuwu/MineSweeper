@@ -11,4 +11,7 @@
 
 @interface ChatViewController : WLChatBaseViewController//QDCommonViewController
 
+// 是否游戏群组
+@property (nonatomic, assign) BOOL isGameGroup;
+
 @end

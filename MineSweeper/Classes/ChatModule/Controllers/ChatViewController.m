@@ -16,6 +16,8 @@
 #import "QMUINavigationButton.h"
 
 #import "ChatRedPacketCell.h"
+#import "ChatGetRedPacketCell.h"
+
 
 #import "RCRedPacketMessage.h"
 #import "RCRedPacketGetMessage.h"
@@ -25,6 +27,8 @@
 #import "IGroupDetailInfo.h"
 #import "ImModelClient.h"
 #import "IRedPacketModel.h"
+
+#import "RcRedPacketMessageModel.h"
 
 @interface ChatViewController ()
 
@@ -37,6 +41,7 @@
 @property (nonatomic, strong) IRedPacketModel *openPacketModel;
 
 @property (nonatomic, assign) BOOL isGotoNextVC;
+@property (nonatomic, assign) BOOL isFirstIn;
 
 @end
 
@@ -52,10 +57,10 @@
     return @"聊天";
 }
 
-- (void)initSubviews {
-    [super initSubviews];
-    
-}
+//- (void)initSubviews {
+//    [super initSubviews];
+//
+//}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -83,20 +88,37 @@
         } error:^(RCErrorCode status) {
             DLog(@"退出群组聊天失败");
         }];
+        
+        // 删除超过10分钟的红包历史消息
+        [self delete10MinuteMessageHistory];
+        
+//        NSArray *messages = [[RCIMClient sharedRCIMClient] getLatestMessages:ConversationType_GROUP targetId:self.targetId count:10];
+//        NSMutableArray *redContentArray = [NSMutableArray array];
+//        NSMutableArray *redGetArray = [NSMutableArray array];
+//        for (RCMessage *rcMsg in messages) {
+//            [redContentArray addObject:[NSDictionary modelWithJSON:[rcMsg.content modelToJSONObject]]];
+//        }
+//        NSInteger lastMessageId = [(RCMessageModel *)messages.lastObject messageId];
+//        [NSUserDefaults setInteger:lastMessageId forKey:[NSString stringWithFormat:@"kLastMsgId_%@", self.targetId]];
+        //    [NSUserDefaults setObject:lastMessageId forKey:[NSString stringWithFormat:@"lastmsg_%@",self.targetId]];
+//        [NSUserDefaults setObject:[messages modelToJSONObject] forKey:[NSString stringWithFormat:@"kLastMegList_%@", self.targetId]];
+//        [NSUserDefaults setObject:[redContentArray modelToJSONObject] forKey:[NSString stringWithFormat:@"kLastMegList_content_%@", self.targetId]];
+//        [NSUserDefaults setString:[messages modelToJSONString] forKey:[NSString stringWithFormat:@"kLastMegList_str_%@", self.targetId]];
+        
         // 清除聊天记录
-        BOOL success = [[RCIMClient sharedRCIMClient] clearMessages:ConversationType_GROUP targetId:self.targetId];
-        if (success) {
-            DLog(@"删除群组聊天消息成功");
-        } else {
-            DLog(@"删除群组聊天消息失败");
-        }
+//        BOOL success = [[RCIMClient sharedRCIMClient] clearMessages:ConversationType_GROUP targetId:self.targetId];
+//        if (success) {
+//            DLog(@"删除群组聊天消息成功");
+//        } else {
+//            DLog(@"删除群组聊天消息失败");
+//        }
         // 此方法从服务器端清除历史消息，但是必须先开通历史消息云存储功能。
-        [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:ConversationType_GROUP targetId:self.targetId recordTime:0 success:^{
-            
-            DLog(@"删除群组服务器聊天历史消息成功");
-        } error:^(RCErrorCode status) {
-            DLog(@"删除群组服务器聊天历史消息失败");
-        }];
+//        [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:ConversationType_GROUP targetId:self.targetId recordTime:0 success:^{
+//
+//            DLog(@"删除群组服务器聊天历史消息成功");
+//        } error:^(RCErrorCode status) {
+//            DLog(@"删除群组服务器聊天历史消息失败");
+//        }];
         //添加聊天用户改变监听
         [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
     }
@@ -105,14 +127,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    if (_isGameGroup && !_isFirstIn) {
+        [self delete10MinuteMessageHistory];
+    }
+    self.isFirstIn = YES;
+    [self loadData];
+    
     if (self.conversationType != ConversationType_CUSTOMERSERVICE) {
         if (configTool.userInfoModel.customer_id.intValue != self.targetId.intValue) {
             UIBarButtonItem *rightBtnItem = [UIBarButtonItem qmui_itemWithButton:[[QMUINavigationButton alloc] initWithImage:[[UIImage imageNamed:@"chats_more_btn"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]] target:self action:@selector(rightBtnItemClicked)];
             self.navigationItem.rightBarButtonItem = rightBtnItem;
         }
     }
-    
-    [self loadData];
     
     [kNSNotification addObserver:self selector:@selector(loadData) name:@"kChatUserInfoChanged" object:nil];
     //聊天消息数量改变监听
@@ -123,6 +149,26 @@
     [kNSNotification addObserver:self selector:@selector(quitGroup) name:@"kChatDidEnterBackground" object:nil];
     // 加入群聊
     [kNSNotification addObserver:self selector:@selector(joinGroup) name:@"kChatDidBecomeActive" object:nil];
+}
+
+// 删除超过10分钟的历史消息记录
+- (void)delete10MinuteMessageHistory {
+    NSArray *historyMessages = [[RCIMClient sharedRCIMClient] getLatestMessages:ConversationType_GROUP targetId:self.targetId count:500];
+    NSMutableArray *messages = [NSMutableArray array];
+    for (RCMessage *rcMsg in historyMessages) {
+        NSDate *sendTime = [NSDate dateWithTimeIntervalSince1970:rcMsg.sentTime / 1000];
+        float minuts = [[NSDate date] minutesFrom:sendTime];
+        if (minuts > 10) {
+            [messages addObject:@(rcMsg.messageId)];
+        }
+    }
+    BOOL success =  [[RCIMClient sharedRCIMClient] deleteMessages:messages];
+    if (success) {
+        DLog(@"删除超过10分钟的历史消息成功");
+    } else {
+        [[RCIMClient sharedRCIMClient] deleteMessages:messages];
+        DLog(@"删除超过10分钟的历史消息失败");
+    }
 }
 
 - (void)quitGroup {
@@ -147,6 +193,95 @@
             [self joinGroup];
         }];
     }
+}
+
+- (void)getHistoryMessage {
+//    self.historyMessages = [[RCIMClient sharedRCIMClient] getLatestMessages:ConversationType_GROUP targetId:self.targetId count:100];
+    DLog(@"---1");
+    NSInteger lastMessageId = [NSUserDefaults intForKey:[NSString stringWithFormat:@"kLastMsgId_%@", self.targetId]];
+    NSArray *messages1 = [[RCIMClient sharedRCIMClient] getHistoryMessages:ConversationType_GROUP targetId:self.targetId oldestMessageId:lastMessageId count:20];
+    DLog(@"---2");
+    
+    
+    NSString *modelStr = [NSUserDefaults objectForKey:[NSString stringWithFormat:@"kLastMegList_str_%@", self.targetId]];
+    id modelD = [modelStr jsonValueDecoded];
+    NSArray *messages4 = [NSArray modelArrayWithClass:[RCMessage class] json:modelD];
+    DLog(@"---4");
+//    modelStr    __NSCFString *    @"[{\"extra\":\"\",\"sentStatus\":30,\"messageId\":66589,\"sentTime\":1541065022300,\"conversationType\":3,\"receivedStatus\":1,\"messageUId\":\"B6PQ-H1MN-0H6C-01KR\",\"messageDirection\":2,\"targetId\":\"50\",\"objectName\":\"app:RedpackMsg\",\"senderUserId\":\"1313\",\"receivedTime\":1541065023203,\"content\":{\"title\":\"416-9\",\"pack_id\":\"24730\"}}]"    0x000000010fd33d50
+    
+    id messageObject = [NSUserDefaults objectForKey:[NSString stringWithFormat:@"kLastMegList_%@", self.targetId]];
+    if (messageObject) {
+        NSArray *messages3 = [NSArray modelArrayWithClass:[RCMessage class] json:messageObject];
+//        NSMutableArray *dataArray = [NSMutableArray array];
+        id data = [NSUserDefaults objectForKey:[NSString stringWithFormat:@"kLastMegList_content_%@", self.targetId]];
+        NSArray *dataArray = [NSArray modelArrayWithClass:[NSDictionary class] json:data];
+        for (int i = 0; i < messages3.count; i++) {
+            RCMessage *rcMsg = messages3[i];
+            NSDictionary *cont = dataArray[i];
+            DLog(@"---4: %@", cont);
+            RCMessage *addMsg;
+//            if ([[rcMsgDic objectForKey:@"objectName"] isEqualToString:@"app:RedpackMsg"]) {
+//                addMsg = [RcRedPacketMessageModel modelWithDictionary:rcMsgDic];
+//            }
+//            if ([rcMsg isKindOfClass:[]]) {
+//                <#statements#>
+//            }
+            
+//            RCMessageModel *model = [RCMessageModel modelWithMessage:rcMsg];
+//            [dataArray addObject:model];
+//            RCMessage *addMsg;
+//            if (rcMsg.messageDirection == MessageDirection_RECEIVE) {
+////                // 接收
+////                RCRedPacketMessage *msg = (RCRedPacketMessage *)rcMsg.content;
+//                addMsg = [[RCIMClient sharedRCIMClient] insertIncomingMessage:ConversationType_GROUP targetId:self.targetId senderUserId:rcMsg.senderUserId receivedStatus:rcMsg.receivedStatus content:rcMsg.content sentTime:rcMsg.receivedTime];
+////                [self.conversationMessageCollectionView reloadData];
+//            } else {
+////                //发送
+//                addMsg = [[RCIMClient sharedRCIMClient] insertOutgoingMessage:ConversationType_GROUP targetId:self.targetId sentStatus:rcMsg.sentStatus content:rcMsg.content sentTime:rcMsg.sentTime];
+////                [self.conversationMessageCollectionView reloadData];
+//            }
+//            [self appendAndDisplayMessage:addMsg];
+//            if ([rcMsg isKindOfClass:[RCRedPacketMessage class]]) {
+//                RCRedPacketMessage *msg = (RCRedPacketMessage *)rcMsg;
+//                // 在会话页面中插入一条消息并展示
+//                [self appendAndDisplayMessage:msg];
+//            }
+            // 在会话页面中插入一条消息并展示
+            [self appendAndDisplayMessage:addMsg];
+        }
+        
+        DLog(@"---3");
+//        dispatch_async_on_main_queue(^{
+//            if (dataArray.count > 0) {
+//                [self.conversationDataRepository insertObjects:dataArray atIndex:0];
+//                [self.conversationMessageCollectionView reloadData];
+//            }
+//        });
+    }
+    DLog(@"---3");
+//    long lastMessageId = [(RCMessageModel *)self.conversationDataRepository.lastObject messageId];
+//    [NSUserDefaults setObject:lastMessageId forKey:[NSString stringWithFormat:@"lastmsg_%@",self.targetId]];
+    
+    
+//    NSArray *messages2 = (NSArray *)[NSUserDefaults objectForKey:[NSString stringWithFormat:@"kLastMegList_%@", self.targetId]];
+//    dispatch_async_on_main_queue(^{
+//        if (messages2.count > 0) {
+//            [self.conversationDataRepository insertObjects:messages2 atIndex:0];
+////            [self.conversationMessageCollectionView reloadData];
+//        }
+//    });
+//
+    [[RCIMClient sharedRCIMClient] getRemoteHistoryMessages:ConversationType_GROUP targetId:self.targetId recordTime:[NSString wl_timeStamp].longValue count:20 success:^(NSArray *messages, BOOL isRemaining) {
+        DLog(@"获取群组聊天历史成功");
+        dispatch_async_on_main_queue(^{
+            if (messages.count > 0) {
+                [self.conversationDataRepository insertObjects:messages atIndex:0];
+//                [self.conversationMessageCollectionView reloadData];
+            }
+        });
+    } error:^(RCErrorCode status) {
+        DLog(@"获取群组聊天历史失败");
+    }];
 }
 
 - (void)loadData {
@@ -195,6 +330,7 @@
         // 加入群聊
         [[RCIMClient sharedRCIMClient] joinGroup:self.targetId groupName:_groupDetailInfo.title success:^{
             DLog(@"加入群组聊天成功");
+//            [self getHistoryMessage];
         } error:^(RCErrorCode status) {
             DLog(@"加入群组聊天失败");
         }];
@@ -261,7 +397,10 @@
     if ([model.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
         // 查看红包历史
         RCRedPacketGetMessage *message = (RCRedPacketGetMessage *) model.content;
-        [self lookRedPacketHistory:message.pack_id];
+        // 红包群提示消息：type 1是提示给我自己看的，可以点的，2是提示给所有人看的，不能点
+        if (message.type.integerValue == 1) {
+            [self lookRedPacketHistory:message.pack_id];
+        }
     }
     if ([model.content isMemberOfClass:[RCLocationMessage class]]) {
         DLog(@"位置 RCLocationMessage");

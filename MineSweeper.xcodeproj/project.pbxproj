@@ -7,15 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		10082DE62153B34C00EC3FCE /* RongIMLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10082DDA2153B34C00EC3FCE /* RongIMLib.framework */; };
-		10082DE72153B34C00EC3FCE /* libopencore-amrnb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 10082DDB2153B34C00EC3FCE /* libopencore-amrnb.a */; };
-		10082DE82153B34C00EC3FCE /* RCConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10082DDC2153B34C00EC3FCE /* RCConfig.plist */; };
-		10082DE92153B34C00EC3FCE /* release_notes_ios.txt in Resources */ = {isa = PBXBuildFile; fileRef = 10082DDD2153B34C00EC3FCE /* release_notes_ios.txt */; };
-		10082DEA2153B34C00EC3FCE /* RCColor.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10082DDF2153B34C00EC3FCE /* RCColor.plist */; };
-		10082DEB2153B34C00EC3FCE /* RongCloudKit.strings in Resources */ = {isa = PBXBuildFile; fileRef = 10082DE02153B34C00EC3FCE /* RongCloudKit.strings */; };
-		10082DEC2153B34C00EC3FCE /* RongIMKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10082DE32153B34C00EC3FCE /* RongIMKit.framework */; };
-		10082DED2153B34C00EC3FCE /* Emoji.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10082DE42153B34C00EC3FCE /* Emoji.plist */; };
-		10082DEE2153B34C00EC3FCE /* RongCloud.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 10082DE52153B34C00EC3FCE /* RongCloud.bundle */; };
 		10082DF12153B64800EC3FCE /* WLRongCloudDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 10082DF02153B64700EC3FCE /* WLRongCloudDataSource.m */; };
 		10082DF42153C7DE00EC3FCE /* ChatGroupNoteInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10082DF32153C7DE00EC3FCE /* ChatGroupNoteInfoViewController.m */; };
 		10082DF72153C81300EC3FCE /* ChatGourpNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10082DF62153C81300EC3FCE /* ChatGourpNameViewController.m */; };
@@ -384,6 +375,16 @@
 		10A49AD6215F82D6008A2F86 /* ChatHistoryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 10A49AD5215F82D6008A2F86 /* ChatHistoryTableViewCell.m */; };
 		10A49AD9215F9903008A2F86 /* RCDSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10A49AD8215F9903008A2F86 /* RCDSearchViewController.m */; };
 		10AE957E215F08A5008C19B7 /* ChatGroupMoreUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10AE957D215F08A5008C19B7 /* ChatGroupMoreUserViewController.m */; };
+		10B98C0A218B048700A0CC45 /* RcRedPacketMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 10B98C09218B048700A0CC45 /* RcRedPacketMessageModel.m */; };
+		10B98C19218B162800A0CC45 /* RongIMLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10B98C0D218B162700A0CC45 /* RongIMLib.framework */; };
+		10B98C1A218B162800A0CC45 /* libopencore-amrnb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 10B98C0E218B162700A0CC45 /* libopencore-amrnb.a */; };
+		10B98C1B218B162800A0CC45 /* RCConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B98C0F218B162700A0CC45 /* RCConfig.plist */; };
+		10B98C1C218B162800A0CC45 /* release_notes_ios.txt in Resources */ = {isa = PBXBuildFile; fileRef = 10B98C10218B162700A0CC45 /* release_notes_ios.txt */; };
+		10B98C1D218B162800A0CC45 /* RCColor.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B98C12218B162700A0CC45 /* RCColor.plist */; };
+		10B98C1E218B162800A0CC45 /* RongCloudKit.strings in Resources */ = {isa = PBXBuildFile; fileRef = 10B98C13218B162700A0CC45 /* RongCloudKit.strings */; };
+		10B98C1F218B162800A0CC45 /* RongIMKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10B98C16218B162700A0CC45 /* RongIMKit.framework */; };
+		10B98C20218B162800A0CC45 /* Emoji.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B98C17218B162700A0CC45 /* Emoji.plist */; };
+		10B98C21218B162800A0CC45 /* RongCloud.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 10B98C18218B162700A0CC45 /* RongCloud.bundle */; };
 		10C575822151D93400FBFE1E /* BaseModelClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 10C575812151D93400FBFE1E /* BaseModelClient.m */; };
 		10C575852151D99B00FBFE1E /* UserModelClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 10C575842151D99B00FBFE1E /* UserModelClient.m */; };
 		10C575882151D9B100FBFE1E /* ImModelClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 10C575872151D9B100FBFE1E /* ImModelClient.m */; };
@@ -421,16 +422,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		10082DDA2153B34C00EC3FCE /* RongIMLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RongIMLib.framework; sourceTree = "<group>"; };
-		10082DDB2153B34C00EC3FCE /* libopencore-amrnb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libopencore-amrnb.a"; sourceTree = "<group>"; };
-		10082DDC2153B34C00EC3FCE /* RCConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RCConfig.plist; sourceTree = "<group>"; };
-		10082DDD2153B34C00EC3FCE /* release_notes_ios.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes_ios.txt; sourceTree = "<group>"; };
-		10082DDF2153B34C00EC3FCE /* RCColor.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RCColor.plist; sourceTree = "<group>"; };
-		10082DE12153B34C00EC3FCE /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/RongCloudKit.strings"; sourceTree = "<group>"; };
-		10082DE22153B34C00EC3FCE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/RongCloudKit.strings; sourceTree = "<group>"; };
-		10082DE32153B34C00EC3FCE /* RongIMKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RongIMKit.framework; sourceTree = "<group>"; };
-		10082DE42153B34C00EC3FCE /* Emoji.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Emoji.plist; sourceTree = "<group>"; };
-		10082DE52153B34C00EC3FCE /* RongCloud.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = RongCloud.bundle; sourceTree = "<group>"; };
 		10082DEF2153B64700EC3FCE /* WLRongCloudDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WLRongCloudDataSource.h; sourceTree = "<group>"; };
 		10082DF02153B64700EC3FCE /* WLRongCloudDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WLRongCloudDataSource.m; sourceTree = "<group>"; };
 		10082DF22153C7DE00EC3FCE /* ChatGroupNoteInfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatGroupNoteInfoViewController.h; sourceTree = "<group>"; };
@@ -1128,6 +1119,18 @@
 		10A49AD8215F9903008A2F86 /* RCDSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCDSearchViewController.m; sourceTree = "<group>"; };
 		10AE957C215F08A5008C19B7 /* ChatGroupMoreUserViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatGroupMoreUserViewController.h; sourceTree = "<group>"; };
 		10AE957D215F08A5008C19B7 /* ChatGroupMoreUserViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatGroupMoreUserViewController.m; sourceTree = "<group>"; };
+		10B98C08218B048700A0CC45 /* RcRedPacketMessageModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RcRedPacketMessageModel.h; sourceTree = "<group>"; };
+		10B98C09218B048700A0CC45 /* RcRedPacketMessageModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RcRedPacketMessageModel.m; sourceTree = "<group>"; };
+		10B98C0D218B162700A0CC45 /* RongIMLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RongIMLib.framework; sourceTree = "<group>"; };
+		10B98C0E218B162700A0CC45 /* libopencore-amrnb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libopencore-amrnb.a"; sourceTree = "<group>"; };
+		10B98C0F218B162700A0CC45 /* RCConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RCConfig.plist; sourceTree = "<group>"; };
+		10B98C10218B162700A0CC45 /* release_notes_ios.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes_ios.txt; sourceTree = "<group>"; };
+		10B98C12218B162700A0CC45 /* RCColor.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RCColor.plist; sourceTree = "<group>"; };
+		10B98C14218B162700A0CC45 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/RongCloudKit.strings"; sourceTree = "<group>"; };
+		10B98C15218B162700A0CC45 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/RongCloudKit.strings; sourceTree = "<group>"; };
+		10B98C16218B162700A0CC45 /* RongIMKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RongIMKit.framework; sourceTree = "<group>"; };
+		10B98C17218B162700A0CC45 /* Emoji.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Emoji.plist; sourceTree = "<group>"; };
+		10B98C18218B162700A0CC45 /* RongCloud.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = RongCloud.bundle; sourceTree = "<group>"; };
 		10C575802151D93400FBFE1E /* BaseModelClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseModelClient.h; sourceTree = "<group>"; };
 		10C575812151D93400FBFE1E /* BaseModelClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseModelClient.m; sourceTree = "<group>"; };
 		10C575832151D99B00FBFE1E /* UserModelClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserModelClient.h; sourceTree = "<group>"; };
@@ -1280,13 +1283,16 @@
 				10F820B1215E024500B555E3 /* Foundation.framework in Frameworks */,
 				10351AC42147CE7200EDC7AD /* UIKit.framework in Frameworks */,
 				10351AA42147CDFB00EDC7AD /* CoreGraphics.framework in Frameworks */,
+				10B98C19218B162800A0CC45 /* RongIMLib.framework in Frameworks */,
 				10F1C6282180A82900167538 /* libcrypto.a in Frameworks */,
 				10351ACC2147CED900EDC7AD /* CoreText.framework in Frameworks */,
 				10351AC02147CE6400EDC7AD /* QuartzCore.framework in Frameworks */,
 				10351AAA2147CE1100EDC7AD /* CoreTelephony.framework in Frameworks */,
 				10351AC22147CE6A00EDC7AD /* SystemConfiguration.framework in Frameworks */,
 				10351ABA2147CE4F00EDC7AD /* libz.tbd in Frameworks */,
+				10B98C1A218B162800A0CC45 /* libopencore-amrnb.a in Frameworks */,
 				10351AB02147CE2700EDC7AD /* libc++.tbd in Frameworks */,
+				10B98C1F218B162800A0CC45 /* RongIMKit.framework in Frameworks */,
 				104CBF47215B4964000D4D44 /* libsqlite3.0.tbd in Frameworks */,
 				104CBF45215B495D000D4D44 /* Security.framework in Frameworks */,
 				10351ABE2147CE5D00EDC7AD /* OpenGLES.framework in Frameworks */,
@@ -1308,9 +1314,6 @@
 				10351A9E2147CDE300EDC7AD /* AVFoundation.framework in Frameworks */,
 				10351A9A2147CDD500EDC7AD /* AssetsLibrary.framework in Frameworks */,
 				101134302148A7FB0082F74B /* MOBFoundation.framework in Frameworks */,
-				10082DEC2153B34C00EC3FCE /* RongIMKit.framework in Frameworks */,
-				10082DE72153B34C00EC3FCE /* libopencore-amrnb.a in Frameworks */,
-				10082DE62153B34C00EC3FCE /* RongIMLib.framework in Frameworks */,
 				10351A512147BD2600EDC7AD /* libWeChatSDK.a in Frameworks */,
 				10351A592147BD2600EDC7AD /* SMSConnector.framework in Frameworks */,
 				10351A552147BD2600EDC7AD /* ShareSDKConfigFile.framework in Frameworks */,
@@ -1326,38 +1329,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		10082DD82153B34C00EC3FCE /* Rong_Cloud_iOS_IMKit_SDK_v2_9_6_Stable */ = {
-			isa = PBXGroup;
-			children = (
-				10082DD92153B34C00EC3FCE /* IMLib */,
-				10082DDD2153B34C00EC3FCE /* release_notes_ios.txt */,
-				10082DDE2153B34C00EC3FCE /* IMKit */,
-			);
-			path = Rong_Cloud_iOS_IMKit_SDK_v2_9_6_Stable;
-			sourceTree = "<group>";
-		};
-		10082DD92153B34C00EC3FCE /* IMLib */ = {
-			isa = PBXGroup;
-			children = (
-				10082DDA2153B34C00EC3FCE /* RongIMLib.framework */,
-				10082DDB2153B34C00EC3FCE /* libopencore-amrnb.a */,
-				10082DDC2153B34C00EC3FCE /* RCConfig.plist */,
-			);
-			path = IMLib;
-			sourceTree = "<group>";
-		};
-		10082DDE2153B34C00EC3FCE /* IMKit */ = {
-			isa = PBXGroup;
-			children = (
-				10082DDF2153B34C00EC3FCE /* RCColor.plist */,
-				10082DE02153B34C00EC3FCE /* RongCloudKit.strings */,
-				10082DE32153B34C00EC3FCE /* RongIMKit.framework */,
-				10082DE42153B34C00EC3FCE /* Emoji.plist */,
-				10082DE52153B34C00EC3FCE /* RongCloud.bundle */,
-			);
-			path = IMKit;
-			sourceTree = "<group>";
-		};
 		1011342E2148A7FA0082F74B /* Required */ = {
 			isa = PBXGroup;
 			children = (
@@ -1652,8 +1623,8 @@
 		1035178A2147A33F00EDC7AD /* SDKs */ = {
 			isa = PBXGroup;
 			children = (
+				10B98C0B218B162700A0CC45 /* Rong_Cloud_iOS_IMKit_SDK_v2_9_7_Stable */,
 				10F1C5CE2180A82900167538 /* AlipaySDK_15.5.5 */,
-				10082DD82153B34C00EC3FCE /* Rong_Cloud_iOS_IMKit_SDK_v2_9_6_Stable */,
 				10351A372147BD2600EDC7AD /* ShareSDK-iOS-4.0.1 */,
 			);
 			path = SDKs;
@@ -2210,6 +2181,8 @@
 				10F820AB215DCAB100B555E3 /* RCRedPacketGetMessage.m */,
 				101BC3AF2161D2770048859F /* RcRedPacketMessageExtraModel.h */,
 				101BC3B02161D2770048859F /* RcRedPacketMessageExtraModel.m */,
+				10B98C08218B048700A0CC45 /* RcRedPacketMessageModel.h */,
+				10B98C09218B048700A0CC45 /* RcRedPacketMessageModel.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3156,6 +3129,38 @@
 			path = MineSweeper;
 			sourceTree = "<group>";
 		};
+		10B98C0B218B162700A0CC45 /* Rong_Cloud_iOS_IMKit_SDK_v2_9_7_Stable */ = {
+			isa = PBXGroup;
+			children = (
+				10B98C0C218B162700A0CC45 /* IMLib */,
+				10B98C10218B162700A0CC45 /* release_notes_ios.txt */,
+				10B98C11218B162700A0CC45 /* IMKit */,
+			);
+			path = Rong_Cloud_iOS_IMKit_SDK_v2_9_7_Stable;
+			sourceTree = "<group>";
+		};
+		10B98C0C218B162700A0CC45 /* IMLib */ = {
+			isa = PBXGroup;
+			children = (
+				10B98C0D218B162700A0CC45 /* RongIMLib.framework */,
+				10B98C0E218B162700A0CC45 /* libopencore-amrnb.a */,
+				10B98C0F218B162700A0CC45 /* RCConfig.plist */,
+			);
+			path = IMLib;
+			sourceTree = "<group>";
+		};
+		10B98C11218B162700A0CC45 /* IMKit */ = {
+			isa = PBXGroup;
+			children = (
+				10B98C12218B162700A0CC45 /* RCColor.plist */,
+				10B98C13218B162700A0CC45 /* RongCloudKit.strings */,
+				10B98C16218B162700A0CC45 /* RongIMKit.framework */,
+				10B98C17218B162700A0CC45 /* Emoji.plist */,
+				10B98C18218B162700A0CC45 /* RongCloud.bundle */,
+			);
+			path = IMKit;
+			sourceTree = "<group>";
+		};
 		10CDC1692150AC3D0069277D /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -3405,18 +3410,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				103519182147A34000EDC7AD /* photo_check_selected@3x.png in Resources */,
-				10082DEA2153B34C00EC3FCE /* RCColor.plist in Resources */,
 				10F1C6292180A82900167538 /* AlipaySDK.bundle in Resources */,
 				1024156D21591E47008A365A /* Address.plist in Resources */,
-				10082DEE2153B34C00EC3FCE /* RongCloud.bundle in Resources */,
 				10351A542147BD2600EDC7AD /* ShareSDKUI.bundle in Resources */,
 				1035191B2147A34000EDC7AD /* photo_check_default@3x.png in Resources */,
 				10351A532147BD2600EDC7AD /* ShareSDK.bundle in Resources */,
+				10B98C1C218B162800A0CC45 /* release_notes_ios.txt in Resources */,
 				103519282147A34000EDC7AD /* hud_success@2x.png in Resources */,
-				10082DE92153B34C00EC3FCE /* release_notes_ios.txt in Resources */,
+				10B98C1D218B162800A0CC45 /* RCColor.plist in Resources */,
+				10B98C20218B162800A0CC45 /* Emoji.plist in Resources */,
 				101BC3A4216091C00048859F /* README.md in Resources */,
+				10B98C1B218B162800A0CC45 /* RCConfig.plist in Resources */,
 				103519192147A34000EDC7AD /* navigationbar_arrow_up@2x.png in Resources */,
-				10082DED2153B34C00EC3FCE /* Emoji.plist in Resources */,
 				1035191A2147A34000EDC7AD /* navigationbar_arrow_down@2x.png in Resources */,
 				1035192A2147A34000EDC7AD /* hud_attention@2x.png in Resources */,
 				1073BC4F21509324001EF550 /* AXWebViewController.bundle in Resources */,
@@ -3425,13 +3430,13 @@
 				103519172147A34000EDC7AD /* photo_check_selected@2x.png in Resources */,
 				1089C5512146AD9900363537 /* Assets.xcassets in Resources */,
 				1035192B2147A34000EDC7AD /* hud_error@2x.png in Resources */,
-				10082DE82153B34C00EC3FCE /* RCConfig.plist in Resources */,
+				10B98C21218B162800A0CC45 /* RongCloud.bundle in Resources */,
 				1035191C2147A34000EDC7AD /* photo_check_default@2x.png in Resources */,
 				10351A582147BD2600EDC7AD /* ShareSDKConfigFile.bundle in Resources */,
 				10351A502147BD2600EDC7AD /* README.txt in Resources */,
+				10B98C1E218B162800A0CC45 /* RongCloudKit.strings in Resources */,
 				1018BCBC2154E0D9004BC57B /* SWQRCode.bundle in Resources */,
 				1089C54F2146AD9700363537 /* Main.storyboard in Resources */,
-				10082DEB2153B34C00EC3FCE /* RongCloudKit.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3739,6 +3744,7 @@
 				1037ECDB216C807E002B5E9A /* MyRecommendTableViewCell.m in Sources */,
 				103519142147A34000EDC7AD /* KxMenu.m in Sources */,
 				1035192C2147A34000EDC7AD /* UIImage+BoxBlur.m in Sources */,
+				10B98C0A218B048700A0CC45 /* RcRedPacketMessageModel.m in Sources */,
 				103519422147A34000EDC7AD /* WLPersistanceTable.m in Sources */,
 				103519312147A34000EDC7AD /* UIView+FirstResponderNotify.m in Sources */,
 				10C575882151D9B100FBFE1E /* ImModelClient.m in Sources */,
@@ -3884,15 +3890,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		10082DE02153B34C00EC3FCE /* RongCloudKit.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				10082DE12153B34C00EC3FCE /* zh-Hans */,
-				10082DE22153B34C00EC3FCE /* en */,
-			);
-			name = RongCloudKit.strings;
-			sourceTree = "<group>";
-		};
 		1089C54D2146AD9700363537 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -3907,6 +3904,15 @@
 				1089C5532146AD9900363537 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		10B98C13218B162700A0CC45 /* RongCloudKit.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				10B98C14218B162700A0CC45 /* zh-Hans */,
+				10B98C15218B162700A0CC45 /* en */,
+			);
+			name = RongCloudKit.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -4036,16 +4042,14 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_1_Stable/IMLib",
-					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_1_Stable/IMKit",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/ShareSDK-iOS-4.0.1/ShareSDK/Support/Required",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/ShareSDK-iOS-4.0.1/ShareSDK/Support/Optional",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/ShareSDK-iOS-4.0.1/ShareSDK/Support/PlatformConnector",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/ShareSDK-iOS-4.0.1/ShareSDK",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/ShareSDK-iOS-4.0.1/Required",
-					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_6_Stable/IMLib",
-					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_6_Stable/IMKit",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/AlipaySDK_15.5.5",
+					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_7_Stable/IMLib",
+					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_7_Stable/IMKit",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MineSweeper/Supporting Files/MineSweeper.pch";
@@ -4061,10 +4065,9 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_1_Stable/IMLib",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/ShareSDK-iOS-4.0.1/ShareSDK/Support/PlatformSDK/WeChatSDK",
-					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_6_Stable/IMLib",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/AlipaySDK_15.5.5",
+					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_7_Stable/IMLib",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.chuansongmen.MineSweeper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4088,16 +4091,14 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_1_Stable/IMLib",
-					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_1_Stable/IMKit",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/ShareSDK-iOS-4.0.1/ShareSDK/Support/Required",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/ShareSDK-iOS-4.0.1/ShareSDK/Support/Optional",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/ShareSDK-iOS-4.0.1/ShareSDK/Support/PlatformConnector",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/ShareSDK-iOS-4.0.1/ShareSDK",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/ShareSDK-iOS-4.0.1/Required",
-					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_6_Stable/IMLib",
-					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_6_Stable/IMKit",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/AlipaySDK_15.5.5",
+					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_7_Stable/IMLib",
+					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_7_Stable/IMKit",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MineSweeper/Supporting Files/MineSweeper.pch";
@@ -4113,10 +4114,9 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_1_Stable/IMLib",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/ShareSDK-iOS-4.0.1/ShareSDK/Support/PlatformSDK/WeChatSDK",
-					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_6_Stable/IMLib",
 					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/AlipaySDK_15.5.5",
+					"$(PROJECT_DIR)/MineSweeper/Vendors/SDKs/Rong_Cloud_iOS_IMKit_SDK_v2_9_7_Stable/IMLib",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.chuansongmen.MineSweeper;
 				PRODUCT_NAME = "$(TARGET_NAME)";

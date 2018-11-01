@@ -93,6 +93,7 @@ static NSString *paylistCellid = @"paylistCellid";
     [super viewDidLoad];
     //* 注册消息类型，如果使用IMKit，使用此方法，不再使用RongIMLib的同名方法。如果对消息类型进行扩展，可以忽略此方法。
 //    [self registerClass:[ChatRedPacketCell class] forCellWithReuseIdentifier:redPacketCellid];
+//    [self registerClass:[ChatGetRedPacketCell class] forCellWithReuseIdentifier:redPacketCellid];
     [self registerClass:ChatRedPacketCell.class forMessageClass:RCRedPacketMessage.class];
     [self registerClass:ChatGetRedPacketCell.class forMessageClass:RCRedPacketGetMessage.class];
     self.enableUnreadMessageIcon = YES;
@@ -140,8 +141,8 @@ static NSString *paylistCellid = @"paylistCellid";
             txtCell.textLabel.textColor = WLColoerRGB(51.f);
             txtCell.bubbleBackgroundView.image = [[UIImage imageNamed:@"chat_from_bg_normal"] resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,20.f, 30.f)];
         }
-//        txtCell.bubbleBackgroundView.image = [txtCell.bubbleBackgroundView.image
-//                                           resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,20.f, 30.f)];
+        //        txtCell.bubbleBackgroundView.image = [txtCell.bubbleBackgroundView.image
+        //                                           resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,20.f, 30.f)];
     }
     if ([cell isKindOfClass:[RCVoiceMessageCell class]]) {
         RCVoiceMessageCell *txtCell = (RCVoiceMessageCell *)cell;
@@ -153,16 +154,35 @@ static NSString *paylistCellid = @"paylistCellid";
             txtCell.voiceDurationLabel.textColor = WLColoerRGB(51.f);
             txtCell.bubbleBackgroundView.image = [[UIImage imageNamed:@"chat_from_bg_normal"] resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,20.f, 30.f)];
         }
-//        txtCell.bubbleBackgroundView.image = [txtCell.bubbleBackgroundView.image
-//                                              resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,20.f, 30.f)];
+        //        txtCell.bubbleBackgroundView.image = [txtCell.bubbleBackgroundView.image
+        //                                              resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,20.f, 30.f)];
     }
     if ([cell isKindOfClass:[RCImageMessageCell class]]) {
-//        RCImageMessageCell *txtCell = (RCImageMessageCell *)cell;
+        //        RCImageMessageCell *txtCell = (RCImageMessageCell *)cell;
         
-//        txtCell.pictureView.image = [UIImage imageWithColor:[UIColor greenColor]];// txtCell.pictureView.image; //[txtCell.bubbleBackgroundView.image
-                                      //        resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,
-                                        //                                                   20.f, 30.f)];
+        //        txtCell.pictureView.image = [UIImage imageWithColor:[UIColor greenColor]];// txtCell.pictureView.image; //[txtCell.bubbleBackgroundView.image
+        //        resizableImageWithCapInsets:UIEdgeInsetsMake(20.f, 30,
+        //                                                   20.f, 30.f)];
     }
+    //    if (self.conversationType == ConversationType_GROUP) {
+    //        if ([cell isKindOfClass:[ChatRedPacketCell class]] || [cell isKindOfClass:[ChatGetRedPacketCell class]]) {
+    //            BOOL isHis = [_historyMessages bk_any:^BOOL(id obj) {
+    //                return [obj messageId] == cell.model.messageId;
+    //            }];
+    //            // 如果是历史消息：删除模型
+    //            if (isHis) {
+    //                dispatch_async_on_main_queue(^{
+    ////                    [self deleteMessage:cell.model];
+    ////                    NSMutableArray *data = self.conversationDataRepository;
+    ////                    if (self.conversationDataRepository.count > 0) {
+    ////                        [self.conversationDataRepository removeObjectAtIndex:indexPath.row];
+    //////                        [self.conversationDataRepository removeObject:cell.model];
+    ////                    }
+    ////                    [self.conversationMessageCollectionView reloadData];
+    //                });
+    //            }
+    //        }
+    //    }
 }
 
 /*!
@@ -239,28 +259,28 @@ static NSString *paylistCellid = @"paylistCellid";
  *  @param indexPath      indexPath
  *  @return RCMessageTemplateCell
  */
-- (RCMessageBaseCell *)rcConversationCollectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    RCMessageModel *model = self.conversationDataRepository[indexPath.row];
-    RCMessageContent *msgContent = model.content;
-    if ([msgContent isMemberOfClass:[RCRedPacketMessage class]]) {
-        // 红包cell
-        ChatRedPacketCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:redPacketCellid forIndexPath:indexPath];
-        cell.delegate = self;
-//        cell.cellDelegate = self;
-//        cell.isDisplayMessageTime = YES;
-//        cell.isDisplayMessageTime = YES;
-        if ([(RCRedPacketMessage *)msgContent uid].integerValue == configTool.loginUser.uid.integerValue) {
-            cell.messageDirection = MessageDirection_SEND;
-        } else {
-            cell.messageDirection = MessageDirection_RECEIVE;
-        }
-        [cell setDataModel:model];
-//        [cell wl_setDebug:YES];
-        return cell;
-    }
-    return nil;
-}
+//- (RCMessageBaseCell *)rcConversationCollectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    RCMessageModel *model = self.conversationDataRepository[indexPath.row];
+//    RCMessageContent *msgContent = model.content;
+//    if ([model.objectName isEqualToString:RCRedPacketMessageTypeIdentifier] || [msgContent isMemberOfClass:[RCRedPacketMessage class]]) {
+//        // 红包cell
+//        ChatRedPacketCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:redPacketCellid forIndexPath:indexPath];
+//        cell.delegate = self;
+////        cell.cellDelegate = self;
+////        cell.isDisplayMessageTime = YES;
+////        cell.isDisplayMessageTime = YES;
+//        if ([(RCRedPacketMessage *)msgContent uid].integerValue == configTool.loginUser.uid.integerValue) {
+//            cell.messageDirection = MessageDirection_SEND;
+//        } else {
+//            cell.messageDirection = MessageDirection_RECEIVE;
+//        }
+//        [cell setDataModel:model];
+////        [cell wl_setDebug:YES];
+//        return cell;
+//    }
+//    return nil;
+//}
 
 #pragma mark override
 // 点击cell中url

@@ -144,6 +144,7 @@
 - (void)join:(IGameGroupModel *)model {
     ChatViewController *chatVc = [[ChatViewController alloc] initWithConversationType:ConversationType_GROUP targetId:model.groupId];
     chatVc.title = model.title;// @"5-10 赔率1.5倍  群组";
+    chatVc.isGameGroup = YES;
     [self.navigationController pushViewController:chatVc animated:YES];
 //    [WLHUDView showHUDWithStr:@"" dim:YES];
 //    WEAKSELF

@@ -142,6 +142,9 @@
 }
 
 - (void)join:(IGameGroupModel *)model {
+    // 删除历史消息
+    [self delete10MinuteMessageHistory:model.groupId];
+    
     ChatViewController *chatVc = [[ChatViewController alloc] initWithConversationType:ConversationType_GROUP targetId:model.groupId];
     chatVc.title = model.title;// @"5-10 赔率1.5倍  群组";
     chatVc.isGameGroup = YES;
@@ -159,6 +162,26 @@
 //    } Failed:^(NSError *error) {
 //        [WLHUDView hiddenHud];
 //    }];
+}
+
+// 删除超过10分钟的历史消息记录
+- (void)delete10MinuteMessageHistory:(NSString *)targetId {
+    NSArray *historyMessages = [[RCIMClient sharedRCIMClient] getLatestMessages:ConversationType_GROUP targetId:targetId count:500];
+    NSMutableArray *messages = [NSMutableArray array];
+    for (RCMessage *rcMsg in historyMessages) {
+        NSDate *sendTime = [NSDate dateWithTimeIntervalSince1970:rcMsg.sentTime / 1000];
+        float minuts = [[NSDate date] minutesFrom:sendTime];
+        if (minuts > 10) {
+            [messages addObject:@(rcMsg.messageId)];
+        }
+    }
+    BOOL success =  [[RCIMClient sharedRCIMClient] deleteMessages:messages];
+    if (success) {
+        DLog(@"删除超过10分钟的历史消息成功");
+    } else {
+        [[RCIMClient sharedRCIMClient] deleteMessages:messages];
+        DLog(@"删除超过10分钟的历史消息失败");
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

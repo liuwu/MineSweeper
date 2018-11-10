@@ -38,7 +38,7 @@
 @property (nonatomic, strong) IGroupDetailInfo *groupDetailInfo;
 @property (nonatomic, strong) IFriendModel *friendModel;
 
-@property (nonatomic, strong) IRedPacketModel *openPacketModel;
+//@property (nonatomic, strong) IRedPacketModel *openPacketModel;
 
 @property (nonatomic, assign) BOOL isGotoNextVC;
 @property (nonatomic, assign) BOOL isFirstIn;
@@ -625,119 +625,6 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-// 输入支付密码
-- (void)inputPayPwd {
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 270, 189.f)];
-    contentView.backgroundColor = [UIColor whiteColor];
-    [contentView wl_setCornerRadius:5.f];
-    
-    QMUILabel *titleLabel = [[QMUILabel alloc] init];
-    titleLabel.font = UIFontMake(17);
-    titleLabel.textColor = WLColoerRGB(51.f);
-    titleLabel.text = @"支付";
-    [contentView addSubview:titleLabel];
-    [titleLabel sizeToFit];
-    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(contentView);
-        make.top.mas_equalTo(contentView).mas_offset(16.f);
-    }];
-    
-    QMUILabel *moneyLabel = [[QMUILabel alloc] init];
-    moneyLabel.font = UIFontMake(17);
-    moneyLabel.textColor = WLColoerRGB(51.f);
-    moneyLabel.text = @"50.00元";
-    [contentView addSubview:moneyLabel];
-    //    self.idLabel = nameLabel;
-    [moneyLabel sizeToFit];
-    [moneyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(contentView);
-        make.top.mas_equalTo(titleLabel.mas_bottom).mas_offset(15.f);
-    }];
-    
-    QMUITextField *moneyTextField = [[QMUITextField alloc] init];
-    moneyTextField.placeholder = @"输入支付密码";
-    moneyTextField.placeholderColor = WLColoerRGB(153.f);
-    moneyTextField.font = UIFontMake(14.f);
-    moneyTextField.textColor = WLColoerRGB(51.f);
-    moneyTextField.secureTextEntry = YES;
-    moneyTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-    [contentView addSubview:moneyTextField];
-    [moneyTextField wl_setCornerRadius:5.f];
-    [moneyTextField wl_setBorderWidth:1.f color:WLColoerRGB(242.f)];
-    [moneyTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(240.f, 36.f));
-        make.centerX.mas_equalTo(contentView);
-        make.top.mas_equalTo(moneyLabel.mas_bottom).mas_offset(15.f);
-    }];
-    
-    QMUIFillButton *payBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorRed];
-    [payBtn setTitle:@"确认支付" forState:UIControlStateNormal];
-    payBtn.titleLabel.font = WLFONT(14);
-    [payBtn addTarget:self action:@selector(payBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [payBtn setCornerRadius:5.f];
-    [contentView addSubview:payBtn];
-    [payBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(115.f, 36.f));
-        make.left.mas_equalTo(moneyTextField);
-        make.top.mas_equalTo(moneyTextField.mas_bottom).mas_offset(15.f);
-    }];
-
-    QMUIFillButton *cancelBtn = [[QMUIFillButton alloc] initWithFillType:QMUIFillButtonColorGray];
-    [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
-    cancelBtn.titleLabel.font = WLFONT(14);
-    [cancelBtn addTarget:self action:@selector(cancelBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [cancelBtn setCornerRadius:5.f];
-    [contentView addSubview:cancelBtn];
-    [cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(payBtn);
-        make.right.mas_equalTo(moneyTextField);
-        make.top.mas_equalTo(moneyTextField.mas_bottom).mas_offset(15.f);
-    }];
-    
-    QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
-    modalViewController.animationStyle = QMUIModalPresentationAnimationStylePopup;
-    modalViewController.contentView = contentView;
-    modalViewController.modal = YES;
-    //    modalViewController.delegate = self;
-    [modalViewController showWithAnimated:YES completion:nil];
-    self.payModalViewController =  modalViewController;
-    
-    
-//    QMUIDialogTextFieldViewController *dialogViewController = [[QMUIDialogTextFieldViewController alloc] init];
-//    dialogViewController.title = @"支付";
-//    [dialogViewController addTextFieldWithTitle:@"" configurationHandler:^(QMUILabel *titleLabel, QMUITextField *textField, CALayer *separatorLayer) {
-//        titleLabel.text = @"测试";
-//        textField.placeholder = @"请输入支付密码";
-//        textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-////        textField.maximumTextLength = 6;
-//        textField.secureTextEntry = YES;
-//    }];
-//    dialogViewController.enablesSubmitButtonAutomatically = NO;// 为了演示效果与第二个 cell 的区分开，这里手动置为 NO，平时的默认值为 YES
-//    [dialogViewController addCancelButtonWithText:@"取消" block:nil];
-//    [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogTextFieldViewController *aDialogViewController) {
-//        if (aDialogViewController.textFields.firstObject.text.length > 0) {
-//            [aDialogViewController hide];
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                [QMUITips showSucceed:@"提交成功" inView:self.view hideAfterDelay:1.2];
-//            });
-//        } else {
-//            [QMUITips showInfo:@"请填写内容" inView:self.view hideAfterDelay:1.2];
-//        }
-//    }];
-//    [dialogViewController show];
-}
-
-// 确认支付
-- (void)payBtnClicked:(UIButton *)sender {
-    
-}
-
-// 取消支付
-- (void)cancelBtnClicked:(UIButton *)sender {
-     [_payModalViewController hideWithAnimated:YES completion:nil];
-    
-}
-
 // 打开红包被抢完
 - (void)showPacketGrabEnd:(NSString *)title {
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 250, 300)];
@@ -774,7 +661,7 @@
 
 // 打开红包页面
 - (void)showOpenPacket:(IRedPacketModel *)model {
-    self.openPacketModel = model;
+//    self.openPacketModel = model;
     
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 250, 300)];
     
@@ -818,7 +705,7 @@
     [lookMoreBtn setTitle:@"查看全部" forState:UIControlStateNormal];
     [lookMoreBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     lookMoreBtn.titleLabel.font = WLFONT(14);
-    [lookMoreBtn addTarget:self action:@selector(lookMoreBtnClickedBtn:) forControlEvents:UIControlEventTouchUpInside];
+//    [lookMoreBtn addTarget:self action:@selector(lookMoreBtnClickedBtn:) forControlEvents:UIControlEventTouchUpInside];
     [contentView addSubview:lookMoreBtn];
     [lookMoreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(200.f);
@@ -833,27 +720,31 @@
     //    modalViewController.delegate = self;
     [modalViewController showWithAnimated:YES completion:nil];
     self.packetModalViewController = modalViewController;
-    //    QMUIModalPresentationViewControllerDelegate
+    
+    @weakify(self);
+    [lookMoreBtn bk_whenTapped:^{
+        @strongify(self);
+        DLog(@"lookMoreBtnClickedBtn --------");
+        [self.packetModalViewController hideWithAnimated:YES completion:nil];
+        [self lookRedPacketHistory:model.redpack_id];
+    }];
 }
 
 // 查看更多红包
-- (void)lookMoreBtnClickedBtn:(UIButton *)sender {
-    self.isGotoNextVC = YES;
-    DLog(@"lookMoreBtnClickedBtn --------");
-    [_packetModalViewController hideWithAnimated:YES completion:nil];
-    // 查看红包历史
-//    [self lookRedPacketHistory:_openPacketModel.redpack_id];
-    RedPacketViewController *vc = [[RedPacketViewController alloc] init];
-    vc.packetId = _openPacketModel.redpack_id;
-    vc.isFirstLook = YES;
-    [self.navigationController pushViewController:vc animated:YES];
-}
+//- (void)lookMoreBtnClickedBtn:(UIButton *)sender {
+//    self.isGotoNextVC = YES;
+//    DLog(@"lookMoreBtnClickedBtn --------");
+//    [_packetModalViewController hideWithAnimated:YES completion:nil];
+//    RedPacketViewController *vc = [[RedPacketViewController alloc] init];
+//    vc.packetId = _openPacketModel.redpack_id;
+//    [self.navigationController pushViewController:vc animated:YES];
+//}
 
+// 查看红包历史
 - (void)lookRedPacketHistory:(NSString *)packId {
     self.isGotoNextVC = YES;
     RedPacketViewController *vc = [[RedPacketViewController alloc] init];
     vc.packetId = packId;
-    vc.isFirstLook = NO;
     [self.navigationController pushViewController:vc animated:YES];
 }
 

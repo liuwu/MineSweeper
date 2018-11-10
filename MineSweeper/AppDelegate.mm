@@ -320,6 +320,9 @@ single_implementation(AppDelegate);
         NSString *alertMessage = @"您的账号长时间未登录或在其他设备上登录";
         [self logoutWithErrormsg:alertMessage];
     }
+    if (status == ConnectionStatus_Unconnected) {
+        [self connectRCIM];
+    }
     DLog(@"onRCIMConnectionStatusChanged -- : %ld",(long)status);
 }
 
@@ -358,6 +361,8 @@ single_implementation(AppDelegate);
         // 如果不是在聊天页面，删掉红包消息
         NSString *chatGroupId = [NSUserDefaults stringForKey:@"kNowRedGroupChatUserId"];
         if (!(message.targetId && message.targetId.intValue == chatGroupId.intValue) || _isBack) {
+            // 删除或退出群组
+            [self delteOrQuitGameGroup:message.targetId];
             // 删除消息
             BOOL success = [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
             if (success) {
@@ -397,14 +402,12 @@ single_implementation(AppDelegate);
 //            }];
             
         }
-//        if (![[UIViewController getCurrentViewCtrl] isKindOfClass:[ChatViewController class]]) {
-//        }
     }
     
     // 收到红包消息，播放声音
     if ([message.content isMemberOfClass:[RCRedPacketMessage class]] || [message.content isMemberOfClass:[RCRedPacketGetMessage class]]) {
         NSString *chatGroupId = [NSUserDefaults stringForKey:@"kNowRedGroupChatUserId"];
-        if (message.targetId && message.targetId.intValue == chatGroupId.intValue && !_isBack && left == 0) {
+        if (message.targetId && chatGroupId != nil && message.targetId.intValue == chatGroupId.intValue && !_isBack && left == 0) {
             [self playSound];
         }
     }
@@ -429,6 +432,23 @@ single_implementation(AppDelegate);
         [self setIconBadgeNumber];
         //添加聊天用户改变监听
         [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
+    }
+}
+
+- (void)delteOrQuitGameGroup:(NSString *)targetId {
+    [[RCIMClient sharedRCIMClient] quitGroup:targetId success:^{
+        DLog(@"退出群组聊天成功");
+    } error:^(RCErrorCode status) {
+        DLog(@"退出群组聊天失败");
+    }];
+    // 会话列表删除会话
+    [[RCIMClient sharedRCIMClient] removeConversation:ConversationType_GROUP targetId:targetId];
+    [self delete10MinuteMessageHistory:targetId];
+    BOOL success = [[RCIMClient sharedRCIMClient] removeConversation:ConversationType_GROUP targetId:targetId];
+    if (success) {
+        DLog(@"本地删除游戏群会话成功");
+    } else {
+        DLog(@"本地删除游戏群会话失败");
     }
 }
 
@@ -461,36 +481,12 @@ single_implementation(AppDelegate);
         DLog(@":%@  UIViewController:%@" , [UIViewController getCurrentViewCtrl] , [[UIViewController getCurrentViewCtrl] class]);
         NSString *chatGroupId = [NSUserDefaults stringForKey:@"kNowRedGroupChatUserId"];
         if (!(message.targetId && message.targetId.intValue == chatGroupId.intValue) || _isBack) {
+            // 删除或退出群组
+            [self delteOrQuitGameGroup:message.targetId];
         // 如果不是在聊天页面，删掉红包消息
 //        if (![[UIViewController getCurrentViewCtrl] isKindOfClass:[ChatViewController class]]) {
             // 删除消息
             [[RCIMClient sharedRCIMClient] deleteMessages:@[@(message.messageId)]];
-//            [[RCIMClient sharedRCIMClient] deleteMessages:message.conversationType targetId:message.targetId success:^{
-//                DLog(@"删除群组聊天消息成功");
-//            } error:^(RCErrorCode status) {
-//                DLog(@"删除群组聊天消息失败");
-//            }];
-            // 清除聊天记录
-//            BOOL success = [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
-//            if (success) {
-//                DLog(@"删除群组聊天消息成功");
-//            } else {
-//                [[RCIMClient sharedRCIMClient] clearMessages:message.conversationType targetId:message.targetId];
-//                DLog(@"删除群组聊天消息失败");
-//            }
-//            // 此方法从服务器端清除历史消息，但是必须先开通历史消息云存储功能。
-//            [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:message.conversationType targetId:message.targetId recordTime:0 success:^{
-//
-//                DLog(@"删除群组服务器聊天历史消息成功");
-//            } error:^(RCErrorCode status) {
-//                DLog(@"删除群组服务器聊天历史消息失败");
-//                [[RCIMClient sharedRCIMClient] clearRemoteHistoryMessages:message.conversationType targetId:message.targetId recordTime:0 success:^{
-//
-//                    DLog(@"删除群组服务器聊天历史消息成功");
-//                } error:^(RCErrorCode status) {
-//                    DLog(@"删除群组服务器聊天历史消息失败");
-//                }];
-//            }];
         }
     }
     if ([message.content isMemberOfClass:[RCRedPacketMessage class]]) {
@@ -691,7 +687,7 @@ single_implementation(AppDelegate);
     // 关闭融云连接
 //    [[RCIM sharedRCIM] clearUserInfoCache];
 //    [[RCIM sharedRCIM] clearGroupInfoCache];
-    [[RCIM sharedRCIM] disconnect:NO];
+    [[RCIM sharedRCIM] logout];
     
 //    [LGAlertView removeAlertViews];
 //    [self.window endEditing:YES];
@@ -704,6 +700,8 @@ single_implementation(AppDelegate);
 
 #pragma mark - 登录成功
 - (void)loginSucceed {
+    // 退出融云所有h红包群组
+    [self quitAllRCGameGroup];
     [self connectRCIM];
     // 启动前，清下一下群组的缓存
     [[RCIM sharedRCIM] clearGroupInfoCache];
@@ -714,8 +712,6 @@ single_implementation(AppDelegate);
     self.window.rootViewController = _mainVc;
     /// 上报定位
     [self getCityLocationInfo];
-    // 退出融云所有h红包群组
-//    [self quitAllRCGameGroup];
 }
 
 - (void)quitAllRCGameGroup {
@@ -732,6 +728,7 @@ single_implementation(AppDelegate);
 - (void)quitAllRcGroup:(NSArray *)list {
     if (list.count > 0) {
         for (IGameGroupModel *model in list) {
+            [[RCIMClient sharedRCIMClient] removeConversation:ConversationType_GROUP targetId:model.groupId];
             [self delete10MinuteMessageHistory:model.groupId];
             BOOL success = [[RCIMClient sharedRCIMClient] removeConversation:ConversationType_GROUP targetId:model.groupId];
             if (success) {
@@ -845,16 +842,20 @@ single_implementation(AppDelegate);
     } error:^(RCConnectErrorCode status) {
         dispatch_async(dispatch_get_main_queue(), ^{
             DLog(@"融云连接错误===%ld",(long)status);
+            if (status == RC_CONNECTION_EXIST) {
+                return;
+            }
             [[RCIM sharedRCIM] disconnect:NO];
-            configTool.rcToken.token = nil;
-            [weakSelf checkTokenExpires];
+            [weakSelf connectRCIM];
+//            configTool.rcToken.token = nil;
+//            [weakSelf checkTokenExpires2];
         });
     } tokenIncorrect:^{
         dispatch_async(dispatch_get_main_queue(), ^{
             DLog(@"融云token错误或者过期。需要重新换取token");
             [[RCIM sharedRCIM] disconnect:NO];
             configTool.rcToken.token = nil;
-            [weakSelf checkTokenExpires];
+            [weakSelf checkTokenExpires2];
 //            configTool.loginUser.rongToken = @"";
 //            WEAKSELF
 //            [ImModelClient getImTokenWithParams:nil Success:^(id resultInfo) {
@@ -866,6 +867,28 @@ single_implementation(AppDelegate);
 //
 //            }];
         });
+    }];
+}
+
+// 检查登录Token已过期
+- (void)checkTokenExpires2 {
+    if (!configTool.loginUser) {
+        return;
+    }
+    //小于半小时的，重新获取token
+    NSDictionary *params = @{
+                             @"uid" : [NSNumber numberWithInteger:configTool.loginUser.uid.integerValue],
+                             @"password" : [NSUserDefaults stringForKey:[NSString stringWithFormat:@"%@%@", configTool.loginUser.uid, configTool.loginUser.mobile]],
+                             @"_password" : configTool.loginUser.password
+                             };
+    WEAKSELF
+    [LoginModuleClient getUserTokenWithParams:params Success:^(id resultInfo) {
+        [configTool refreshLoginUserToken:resultInfo];
+        [kNSNotification postNotificationName:@"kLoginUserTokenRefresh" object:nil];
+        [weakSelf connectRCIM];
+    } Failed:^(NSError *error) {
+        [weakSelf checkTokenExpires2];
+        //            [WLHUDView hiddenHud];
     }];
 }
 

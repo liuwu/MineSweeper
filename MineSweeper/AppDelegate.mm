@@ -633,7 +633,7 @@ single_implementation(AppDelegate);
         return;
     }
     double minutes = [[configTool.loginUser.token.expires_time wl_dateFormartNormalString] minutesUntil];
-    if (minutes < 10) {
+    if (minutes < 100) {
         //小于半小时的，重新获取token
         NSDictionary *params = @{
                                  @"uid" : [NSNumber numberWithInteger:configTool.loginUser.uid.integerValue],

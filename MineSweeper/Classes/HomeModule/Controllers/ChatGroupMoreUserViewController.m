@@ -18,7 +18,9 @@
 @property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) UICollectionView *mainCollectionView;
 @property (nonatomic, assign) BOOL isIn;
-@property (nonatomic, strong) NSArray *datasource;
+@property (nonatomic, strong) NSMutableArray *datasource;
+
+@property (nonatomic, assign) NSInteger page;
 
 @end
 
@@ -40,89 +42,113 @@
 
 - (void)initSubviews {
     [super initSubviews];
+    self.page = 1;
+    self.datasource = [NSMutableArray array];
     [self addTableHeaderInfo];
 //    [self addTableViewCell];
     //    [self loadData];
-    [self loadGroupUser];
-//    [kNSNotification addObserver:self selector:@selector(loadData) name:@"kGroupInfoChanged" object:nil];
-    [kNSNotification addObserver:self selector:@selector(loadGroupUserNOhub) name:@"kGroupUserChanged" object:nil];
+//    [self loadGroupUser];
+    [kNSNotification addObserver:self selector:@selector(loadData) name:@"kGroupInfoChanged" object:nil];
+    
+    //下拉刷新
+    self.mainCollectionView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(beginPullDownRefreshingNew)];
+    //上提加载更多
+    MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(beginPullUpRefreshingNew)];
+    self.mainCollectionView.mj_footer = footer;
+    self.mainCollectionView.mj_footer.hidden = YES;
+    
+    [self.mainCollectionView.mj_header beginRefreshing];
+//    [self.mainCollectionView wl_setDebug:YES];
+    
+    [kNSNotification addObserver:self selector:@selector(beginPullDownRefreshingNew) name:@"kGroupUserChanged" object:nil];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
 }
 
-- (void)loadGroupUserNOhub {
-    @weakify(self);
-    [ImGroupModelClient getImGroupMemberListWithParams:@{@"id" : [NSNumber numberWithInteger:_groupDetailInfo.groupId.integerValue]} Success:^(id resultInfo) {
-        @strongify(self);
-        self.datasource = [NSArray modelArrayWithClass:[IFriendModel class] json:resultInfo];
-        [self.mainCollectionView reloadData];
-        //        [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
-        //        [weakSelf.navigationController popViewControllerAnimated:YES];
-    } Failed:^(NSError *error) {
-    }];
+//- (void)loadGroupUserNOhub {
+//    @weakify(self);
+//    [ImGroupModelClient getImGroupMemberListWithParams:@{@"id" : @(_groupDetailInfo.groupId.integerValue),
+//                                                         @"p" : @(_page)}
+//                                               Success:^(id resultInfo) {
+//        @strongify(self);
+//        self.datasource = [NSArray modelArrayWithClass:[IFriendModel class] json:resultInfo];
+//        [self.mainCollectionView reloadData];
+//        //        [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
+//        //        [weakSelf.navigationController popViewControllerAnimated:YES];
+//    } Failed:^(NSError *error) {
+//    }];
+//}
+
+- (void)beginPullDownRefreshingNew {
+    self.page = 1;
+    self.datasource = [NSMutableArray array];
+    [self loadGroupUser];
+}
+
+- (void)beginPullUpRefreshingNew {
+    _page++;
+    [self loadGroupUser];
 }
 
 - (void)loadGroupUser {
-    [WLHUDView showHUDWithStr:@"" dim:YES];
+//    [WLHUDView showHUDWithStr:@"" dim:YES];
     @weakify(self);
-    [ImGroupModelClient getImGroupMemberListWithParams:@{@"id" : [NSNumber numberWithInteger:_groupDetailInfo.groupId.integerValue]} Success:^(id resultInfo) {
-        [WLHUDView hiddenHud];
-        @strongify(self);
-        self.datasource = [NSArray modelArrayWithClass:[IFriendModel class] json:resultInfo];
-        [self.mainCollectionView reloadData];
+    [ImGroupModelClient getImGroupMemberListWithParams:@{@"id" : @(_groupDetailInfo.groupId.integerValue),
+                                                         @"p" : @(_page)}
+                                               Success:^(id resultInfo) {
+                                                   [self.mainCollectionView.mj_header endRefreshing];
+                                                   [self.mainCollectionView.mj_footer endRefreshing];
+//                                                   [WLHUDView hiddenHud];
+                                                   @strongify(self);
+                                                   NSArray *data = [NSArray modelArrayWithClass:[IFriendModel class] json:resultInfo];
+                                                   if (data.count > 0) {
+                                                       [self.datasource addObjectsFromArray:data];
+                                                       self.mainCollectionView.mj_footer.hidden = NO;
+                                                   } else {
+                                                       self.mainCollectionView.mj_footer.hidden = YES;
+                                                   }
+                                                   [self.mainCollectionView reloadData];
 //        [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
 //        [weakSelf.navigationController popViewControllerAnimated:YES];
     } Failed:^(NSError *error) {
+        self.mainCollectionView.mj_footer.hidden = YES;
+        [self.mainCollectionView.mj_header endRefreshing];
+        [self.mainCollectionView.mj_footer endRefreshing];
         if (error.localizedDescription.length > 0) {
             [WLHUDView showErrorHUD:error.localizedDescription];
-        } else {
-            [WLHUDView hiddenHud];
         }
+//        else {
+//            [WLHUDView hiddenHud];
+//        }
     }];
 }
 
 // 获取群主信息接口
 - (void)loadData {
     //    [WLHUDView showHUDWithStr:@"" dim:YES];
-    if (!_isIn) {
+//    if (!_isIn) {
         WEAKSELF
-        [ImGroupModelClient getImGroupInfoWithParams:@{@"id" : [NSNumber numberWithInteger:_groupDetailInfo.groupId.integerValue]}
+        [ImGroupModelClient getImGroupInfoWithParams:@{@"id" : @(_groupDetailInfo.groupId.integerValue)}
                                              Success:^(id resultInfo) {
                                                  //                                             [WLHUDView hiddenHud];
                                                  weakSelf.groupDetailInfo = [IGroupDetailInfo modelWithDictionary:resultInfo];
-                                                 [weakSelf.mainCollectionView reloadData];
+//                                                 [weakSelf.mainCollectionView reloadData];
                                              } Failed:^(NSError *error) {
                                                  //                                             [WLHUDView hiddenHud];
                                              }];
-    }
+//    }
    
 }
 
-// 获取群主信息接口
-//- (void)loadData {
-//    //    [WLHUDView showHUDWithStr:@"" dim:YES];
-//    WEAKSELF
-//    [ImGroupModelClient getImGroupInfoWithParams:@{@"id" : [NSNumber numberWithInteger:_groupId.integerValue]}
-//                                         Success:^(id resultInfo) {
-//                                             //                                             [WLHUDView hiddenHud];
-//                                             self.groupDetailInfo = [IGroupDetailInfo modelWithDictionary:resultInfo];
-//                                             [weakSelf updateUI];
-//                                         } Failed:^(NSError *error) {
-//                                             //                                             [WLHUDView hiddenHud];
-//                                         }];
-//}
-
-//- (void)updateUI {
-//    [_mainCollectionView reloadData];
-//}
-
 - (void)addTableHeaderInfo {
+    self.view.backgroundColor = WLColoerRGB(248.f);
     // 隐藏分割线
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.backgroundColor = WLColoerRGB(248.f);
+//    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//    self.tableView.backgroundColor = WLColoerRGB(248.f);
     
     //    CGFloat headerHeight = _userArray.count > 4 ? 180.f : 90.f;
 //    CGFloat headerHeight = 90;
@@ -136,11 +162,11 @@
 //            headerHeight = _groupDetailInfo.member_list.count > 4 ? 180.f : 90.f;
 //        }
 //    }
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0., DEVICE_WIDTH,  self.view.height - self.qmui_navigationBarMaxYInViewCoordinator)];
-    //    headerView.backgroundColor = [UIColor redColor];
-    //    [headerView wl_setDebug:YES];
-    self.headerView = headerView;
-    self.tableView.tableHeaderView = headerView;
+//    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0., DEVICE_WIDTH,  self.view.height - self.qmui_navigationBarMaxYInViewCoordinator)];
+//    //    headerView.backgroundColor = [UIColor redColor];
+//    //    [headerView wl_setDebug:YES];
+//    self.headerView = headerView;
+//    self.tableView.tableHeaderView = headerView;
     
     //1.初始化layout
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -160,10 +186,11 @@
     // 移动方向的设置
     
     //2.初始化collectionView
-    UICollectionView *mainCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(itemSpaceWith, 0., DEVICE_WIDTH - itemSpaceWith * 2.f, self.view.height - self.qmui_navigationBarMaxYInViewCoordinator) collectionViewLayout:layout];
+    UICollectionView *mainCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(itemSpaceWith, self.qmui_navigationBarMaxYInViewCoordinator, DEVICE_WIDTH - itemSpaceWith * 2.f, self.view.height - self.qmui_navigationBarMaxYInViewCoordinator) collectionViewLayout:layout];
     mainCollectionView.scrollEnabled = YES;
-    [headerView addSubview:mainCollectionView];
-    mainCollectionView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:mainCollectionView];
+//    mainCollectionView.backgroundColor = [UIColor clearColor];
+    mainCollectionView.backgroundColor = WLColoerRGB(248.f);
     //3.注册collectionViewCell
     //注意，此处的ReuseIdentifier 必须和 cellForItemAtIndexPath 方法中 一致 均为 cellId
     [mainCollectionView registerClass:[UserItemCollectionViewCell class] forCellWithReuseIdentifier:@"user_item_cell"];
@@ -216,7 +243,7 @@
         [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
         NSMutableArray *datasource = [NSMutableArray arrayWithArray:self.datasource];
         [datasource removeObjectAtIndex:index];
-        self.datasource = [NSArray arrayWithArray:datasource];
+        self.datasource = [NSMutableArray arrayWithArray:datasource];
         [self.mainCollectionView reloadData];
     } Failed:^(NSError *error) {
         if (error.localizedDescription.length > 0) {

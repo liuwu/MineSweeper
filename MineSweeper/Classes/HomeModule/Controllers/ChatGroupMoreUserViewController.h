@@ -6,10 +6,11 @@
 //  Copyright © 2018年 liuwu. All rights reserved.
 //
 
-#import "QMUICommonTableViewController.h"
+//#import "QMUICommonTableViewController.h"
+#import "QDCommonViewController.h"
 #import "IGroupDetailInfo.h"
 
-@interface ChatGroupMoreUserViewController : QMUICommonTableViewController
+@interface ChatGroupMoreUserViewController : QDCommonViewController// QMUICommonTableViewController
 
 @property (nonatomic, strong) IGroupDetailInfo *groupDetailInfo;
 

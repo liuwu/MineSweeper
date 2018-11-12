@@ -81,6 +81,7 @@
     // 金额
     LWLoginTextFieldView *moenyTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeMoney];
     moenyTxtView.titleLabel.text = @"请输入红包总金额";
+    moenyTxtView.textField.keyboardType = UIKeyboardTypeNumberPad;
     [self.view addSubview:moenyTxtView];
     self.moenyTxtView = moenyTxtView;
     [moenyTxtView.textField becomeFirstResponder];

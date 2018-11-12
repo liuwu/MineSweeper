@@ -323,6 +323,11 @@ single_implementation(AppDelegate);
     if (status == ConnectionStatus_Unconnected) {
         [self connectRCIM];
     }
+    // 连接成功
+    if (status == ConnectionStatus_Connected) {
+        // 加入群聊
+        [kNSNotification postNotificationName:@"kChatDidBecomeActive" object:nil];
+    }
     DLog(@"onRCIMConnectionStatusChanged -- : %ld",(long)status);
 }
 
@@ -836,6 +841,8 @@ single_implementation(AppDelegate);
 //        self->_rcConnectCount = 0;
         //添加聊天用户改变监听
         [kNSNotification postNotificationName:kWL_ChatMsgNumChangedNotification object:nil];
+        // 加入群聊
+        [kNSNotification postNotificationName:@"kChatDidBecomeActive" object:nil];
         // 退出融云所有h红包群组
         [self quitAllRCGameGroup];
         DLog(@"++++++++++++++++++++++++++++++++++++++++++++++链接融云服务器成功++++++++++++++++++++++++++++++++++++");

@@ -177,7 +177,7 @@
             DLog(@"退出群组聊天成功");
         } error:^(RCErrorCode status) {
             DLog(@"退出群组聊天失败");
-            [self quitGroup];
+//            [self quitGroup];
         }];
     }
 }
@@ -190,7 +190,7 @@
             DLog(@"加入群组聊天成功");
         } error:^(RCErrorCode status) {
             DLog(@"加入群组聊天失败");
-            [self joinGroup];
+//            [self joinGroup];
         }];
     }
 }

@@ -107,10 +107,9 @@
                                                    NSArray *data = [NSArray modelArrayWithClass:[IFriendModel class] json:resultInfo];
                                                    if (data.count > 0) {
                                                        [self.datasource addObjectsFromArray:data];
-                                                       self.mainCollectionView.mj_footer.hidden = NO;
-                                                   } else {
-                                                       self.mainCollectionView.mj_footer.hidden = YES;
                                                    }
+                                                   self.mainCollectionView.mj_footer.hidden = data.count > 8 ? NO : YES;
+                                                   
                                                    [self.mainCollectionView reloadData];
 //        [kNSNotification postNotificationName:@"kGroupInfoChanged" object:nil];
 //        [weakSelf.navigationController popViewControllerAnimated:YES];

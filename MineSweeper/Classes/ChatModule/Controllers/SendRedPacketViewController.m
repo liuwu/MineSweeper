@@ -21,7 +21,7 @@
 
 @property (nonatomic, strong) LWLoginTextFieldView *moenyTxtView;
 @property (nonatomic, strong) LWLoginTextFieldView *packetNountTxtView;
-@property (nonatomic, strong) QMUILabel *userCountLabel;
+//@property (nonatomic, strong) QMUILabel *userCountLabel;
 @property (nonatomic, strong) LWLoginTextFieldView *mineCountTxtView;
 @property (nonatomic, strong) QMUIFillButton *sendBtn;
 
@@ -97,12 +97,12 @@
     [self.view addSubview:packetNountTxtView];
     self.packetNountTxtView = packetNountTxtView;
     
-    QMUILabel *userCountLabel = [[QMUILabel alloc] init];
-    userCountLabel.text = @"群组共5人";
-    userCountLabel.font = UIFontMake(12);
-    userCountLabel.textColor = WLColoerRGB(153.f);
-    [self.view addSubview:userCountLabel];
-    self.userCountLabel = userCountLabel;
+//    QMUILabel *userCountLabel = [[QMUILabel alloc] init];
+//    userCountLabel.text = @"群组共5人";
+//    userCountLabel.font = UIFontMake(12);
+//    userCountLabel.textColor = WLColoerRGB(153.f);
+//    [self.view addSubview:userCountLabel];
+//    self.userCountLabel = userCountLabel;
     
     // 雷数
     LWLoginTextFieldView *mineCountTxtView = [[LWLoginTextFieldView alloc] initWithTextFieldType:LWLoginTextFieldTypeMoney];
@@ -138,14 +138,14 @@
         make.top.mas_equalTo(self.moenyTxtView.mas_bottom).mas_offset(10.f);
     }];
     
-    [_userCountLabel sizeToFit];
-    [_userCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.packetNountTxtView).offset(7.f);
-        make.top.mas_equalTo(self.packetNountTxtView.mas_bottom).offset(8.f);
-    }];
+//    [_userCountLabel sizeToFit];
+//    [_userCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(self.packetNountTxtView).offset(7.f);
+//        make.top.mas_equalTo(self.packetNountTxtView.mas_bottom).offset(8.f);
+//    }];
     
     [_mineCountTxtView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.packetNountTxtView.mas_bottom).offset(30.f);
+        make.top.mas_equalTo(self.packetNountTxtView.mas_bottom).offset(10.f);
         make.centerX.mas_equalTo(self.view);
         make.size.mas_equalTo(self.moenyTxtView);
     }];
